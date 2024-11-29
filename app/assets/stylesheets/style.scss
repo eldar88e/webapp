@@ -1,3 +1,15 @@
-.container {
-  max-width: 1400px;
+.header {
+  padding-top: 68px;
+  padding-bottom: 23px;
+
+  .logo {
+    background: linear-gradient(276.05deg, #5F35F7 5.83%, #5098F7 94.27%);
+    font-size: 20px;
+    padding: 13px 26px;
+    text-transform: uppercase;
+    line-height: 24px;
+    border-radius: 25px;
+    font-family: Montserrat, sans-serif;
+    display: inline-block;
+  }
 }

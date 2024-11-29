@@ -14,23 +14,20 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "style", "data-turbo-track": "reload" %>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
   <body>
-    <div class="container">
-      <p class="notice"><%= notice %></p>
+    <%= render partial: '/layouts/partial/header' %>
+    <div class="container mx-auto">
+      <p class="notice" style="color: green"><%= notice %></p>
       <p class="alert"><%= alert %></p>
-
-      <% if user_signed_in? %>
-        <%= image_tag current_user.photo_url, style: 'width: 40px;'%>
-        <%= link_to edit_user_registration_path do %>
-          <span id="user"><%= current_user.first_name || current_user.username %></span>
-        <% end %>
-      <% end %>
 
       <%= yield %>
     </div>
+
+    <%= render partial: '/layouts/partial/footer' %>
   </body>
 </html>

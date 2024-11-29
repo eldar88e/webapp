@@ -1,0 +1,15 @@
+<h1>User#show</h1>
+<p>Find me in app/views/user/show.html.erb</p>
+
+<% @user.attributes.each do |key, val| %>
+  <% next if key.match?(/id|updated_at|created_at|photo_url|password|reset_password_token/) %>
+
+  <% next if key == 'email' && val.match?(/@example.com/) %>
+
+  <div class="mb-3">
+    <span><%= key %></span>
+    <span><%= val %></span>
+  </div>
+
+  <%= link_to 'Мои заказы', orders_path %>
+<% end %>

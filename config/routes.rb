@@ -1,9 +1,12 @@
 Rails.application.routes.draw do
+  #get "user/show", to: "user#show"
   resources :order_items
   resources :orders
   resources :carts
   resources :products
-  devise_for :users
+  devise_for :users, controllers: {
+    registrations: 'users/registrations'
+  }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -17,6 +20,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "products#index"
   resources :products, only: [ :index, :show, :create, :update, :destroy ]
+  resources :users, only: [ :show ]
+  resources :carts, only: [ :show ]
+  resources :orders, only: [ :index, :show ]
 
   post "/auth/telegram", to: "auth#telegram_auth"
 end
