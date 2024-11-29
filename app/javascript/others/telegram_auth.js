@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-    if (typeof Telegram !== "undefined" && Telegram.WebApp) {
+    const user = document.getElementById('user');
+    if ( !user && typeof Telegram !== "undefined" && Telegram.WebApp) {
         const initData = Telegram.WebApp.initData || "";
 
         fetch("/auth/telegram", {
