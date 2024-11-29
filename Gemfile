@@ -19,8 +19,10 @@ gem "bootsnap", require: false
 gem "dotenv"
 gem "devise"
 
+gem "pry"
+
 group :development, :test do
-  gem "pry"
+
   gem "rubocop-rails-omakase", require: false
 end
 
