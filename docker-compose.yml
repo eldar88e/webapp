@@ -13,6 +13,8 @@ services:
       - net
 
   web:
+    tty: true
+    stdin_open: true
     image: webapp
     build: .
     container_name: webapp
