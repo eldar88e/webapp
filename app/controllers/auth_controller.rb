@@ -17,6 +17,7 @@ class AuthController < ApplicationController
         u.username = data['user']['username']
         u.first_name = data['user']['first_name']
         u.last_name = data['user']['last_name']
+        u.photo_url = data['user']['photo_url']
       end
 
       # Логиним пользователя
