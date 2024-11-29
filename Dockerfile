@@ -31,7 +31,7 @@ COPY . .
 
 RUN bundle exec bootsnap precompile app/ lib/
 
-RUN ./bin/rails assets:precompile
+RUN bundle exec rails assets:precompile
 
 RUN rm -rf node_modules
 
