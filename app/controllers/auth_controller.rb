@@ -5,6 +5,7 @@ class AuthController < ApplicationController
 
   def telegram_auth
     puts request.body.read
+    binding.pry
   end
 
   private
