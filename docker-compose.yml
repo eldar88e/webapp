@@ -1,0 +1,53 @@
+services:
+  pg:
+    image: postgres:16.1
+    container_name: webapp-pg
+    env_file: ./.env
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      TZ: Europe/Moscow
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - net
+
+  web:
+    image: webapp
+    build: .
+    container_name: webapp
+    env_file: ./.env
+    depends_on:
+      - pg
+      - redis
+    volumes:
+      - gems:/usr/local/bundle
+      - .:/app
+    networks:
+      net:
+      proxy-net:
+        ipv4_address: 172.29.0.10
+    ports:
+      - "127.0.0.1:3000:3000"
+    restart: always
+
+  redis:
+    image: redis:latest
+    container_name: webapp-redis
+    command: redis-server
+    restart: unless-stopped
+    networks:
+      - net
+    volumes:
+      - redis:/data
+
+volumes:
+  db_data:
+  redis:
+  gems:
+
+networks:
+  net:
+  proxy-net:
+    external: true
