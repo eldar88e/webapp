@@ -4,11 +4,15 @@ class AuthController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :telegram_auth
 
   def telegram_auth
-    binding.pry
     data      = params.to_unsafe_h.except(:controller, :action)
+
+    puts "=" * 50
+    puts data
+    puts "+" * 50
+
     init_data = URI.decode_www_form(data['initData']).to_h
     tg_user   = JSON.parse init_data['user']
-    user = User.find_or_create_by(tg_id: tg_user['id']) do |u|
+    user      = User.find_or_create_by(tg_id: tg_user['id']) do |u|
       u.username   = tg_user['username']
       u.first_name = tg_user['first_name']
       u.last_name  = tg_user['last_name']
