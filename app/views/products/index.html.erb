@@ -14,20 +14,3 @@
 </div>
 
 <%= link_to "New product", new_product_path %>
-
-<script>
-    const initData = window.Telegram.WebApp.initData;
-    const initDataUnsafe = window.Telegram.WebApp.initDataUnsafe;
-    console.log('Hello!');
-    document.addEventListener("DOMContentLoaded", () => {
-        console.log('Hi!');
-        fetch("/auth/telegram", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-            },
-            body: JSON.stringify(initDataUnsafe),
-        });
-    });
-</script>
