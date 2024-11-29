@@ -4,11 +4,16 @@ class AuthController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :telegram_auth
 
   def telegram_auth
-    data      = params.to_unsafe_h.except(:controller, :action)
+    puts "=" * 80
+    puts cookies.to_hash
+    puts "+" * 80
+    return render json: { success: true, user: user } if user_signed_in?
 
-    puts "=" * 50
+    data = params.to_unsafe_h.except(:controller, :action)
+
+    puts "=" * 80
     puts data
-    puts "+" * 50
+    puts "+" * 80
 
     init_data = URI.decode_www_form(data['initData']).to_h
     return render json: { success: true, user: user } if init_data.blank?
@@ -23,7 +28,7 @@ class AuthController < ApplicationController
       u.password   = Devise.friendly_token[0, 20]
     end
     sign_in(user)
-    binding.pry
+
     render json: { success: true, user: user }
   end
 

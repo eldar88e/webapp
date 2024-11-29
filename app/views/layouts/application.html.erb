@@ -24,7 +24,7 @@
       <p class="alert"><%= alert %></p>
 
       <% if user_signed_in? %>
-        <%= image_tag current_user.photo_url, style: 'width: 80px;'%>
+        <%= image_tag current_user.photo_url, style: 'width: 40px;'%>
         <span><%= current_user.first_name if current_user.first_name %></span>
       <% end %>
 
