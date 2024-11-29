@@ -5,6 +5,7 @@ class AuthController < ApplicationController
 
   def telegram_auth
     Rails.logger.info request.body.read
+    secret_key = OpenSSL::Digest::SHA256.digest(ENV['TELEGRAM_BOT_TOKEN'])
     data = params.to_unsafe_h.except(:controller, :action)
 
     binding.pry
@@ -12,7 +13,7 @@ class AuthController < ApplicationController
     hmac = OpenSSL::HMAC.hexdigest(OpenSSL::Digest::SHA256.new, secret_key, check_string)
 
     if hmac == data['hash']
-      user = User.find_or_create_by(telegram_id: data['user']['id']) do |u|
+      user = User.find_or_create_by(tg_id: data['user']['id']) do |u|
         u.username = data['user']['username']
         u.first_name = data['user']['first_name']
         u.last_name = data['user']['last_name']
