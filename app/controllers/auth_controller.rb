@@ -5,13 +5,15 @@ class AuthController < ApplicationController
 
   def telegram_auth
     binding.pry
-    data = params.to_unsafe_h.except(:controller, :action)
-    user = User.find_or_create_by(tg_id: data['user']['id']) do |u|
-      u.username   = data['user']['username']
-      u.first_name = data['user']['first_name']
-      u.last_name  = data['user']['last_name']
-      u.photo_url  = data['user']['photo_url']
-      u.email      = generate_email(data['user']['id'])
+    data      = params.to_unsafe_h.except(:controller, :action)
+    init_data = URI.decode_www_form(data['initData']).to_h
+    tg_user   = JSON.parse init_data['user']
+    user = User.find_or_create_by(tg_id: tg_user['id']) do |u|
+      u.username   = tg_user['username']
+      u.first_name = tg_user['first_name']
+      u.last_name  = tg_user['last_name']
+      u.photo_url  = tg_user['photo_url']
+      u.email      = generate_email(tg_user['id'])
       u.password   = Devise.friendly_token[0, 20]
     end
 

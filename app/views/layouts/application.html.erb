@@ -22,9 +22,11 @@
     <div class="container">
       <p class="notice"><%= notice %></p>
       <p class="alert"><%= alert %></p>
-      <div class="bg-blue-500 text-white p-4">
-        Tailwind CSS работает!
-      </div>
+
+      <% if user_signed_in? %>
+        <%= image_tag current_user.photo_url, style: 'width: 200px;'%>
+      <% end %>
+
       <%= yield %>
     </div>
   </body>
