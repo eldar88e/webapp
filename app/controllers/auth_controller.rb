@@ -6,8 +6,9 @@ class AuthController < ApplicationController
   def telegram_auth
     puts "=" * 80
     puts cookies.to_hash
+    puts current_user
     puts "+" * 80
-    return render json: { success: true, user: user } if user_signed_in?
+    return render json: { success: true, user: current_user } if user_signed_in?
 
     data = params.to_unsafe_h.except(:controller, :action)
 
@@ -29,7 +30,7 @@ class AuthController < ApplicationController
     end
     sign_in(user)
 
-    render json: { success: true, user: user }
+    render json: { success: true, user: current_user }
   end
 
   private
