@@ -18,10 +18,10 @@ gem "bootsnap", require: false
 # gem "image_processing", "~> 1.2"
 gem "dotenv"
 gem "devise"
-
-gem "pry"
+gem "telegram-bot-ruby"
 
 group :development, :test do
+  gem "pry"
   gem "rubocop-rails-omakase", require: false
 end
 

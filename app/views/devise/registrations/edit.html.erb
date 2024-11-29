@@ -13,25 +13,32 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-    <% if @minimum_password_length %>
-      <br />
-      <em><%= @minimum_password_length %> characters minimum</em>
-    <% end %>
+    <%= f.label :first_name %><br />
+    <%= f.text_field :first_name, autocomplete: "name", placeholder: 'Введите имя...' %>
   </div>
 
   <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+    <%= f.label :last_name %><br />
+    <%= f.text_field :last_name, placeholder: 'Введите фамилию...' %>
   </div>
 
   <div class="field">
-    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "current-password" %>
+    <%= f.label :address %><br />
+    <%= f.text_field :address, autocomplete: "street-address", placeholder: 'Введите адрес...' %>
+  </div>
+
+  <div class="field">
+    <%= f.label :postal_code %><br />
+    <%= f.number_field :postal_code, autocomplete: "postal-code", placeholder: 'Введите индекс...' %>
+  </div>
+
+  <div class="field">
+    <%= f.label :phone_number %><br />
+    <%= f.text_field :phone_number, autocomplete: "tel", placeholder: 'Введите номер телефона...' %>
   </div>
 
   <div class="actions">
+    <br />
     <%= f.submit "Update" %>
   </div>
 <% end %>
