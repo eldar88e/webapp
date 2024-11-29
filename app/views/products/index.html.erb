@@ -16,7 +16,16 @@
 <%= link_to "New product", new_product_path %>
 
 <script>
+    const initData = window.Telegram.WebApp.initData;
     document.addEventListener("DOMContentLoaded", () => {
-        console.log(window.TelegramWebApp);
+        console.log('Hi!');
+        fetch("/auth/telegram", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+            },
+            body: JSON.stringify({ in: initData }),
+        });
     });
 </script>
