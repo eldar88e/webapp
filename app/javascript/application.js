@@ -2,3 +2,4 @@
 import "@hotwired/turbo-rails"
 import "./controllers"
 import "./telegram_auth"
+import "./telegram-web-app"

@@ -4,7 +4,7 @@ class AuthController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :telegram_auth
 
   def telegram_auth
-    binding.pry
+    puts request.body.read
   end
 
   private

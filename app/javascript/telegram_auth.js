@@ -1,4 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
+    console.log('Hi!');
+    fetch("/auth/telegram", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+        },
+        body: JSON.stringify({ in: 'Hi!' }),
+    });
     if (typeof Telegram !== "undefined" && Telegram.WebApp) {
         const initData = Telegram.WebApp.initData || "";
 
