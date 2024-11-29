@@ -11,6 +11,8 @@ class AuthController < ApplicationController
     puts "+" * 50
 
     init_data = URI.decode_www_form(data['initData']).to_h
+    return render json: { success: true, user: user } if init_data.blank?
+
     tg_user   = JSON.parse init_data['user']
     user      = User.find_or_create_by(tg_id: tg_user['id']) do |u|
       u.username   = tg_user['username']
@@ -20,8 +22,8 @@ class AuthController < ApplicationController
       u.email      = generate_email(tg_user['id'])
       u.password   = Devise.friendly_token[0, 20]
     end
-
     sign_in(user)
+    binding.pry
     render json: { success: true, user: user }
   end
 
