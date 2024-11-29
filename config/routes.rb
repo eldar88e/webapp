@@ -17,4 +17,6 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "products#index"
   resources :products, only: [ :index, :show, :create, :update, :destroy ]
+
+  post "/auth/telegram", to: "auth#telegram_auth"
 end
