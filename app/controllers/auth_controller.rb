@@ -4,8 +4,27 @@ class AuthController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :telegram_auth
 
   def telegram_auth
-    puts request.body.read
+    Rails.logger.info request.body.read
+    data = params.to_unsafe_h.except(:controller, :action)
+
     binding.pry
+    check_string = data.sort.map { |k, v| "#{k}=#{v}" }.join("\n")
+    hmac = OpenSSL::HMAC.hexdigest(OpenSSL::Digest::SHA256.new, secret_key, check_string)
+
+    if hmac == data['hash']
+      user = User.find_or_create_by(telegram_id: data['user']['id']) do |u|
+        u.username = data['user']['username']
+        u.first_name = data['user']['first_name']
+        u.last_name = data['user']['last_name']
+      end
+
+      # Логиним пользователя
+      session[:user_id] = user.id
+
+      render json: { success: true, user: user }
+    else
+      render json: { success: false, error: 'Invalid hash' }, status: :unauthorized
+    end
   end
 
   private
