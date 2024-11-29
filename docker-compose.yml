@@ -12,7 +12,7 @@ services:
     networks:
       - net
 
-  web:
+  webapp:
     image: webapp
     build: .
     container_name: webapp
