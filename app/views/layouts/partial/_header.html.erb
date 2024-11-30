@@ -12,7 +12,7 @@
         <%= link_to 'strattera bot', root_path, class: 'logo' %>
       </div>
       <div class="px-4">
-        <%=link_to 'cart', cart_path(id: current_user.cart) %>
+        <%=link_to 'cart', current_user ? cart_path(id: current_user.cart) : "#" %>
       </div>
     </div>
   </div>
