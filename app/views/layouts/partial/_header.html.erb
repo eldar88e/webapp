@@ -1,7 +1,7 @@
 <div class="header">
   <div class="container mx-auto">
-    <div class="flex flex-wrap -mx-4">
-      <div class="w-1/4 px-4">
+    <div class="flex flex-wrap -mx-4 items-center justify-between">
+      <div class="px-4">
         <% if user_signed_in? %>
           <%= link_to edit_user_registration_path, id: "user", title: current_user.first_name || current_user.username do %>
             <%= image_tag current_user.photo_url, class: "h-10 w-10 rounded-full" %>
@@ -11,7 +11,9 @@
       <div class="w-1/2" style="text-align: center;">
         <%= link_to 'strattera bot', root_path, class: 'logo' %>
       </div>
-      <div class="w-1/4 px-4"></div>
+      <div class="px-4">
+        <%=link_to 'cart', cart_path(id: current_user.cart) %>
+      </div>
     </div>
   </div>
 </div>
