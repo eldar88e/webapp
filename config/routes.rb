@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   resources :products, only: [ :index, :show, :create, :update, :destroy ]
   resources :users, only: [ :show ]
   resources :carts, only: [ :show ]
+  resources :cart_items, only: [ :create, :update, :destroy ]
   resources :orders, only: [ :index, :show ]
 
   post "/auth/telegram", to: "auth#telegram_auth"

@@ -33,15 +33,15 @@ class Order < ApplicationRecord
   # Колбэки для каждого статуса
   def on_unpaid
     # Логика для статуса "не оплачен"
-    msg = "Order is now unpaid"
-    TelegramService.call(msg, self.user.tg_id)
-    Rails.logger.info msg
+    TelegramService.call(I18n.t('tg_msg.unpaid'), self.user.tg_id)
+    Rails.logger.info "Order is now unpaid"
   end
 
   def on_pending
     # Логика для статуса "оплачен"
+    self.user.cart.destroy # удаляем корзину после оплаты
     msg = "Order is now paid"
-    TelegramService.call msg
+    TelegramService.call msg # TODO: msg для админа с инфо кто оплатил
     Rails.logger.info msg
   end
 

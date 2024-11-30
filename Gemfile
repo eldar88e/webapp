@@ -19,6 +19,7 @@ gem "bootsnap", require: false
 gem "dotenv"
 gem "devise"
 gem "telegram-bot-ruby"
+gem "i18n"
 
 group :development, :test do
   gem "pry"

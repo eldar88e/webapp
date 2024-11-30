@@ -1,10 +1,9 @@
-<p style="color: green"><%= notice %></p>
+<% if @cart_items.present? %>
+  <div id="<%= dom_id @cart %>">
+    <%= render partial: '/cart_items/cart_item', collection: @cart_items %>
 
-<%= render @cart %>
-
-<div>
-  <%= link_to "Edit this cart", edit_cart_path(@cart) %> |
-  <%= link_to "Back to carts", carts_path %>
-
-  <%= button_to "Destroy this cart", @cart, method: :delete %>
-</div>
+    <div><%= button_to "Destroy this cart", @cart, method: :delete %></div>
+  </div>
+<% else %>
+  <div><%= t('empty_cart') %></div>
+<% end %>

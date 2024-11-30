@@ -7,6 +7,8 @@
     <%= product.price %>
   </p>
 
+  <%= button_to 'Заказать', cart_items_path(cart_item: { product_id: product.id }) %>
+
   <p>
     <%= product.stock_quantity %>
   </p>
