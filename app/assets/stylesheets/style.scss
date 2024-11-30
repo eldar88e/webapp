@@ -1,3 +1,17 @@
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  background: #000001;
+  color: rgba(255, 255, 255, 1);
+}
+
 .header {
   padding-top: 68px;
   padding-bottom: 23px;
@@ -8,8 +22,20 @@
     padding: 13px 26px;
     text-transform: uppercase;
     line-height: 24px;
+    letter-spacing: 0.02em;
     border-radius: 25px;
     font-family: Montserrat, sans-serif;
     display: inline-block;
+    color: rgba(0, 0, 0, 1);
+  }
+}
+
+.footer {
+  color: rgba(255, 255, 255, 1);
+  margin-top: 26px;
+  margin-bottom: 40px;
+
+  a {
+    color: rgba(71, 132, 252, 1);
   }
 }

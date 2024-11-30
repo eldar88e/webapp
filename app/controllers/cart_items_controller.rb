@@ -9,16 +9,16 @@ class CartItemsController < ApplicationController
     if cart_item
       cart_item.quantity += 1
       if cart_item.save
-        flash[:notice] = 'Количество товара в корзине обновлено.'
+        success_notice('Количество товара в корзине обновлено.')
       else
-        flash[:alert] = 'Не удалось обновить количество товара.'
+        error_notice('Не удалось обновить количество товара.')
       end
     else
       cart_item = cart.cart_items.new(cart_item_params)
       if cart_item.save
-        flash[:notice] = 'Товар добавлен в корзину.'
+        success_notice('Товар добавлен в корзину.')
       else
-        flash[:alert] = 'Не удалось добавить товар в корзину.'
+        error_notice('Не удалось добавить товар в корзину.')
       end
     end
     redirect_to root_path
