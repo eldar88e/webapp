@@ -60,7 +60,7 @@ class CartsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_cart
-      @cart = current_user.cart || current_user.create_cart
+      @cart = current_user.cart
     end
 
     # Only allow a list of trusted parameters through.
