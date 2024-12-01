@@ -7,6 +7,7 @@
 <% end %>
 
 <div class="header">
+  <div class="container mx-auto">
     <div class="flex items-center justify-between">
       <% if user_signed_in? %>
         <%= link_to edit_user_registration_path, id: "user", title: current_user.first_name || current_user.username do %>
@@ -15,6 +16,8 @@
             <circle cx="25" cy="25" r="24.5" stroke="#4784FC"/>
           </svg>
         <% end %>
+      <% else %>
+        <div style="width: 50px; height: 50px"></div>
       <% end %>
 
       <%= link_to 'strattera bot', root_path, class: 'logo' %>
@@ -32,5 +35,6 @@
           </defs>
         </svg>
       <% end %>
+    </div>
   </div>
 </div>

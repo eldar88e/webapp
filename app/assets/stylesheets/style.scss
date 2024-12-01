@@ -15,7 +15,7 @@ body {
 
 .header {
   padding-top: 68px;
-  padding-bottom: 23px;
+  padding-bottom: 20px;
 
   .logo {
     background: linear-gradient(276.05deg, #5F35F7 5.83%, #5098F7 94.27%);
@@ -66,6 +66,11 @@ body {
   .product-img {
     padding-top: 30px;
     padding-bottom: 45px;
+
+    img {
+      width: 196px;
+      margin: 0 auto;
+    }
   }
 
   .product-footer {
