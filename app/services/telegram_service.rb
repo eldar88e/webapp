@@ -38,6 +38,9 @@ class TelegramService
         Rails.logger.error("Failed to delete message #{@msg_id} from chat #{@chat_id}: #{response}.")
         false
       end
+    rescue Telegram::Bot::Exceptions::ResponseError => e
+      Rails.logger.error("Failed to delete message #{@msg_id} from chat #{@chat_id}: #{response}.\nError: #{e}")
+      false
     end
   end
 

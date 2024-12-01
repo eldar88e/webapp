@@ -18,7 +18,7 @@ gem "bootsnap", require: false
 # gem "image_processing", "~> 1.2"
 gem "dotenv"
 gem "devise"
-gem "telegram-bot-ruby"
+gem "telegram-bot-ruby", require: false
 gem "i18n"
 
 group :development, :test do
