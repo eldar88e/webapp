@@ -1,9 +1,8 @@
-<div id="<%= dom_id order %>">
+<div id="<%= dom_id order %>" class="mb-3">
   <p>
-    <strong>User:</strong>
-    <%= order.user_id %>
+    <strong>Заказ №:</strong>
+    <%= order.id %>
   </p>
-
   <p>
     <strong>Total amount:</strong>
     <%= order.total_amount %>
@@ -13,5 +12,4 @@
     <strong>Status:</strong>
     <%= order.status %>
   </p>
-
 </div>

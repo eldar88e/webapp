@@ -4,24 +4,12 @@ class CartItemsController < ApplicationController
   # POST /order_items or /order_items.json
   def create
     cart      = current_user.cart
-    cart_item = cart.cart_items.find_by(product_id: cart_item_params[:product_id])
+    cart_item = cart.cart_items.find_or_initialize_by(product_id: cart_item_params[:product_id])
 
-    if cart_item
-      cart_item.quantity += 1
-      if cart_item.save
-        success_notice('Количество товара в корзине обновлено.')
-      else
-        error_notice('Не удалось обновить количество товара.')
-      end
-    else
-      cart_item = cart.cart_items.new(cart_item_params)
-      if cart_item.save
-        success_notice('Товар добавлен в корзину.')
-      else
-        error_notice('Не удалось добавить товар в корзину.')
-      end
-    end
-    redirect_to root_path
+    cart_item.quantity += 1 if cart_item.persisted?
+    return render turbo_stream: success_notice('Товар добавлен в корзину.') if cart_item.save
+
+    render turbo_stream: error_notice('Не удалось добавить товар в корзину.')
   end
 
   # PATCH/PUT /order_items/1 or /order_items/1.json

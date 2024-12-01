@@ -1,17 +1,10 @@
-<p style="color: green"><%= notice %></p>
-
 <%= render @order %>
 
 <div>
-  <%= link_to "Edit this order", edit_order_path(@order) %> |
   <%= link_to "Back to orders", orders_path %>
 
-  <%= button_to "Destroy this order", @order, method: :delete, class: 'mb-3' %>
-
-  <h5 class=""> Order items:</h5>
-  <% @order_items.each do |item| %>
-    <div class="mt-5">
-      <%= item.product.name %>
-    </div>
+  <h5 class="mt-3"> Order items:</h5>
+  <% @order_items.each do |order_items| %>
+    <%= render order_items %>
   <% end %>
 </div>

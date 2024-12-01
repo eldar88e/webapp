@@ -10,6 +10,7 @@ body {
   font-weight: 400;
   background: #000001;
   color: rgba(255, 255, 255, 1);
+  margin: 0 10px;
 }
 
 .header {
@@ -37,5 +38,64 @@ body {
 
   a {
     color: rgba(71, 132, 252, 1);
+  }
+}
+
+.product {
+  border-radius: 56px;
+  background: linear-gradient(150.15deg, #2E2B3D -7.7%, #000000 73.15%);
+  padding: 36px;
+  padding-bottom: 110px;
+  margin-bottom: -50px;
+
+  .product-title {
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .product-exist {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    line-height: 17px;
+  }
+
+  .product-img {
+    padding-top: 30px;
+    padding-bottom: 45px;
+  }
+
+  .product-footer {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+  }
+
+  .btn-order {
+    background: rgba(71, 132, 252, 1);
+    border-radius: 48px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    .title {
+      font-size: 18px;
+      line-height: 22px;
+      padding-left: 20px;
+      text-transform: uppercase;
+    }
+
+    .plus {
+      width: 40px;
+      height: 40px;
+      background-color: white;
+      border-radius: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 }

@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_action :set_order, only: %i[ show edit update destroy ]
+  before_action :set_order, only: %i[ show update ]
 
   # GET /orders or /orders.json
   def index
@@ -16,23 +16,18 @@ class OrdersController < ApplicationController
     @order = Order.new
   end
 
-  # GET /orders/1/edit
-  def edit
-  end
-
   # POST /orders or /orders.json
   def create
-    @order = Order.new(order_params)
+    cart  = current_user.cart
+    order = current_user.orders.find_or_create_by(status: :unpaid)
+    order.update!(total_amount: calculate_total_price(cart))
 
-    respond_to do |format|
-      if @order.save
-        format.html { redirect_to @order, notice: "Order was successfully created." }
-        format.json { render :show, status: :created, location: @order }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @order.errors, status: :unprocessable_entity }
-      end
+    cart.cart_items.each do |cart_item|
+      order_item = order.order_items.find_or_create_by(product: cart_item.product)
+      order_item.update(quantity: cart_item.quantity, price: cart_item.product.price)
     end
+
+    redirect_to order_path(order), notice: "Ваш заказ успешно оформлен!"
   end
 
   # PATCH/PUT /orders/1 or /orders/1.json
@@ -48,17 +43,11 @@ class OrdersController < ApplicationController
     end
   end
 
-  # DELETE /orders/1 or /orders/1.json
-  def destroy
-    @order.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to orders_path, status: :see_other, notice: "Order was successfully destroyed." }
-      format.json { head :no_content }
-    end
-  end
-
   private
+    def calculate_total_price(cart)
+      cart.cart_items.sum { |item| item.product.price * item.quantity }
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_order
       @order = Order.find(params[:id])

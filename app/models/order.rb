@@ -33,7 +33,9 @@ class Order < ApplicationRecord
   # Колбэки для каждого статуса
   def on_unpaid
     # Логика для статуса "не оплачен"
-    TelegramService.call(I18n.t('tg_msg.unpaid'), self.user.tg_id)
+    TelegramService.delete_msg('', self.user.tg_id, self.msg_id) if self.msg_id
+    msg_id = TelegramService.call(I18n.t('tg_msg.unpaid'), self.user.tg_id)
+    self.update_columns(msg_id: msg_id)
     Rails.logger.info "Order is now unpaid"
   end
 

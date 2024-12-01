@@ -1,13 +1,5 @@
 <% content_for :title, "Products" %>
 
 <div id="products">
-  <% @products.each do |product| %>
-    <div class="mb-3">
-      <%= render product %>
-
-      <%= link_to "Show this product", product %>
-    </div>
-  <% end %>
+  <%= render @products %>
 </div>
-
-<%= link_to "New product", new_product_path %>
