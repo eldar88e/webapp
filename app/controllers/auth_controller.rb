@@ -28,7 +28,7 @@ class AuthController < ApplicationController
       end
       sign_in(user)
 
-      render json: { success: true, user: current_user }
+      render head :ok # json: { success: true, user: current_user }
     end
   end
 
