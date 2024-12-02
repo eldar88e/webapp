@@ -25,7 +25,7 @@
         <%= button_to cart_items_path(cart_item: { product_id: product.id }), class: 'btn-order' do %>
           <div class="title">Заказать</div>
           <div class="plus">
-            <%= image_tag image_url('plus.svg') %>
+            <%= image_tag image_path('plus.svg') %>
           </div>
         <% end %>
         <div class="price"><%= product.price.to_i %><span style="margin-left: 3px">₽</span></div>
