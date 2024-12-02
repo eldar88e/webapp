@@ -9,3 +9,6 @@ window.closeModal = function() {
 window.openModal = function() {
     document.getElementById('modal').style.display = 'block';
 };
+window.miniappClose = function() {
+    Telegram.WebApp.close();
+};

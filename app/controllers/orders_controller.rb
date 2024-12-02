@@ -27,7 +27,12 @@ class OrdersController < ApplicationController
       order_item.update(quantity: cart_item.quantity, price: cart_item.product.price)
     end
 
-    redirect_to order_path(order), notice: "Ваш заказ успешно оформлен!"
+    # redirect_to order_path(order), notice: "Ваш заказ успешно оформлен!"
+
+    render turbo_stream: [
+      success_notice("Ваш заказ успешно оформлен!"),
+      turbo_stream.append(:modal, "<script>miniappClose();</script>".html_safe)
+    ]
   end
 
   # PATCH/PUT /orders/1 or /orders/1.json
