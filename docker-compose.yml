@@ -1,7 +1,7 @@
 services:
   pg:
     image: postgres:16.1
-    container_name: webapp-pg
+    container_name: miniapp-pg
     restart: unless-stopped
     environment:
       POSTGRES_USER: admin
@@ -12,12 +12,12 @@ services:
     networks:
       - net
 
-  webapp:
+  miniapp:
     tty: true
     stdin_open: true
-    image: webapp
+    image: miniapp
     build: .
-    container_name: webapp
+    container_name: miniapp
     env_file: ./.env
     depends_on:
       - pg
@@ -33,7 +33,7 @@ services:
 
   redis:
     image: redis:latest
-    container_name: webapp-redis
+    container_name: miniapp-redis
     command: redis-server
     restart: unless-stopped
     networks:
