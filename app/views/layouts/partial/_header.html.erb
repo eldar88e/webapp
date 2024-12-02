@@ -14,6 +14,8 @@
                     id: "user", title: current_user.first_name || current_user.username do %>
           <%= image_tag image_path('user.svg') %>
         <% end %>
+      <% else %>
+        <%= image_tag image_path('user.svg') %>
       <% end %>
 
       <%= link_to 'strattera bot', root_path, class: 'logo' %>
