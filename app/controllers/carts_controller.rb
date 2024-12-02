@@ -5,7 +5,7 @@ class CartsController < ApplicationController
   def show
     @cart_items = @cart.cart_items.includes(:product)
     render turbo_stream: [
-      turbo_stream.update(:modal, partial: "/cart_items/carts"),
+      turbo_stream.update(:modal, partial: "/carts/cart"),
       turbo_stream.append(:modal, "<script>openModal();</script>".html_safe)
     ]
   end
