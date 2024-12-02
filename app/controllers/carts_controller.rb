@@ -4,7 +4,10 @@ class CartsController < ApplicationController
   # GET /carts/1 or /carts/1.json
   def show
     @cart_items = @cart.cart_items.includes(:product)
-    render turbo_stream: turbo_stream.update(:main, partial: '/cart_items/carts')
+    render turbo_stream: [
+      turbo_stream.update(:modal, partial: "/cart_items/carts"),
+      turbo_stream.append(:modal, "<script>openModal();</script>".html_safe)
+    ]
   end
 
   # DELETE /carts/1 or /carts/1.json
