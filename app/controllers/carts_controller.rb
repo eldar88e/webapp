@@ -4,6 +4,7 @@ class CartsController < ApplicationController
   # GET /carts/1 or /carts/1.json
   def show
     @cart_items = @cart.cart_items.includes(:product)
+    render turbo_stream: turbo_stream.update(:main, partial: '/cart_items/carts')
   end
 
   # DELETE /carts/1 or /carts/1.json

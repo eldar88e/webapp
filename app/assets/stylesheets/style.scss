@@ -110,3 +110,15 @@ body {
     }
   }
 }
+
+.modal {
+  background-color: rgba(26, 24, 34, 1);
+  border-radius: 48px;
+  max-height: 560px;
+  overflow-y: scroll;
+  display: none;
+  padding-top: 53px;
+  padding-left: 36px;
+  padding-right: 50px;
+  margin-bottom: 60px;
+}
