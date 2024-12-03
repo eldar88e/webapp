@@ -31,6 +31,22 @@ services:
         ipv4_address: 172.29.0.10
     restart: always
 
+  sidekiq:
+    image: miniapp
+    build: .
+    container_name: miniapp-sidekiq
+    env_file: ./.env
+    depends_on:
+      - pg
+      - redis
+    volumes:
+      - gems:/usr/local/bundle
+      - .:/app
+    command: bundle exec sidekiq -C config/sidekiq_bot.yml
+    networks:
+      net:
+    restart: always
+
   redis:
     image: redis:latest
     container_name: miniapp-redis
