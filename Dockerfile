@@ -29,11 +29,11 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
-RUN bundle exec bootsnap precompile app/ lib/
+# RUN bundle exec bootsnap precompile app/ lib/
 
-RUN bundle exec rails assets:precompile
+# RUN bundle exec rails assets:precompile
 
-RUN rm -rf node_modules
+# RUN rm -rf node_modules
 
 RUN addgroup -g 1000 rails && \
     adduser -u 1000 -G rails -D -s /bin/sh rails && \
