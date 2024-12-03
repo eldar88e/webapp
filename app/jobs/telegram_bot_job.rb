@@ -57,7 +57,9 @@ class TelegramBotJob < ApplicationJob
     markup    = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
     bot.api.send_video(chat_id: chat_id, video: video_url, caption: I18n.t('tg_msg.start'), reply_markup: markup)
   rescue => e
-    binding.pry
+    puts "+" * 80
+    Rails.logger.error e.message
+    puts "+" * 80
   end
 
   def save_user(chat)
