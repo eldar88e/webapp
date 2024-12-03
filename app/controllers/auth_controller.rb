@@ -30,7 +30,7 @@ class AuthController < ApplicationController
       sign_in(user)
     end
 
-    render head :ok # json: { success: true, user: current_user }
+    render json: { success: true, user: current_user } # head :ok
   end
 
   private
