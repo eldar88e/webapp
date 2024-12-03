@@ -29,10 +29,8 @@ class TelegramBotJob < ApplicationJob
     case message.text
     when '/start'
       user = User.find_by(tg_id: message.chat.id)
-      if user.blank?
-        send_firs_msg(bot, message.chat.id)
-        save_user(message.chat)
-      end
+      save_user(message.chat) if user.blank?
+      send_firs_msg(bot, message.chat.id)
     else
       send_firs_msg(bot, message.chat.id)
       # bot.api.send_message(chat_id: message.chat.id, text: I18n.t('tg_msg.error_msg'))
