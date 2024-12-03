@@ -21,9 +21,9 @@ gem "devise"
 gem "telegram-bot-ruby", require: false
 gem "i18n"
 gem "sidekiq"
+gem "pry"
 
 group :development, :test do
-  gem "pry"
   gem "rubocop-rails-omakase", require: false
 end
 

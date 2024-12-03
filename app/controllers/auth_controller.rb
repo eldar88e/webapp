@@ -2,6 +2,7 @@ class AuthController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def telegram_auth
+    binding.pry
     puts "=" * 80
     puts cookies.to_hash
     puts current_user
