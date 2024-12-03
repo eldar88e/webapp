@@ -53,9 +53,10 @@ class TelegramBotJob < ApplicationJob
     ]
     ActionController::Base.default_url_options[:host] = 'https://webapp.open-ps.ru/'
     # video  = Rails.root.join('app/assets/images/first_animation.mp4')
-    video_url = ActionController::Base.helpers.image_url('first_animation.mp4')
+    # video_url = ActionController::Base.helpers.image_url('first_animation.mp4')
+    video_url = Rails.root.join('public/videos/first_animation.mp4')
     markup    = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
-    bot.api.send_video(chat_id: chat_id, video: video_url, caption: I18n.t('tg_msg.start'), reply_markup: markup)
+    bot.api.send_video(chat_id: chat_id, video: Faraday::UploadIO.new(video_url, 'video/mp4'), caption: I18n.t('tg_msg.start'), reply_markup: markup)
   rescue => e
     puts "+" * 80
     Rails.logger.error e.message
