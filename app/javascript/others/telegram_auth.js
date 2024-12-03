@@ -3,13 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (user) {
         // console.log("Authenticated.");
     } else if ( typeof Telegram !== "undefined" && Telegram.WebApp) {
-
-        if (userAgent.includes('telegram') || userAgent.includes('tgc')) {
-            alert('Открыто в Telegram WebView');
-        } else {
-            alert('Не в Telegram WebView');
-        }
-
         const initData = Telegram.WebApp.initData || "";
 
         fetch("/auth/telegram", {
