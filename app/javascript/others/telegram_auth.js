@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .then((data) => {
                 if (data.success) {
                     console.log("Authenticated:", data.user);
-                    // window.location.href = "/";
+                    window.location.href = "/";
                 } else {
                     alert("Authentication failed: " + data.error);
                 }
