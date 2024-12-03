@@ -22,6 +22,7 @@ class AuthController < ApplicationController
         u.username   = tg_user["username"]
         u.first_name = tg_user["first_name"]
         u.last_name  = tg_user["last_name"]
+        u.full_name  = "#{tg_user["first_name"]} #{tg_user["last_name"]}"
         u.photo_url  = tg_user["photo_url"]
         u.email      = generate_email(tg_user["id"])
         u.password   = Devise.friendly_token[0, 20]

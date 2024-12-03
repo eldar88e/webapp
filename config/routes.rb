@@ -1,5 +1,7 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
-  #get "user/show", to: "user#show"
+  mount Sidekiq::Web => '/sidekiq'
   resources :order_items
   resources :orders
   resources :carts

@@ -20,6 +20,7 @@ gem "dotenv"
 gem "devise"
 gem "telegram-bot-ruby", require: false
 gem "i18n"
+gem "sidekiq"
 
 group :development, :test do
   gem "pry"
