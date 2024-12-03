@@ -5,6 +5,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-ExtraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}
+
 body {
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
@@ -141,8 +148,35 @@ body {
 
 .btn {
   background: rgba(71, 131, 252, 1);
-  font-size: 14px;
-  line-height: 17px;
-  padding: 8px 26px;
+  font-size: 18px;
+  line-height: 22px;
+  padding: 14px 26px;
   border-radius: 48px;
+}
+
+.input-str {
+  border: 1px solid rgba(71, 132, 252, 1);
+  background: none;
+  border-radius: 25px;
+  font-size: 18px;
+  line-height: 22px;
+  padding: 14px 18px;
+  width: 100%;
+}
+
+.input-str::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 200;
+}
+
+/* Для старых браузеров */
+.input-str:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 200;
+
+}
+
+.input-str::-ms-input-placeholder { /* Microsoft Edge */
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 200;
 }

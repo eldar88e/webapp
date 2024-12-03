@@ -16,9 +16,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   # GET /resource/edit
-  # def edit
-  #   super
-  # end
+  def edit
+    render turbo_stream: [
+      turbo_stream.update(:modal, partial: "/devise/registrations/edit"),
+      turbo_stream.append(:modal, "<script>openModal();</script>".html_safe)
+    ]
+  end
 
   # PUT /resource
   # def update

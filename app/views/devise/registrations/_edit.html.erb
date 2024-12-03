@@ -1,0 +1,25 @@
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: 'mb-3' }) do |f| %>
+  <%= render "devise/shared/error_messages", resource: resource %>
+
+  <div class="mt-6">
+      <%= f.text_field :full_name, autocomplete: "name", placeholder: 'ФИО ( полностью )', class: "input-str" %>
+  </div>
+
+  <div class="mt-6">
+    <%= f.number_field :phone_number, autocomplete: "tel", placeholder: 'Номер телефона', class: "input-str" %>
+  </div>
+
+  <div class="mt-6">
+    <%= f.text_field :address, autocomplete: "street-address", placeholder: 'Город, улица, дом, квартира', class: "input-str" %>
+  </div>
+
+  <div class="mt-6">
+    <%= f.number_field :postal_code, autocomplete: "postal-code", placeholder: 'Почтовый индекс', class: "input-str" %>
+  </div>
+
+  <div class="mt-6">
+    <%= f.submit "Обновить", class: "btn" %>
+  </div>
+<% end %>
+
+<%= link_to 'Мои заказы', orders_path %>
