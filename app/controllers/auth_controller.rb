@@ -28,9 +28,9 @@ class AuthController < ApplicationController
         u.password   = Devise.friendly_token[0, 20]
       end
       sign_in(user)
-
-      render head :ok # json: { success: true, user: current_user }
     end
+
+    render head :ok # json: { success: true, user: current_user }
   end
 
   private

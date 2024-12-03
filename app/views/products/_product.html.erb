@@ -22,11 +22,20 @@
       </div>
 
       <div class="product-footer">
-        <%= button_to cart_items_path(cart_item: { product_id: product.id }), class: 'btn-order' do %>
-          <div class="title">Заказать</div>
-          <div class="plus">
-            <%= image_tag image_path('plus.svg') %>
-          </div>
+        <% if user_signed_in? %>
+          <%= button_to cart_items_path(cart_item: { product_id: product.id }), class: 'btn-order' do %>
+            <div class="title">Заказать</div>
+            <div class="plus">
+              <%= image_tag image_path('plus.svg') %>
+            </div>
+          <% end %>
+        <% else %>
+          <%= link_to '#', class: 'btn-order' do %>
+            <div class="title">Заказать</div>
+            <div class="plus">
+              <%= image_tag image_path('plus.svg') %>
+            </div>
+          <% end %>
         <% end %>
         <div class="price"><%= product.price.to_i %><span style="margin-left: 3px">₽</span></div>
       </div>
