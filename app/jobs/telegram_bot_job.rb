@@ -2,28 +2,47 @@ require 'telegram/bot'
 
 class TelegramBotJob < ApplicationJob
   queue_as :bot_queue
+  VIDEO_URL = 'https://webapp.open-ps.ru/videos/first_animation.mp4'
 
   def perform(*args)
     setting = Setting.pluck(:variable, :value).to_h.transform_keys(&:to_sym)
+
     Telegram::Bot::Client.run(setting[:tg_token]) do |bot|
       bot.listen do |message|
         case message
         when Telegram::Bot::Types::CallbackQuery
-          Rails.logger.error "CallbackQuery"
+          handle_callback(message)
         when Telegram::Bot::Types::Message
           handle_message(bot, message)
         else
           bot.api.send_message(chat_id: message.from.id, text: I18n.t('tg_msg.error_data'))
         end
+      rescue => e
+        puts "+" * 80
+        Rails.logger.error e.message
+        puts "+" * 80
       end
-    rescue => e
-      puts "+" * 80
-      Rails.logger.error e.message
-      puts "+" * 80
     end
   end
 
   private
+
+  def handle_callback(message)
+    self.send(message.data.to_sym, message) if self.respond_to?(message.data.to_sym, true)
+  end
+
+  def i_paid(message)
+    user  = User.find_by(tg_id: message.from.id)
+    order = user.orders.find_by(msg_id: message.message.message_id)
+    order.update(status: :pending)
+  end
+
+  def approve_payment(message)
+    text         = message.message.text
+    order_number = text.match(/№(\d+)/)[1]
+    order        = Order.find(order_number)
+    order.update(status: :processing)
+  end
 
   def handle_message(bot, message)
     case message.text
@@ -33,7 +52,6 @@ class TelegramBotJob < ApplicationJob
       send_firs_msg(bot, message.chat.id)
     else
       send_firs_msg(bot, message.chat.id)
-      # bot.api.send_message(chat_id: message.chat.id, text: I18n.t('tg_msg.error_msg'))
     end
   end
 
@@ -49,16 +67,8 @@ class TelegramBotJob < ApplicationJob
         text: 'Задать вопрос', url: 'https://t.me/eczane_store'
       ) ]
     ]
-    ActionController::Base.default_url_options[:host] = 'https://webapp.open-ps.ru/'
-    # video  = Rails.root.join('app/assets/images/first_animation.mp4')
-    # video_url = ActionController::Base.helpers.image_url('first_animation.mp4')
-    video_url = 'https://webapp.open-ps.ru/videos/first_animation.mp4'
-    markup    = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
-    bot.api.send_video(chat_id: chat_id, video: video_url, caption: I18n.t('tg_msg.start'), reply_markup: markup)
-  rescue => e
-    puts "+" * 80
-    Rails.logger.error e.message
-    puts "+" * 80
+    markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
+    bot.api.send_video(chat_id: chat_id, video: VIDEO_URL, caption: I18n.t('tg_msg.start'), reply_markup: markup)
   end
 
   def save_user(chat)

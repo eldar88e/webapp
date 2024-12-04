@@ -13,15 +13,16 @@ class TelegramService
     @msg_id    = msg_id
   end
 
-  def self.call(msg, id=nil)
-    new(msg, id).report
+  def self.call(msg, id=nil, **args)
+    new(msg, id).report(args[:markup])
   end
 
   def self.delete_msg(msg, id, msg_id)
     new(msg, id, msg_id).send(:delete_message)
   end
 
-  def report
+  def report(markup=nil)
+    @markup = markup
     tg_send if @message.present? && credential_exists?
   end
 
@@ -67,19 +68,37 @@ class TelegramService
   def send_messages_to_user(user_id)
     message_id    = nil
     message_count = (@message.size / MESSAGE_LIMIT) + 1
-    @message      = "‼️Dev #{@message}" if Rails.env.development?
+    @message      = "‼️‼️Development‼️‼️\n\n#{@message}" if Rails.env.development?
+    markup        = form_markup
     Telegram::Bot::Client.run(@bot_token) do |bot|
       message_count.times do
         text_part  = next_text_part
-        response   = bot.api.send_message(chat_id: user_id, text: escape(text_part), parse_mode: 'MarkdownV2')
+        response   = bot.api.send_message(
+          chat_id: user_id,
+          text: escape(text_part),
+          parse_mode: 'MarkdownV2',
+          reply_markup: markup
+        )
         message_id = response.message_id
       end
     end
     message_id
   end
 
+  def form_keyboard
+    text = I18n.t("tg_btn.#{@markup}")
+    [[Telegram::Bot::Types::InlineKeyboardButton.new(text: text, callback_data: @markup)]]
+  end
+
+  def form_markup
+    return if @markup.nil?
+
+    keyboard = form_keyboard
+    Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
+  end
+
   def next_text_part
-    part = @message[0...MESSAGE_LIMIT]
+    part     = @message[0...MESSAGE_LIMIT]
     @message = @message[MESSAGE_LIMIT..] || ''
     part
   end

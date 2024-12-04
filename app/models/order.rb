@@ -34,24 +34,55 @@ class Order < ApplicationRecord
   def on_unpaid
     # Логика для статуса "не оплачен"
     TelegramService.delete_msg('', self.user.tg_id, self.msg_id) if self.msg_id
-    msg_id = TelegramService.call(I18n.t('tg_msg.unpaid'), self.user.tg_id)
+    card = Setting.find_by(variable: 'card').value
+    msg  = I18n.t(
+      'tg_msg.unpaid',
+      order: id,
+      card: card,
+      price: total_amount,
+      items: order_items_str,
+      address: user.address,
+      fio: user.full_name,
+      phone: user.phone_number
+    )
+    msg_id = TelegramService.call(msg, self.user.tg_id, markup: 'i_paid')
     self.update_columns(msg_id: msg_id)
     Rails.logger.info "Order is now unpaid"
   end
 
-  def on_pending
+  def on_pending # is paid and on pending
     # Логика для статуса "оплачен"
     self.user.cart.destroy # удаляем корзину после оплаты
-    msg = "Order is now paid"
-    TelegramService.call msg # TODO: msg для админа с инфо кто оплатил
-    Rails.logger.info msg
+    admin_chat_id = Setting.find_by(variable: 'admin_chat_id').value
+    msg           = I18n.t(
+      'tg_msg.paid_admin',
+      order: id,
+      price: total_amount,
+      items: order_items_str,
+      address: user.address,
+      fio: user.full_name,
+      phone: user.phone_number
+    )
+    TelegramService.call(msg, admin_chat_id, markup: 'approve_payment') # send admin
+    TelegramService.call(I18n.t('tg_msg.paid_client'), user.tg_id) # send client
+    Rails.logger.info "Order is now paid"
   end
 
   def on_processing
     # Логика для статуса "в обработке"
-    msg = "Order is being processed"
-    TelegramService.call(msg, 6002481446) # TODO: указать ID курьера
-    Rails.logger.info msg
+    msg = I18n.t(
+      'tg_msg.on_processing_courier',
+      order: id,
+      postal_code: user.postal_code,
+      items: order_items_str,
+      address: user.address,
+      fio: user.full_name,
+      phone: user.phone_number
+    )
+    courier_tg_id = Setting.find_by(variable: 'courier_tg_id').value
+    TelegramService.call(msg, courier_tg_id)  # TODO: добавить кнопку трек код
+    TelegramService.call(I18n.t('tg_msg.on_processing_client', order: id), user.tg_id)
+    Rails.logger.info "Order is being processed"
   end
 
   def on_shipped
@@ -73,5 +104,9 @@ class Order < ApplicationRecord
     msg = "Order has been refunded"
     TelegramService.call msg # TODO: указать ID клиента и админа
     Rails.logger.info msg
+  end
+
+  def order_items_str
+    order_items.map { |i| "#{i.product.name} #{i.quantity}шт. #{i.price}₽" }.join(",\n")
   end
 end
