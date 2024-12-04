@@ -1,0 +1,31 @@
+<%= form_with(model: current_user, url: orders_path(page: 2), method: :post, class: 'mb-3') do |f| %>
+  <div class="">
+    <%= f.text_field :full_name, autocomplete: "name", placeholder: 'ФИО ( полностью )', class: "input-str" %>
+  </div>
+
+  <div class="mt-6">
+    <%= f.number_field :phone_number, autocomplete: "tel", placeholder: 'Номер телефона', class: "input-str" %>
+  </div>
+
+  <div class="mt-6">
+    <%= f.text_field :address, autocomplete: "street-address", placeholder: 'Город, улица, дом, квартира', class: "input-str" %>
+  </div>
+
+  <div class="mt-6">
+    <%= f.number_field :postal_code, autocomplete: "postal-code", placeholder: 'Почтовый индекс', class: "input-str" %>
+  </div>
+
+  <div class="mt-6 flex items-center gap-4">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="10" cy="10" r="10" fill="#D9D9D9"/>
+    </svg>
+
+    <%= link_to '#', class: 'agreement' do %>
+      Я принимаю условия пользовательского соглашения
+    <% end %>
+  </div>
+
+  <div class="mt-6">
+    <%= f.submit "Продолжить", class: "btn" %>
+  </div>
+<% end %>

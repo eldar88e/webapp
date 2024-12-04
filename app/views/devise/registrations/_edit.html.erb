@@ -1,7 +1,7 @@
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: 'mb-3' }) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="mt-6">
+  <div class="">
       <%= f.text_field :full_name, autocomplete: "name", placeholder: 'ФИО ( полностью )', class: "input-str" %>
   </div>
 

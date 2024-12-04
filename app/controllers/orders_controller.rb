@@ -18,6 +18,13 @@ class OrdersController < ApplicationController
 
   # POST /orders or /orders.json
   def create
+    if params[:page].to_i == 1
+      return render turbo_stream: [
+        turbo_stream.update(:modal, partial: 'orders/user'),
+        turbo_stream.append(:modal, "<script>history.pushState(null, null, '/');</script>".html_safe)
+      ]
+    end
+
     cart  = current_user.cart
     order = current_user.orders.find_or_create_by(status: :unpaid)
     order.update!(total_amount: calculate_total_price(cart))
