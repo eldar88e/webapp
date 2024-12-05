@@ -39,10 +39,10 @@ class TelegramBotJob < ApplicationJob
       send_firs_msg(bot, message.chat.id)
     else
       user_state = Rails.cache.read("user_#{message.from.id}_state")
-      if user_state[:waiting_for_tracking]
+      if user_state&.dig(:waiting_for_tracking)
         order = Order.find_by(id: user_state[:order_id])
         order.update(tracking_number: message.text, status: 'shipped')
-        bot.api.send_message(chat_id: message.chat.id, text: "Трек-номер сохранён: #{message.text}")
+        bot.api.send_message(chat_id: message.chat.id, text: "Трек-номер для закакза №#{user_state[:order_id]} сохранён: #{message.text}")
         bot.api.delete_message(chat_id: message.from.id, message_id: user_state[:msg_id])
         Rails.cache.delete("user_#{message.from.id}_state")
       else
@@ -65,7 +65,7 @@ class TelegramBotJob < ApplicationJob
       { waiting_for_tracking: true, order_id: order_number, msg_id: message.message.message_id },
       expires_in: 1.minute
     )
-    bot.api.send_message(chat_id: message.from.id, text: "Введите трек-номер в чат:")
+    bot.api.send_message(chat_id: message.from.id, text: "Введите трек-номер для заказа №#{order_number} в чат:")
   end
 
   def approve_payment(bot, message)
