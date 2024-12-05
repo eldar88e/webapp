@@ -107,6 +107,8 @@ class Order < ApplicationRecord
   end
 
   def order_items_str
-    order_items.map { |i| "#{i.product.name} #{i.quantity}шт. #{i.price}₽" }.join(",\n")
+    order_items.map.with_index(1) do |i, idx|
+      "#{idx}. #{i.product.name} #{i.quantity}шт. #{i.price}₽"
+    end.join(",\n")
   end
 end
