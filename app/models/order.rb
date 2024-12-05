@@ -33,7 +33,7 @@ class Order < ApplicationRecord
   # Колбэки для каждого статуса
   def on_unpaid
     # Логика для статуса "не оплачен"
-    TelegramService.delete_msg('', self.user.tg_id, self.msg_id) if self.msg_id
+    TelegramService.delete_msg('', self.user.tg_id, self.msg_id) if self.msg_id # TODO: нужно ли ?
     card = Setting.find_by(variable: 'card').value
     msg  = I18n.t(
       'tg_msg.unpaid',
@@ -65,7 +65,8 @@ class Order < ApplicationRecord
       phone: user.phone_number
     )
     TelegramService.call(msg, admin_chat_id, markup: 'approve_payment') # send admin
-    TelegramService.call(I18n.t('tg_msg.paid_client'), user.tg_id) # send client
+    msg_id = TelegramService.call(I18n.t('tg_msg.paid_client'), user.tg_id) # send client
+    update_columns(msg_id: msg_id)
     Rails.logger.info "Order is now paid"
   end
 
@@ -82,12 +83,15 @@ class Order < ApplicationRecord
     )
     courier_tg_id = Setting.find_by(variable: 'courier_tg_id').value
     TelegramService.call(msg, courier_tg_id, markup: 'submit_tracking')
-    TelegramService.call(I18n.t('tg_msg.on_processing_client', order: id), user.tg_id)
+    TelegramService.delete_msg('', user.tg_id, self.msg_id)
+    msg_id = TelegramService.call(I18n.t('tg_msg.on_processing_client', order: id), user.tg_id)
+    update_columns(msg_id: msg_id)
     Rails.logger.info "Order is being processed"
   end
 
   def on_shipped
     # Логика для статуса "отправлен"
+    TelegramService.delete_msg('', user.tg_id, self.msg_id)
     msg = I18n.t('tg_msg.on_shipped_courier',
                  order: id,
                  price: total_amount,
