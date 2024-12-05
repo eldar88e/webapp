@@ -21,7 +21,7 @@ class OrdersController < ApplicationController
     return handle_user_info if params[:page].to_i == 1
 
     return error_notice("Вы не согласны с нашими условиями!") if params[:user][:agreement] != "1"
-
+    # TODO: Cделать обязательные поля
     update_user
 
     create_order
@@ -69,7 +69,7 @@ class OrdersController < ApplicationController
     end
 
     def update_user
-      user_params     = params.require(:user).permit(:full_name, :address, :phone_number, :postal_code)
+      user_params     = params.require(:user).permit(:first_name, :middle_name, :last_name, :address, :phone_number, :postal_code)
       filtered_params = user_params.to_h.reject { |_key, value| value.blank? }
       current_user.update(filtered_params) if filtered_params.any?
     end

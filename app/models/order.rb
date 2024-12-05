@@ -40,11 +40,12 @@ class Order < ApplicationRecord
       order: id,
       card: card,
       price: total_amount,
-      items: order_items_str,
+      items: order_items_str(user.cart.cart_items),
       address: user.address,
       fio: user.full_name,
       phone: user.phone_number
     )
+
     msg_id = TelegramService.call(msg, self.user.tg_id, markup: 'i_paid')
     self.update_columns(msg_id: msg_id)
     Rails.logger.info "Order is now unpaid"
@@ -87,9 +88,18 @@ class Order < ApplicationRecord
 
   def on_shipped
     # Логика для статуса "отправлен"
-    msg = "Order has been shipped"
-    TelegramService.call(msg, self.user.tg_id)
-    Rails.logger.info msg
+    msg = I18n.t('tg_msg.on_shipped_courier',
+                 order: id,
+                 price: total_amount,
+                 items: order_items_str,
+                 address: user.address,
+                 fio: user.full_name,
+                 phone: user.phone_number,
+                 track: tracking_number
+    )
+    TelegramService.call(msg, user.tg_id)
+    # TODO: реализовать списание с остатков
+    Rails.logger.info "Order has been shipped"
   end
 
   def on_cancelled
@@ -106,9 +116,9 @@ class Order < ApplicationRecord
     Rails.logger.info msg
   end
 
-  def order_items_str
-    order_items.map.with_index(1) do |i, idx|
-      "#{idx}. #{i.product.name} #{i.quantity}шт. #{i.price}₽"
+  def order_items_str(items = nil)
+    (items || order_items).map.with_index(1) do |i, idx|
+      "#{idx}. #{i.product.name} #{i.quantity}шт. #{items ? i.product.price : i.price}₽"
     end.join(",\n")
   end
 end

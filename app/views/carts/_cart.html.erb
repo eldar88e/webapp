@@ -1,17 +1,11 @@
-<% if @cart_items.present? %>
-  <div class="cart scrollable">
-    <div class="cart-header">
-      <div class="cart-header-column">Название</div>
-      <div class="cart-header-column">Количество</div>
-      <div class="cart-header-column">Цена</div>
-    </div>
-
-    <%= render partial: '/cart_items/cart_item', collection: @cart_items %>
+<div class="cart scrollable">
+  <div class="cart-header">
+    <div class="cart-header-column">Название</div>
+    <div class="cart-header-column">Количество</div>
+    <div class="cart-header-column">Цена</div>
   </div>
 
-  <%#= button_to "Очистить корзину", @cart, method: :delete, class: 'btn mb-3 mt-3' %>
+  <%= render partial: '/cart_items/cart_item', collection: @cart_items %>
+</div>
 
-  <%= button_to "Оформить заказ", orders_path(page: 1), class: 'btn'  %>
-<% else %>
-  <div>Ваша корзина пуста!</div>
-<% end %>
+<%= button_to "Оформить заказ", orders_path(page: 1), class: 'btn'  %>

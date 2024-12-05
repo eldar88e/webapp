@@ -4,10 +4,14 @@ class CartsController < ApplicationController
   # GET /carts/1 or /carts/1.json
   def show
     @cart_items = @cart.cart_items.includes(:product)
-    render turbo_stream: [
-      turbo_stream.update(:modal, partial: "/carts/cart"),
-      turbo_stream.append(:modal, "<script>openModal();</script>".html_safe)
-    ]
+    if @cart_items.present?
+      render turbo_stream: [
+        turbo_stream.update(:modal, partial: "/carts/cart"),
+        turbo_stream.append(:modal, "<script>openModal();</script>".html_safe)
+      ]
+    else
+      render turbo_stream: success_notice('Ваша корзина пуста!')
+    end
   end
 
   # DELETE /carts/1 or /carts/1.json

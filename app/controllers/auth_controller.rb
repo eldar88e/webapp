@@ -19,13 +19,11 @@ class AuthController < ApplicationController
 
       tg_user   = JSON.parse init_data["user"]
       user      = User.find_or_create_by(tg_id: tg_user["id"]) do |u|
-        u.username   = tg_user["username"]
-        u.first_name = tg_user["first_name"]
-        u.last_name  = tg_user["last_name"]
-        u.full_name  = "#{tg_user["first_name"]} #{tg_user["last_name"]}"
-        u.photo_url  = tg_user["photo_url"]
-        u.email      = generate_email(tg_user["id"])
-        u.password   = Devise.friendly_token[0, 20]
+        u.username    = tg_user["username"]
+        u.first_name  = tg_user["first_name"]
+        u.middle_name = tg_user["last_name"]
+        u.email       = generate_email(tg_user["id"])
+        u.password    = Devise.friendly_token[0, 20]
       end
       sign_in(user)
     end

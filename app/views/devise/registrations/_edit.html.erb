@@ -2,7 +2,15 @@
   <%= render "devise/shared/error_messages", resource: resource %>
 
   <div class="">
-      <%= f.text_field :full_name, autocomplete: "name", placeholder: 'ФИО ( полностью )', class: "input-str" %>
+    <%= f.text_field :middle_name, autocomplete: "name", placeholder: 'Фамилия', class: "input-str" %>
+  </div>
+
+  <div class="mt-6">
+    <%= f.text_field :first_name, autocomplete: "name", placeholder: 'Имя', class: "input-str" %>
+  </div>
+
+  <div class="mt-6">
+    <%= f.text_field :last_name, autocomplete: "name", placeholder: 'Отчество', class: "input-str" %>
   </div>
 
   <div class="mt-6">

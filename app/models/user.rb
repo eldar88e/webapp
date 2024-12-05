@@ -9,4 +9,8 @@ class User < ApplicationRecord
   def cart
     super || create_cart
   end
+
+  def full_name
+    "#{middle_name} #{first_name} #{last_name}"
+  end
 end
