@@ -18,27 +18,18 @@ class OrdersController < ApplicationController
 
   # POST /orders or /orders.json
   def create
-    if params[:page].to_i == 1
-      return render turbo_stream: [
-        turbo_stream.update(:modal, partial: 'orders/user'),
-        turbo_stream.append(:modal, "<script>history.pushState(null, null, '/');</script>".html_safe)
-      ]
-    end
+    return handle_user_info if params[:page].to_i == 1
 
-    cart  = current_user.cart
-    order = current_user.orders.find_or_create_by(status: :unpaid)
-    order.update!(total_amount: calculate_total_price(cart))
+    return error_notice("Вы не согласны с нашими условиями!") if params[:user][:agreement] != "1"
 
-    cart.cart_items.each do |cart_item|
-      order_item = order.order_items.find_or_create_by(product: cart_item.product)
-      order_item.update(quantity: cart_item.quantity, price: cart_item.product.price)
-    end
+    update_user
 
-    # redirect_to order_path(order), notice: "Ваш заказ успешно оформлен!"
+    create_order
 
     render turbo_stream: [
       success_notice("Ваш заказ успешно оформлен!"),
-      turbo_stream.append(:modal, "<script>miniappClose();</script>".html_safe)
+      turbo_stream.append(:modal, "<script>closeModal();</script>".html_safe),
+      turbo_stream.append(:modal, "<script>closeMiniApp();</script>".html_safe)
     ]
   end
 
@@ -68,5 +59,29 @@ class OrdersController < ApplicationController
     # Only allow a list of trusted parameters through.
     def order_params
       params.require(:order).permit(:user_id, :total_amount, :status)
+    end
+
+    def handle_user_info
+      render turbo_stream: [
+        turbo_stream.update(:modal, partial: 'orders/user'),
+        turbo_stream.append(:modal, "<script>history.pushState(null, null, '/');</script>".html_safe)
+      ]
+    end
+
+    def update_user
+      user_params     = params.require(:user).permit(:full_name, :address, :phone_number, :postal_code)
+      filtered_params = user_params.to_h.reject { |_key, value| value.blank? }
+      current_user.update(filtered_params) if filtered_params.any?
+    end
+
+    def create_order
+      cart  = current_user.cart
+      order = current_user.orders.find_or_create_by(status: :unpaid)
+      order.update!(total_amount: calculate_total_price(cart))
+
+      cart.cart_items.each do |cart_item|
+        order_item = order.order_items.find_or_create_by(product: cart_item.product)
+        order_item.update(quantity: cart_item.quantity, price: cart_item.product.price)
+      end
     end
 end

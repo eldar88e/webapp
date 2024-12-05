@@ -27,6 +27,7 @@
             <div class="title">Заказать</div>
             <div class="plus">
               <%= image_tag image_path('plus.svg') %>
+              <%= render partial: '/layouts/partial/cart_item_counter', locals: { id: product.id } %>
             </div>
           <% end %>
         <% else %>

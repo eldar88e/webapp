@@ -104,6 +104,22 @@ body {
         display: flex;
         justify-content: center;
         align-items: center;
+        position: relative;
+
+        .cart-item-counter {
+          position: absolute;
+          left: -1px;
+          top: -1px;
+          width: 15px;
+          height: 15px;
+          background: #2A2738;
+          border-radius: 50%;
+          font-size: 14px;
+          color: white;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
       }
     }
 
@@ -259,4 +275,60 @@ body {
   text-decoration: underline;
   text-decoration-color: rgba(71, 132, 252, 1);
   text-underline-offset: 6px;
+}
+
+.form-check-input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none; /* Для Safari */
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background: #d9d9d9;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+/* При наведении */
+.form-check-input[type="checkbox"]:hover {
+  background-color: #cbd5e1; /* Более тёмный серый */
+}
+
+/* Для состояния checked */
+.form-check-input[type="checkbox"]:checked {
+  background: #d9d9d9;
+}
+
+/* Добавить кастомную SVG-иконку для checked */
+.form-check-input[type="checkbox"]:checked::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  background-image: url('checked.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.cart-logo {
+  position: relative;
+
+  .cart-counter {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: -4px;
+    bottom: 1px;
+    background: #000001;
+    border: solid 1px #4884fc;
+    border-radius: 50%;
+    font-size: 12px;
+    line-height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

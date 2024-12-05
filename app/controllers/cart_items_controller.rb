@@ -7,7 +7,11 @@ class CartItemsController < ApplicationController
     cart_item = cart.cart_items.find_or_initialize_by(product_id: cart_item_params[:product_id])
 
     cart_item.quantity += 1 if cart_item.persisted?
-    return render turbo_stream: success_notice('Товар добавлен в корзину.') if cart_item.save
+    return render turbo_stream: [
+      turbo_stream.replace(:cart_logo, partial: '/layouts/partial/cart'),
+      turbo_stream.replace("cart_item_#{cart_item_params[:product_id]}_counter", partial: '/layouts/partial/cart_item_counter', locals: { id: cart_item_params[:product_id] }),
+      success_notice('Товар добавлен в корзину.')
+    ] if cart_item.save
 
     render turbo_stream: error_notice('Не удалось добавить товар в корзину.')
   end

@@ -10,4 +10,5 @@ ru:
   tg_btn:
     i_paid: "Я оплатил"
     approve_payment: "Оплата пришла"
+    submit_tracking: "Привязать трек"
   empty_cart: "Ваша корзина пустая!"

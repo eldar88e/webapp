@@ -20,9 +20,7 @@
 
       <%= link_to 'strattera bot', root_path, class: 'logo' %>
 
-      <%=link_to current_user ? cart_path(id: current_user.cart) : "#", data: { turbo_prefetch: false }  do %>
-        <%= image_tag image_path('cart.svg') %>
-      <% end %>
+      <%= render '/layouts/partial/cart' %>
     </div>
   </div>
 </div>

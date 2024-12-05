@@ -2,7 +2,18 @@ require 'telegram/bot'
 
 class TelegramBotJob < ApplicationJob
   queue_as :bot_queue
-  VIDEO_URL = 'https://webapp.open-ps.ru/videos/first_animation.mp4'
+  VIDEO_URL      = 'https://webapp.open-ps.ru/videos/first_animation.mp4'
+  FIRST_KEYBOARD = [
+    [ Telegram::Bot::Types::InlineKeyboardButton.new(
+      text: 'Каталог', url: "https://t.me/atominexbot?startapp"  # =#{chat_id}
+    ) ],
+    [ Telegram::Bot::Types::InlineKeyboardButton.new(
+      text: 'Перейти в СДВГ-чат', url: 'https://t.me/+EbVQcAOIdsk1Njhk'
+    ) ],
+    [ Telegram::Bot::Types::InlineKeyboardButton.new(
+      text: 'Задать вопрос', url: 'https://t.me/eczane_store'
+    ) ]
+  ].freeze
 
   def perform(*args)
     setting = Setting.pluck(:variable, :value).to_h.transform_keys(&:to_sym)
@@ -37,6 +48,12 @@ class TelegramBotJob < ApplicationJob
     order.update(status: :pending)
   end
 
+  def submit_tracking(bot, message)
+    bot.api.send_message(chat_id: message.from.id, text: "Введите трек-номер в чат:")
+    # Здесь можно сохранить состояние, чтобы бот знал, что ожидается ввод
+    set_user_state(message.from.id, 'awaiting_tracking_number')
+  end
+
   def approve_payment(message)
     text         = message.message.text
     order_number = text.match(/№(\d+)/)[1]
@@ -56,18 +73,7 @@ class TelegramBotJob < ApplicationJob
   end
 
   def send_firs_msg(bot, chat_id)
-    keyboard = [
-      [ Telegram::Bot::Types::InlineKeyboardButton.new(
-        text: 'Каталог', url: "https://t.me/atominexbot?startapp=#{chat_id}"
-      ) ],
-      [ Telegram::Bot::Types::InlineKeyboardButton.new(
-        text: 'Перейти в СДВГ-чат', url: 'https://t.me/+EbVQcAOIdsk1Njhk'
-      ) ],
-      [ Telegram::Bot::Types::InlineKeyboardButton.new(
-        text: 'Задать вопрос', url: 'https://t.me/eczane_store'
-      ) ]
-    ]
-    markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
+    markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: FIRST_KEYBOARD)
     bot.api.send_video(chat_id: chat_id, video: VIDEO_URL, caption: I18n.t('tg_msg.start'), reply_markup: markup)
   end
 
