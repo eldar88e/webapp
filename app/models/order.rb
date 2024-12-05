@@ -81,7 +81,7 @@ class Order < ApplicationRecord
       phone: user.phone_number
     )
     courier_tg_id = Setting.find_by(variable: 'courier_tg_id').value
-    TelegramService.call(msg, courier_tg_id, markup: 'submit_tracking')  # TODO: добавить кнопку трек код
+    TelegramService.call(msg, courier_tg_id, markup: 'submit_tracking')
     TelegramService.call(I18n.t('tg_msg.on_processing_client', order: id), user.tg_id)
     Rails.logger.info "Order is being processed"
   end

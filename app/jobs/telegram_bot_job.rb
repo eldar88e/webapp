@@ -28,13 +28,7 @@ class TelegramBotJob < ApplicationJob
   private
 
   def handle_callback(bot, message)
-    if self.respond_to?(message.data.to_sym, true)
-      if message.data != 'submit_tracking'
-        self.send(message.data.to_sym, message)
-      else
-        self.send(message.data.to_sym, bot, message)
-      end
-    end
+    self.send(message.data.to_sym, bot, message) if self.respond_to?(message.data.to_sym, true)
   end
 
   def handle_message(bot, message)
@@ -57,10 +51,11 @@ class TelegramBotJob < ApplicationJob
     end
   end
 
-  def i_paid(message)
+  def i_paid(bot, message)
     user  = User.find_by(tg_id: message.from.id)
     order = user.orders.find_by(msg_id: message.message.message_id)
     order.update(status: :pending)
+    bot.api.delete_message(chat_id: message.from.id, message_id: message.message.message_id)
   end
 
   def submit_tracking(bot, message)
@@ -73,10 +68,11 @@ class TelegramBotJob < ApplicationJob
     bot.api.send_message(chat_id: message.from.id, text: "Введите трек-номер в чат:")
   end
 
-  def approve_payment(message)
+  def approve_payment(bot, message)
     order_number = parse_order_number(message.message.text)
     order        = Order.find(order_number)
     order.update(status: :processing)
+    bot.api.delete_message(chat_id: message.from.id, message_id: message.message.message_id)
   end
 
   def parse_order_number(text)
