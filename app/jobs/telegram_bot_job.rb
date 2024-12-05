@@ -65,7 +65,7 @@ class TelegramBotJob < ApplicationJob
       { waiting_for_tracking: true, order_id: order_number, msg_id: message.message.message_id },
       expires_in: 1.minute
     )
-    bot.api.send_message(chat_id: message.from.id, text: "Введите трек-номер для заказа №#{order_number} в чат:")
+    bot.api.send_message(chat_id: message.message.chat.id, text: "Введите трек-номер для заказа №#{order_number} в чат:")
   end
 
   def approve_payment(bot, message)
