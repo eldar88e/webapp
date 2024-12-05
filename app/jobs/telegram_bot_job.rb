@@ -43,7 +43,7 @@ class TelegramBotJob < ApplicationJob
         order = Order.find_by(id: user_state[:order_id])
         order.update(tracking_number: message.text, status: 'shipped')
         bot.api.send_message(chat_id: message.chat.id, text: "Трек-номер для закакза №#{user_state[:order_id]} сохранён: #{message.text}")
-        bot.api.delete_message(chat_id: message.from.id, message_id: user_state[:msg_id])
+        bot.api.delete_message(chat_id: message.chat.id, message_id: user_state[:msg_id])
         Rails.cache.delete("user_#{message.from.id}_state")
       else
         send_firs_msg(bot, message.chat.id)
