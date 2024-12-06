@@ -49,6 +49,7 @@ class TelegramBotJob < ApplicationJob
         )
         bot.api.delete_message(chat_id: message.chat.id, message_id: user_state[:msg_id])
         bot.api.delete_message(chat_id: message.chat.id, message_id: user_state[:h_msg])
+        bot.api.delete_message(chat_id: message.chat.id, message_id: message.message_id)
         Rails.cache.delete("user_#{message.from.id}_state")
       else
         send_firs_msg(bot, message.chat.id)
