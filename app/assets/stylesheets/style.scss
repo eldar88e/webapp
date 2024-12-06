@@ -298,9 +298,22 @@ main {
 }
 
 .agreement {
-  text-decoration: underline;
-  text-decoration-color: rgba(71, 132, 252, 1);
-  text-underline-offset: 6px;
+  font-size: 14px;
+  line-height: 17px;
+  text-decoration: none;
+  position: relative;
+  max-width: 235px;
+  padding-bottom: 6px;
+
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    width: 100%;
+    background-color: rgb(71, 132, 252);
+  }
 }
 
 .form-check-input[type="checkbox"] {
