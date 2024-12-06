@@ -83,11 +83,16 @@ body {
 
     .btn-order {
       background: rgba(71, 132, 252, 1);
+      border: 1px solid rgba(71, 132, 252, 1);
       border-radius: 48px;
       padding: 5px;
       display: flex;
       align-items: center;
       gap: 18px;
+
+      &:hover, &:focus {
+        background: transparent;
+      }
 
       .title {
         font-size: 18px;
@@ -191,6 +196,7 @@ body {
   line-height: 22px;
   padding: 14px 26px;
   border-radius: 48px;
+  cursor: pointer;
 }
 
 .input-str {

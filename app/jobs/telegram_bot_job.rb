@@ -19,9 +19,7 @@ class TelegramBotJob < ApplicationJob
           bot.api.send_message(chat_id: message.from.id, text: I18n.t('tg_msg.error_data'))
         end
       rescue => e
-        puts "+" * 80
-        Rails.logger.error e.message
-        puts "+" * 80
+        Rails.logger.error "#{self.class} | #{e.message}"
       end
     end
   end
@@ -45,7 +43,7 @@ class TelegramBotJob < ApplicationJob
         order.update(tracking_number: message.text, status: 'shipped')
         bot.api.send_message(
           chat_id: message.chat.id,
-          text: "Трек-номер для закакза №#{user_state[:order_id]}(#{user_state[:full_name]}) сохранён: #{message.text}"
+          text: I18n.t('tg_msg.track_num_save', order: user_state[:order_id], fio: user_state[:full_name], num: message.text)
         )
         bot.api.delete_message(chat_id: message.chat.id, message_id: user_state[:msg_id])
         bot.api.delete_message(chat_id: message.chat.id, message_id: user_state[:h_msg])

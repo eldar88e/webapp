@@ -19,11 +19,10 @@ class OrdersController < ApplicationController
   # POST /orders or /orders.json
   def create
     return handle_user_info if params[:page].to_i == 1
-
     return error_notice("Вы не согласны с нашими условиями!") if params[:user][:agreement] != "1"
-    # TODO: Cделать обязательные поля
-    update_user
+    return error_notice("Заполните пожалуйста все обязательные поля!") if filtered_params.size < 6
 
+    update_user
     create_order
 
     render turbo_stream: [
@@ -47,6 +46,7 @@ class OrdersController < ApplicationController
   end
 
   private
+
     def calculate_total_price(cart)
       cart.cart_items.sum { |item| item.product.price * item.quantity }
     end
@@ -68,9 +68,15 @@ class OrdersController < ApplicationController
       ]
     end
 
+    def user_params
+      params.require(:user).permit(:first_name, :middle_name, :last_name, :address, :phone_number, :postal_code)
+    end
+
+    def filtered_params
+      user_params.to_h.reject { |_key, value| value.blank? }
+    end
+
     def update_user
-      user_params     = params.require(:user).permit(:first_name, :middle_name, :last_name, :address, :phone_number, :postal_code)
-      filtered_params = user_params.to_h.reject { |_key, value| value.blank? }
       current_user.update(filtered_params) if filtered_params.any?
     end
 
