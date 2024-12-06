@@ -1,4 +1,4 @@
-<div id="cart_item_<%= id  %>_counter">
+<div id="cart_item_<%= id %>_counter">
   <% if current_user && (quantity = quantity_curt_item(id)).positive? %>
     <div class="cart-item-counter"><%= quantity %></div>
   <% end %>
