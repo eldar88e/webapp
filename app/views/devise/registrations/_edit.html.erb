@@ -22,7 +22,7 @@
   </div>
 
   <div class="mt-6">
-    <%= f.number_field :postal_code, autocomplete: "postal-code", placeholder: 'Почтовый индекс', class: "input-str" %>
+    <%= f.number_field :postal_code, autocomplete: "postal-code", placeholder: 'Почтовый индекс', class: "input-str", max: 999999 %>
   </div>
 
   <div class="mt-6">
