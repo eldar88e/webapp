@@ -48,7 +48,7 @@ class Order < ApplicationRecord
 
     msg_id = TelegramService.call(msg, self.user.tg_id, markup: 'i_paid')
     self.update_columns(msg_id: msg_id)
-    Rails.logger.info "Order is now unpaid"
+    Rails.logger.info "Order #{id} is now unpaid"
   end
 
   def on_pending # is paid and on pending
@@ -67,7 +67,7 @@ class Order < ApplicationRecord
     TelegramService.call(msg, admin_chat_id, markup: 'approve_payment') # send admin
     msg_id = TelegramService.call(I18n.t('tg_msg.paid_client'), user.tg_id) # send client
     update_columns(msg_id: msg_id)
-    Rails.logger.info "Order is now paid"
+    Rails.logger.info "Order #{id} is now paid"
   end
 
   def on_processing
@@ -86,7 +86,7 @@ class Order < ApplicationRecord
     TelegramService.delete_msg('', user.tg_id, self.msg_id)
     msg_id = TelegramService.call(I18n.t('tg_msg.on_processing_client', order: id), user.tg_id)
     update_columns(msg_id: msg_id)
-    Rails.logger.info "Order is being processed"
+    Rails.logger.info "Order #{id} is being processed"
   end
 
   def on_shipped
@@ -103,19 +103,19 @@ class Order < ApplicationRecord
     )
     TelegramService.call(msg, user.tg_id)
     # TODO: реализовать списание с остатков
-    Rails.logger.info "Order has been shipped"
+    Rails.logger.info "Order #{id} has been shipped"
   end
 
   def on_cancelled
     # Логика для статуса "отменен"
-    msg = "Order has been cancelled"
+    msg = "Order #{id} has been cancelled"
     TelegramService.call msg # TODO: указать ID клиента и админа
     Rails.logger.info msg
   end
 
   def on_refunded
     # Логика для статуса "возвращен"
-    msg = "Order has been refunded"
+    msg = "Order #{id} has been refunded"
     TelegramService.call msg # TODO: указать ID клиента и админа
     Rails.logger.info msg
   end

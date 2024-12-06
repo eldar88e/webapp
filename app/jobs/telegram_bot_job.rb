@@ -2,7 +2,8 @@ require 'telegram/bot'
 
 class TelegramBotJob < ApplicationJob
   queue_as :bot_queue
-  VIDEO_URL = 'https://webapp.open-ps.ru/videos/first_animation.mp4'
+  VIDEO_URL          = 'https://webapp.open-ps.ru/videos/first_animation.mp4'
+  TRACK_CACHE_PERIOD = 5.minutes
 
   def perform(*args)
     setting = Setting.pluck(:variable, :value).to_h.transform_keys(&:to_sym)
@@ -42,8 +43,12 @@ class TelegramBotJob < ApplicationJob
       if user_state&.dig(:waiting_for_tracking)
         order = Order.find_by(id: user_state[:order_id])
         order.update(tracking_number: message.text, status: 'shipped')
-        bot.api.send_message(chat_id: message.chat.id, text: "Трек-номер для закакза №#{user_state[:order_id]} сохранён: #{message.text}")
+        bot.api.send_message(
+          chat_id: message.chat.id,
+          text: "Трек-номер для закакза №#{user_state[:order_id]}(#{user_state[:full_name]}) сохранён: #{message.text}"
+        )
         bot.api.delete_message(chat_id: message.chat.id, message_id: user_state[:msg_id])
+        bot.api.delete_message(chat_id: message.chat.id, message_id: user_state[:h_msg])
         Rails.cache.delete("user_#{message.from.id}_state")
       else
         send_firs_msg(bot, message.chat.id)
@@ -60,23 +65,34 @@ class TelegramBotJob < ApplicationJob
 
   def submit_tracking(bot, message)
     order_number = parse_order_number(message.message.text)
+    full_name    = parse_full_name(message.message.text)
+    msg = bot.api.send_message(
+      chat_id: message.message.chat.id,
+      text: "Введите трек-номер для заказа №#{order_number}(#{full_name}) в чат:"
+    )
     Rails.cache.write(
       "user_#{message.from.id}_state",
-      { waiting_for_tracking: true, order_id: order_number, msg_id: message.message.message_id },
-      expires_in: 1.minute
+      { waiting_for_tracking: true, order_id: order_number, full_name: full_name,
+        msg_id: message.message.message_id, h_msg: msg.message_id },
+      expires_in: TRACK_CACHE_PERIOD
     )
-    bot.api.send_message(chat_id: message.message.chat.id, text: "Введите трек-номер для заказа №#{order_number} в чат:")
   end
 
   def approve_payment(bot, message)
     order_number = parse_order_number(message.message.text)
+    fio          = parse_full_name(message.message.text)
     order        = Order.find(order_number)
     order.update(status: :processing)
     bot.api.delete_message(chat_id: message.from.id, message_id: message.message.message_id)
+    bot.api.send_message(chat_id: message.from.id, text: I18n.t('tg_msg.approved_pay', order: order_number, fio: fio))
   end
 
   def parse_order_number(text)
     text.match(/№(\d+)/)[1]
+  end
+
+  def parse_full_name(text)
+    text[/ФИО:\s*(.+?)\n\n/, 1]
   end
 
   def send_firs_msg(bot, chat_id)
