@@ -1,37 +1,81 @@
-<%= form_with(model: current_user, url: orders_path(page: 2), method: :post, class: 'mb-3') do |f| %>
-  <div class="">
-    <%= f.text_field :middle_name, autocomplete: "name", placeholder: 'Фамилия', class: "input-str" %>
-  </div>
+<div data-controller="agreement">
+  <div class="form" data-agreement-target="form">
+    <%= form_with(model: current_user, url: orders_path(page: 2), method: :post, class: 'mb-3') do |f| %>
+      <div class="">
+        <%= f.text_field :middle_name, autocomplete: "name", placeholder: 'Фамилия', class: "input-str" %>
+      </div>
 
-  <div class="mt-6">
-    <%= f.text_field :first_name, autocomplete: "name", placeholder: 'Имя', class: "input-str" %>
-  </div>
+      <div class="mt-6">
+        <%= f.text_field :first_name, autocomplete: "name", placeholder: 'Имя', class: "input-str" %>
+      </div>
 
-  <div class="mt-6">
-    <%= f.text_field :last_name, autocomplete: "name", placeholder: 'Отчество', class: "input-str" %>
-  </div>
+      <div class="mt-6">
+        <%= f.text_field :last_name, autocomplete: "name", placeholder: 'Отчество', class: "input-str" %>
+      </div>
 
-  <div class="mt-6">
-    <%= f.number_field :phone_number, autocomplete: "tel", placeholder: 'Номер телефона', class: "input-str" %>
-  </div>
+      <div class="mt-6">
+        <%= f.number_field :phone_number, autocomplete: "tel", placeholder: 'Номер телефона', class: "input-str" %>
+      </div>
 
-  <div class="mt-6">
-    <%= f.text_field :address, autocomplete: "street-address", placeholder: 'Город, улица, дом, квартира', class: "input-str" %>
-  </div>
+      <div class="mt-6">
+        <%= f.text_field :address, autocomplete: "street-address", placeholder: 'Город, улица, дом, квартира', class: "input-str" %>
+      </div>
 
-  <div class="mt-6">
-    <%= f.number_field :postal_code, autocomplete: "postal-code", placeholder: 'Почтовый индекс', class: "input-str" %>
-  </div>
+      <div class="mt-6">
+        <%= f.number_field :postal_code, autocomplete: "postal-code", placeholder: 'Почтовый индекс', class: "input-str" %>
+      </div>
 
-  <div class="mt-6 flex items-center gap-4">
-    <%= f.check_box :agreement, class: 'form-check-input', checked: true %>
+      <div class="mt-6 flex items-center gap-4">
+        <%= f.check_box :agreement, class: 'form-check-input', checked: true, data: { agreement_target: "check_box" } %>
 
-    <%= link_to '#', class: 'agreement' do %>
-      Я принимаю условия пользовательского соглашения
+        <%= link_to '#', class: 'agreement', data: { action: "click->agreement#visible" } do %>
+          Я принимаю условия пользовательского соглашения
+        <% end %>
+      </div>
+
+      <div class="mt-6">
+        <%= f.submit "Продолжить", class: "btn" %>
+      </div>
     <% end %>
   </div>
 
-  <div class="mt-6">
-    <%= f.submit "Продолжить", class: "btn" %>
+  <div class="agreement-text scrollable" data-agreement-target="agreement">
+    <div class="close" data-action="click->agreement#close" ></div>
+    <p>ДОГОВОР ОФЕРТЫ</p><br>
+    <p>Настоящий договор является официальным предложением (публичной офертой) продавца, осуществляющего продажу товаров через Telegram-бот t.me/strattera_bot, в адрес любого физического или юридического лица, имеющего намерение приобрести товары на условиях, изложенных ниже.</p>
+    <p>1. Общие положения</p>
+    <p>1.1. Настоящий договор регулирует отношения между Продавцом и Покупателем при продаже товаров дистанционным способом через Telegram-бот.</p>
+    <p>1.2. Оплата заказа Покупателем является полным и безоговорочным принятием условий настоящего договора оферты.</p>
+    <p>2. Предмет договора</p>
+    <p>2.1. Продавец обязуется передать в собственность Покупателя товары, а Покупатель обязуется оплатить и принять товары на условиях настоящего договора.</p>
+    <p>3. Порядок оформления и оплаты заказа</p>
+    <p>3.1. Оформление заказа и его оплата осуществляются по уникальной ссылке, отправленной Покупателю в чат через Telegram-бот t.me/strattera_bot. Данная ссылка является индивидуальной для каждого клиента.</p>
+    <p>3.2. Покупатель переходит по уникальной ссылке, где заполняет необходимые данные для оформления заказа и производит оплату.</p>
+    <p>3.3. Оплата товара осуществляется в виде 100% предоплаты перед отправкой товара.</p>
+    <p>4. Доставка товара</p>
+    <p>4.1. Доставка товара осуществляется по указанному Покупателем адресу после получения полной оплаты.</p>
+    <p>5. Возврат товара</p>
+    <p>5.1. Возврат товара возможен только при условии видеофиксации процесса распаковки посылки в почтовом отделении или в присутствии курьера транспортной компании.</p>
+    <p>5.2. Для оформления возврата Покупатель обязан предоставить видеофиксацию товара в почтовом отделении или в присутствии курьера транспортной компании и связаться с Продавцом через Telegram-бот.</p>
+    <p>6. Права и обязанности сторон</p>
+    </p>6.1. Продавец обязуется:</p>
+    <p>•  Своевременно отправить оплаченный товар Покупателю.</p>
+    <p>•  Предоставить достоверную информацию о товаре.</p>
+    <p>6.2. Покупатель обязуется:</p>
+    <p>•  Предоставить точные данные для доставки.</p>
+    <p>•  Оплатить стоимость товара в полном объеме до его отправки.</p>
+    <p>•  Использовать полученную уникальную ссылку только для личного оформления заказа.</p>
+    <p>7. Ответственность сторон</p>
+    <p>7.1. Стороны несут ответственность за невыполнение или ненадлежащее выполнение своих обязательств в соответствии с законодательством Российской Федерации.</p>
+    <p>8. Согласие с условиями договора</p>
+    <p>8.1. Оплата заказа Покупателем посредством уникальной ссылки означает полное согласие с условиями настоящего договора оферты.</p>
+    <p>9. Прочие условия</p>
+    <p>9.1. Продавец оставляет за собой право вносить изменения в настоящий договор оферты без предварительного уведомления Покупателя.</p>
+    <p>9.2. Настоящий договор оферты вступает в силу с момента его размещения на Telegram-боте t.me/strattera_bot и действует до момента его отзыва Продавцом.</p>
+    <p>10. Контактная информация</p>
+    <p>•  Telegram-бот: t.me/strattera_bot</p>
+    <p>Продавец и Покупатель гарантируют, что все условия настоящего договора им понятны, и они принимают их безусловно и в полном объеме.</p>
+
+    <%= link_to "Принять", '#', class: "btn mt-3", style: 'display: inline-block', data: { action: "click->agreement#agree" } %>
   </div>
-<% end %>
+</div>

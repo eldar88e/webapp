@@ -344,3 +344,38 @@ body {
     justify-content: center;
   }
 }
+
+.agreement-text {
+  text-align: center;
+  display: none;
+}
+
+.close {
+  position: relative; /* Положение контейнера */
+  width: 12px; /* Ширина кнопки */
+  height: 12px; /* Высота кнопки */
+  cursor: pointer; /* Курсор при наведении */
+  margin-left: -4px;
+  margin-top: -19px;
+  position: absolute;
+}
+
+.close::before,
+.close::after {
+  content: ''; /* Добавляем пустое содержимое */
+  position: absolute;
+  top: 50%; /* Центрируем по вертикали */
+  left: 50%; /* Центрируем по горизонтали */
+  width: 100%; /* Ширина линии */
+  height: 1.5px; /* Толщина линии */
+  background-color: rgba(71, 132, 252, 1);
+  transform-origin: center; /* Точка вращения */
+}
+
+.close::before {
+  transform: translate(-50%, -50%) rotate(45deg); /* Первая линия */
+}
+
+.close::after {
+  transform: translate(-50%, -50%) rotate(-45deg); /* Вторая линия */
+}
