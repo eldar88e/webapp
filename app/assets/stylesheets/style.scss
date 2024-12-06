@@ -155,8 +155,8 @@ main {
 .scrollable {
   padding-right: 18px;
   margin-right: -18px;
-  max-height: 260px;
-  overflow-y: scroll;
+  max-height: 400px;
+  overflow-y: auto;
 
   &::-webkit-scrollbar {
     width: 15px; /* ширина вертикальной полосы прокрутки */
@@ -165,13 +165,13 @@ main {
   &::-webkit-scrollbar-track {
     background: black;
     border: none;
+    border-radius: 8px;
   }
 
   &::-webkit-scrollbar-thumb {
     background-color: rgba(71, 132, 252, 1); /* цвет ползунка */
-    border-radius: 4px; /* округлые края */
-    width: 5px;
-    border: 1px solid black;
+    border-radius: 8px; /* округлые края */
+    border: 4px solid black;
   }
 
   &::-webkit-scrollbar-thumb:hover {
@@ -277,14 +277,21 @@ main {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 24px;
       border: rgba(71, 132, 252, 1) 1px solid;
       border-radius: 17px;
-      padding: 5px 17px;
 
       .plus {
         font-size: 18px;
         line-height: 22px;
+        padding: 6px 16px;
+      }
+
+      .num {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 27px;
+        height: 34px;
       }
     }
   }
@@ -360,8 +367,8 @@ main {
 
 .close {
   position: relative; /* Положение контейнера */
-  width: 12px; /* Ширина кнопки */
-  height: 12px; /* Высота кнопки */
+  width: 24px; /* Ширина кнопки */
+  height: 24px; /* Высота кнопки */
   cursor: pointer; /* Курсор при наведении */
   margin-left: -4px;
   margin-top: -19px;
@@ -374,7 +381,7 @@ main {
   position: absolute;
   top: 50%; /* Центрируем по вертикали */
   left: 50%; /* Центрируем по горизонтали */
-  width: 100%; /* Ширина линии */
+  width: 12px; /* Ширина линии */
   height: 1.5px; /* Толщина линии */
   background-color: rgba(71, 132, 252, 1);
   transform-origin: center; /* Точка вращения */
