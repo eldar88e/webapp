@@ -22,11 +22,13 @@
   <body>
     <%= render partial: '/layouts/partial/header' %>
 
-    <div class="container mx-auto">
-      <div id="modal" class="modal"></div>
+    <main>
+      <div class="container mx-auto">
+        <div id="modal" class="modal"></div>
 
-      <%= yield %>
-    </div>
+        <%= yield %>
+      </div>
+    </main>
 
     <%= render partial: '/layouts/partial/footer' %>
   </body>

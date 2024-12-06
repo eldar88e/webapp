@@ -21,8 +21,12 @@ body {
 }
 
 .header {
-  padding-top: 68px;
-  padding-bottom: 20px;
+  padding: 20px 10px;
+  z-index: 9;
+  position: fixed;
+  width: 100%;
+  background: #000001;
+  margin: 0 -10px;
 
   .logo {
     background: linear-gradient(276.05deg, #5F35F7 5.83%, #5098F7 94.27%);
@@ -36,6 +40,10 @@ body {
     display: inline-block;
     color: rgba(0, 0, 0, 1);
   }
+}
+
+main {
+  padding-top: 90px;
 }
 
 .product-wrapper {
