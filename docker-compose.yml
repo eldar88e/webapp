@@ -32,6 +32,8 @@ services:
     restart: always
 
   sidekiq:
+    tty: true
+    stdin_open: true
     image: miniapp
     build: .
     container_name: miniapp-sidekiq
