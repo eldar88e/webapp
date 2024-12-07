@@ -22,7 +22,6 @@ WORKDIR /app
 COPY Gemfile Gemfile.lock ./
 RUN gem update --system 3.5.23
 RUN gem install bundler -v $(tail -n 1 Gemfile.lock)
-RUN gem install ffi -v 1.17.0 --platform ruby
 RUN bundle check || bundle install && bundle clean --force
 
 COPY package.json yarn.lock ./

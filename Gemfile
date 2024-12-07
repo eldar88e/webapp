@@ -19,6 +19,7 @@ gem "bootsnap", require: false
 gem "administrate"
 gem "dotenv"
 gem "devise"
+gem 'ffi', '~> 1.15'
 gem "telegram-bot-ruby", require: false
 gem "i18n"
 gem "sidekiq"
