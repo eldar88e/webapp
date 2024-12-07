@@ -22,7 +22,8 @@ WORKDIR /app
 COPY Gemfile Gemfile.lock ./
 RUN gem update --system 3.5.23
 RUN gem install bundler -v $(tail -n 1 Gemfile.lock)
-RUN bundle check || bundle install && bundle clean --force
+RUN bundle check || bundle install
+RUN bundle clean --force
 
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
