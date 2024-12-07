@@ -24,17 +24,10 @@
       <div class="product-footer">
         <% if user_signed_in? %>
           <%= button_to cart_items_path(cart_item: { product_id: product.id }), class: 'btn-order' do %>
-            <div class="title">Заказать</div>
-            <div class="plus">
-              <%= image_tag image_path('plus.svg') %>
-              <%= render partial: '/layouts/partial/cart_item_counter', locals: { id: product.id } %>
-            </div>
-          <% end %>
-        <% else %>
-          <%= link_to '#', class: 'btn-order' do %>
             <div class="title-btn">Заказать</div>
             <div class="plus">
               <%= image_tag image_path('plus.svg') %>
+              <%= render partial: '/layouts/partial/cart_item_counter', locals: { id: product.id } %>
             </div>
           <% end %>
         <% end %>

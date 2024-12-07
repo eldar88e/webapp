@@ -4,6 +4,8 @@ class ProductsController < ApplicationController
 
   # GET /products or /products.json
   def index
+    return redirect_to carts_path if params[:start] == 'cart'
+
     @products = Product.all
   end
 

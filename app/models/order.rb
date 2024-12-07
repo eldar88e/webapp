@@ -45,7 +45,6 @@ class Order < ApplicationRecord
       fio: user.full_name,
       phone: user.phone_number
     )
-
     msg_id = TelegramService.call(msg, self.user.tg_id, markup: 'i_paid')
     self.update_columns(msg_id: msg_id)
     Rails.logger.info "Order #{id} is now unpaid"
