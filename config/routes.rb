@@ -11,8 +11,14 @@ Rails.application.routes.draw do
       resources :users
 
       root to: "carts#index"
-    end
-  mount Sidekiq::Web => '/sidekiq'
+  end
+  authenticate :user do
+    mount Sidekiq::Web => '/sidekiq'
+
+  end
+
+  mount ExceptionTrack::Engine => '/exception-track'
+
   resources :order_items
   resources :orders
   resources :carts
