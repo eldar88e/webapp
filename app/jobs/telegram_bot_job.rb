@@ -62,6 +62,15 @@ class TelegramBotJob < ApplicationJob
     bot.api.delete_message(chat_id: message.from.id, message_id: message.message.message_id)
   end
 
+  def approve_payment(bot, message)
+    order_number = parse_order_number(message.message.text)
+    fio          = parse_full_name(message.message.text)
+    order        = Order.find(order_number)
+    order.update(status: :processing)
+    bot.api.delete_message(chat_id: message.chat.id, message_id: message.message.message_id)
+    bot.api.send_message(chat_id: message.chat.id, text: I18n.t('tg_msg.approved_pay', order: order_number, fio: fio))
+  end
+
   def submit_tracking(bot, message)
     order_number = parse_order_number(message.message.text)
     full_name    = parse_full_name(message.message.text)
@@ -75,15 +84,6 @@ class TelegramBotJob < ApplicationJob
         msg_id: message.message.message_id, h_msg: msg.message_id },
       expires_in: TRACK_CACHE_PERIOD
     )
-  end
-
-  def approve_payment(bot, message)
-    order_number = parse_order_number(message.message.text)
-    fio          = parse_full_name(message.message.text)
-    order        = Order.find(order_number)
-    order.update(status: :processing)
-    bot.api.delete_message(chat_id: message.from.id, message_id: message.message.message_id)
-    bot.api.send_message(chat_id: message.from.id, text: I18n.t('tg_msg.approved_pay', order: order_number, fio: fio))
   end
 
   def parse_order_number(text)
