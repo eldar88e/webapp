@@ -1,6 +1,17 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  namespace :admin do
+      resources :carts
+      resources :cart_items
+      resources :orders
+      resources :order_items
+      resources :products
+      resources :settings
+      resources :users
+
+      root to: "carts#index"
+    end
   mount Sidekiq::Web => '/sidekiq'
   resources :order_items
   resources :orders
