@@ -16,7 +16,7 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
 
 # gem "image_processing", "~> 1.2"
-gem "administrate"
+# gem "administrate"
 gem "dotenv"
 gem "devise"
 gem "telegram-bot-ruby", require: false
