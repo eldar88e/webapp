@@ -1,6 +1,6 @@
 FROM ruby:3.3.3-alpine AS chat
 
-RUN apk --update add --no-cache \
+RUN apk --update add \
     build-base \
     tzdata \
     yarn \
