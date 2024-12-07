@@ -139,6 +139,9 @@ GEM
       dry-logic (~> 1.4)
       zeitwerk (~> 2.6)
     erubi (1.13.0)
+    exception-track (1.3.0)
+      kaminari (>= 0.15)
+      rails (>= 5.2)
     factory_bot (6.5.0)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.4.4)
@@ -154,6 +157,7 @@ GEM
       net-http (>= 0.5.0)
     ffi (1.17.0-aarch64-linux-gnu)
     ffi (1.17.0-arm64-darwin)
+    ffi (1.17.0-x86_64-linux-musl)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.6)
@@ -215,13 +219,7 @@ GEM
     nio4r (2.7.4)
     nokogiri (1.16.7-aarch64-linux)
       racc (~> 1.4)
-    nokogiri (1.16.7-arm-linux)
-      racc (~> 1.4)
     nokogiri (1.16.7-arm64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.16.7-x86-linux)
-      racc (~> 1.4)
-    nokogiri (1.16.7-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.16.7-x86_64-linux)
       racc (~> 1.4)
@@ -396,8 +394,8 @@ GEM
 
 PLATFORMS
   aarch64-linux
-  x86_64-linux-musl
   arm64-darwin
+  x86_64-linux-musl
 
 DEPENDENCIES
   administrate
@@ -409,6 +407,7 @@ DEPENDENCIES
   cssbundling-rails
   devise
   dotenv
+  exception-track
   factory_bot_rails
   i18n
   jbuilder
