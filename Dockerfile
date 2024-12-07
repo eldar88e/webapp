@@ -1,6 +1,6 @@
 FROM ruby:3.3.3-alpine AS chat
 
-RUN apk --update add \
+RUN apk --update add --no-cache \
     build-base \
     tzdata \
     yarn \
@@ -10,6 +10,7 @@ RUN apk --update add \
     redis \
     curl \
     libffi-dev \
+    ruby-dev \
     && rm -rf /var/cache/apk/*
 
 ENV BUNDLE_DEPLOYMENT="1" \
