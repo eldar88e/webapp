@@ -417,7 +417,6 @@ DEPENDENCIES
   devise
   dotenv
   factory_bot_rails
-  ffi (~> 1.15)
   i18n
   jbuilder
   jsbundling-rails
