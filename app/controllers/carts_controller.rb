@@ -1,7 +1,12 @@
 class CartsController < ApplicationController
-  before_action :set_cart, only: %i[ show destroy ]
+  layout "cart", only: [ :index ]
+  before_action :set_cart
 
-  # GET /carts/1 or /carts/1.json
+  def index
+    @cart_items = current_user.cart.cart_items
+    @products   = Product.all
+  end
+
   def show
     @cart_items = @cart.cart_items.includes(:product)
     if @cart_items.present?
@@ -12,12 +17,6 @@ class CartsController < ApplicationController
     else
       render turbo_stream: success_notice('Ваша корзина пуста!')
     end
-  end
-
-  # DELETE /carts/1 or /carts/1.json
-  def destroy
-    @cart.destroy!
-    redirect_to root_path, status: :see_other, notice: "Cart was successfully destroyed."
   end
 
   private

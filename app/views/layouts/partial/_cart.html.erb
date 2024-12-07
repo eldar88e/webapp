@@ -1,8 +1,0 @@
-<%= link_to current_user ? cart_path(id: current_user.cart) : "#", data: { turbo_prefetch: false }, id: 'cart_logo' do %>
-  <div class="cart-logo">
-    <%= image_tag image_path('cart.svg') %>
-    <% if current_user && (quantity = cart_items_total).positive? %>
-      <div class="cart-counter"><%= quantity %></div>
-    <% end %>
-  </div>
-<% end %>

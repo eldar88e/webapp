@@ -1,4 +1,5 @@
-<div class="cart scrollable">
+<div class="cart">
+  <h1 class="title">Корзина</h1>
   <div class="cart-header">
     <div class="cart-header-column">Название</div>
     <div class="cart-header-column">Количество</div>
@@ -8,4 +9,4 @@
   <%= render partial: '/cart_items/cart_item', collection: @cart_items %>
 </div>
 
-<%= button_to "Оформить заказ", orders_path(page: 1), class: 'btn'  %>
+<%= button_to "Оформить заказ", orders_path(page: 1), class: 'btn mb-3' %>

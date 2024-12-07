@@ -3,8 +3,8 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   authenticate :user do
     mount Sidekiq::Web => '/sidekiq'
+    mount ExceptionTrack::Engine => '/exception-track'
   end
-  mount ExceptionTrack::Engine => '/exception-track'
 
   devise_for :users, controllers: {
     registrations: 'users/registrations'
@@ -21,12 +21,10 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "products#index"
 
-  resources :products, only: [ :index, :show, :create, :update, :destroy ]
-  resources :users, only: [ :show ]
-  resources :carts, only: [ :show ]
+  resources :products, only: [ :index, :show, :create, :update, :destroy ] # TODO: убрать :show, :create, :update, :destroy :edit
+  resources :carts, only: [ :index, :show ]
   resources :cart_items, only: [ :create, :update, :destroy ]
-  resources :orders, only: [ :index, :show ]
-  resources :order_items
+  resources :orders, only: [ :index, :create, :update ]
 
   post "/auth/telegram", to: "auth#telegram_auth"
 end

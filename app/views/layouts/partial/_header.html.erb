@@ -10,17 +10,30 @@
   <div class="container mx-auto">
     <div class="flex items-center justify-between">
       <% if user_signed_in? %>
-        <%= link_to current_user ? edit_user_registration_path : "#", data: { turbo_prefetch: false },
-                    id: "user", title: current_user.first_name || current_user.username do %>
+        <%= button_to current_user ? edit_user_registration_path : "#", data: { turbo_prefetch: false },
+                    id: "user", title: current_user.first_name || current_user.username, method: :get do %>
           <%= image_tag image_path('user.svg') %>
         <% end %>
       <% else %>
         <%= image_tag image_path('user.svg') %>
       <% end %>
 
-      <%= link_to 'strattera bot', root_path, class: 'logo' %>
+      <%= button_to 'strattera bot', root_path, class: 'logo', method: :get %>
 
-      <%= render '/layouts/partial/cart' %>
+      <% if user_signed_in? %>
+        <%= button_to carts_path, data: { turbo_prefetch: false }, id: 'cart_logo', method: :get do %>
+          <div class="cart-logo">
+            <%= image_tag image_path('cart.svg') %>
+            <% if (quantity = cart_items_total).positive? %>
+              <div class="cart-counter"><%= quantity %></div>
+            <% end %>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="cart-logo">
+          <%= image_tag image_path('cart.svg') %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>
