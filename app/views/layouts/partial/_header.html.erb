@@ -21,18 +21,9 @@
       <%= button_to 'strattera bot', root_path, class: 'logo', method: :get %>
 
       <% if user_signed_in? %>
-        <%= button_to carts_path, data: { turbo_prefetch: false }, id: 'cart_logo', method: :get do %>
-          <div class="cart-logo">
-            <%= image_tag image_path('cart.svg') %>
-            <% if (quantity = cart_items_total).positive? %>
-              <div class="cart-counter"><%= quantity %></div>
-            <% end %>
-          </div>
-        <% end %>
+        <%= render '/layouts/partial/cart' %>
       <% else %>
-        <div class="cart-logo">
-          <%= image_tag image_path('cart.svg') %>
-        </div>
+        <%= image_tag image_path('cart.svg') %>
       <% end %>
     </div>
   </div>
