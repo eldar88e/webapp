@@ -1,12 +1,13 @@
 <div class="cart">
-  <h1 class="title-h">Корзина</h1>
   <div class="cart-header">
-    <div class="cart-header-column">Название</div>
+    <div class="basis-1/3">
+      <div class="cart-header-column">Название</div>
+    </div>
     <div class="cart-header-column">Количество</div>
     <div class="cart-header-column">Цена</div>
   </div>
 
-  <%= render partial: '/cart_items/cart_item', collection: @cart_items %>
+  <%= render 'carts/cart_items' %>
 </div>
 
 <%= button_to "Оформить заказ", orders_path(page: 1), class: 'btn mb-3' %>

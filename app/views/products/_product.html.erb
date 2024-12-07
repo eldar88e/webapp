@@ -1,38 +1,40 @@
-<div id="<%= dom_id product %>">
-  <div class="product-wrapper">
-    <div class="product">
-      <div class="product-title">
-        <%= product.name %>
-      </div>
-      <div class="product-exist">
-        <% if product.stock_quantity.positive? %>
-          <%= image_tag image_path('have.svg') %>
-          <%= 'В наличии' %>
-        <% else %>
-          <%= 'Нет в наличии' %>
-        <% end %>
-      </div>
-
-      <div class="product-img">
-        <% if product.image.attached? %>
-          <%= image_tag url_for(product.image), alt: product.name %>
-        <% else %>
-          <p>No image available</p>
-        <% end %>
-      </div>
-
-      <div class="product-footer">
-        <% if user_signed_in? %>
-          <%= button_to cart_items_path(cart_item: { product_id: product.id }), class: 'btn-order' do %>
-            <div class="title-btn">Заказать</div>
-            <div class="plus">
-              <%= image_tag image_path('plus.svg') %>
-              <%= render partial: '/layouts/partial/cart_item_counter', locals: { id: product.id } %>
-            </div>
+<% if product.name != 'Доставка' %>
+  <div id="<%= dom_id product %>">
+    <div class="product-wrapper">
+      <div class="product">
+        <div class="product-title">
+          <%= product.name %>
+        </div>
+        <div class="product-exist">
+          <% if product.stock_quantity.positive? %>
+            <%= image_tag image_path('have.svg') %>
+            <%= 'В наличии' %>
+          <% else %>
+            <%= 'Нет в наличии' %>
           <% end %>
-        <% end %>
-        <div class="price"><%= product.price.to_i %><span style="margin-left: 3px">₽</span></div>
+        </div>
+
+        <div class="product-img">
+          <% if product.image.attached? %>
+            <%= image_tag url_for(product.image), alt: product.name %>
+          <% else %>
+            <p>No image available</p>
+          <% end %>
+        </div>
+
+        <div class="product-footer">
+          <% if user_signed_in? %>
+            <%= button_to cart_items_path(cart_item: { product_id: product.id }), class: 'btn-order' do %>
+              <div class="title-btn">Заказать</div>
+              <div class="plus">
+                <%= image_tag image_path('plus.svg') %>
+                <%= render partial: '/layouts/partial/cart_item_counter', locals: { id: product.id } %>
+              </div>
+            <% end %>
+          <% end %>
+          <div class="price"><%= product.price.to_i %><span style="margin-left: 3px">₽</span></div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+<% end %>

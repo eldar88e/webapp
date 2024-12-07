@@ -255,6 +255,7 @@ main {
     .cart-header-column {
       padding-bottom: 16px;
       position: relative;
+      display: inline-block;
 
       &:after {
         content: '';

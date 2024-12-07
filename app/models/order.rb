@@ -121,7 +121,7 @@ class Order < ApplicationRecord
 
   def order_items_str(items = nil)
     (items || order_items).map.with_index(1) do |i, idx|
-      "#{idx}. #{i.product.name} #{i.quantity}шт. #{items ? i.product.price : i.price}₽"
+      "#{idx}. #{i.product.name} #{i.product.name != 'Доставка' ? (i.quantity.to_s + 'шт.') : 'услуга' } #{items ? i.product.price : i.price}₽"
     end.join(",\n")
   end
 end

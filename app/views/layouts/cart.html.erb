@@ -25,11 +25,14 @@
 <main>
   <div class="container mx-auto">
     <div id="modal" class="modal" style="display: block;">
-      <% if @cart_items.present? %>
-        <%= render '/carts/cart' %>
-      <% else %>
-        <div><%= t('empty_cart') %></div>
-      <% end %>
+      <h1 class="title-h">Корзина</h1>
+      <div id="cart">
+        <% if @cart_items.present? %>
+          <%= render '/carts/cart' %>
+        <% else %>
+          <div><%= t('empty_cart') %></div>
+        <% end %>
+      </div>
     </div>
 
     <%= yield %>

@@ -1,4 +1,5 @@
 class CartItemsController < ApplicationController
+  DELIVERY_ID = 5 # TODO: вывести в Setting
   before_action :set_cart_item, only: %i[ update destroy ]
 
   # POST /order_items or /order_items.json
@@ -7,16 +8,16 @@ class CartItemsController < ApplicationController
     cart_item = cart.cart_items.find_or_initialize_by(product_id: cart_item_params[:product_id])
 
     cart_item.quantity += 1 if cart_item.persisted?
-    return render turbo_stream: [
-      turbo_stream.replace(:cart_logo, partial: '/layouts/partial/cart'),
-      turbo_stream.replace(
-        "cart_item_#{cart_item_params[:product_id]}_counter",
-        partial: '/layouts/partial/cart_item_counter', locals: { id: cart_item_params[:product_id] }
-      ),
-      success_notice('Товар добавлен в корзину.')
-    ] if cart_item.save
 
-    render turbo_stream: error_notice('Не удалось добавить товар в корзину.')
+    if cart_item.save
+      @cart_items = current_user.cart.cart_items.order(:product_id)
+      render turbo_stream: [
+        turbo_stream.update(:cart, partial: '/carts/cart'),
+        success_notice('Товар добавлен в корзину.')
+      ] + update_counters(cart_item_params[:product_id])
+    else
+      render turbo_stream: error_notice('Не удалось добавить товар в корзину.')
+    end
   end
 
   # PATCH/PUT /order_items/1 or /order_items/1.json
@@ -51,7 +52,8 @@ class CartItemsController < ApplicationController
     def handle_remove_item(cart, cart_item)
       id = cart_item.product.id
       cart_item.destroy
-      if cart.cart_items.size > 1
+      @cart_items = current_user.cart.cart_items.order(:product_id)
+      if @cart_items.where.not(product_id: DELIVERY_ID).size.positive?
         return render turbo_stream: [ turbo_stream.remove("cart_item_#{cart_item.id}") ] + update_counters(id)
       end
 
@@ -72,12 +74,14 @@ class CartItemsController < ApplicationController
     end
 
     def update_counters(id)
+      @cart_items ||= current_user.cart.cart_items.order(:product_id)
       [
         turbo_stream.replace(:cart_logo, partial: '/layouts/partial/cart'),
         turbo_stream.replace(
           "cart_item_#{id}_counter",
           partial: '/layouts/partial/cart_item_counter', locals: { id: id }
-        )
+        ),
+        turbo_stream.replace(:cart_items, partial: '/carts/cart_items')
       ]
     end
 end
