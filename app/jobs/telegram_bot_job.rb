@@ -67,9 +67,8 @@ class TelegramBotJob < ApplicationJob
     fio          = parse_full_name(message.message.text)
     order        = Order.find(order_number)
     order.update(status: :processing)
-    binding.pry
-    bot.api.delete_message(chat_id: message.chat.id, message_id: message.message.message_id)
-    bot.api.send_message(chat_id: message.from.id, text: I18n.t('tg_msg.approved_pay', order: order_number, fio: fio))
+    bot.api.delete_message(chat_id: message.message.chat.id, message_id: message.message.message_id)
+    bot.api.send_message(chat_id: message.message.chat.id, text: I18n.t('tg_msg.approved_pay', order: order_number, fio: fio))
   end
 
   def submit_tracking(bot, message)
