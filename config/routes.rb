@@ -1,32 +1,14 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  namespace :admin do
-      resources :carts
-      resources :cart_items
-      resources :orders
-      resources :order_items
-      resources :products
-      resources :settings
-      resources :users
-
-      root to: "carts#index"
-  end
   authenticate :user do
     mount Sidekiq::Web => '/sidekiq'
-
   end
-
   mount ExceptionTrack::Engine => '/exception-track'
 
-  resources :order_items
-  resources :orders
-  resources :carts
-  resources :products
   devise_for :users, controllers: {
     registrations: 'users/registrations'
   }
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
@@ -38,11 +20,13 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "products#index"
+
   resources :products, only: [ :index, :show, :create, :update, :destroy ]
   resources :users, only: [ :show ]
   resources :carts, only: [ :show ]
   resources :cart_items, only: [ :create, :update, :destroy ]
   resources :orders, only: [ :index, :show ]
+  resources :order_items
 
   post "/auth/telegram", to: "auth#telegram_auth"
 end
