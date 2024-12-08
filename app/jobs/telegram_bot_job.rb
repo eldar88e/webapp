@@ -35,8 +35,7 @@ class TelegramBotJob < ApplicationJob
       save_user(message.chat) if user.blank?
       send_firs_msg(bot, message.chat.id)
     else
-      binding.pry
-      if message.chat.id == settings[:courier_tg_id]
+      if message.chat.id == settings[:courier_tg_id].to_i
         input_tracking_number(message)
       else
         send_firs_msg(bot, message.chat.id)
