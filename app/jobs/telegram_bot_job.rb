@@ -36,14 +36,14 @@ class TelegramBotJob < ApplicationJob
       send_firs_msg(bot, message.chat.id)
     else
       if message.chat.id == settings[:courier_tg_id].to_i
-        input_tracking_number(message)
+        input_tracking_number(bot, message)
       else
         send_firs_msg(bot, message.chat.id)
       end
     end
   end
 
-  def input_tracking_number(message)
+  def input_tracking_number(bot, message)
     user_state = Rails.cache.read("user_#{message.chat.id}_state")
     if user_state&.dig(:waiting_for_tracking)
       order = Order.find_by(id: user_state[:order_id])
