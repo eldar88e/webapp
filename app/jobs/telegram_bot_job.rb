@@ -45,6 +45,7 @@ class TelegramBotJob < ApplicationJob
 
   def input_tracking_number(message)
     user_state = Rails.cache.read("user_#{message.from.id}_state")
+    binding.pry
     if user_state&.dig(:waiting_for_tracking)
       order = Order.find_by(id: user_state[:order_id])
       order.update(tracking_number: message.text, status: 'shipped')
@@ -78,10 +79,8 @@ class TelegramBotJob < ApplicationJob
   def submit_tracking(bot, message)
     order_number = parse_order_number(message.message.text)
     full_name    = parse_full_name(message.message.text)
-    msg = bot.api.send_message(
-      chat_id: message.message.chat.id,
-      text: "Введите трек-номер для заказа №#{order_number}(#{full_name}) в чат:"
-    )
+    msg          = bot.api.send_message(chat_id: message.message.chat.id,
+                                        text: I18n.t('tg_msg.set_track_num', order: order_number, fio: full_name))
     Rails.cache.write(
       "user_#{message.from.id}_state",
       { waiting_for_tracking: true, order_id: order_number, full_name: full_name,
