@@ -44,8 +44,7 @@ class TelegramBotJob < ApplicationJob
   end
 
   def input_tracking_number(message)
-    user_state = Rails.cache.read("user_#{message.from.id}_state")
-    binding.pry
+    user_state = Rails.cache.read("user_#{message.chat.id}_state")
     if user_state&.dig(:waiting_for_tracking)
       order = Order.find_by(id: user_state[:order_id])
       order.update(tracking_number: message.text, status: 'shipped')
@@ -56,7 +55,7 @@ class TelegramBotJob < ApplicationJob
       bot.api.delete_message(chat_id: message.chat.id, message_id: user_state[:msg_id])
       bot.api.delete_message(chat_id: message.chat.id, message_id: user_state[:h_msg])
       bot.api.delete_message(chat_id: message.chat.id, message_id: message.message_id)
-      Rails.cache.delete("user_#{message.from.id}_state")
+      Rails.cache.delete("user_#{message.chat.id}_state")
     end
   end
 
@@ -82,7 +81,7 @@ class TelegramBotJob < ApplicationJob
     msg          = bot.api.send_message(chat_id: message.message.chat.id,
                                         text: I18n.t('tg_msg.set_track_num', order: order_number, fio: full_name))
     Rails.cache.write(
-      "user_#{message.from.id}_state",
+      "user_#{message.chat.id}_state",
       { waiting_for_tracking: true, order_id: order_number, full_name: full_name,
         msg_id: message.message.message_id, h_msg: msg.message_id },
       expires_in: TRACK_CACHE_PERIOD
