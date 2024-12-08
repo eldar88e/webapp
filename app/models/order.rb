@@ -30,11 +30,10 @@ class Order < ApplicationRecord
     end
   end
 
-  # Колбэки для каждого статуса
   def on_unpaid
     # Логика для статуса "не оплачен"
-    TelegramService.delete_msg('', self.user.tg_id, self.msg_id) if self.msg_id # TODO: нужно ли ?
-    card = Setting.find_by(variable: 'card').value
+    TelegramService.delete_msg('', self.user.tg_id, self.msg_id) if self.msg_id
+    card = Setting.find_by(variable: 'card').value # TODO: через cache
     msg  = I18n.t(
       'tg_msg.unpaid',
       order: id,
@@ -53,7 +52,6 @@ class Order < ApplicationRecord
   def on_pending # is paid and on pending
     # Логика для статуса "оплачен"
     self.user.cart.destroy # удаляем корзину после оплаты
-    admin_chat_id = Setting.find_by(variable: 'admin_chat_id').value
     msg           = I18n.t(
       'tg_msg.paid_admin',
       order: id,
@@ -63,7 +61,7 @@ class Order < ApplicationRecord
       fio: user.full_name,
       phone: user.phone_number
     )
-    TelegramService.call(msg, admin_chat_id, markup: 'approve_payment') # send admin
+    TelegramService.call(msg, nil, markup: 'approve_payment') # send to admin
     msg_id = TelegramService.call(I18n.t('tg_msg.paid_client'), user.tg_id) # send client
     update_columns(msg_id: msg_id)
     Rails.logger.info "Order #{id} is now paid"
@@ -80,8 +78,7 @@ class Order < ApplicationRecord
       fio: user.full_name,
       phone: user.phone_number
     )
-    courier_tg_id = Setting.find_by(variable: 'courier_tg_id').value
-    TelegramService.call(msg, courier_tg_id, markup: 'submit_tracking')
+    TelegramService.call(msg, :courier, markup: 'submit_tracking') # send to deliver
     TelegramService.delete_msg('', user.tg_id, self.msg_id)
     msg_id = TelegramService.call(I18n.t('tg_msg.on_processing_client', order: id), user.tg_id)
     update_columns(msg_id: msg_id)
@@ -100,8 +97,8 @@ class Order < ApplicationRecord
                  phone: user.phone_number,
                  track: tracking_number
     )
+    deduct_stock
     TelegramService.call(msg, user.tg_id)
-    # TODO: реализовать списание с остатков
     Rails.logger.info "Order #{id} has been shipped"
   end
 
@@ -123,5 +120,24 @@ class Order < ApplicationRecord
     (items || order_items).map.with_index(1) do |i, idx|
       "#{idx}. #{i.product.name} #{i.product.name != 'Доставка' ? (i.quantity.to_s + 'шт.') : 'услуга' } #{items ? i.product.price : i.price}₽"
     end.join(",\n")
+  end
+
+  def deduct_stock
+    order_items.each do |order_item|
+      product = order_item.product
+      if product.stock_quantity >= order_item.quantity
+        product.update!(stock_quantity: product.stock_quantity - order_item.quantity)
+      else
+        msg = "Insufficient stock for product: #{product.name}"
+        Rails.logger.info msg
+        TelegramService.call(msg)
+        raise StandardError, msg
+      end
+      if product.stock_quantity < 10
+        msg = "Осталось #{product.stock_quantity}шт. #{product.name} на складе!"
+        Rails.logger.info msg
+        TelegramService.call(msg)
+      end
+    end
   end
 end

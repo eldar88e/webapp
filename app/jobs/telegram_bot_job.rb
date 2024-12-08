@@ -6,9 +6,7 @@ class TelegramBotJob < ApplicationJob
   TRACK_CACHE_PERIOD = 5.minutes
 
   def perform(*args)
-    setting = Setting.pluck(:variable, :value).to_h.transform_keys(&:to_sym)
-
-    Telegram::Bot::Client.run(setting[:tg_token]) do |bot|
+    Telegram::Bot::Client.run(settings[:tg_token]) do |bot|
       bot.listen do |message|
         case message
         when Telegram::Bot::Types::CallbackQuery
@@ -37,21 +35,27 @@ class TelegramBotJob < ApplicationJob
       save_user(message.chat) if user.blank?
       send_firs_msg(bot, message.chat.id)
     else
-      user_state = Rails.cache.read("user_#{message.from.id}_state")
-      if user_state&.dig(:waiting_for_tracking)
-        order = Order.find_by(id: user_state[:order_id])
-        order.update(tracking_number: message.text, status: 'shipped')
-        bot.api.send_message(
-          chat_id: message.chat.id,
-          text: I18n.t('tg_msg.track_num_save', order: user_state[:order_id], fio: user_state[:full_name], num: message.text)
-        )
-        bot.api.delete_message(chat_id: message.chat.id, message_id: user_state[:msg_id])
-        bot.api.delete_message(chat_id: message.chat.id, message_id: user_state[:h_msg])
-        bot.api.delete_message(chat_id: message.chat.id, message_id: message.message_id)
-        Rails.cache.delete("user_#{message.from.id}_state")
+      if message.chat.id == settings[:courier_tg_id]
+        input_tracking_number(message)
       else
         send_firs_msg(bot, message.chat.id)
       end
+    end
+  end
+
+  def input_tracking_number(message)
+    user_state = Rails.cache.read("user_#{message.from.id}_state")
+    if user_state&.dig(:waiting_for_tracking)
+      order = Order.find_by(id: user_state[:order_id])
+      order.update(tracking_number: message.text, status: 'shipped')
+      bot.api.send_message(
+        chat_id: message.chat.id,
+        text: I18n.t('tg_msg.track_num_save', order: user_state[:order_id], fio: user_state[:full_name], num: message.text)
+      )
+      bot.api.delete_message(chat_id: message.chat.id, message_id: user_state[:msg_id])
+      bot.api.delete_message(chat_id: message.chat.id, message_id: user_state[:h_msg])
+      bot.api.delete_message(chat_id: message.chat.id, message_id: message.message_id)
+      Rails.cache.delete("user_#{message.from.id}_state")
     end
   end
 
@@ -68,7 +72,7 @@ class TelegramBotJob < ApplicationJob
     order        = Order.find(order_number)
     order.update(status: :processing)
     bot.api.delete_message(chat_id: message.message.chat.id, message_id: message.message.message_id)
-    bot.api.send_message(chat_id: message.message.chat.id, text: I18n.t('tg_msg.approved_pay', order: order_number, fio: fio))
+    # bot.api.send_message(chat_id: message.message.chat.id, text: I18n.t('tg_msg.approved_pay', order: order_number, fio: fio))
   end
 
   def submit_tracking(bot, message)
@@ -128,5 +132,9 @@ class TelegramBotJob < ApplicationJob
 
   def generate_email(chat_id)
     "telegram_user_#{chat_id}@example.com"
+  end
+
+  def settings
+    Setting.pluck(:variable, :value).to_h.transform_keys(&:to_sym) # TODO: cache
   end
 end

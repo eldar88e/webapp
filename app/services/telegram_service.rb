@@ -9,7 +9,7 @@ class TelegramService
     settings = Rails.cache.fetch(:settings, expires_in: 6.hours) do
       Setting.pluck(:variable, :value).to_h.transform_keys(&:to_sym)
     end
-    @chat_id   = id || settings[:admin_chat_id]
+    @chat_id   = id == :courier ? settings[:courier_tg_id] : (id || settings[:admin_chat_id])
     @bot_token = settings[:tg_token]
     @msg_id    = msg_id
   end
