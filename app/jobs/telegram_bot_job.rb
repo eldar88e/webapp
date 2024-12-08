@@ -35,6 +35,7 @@ class TelegramBotJob < ApplicationJob
       save_user(message.chat) if user.blank?
       send_firs_msg(bot, message.chat.id)
     else
+      binding.pry
       if message.chat.id == settings[:courier_tg_id]
         input_tracking_number(message)
       else
@@ -135,6 +136,8 @@ class TelegramBotJob < ApplicationJob
   end
 
   def settings
-    Setting.pluck(:variable, :value).to_h.transform_keys(&:to_sym) # TODO: cache
+    Rails.cache.fetch(:settings, expires_in: 1.hours) do
+      Setting.pluck(:variable, :value).to_h.transform_keys(&:to_sym)
+    end
   end
 end

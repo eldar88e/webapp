@@ -5,10 +5,7 @@ class TelegramService
   BOT_NAME = 'atominexbot' # TODO: перенести в Settings
 
   def initialize(message, id = nil, msg_id = nil)
-    @message = message
-    settings = Rails.cache.fetch(:settings, expires_in: 6.hours) do
-      Setting.pluck(:variable, :value).to_h.transform_keys(&:to_sym)
-    end
+    @message   = message
     @chat_id   = id == :courier ? settings[:courier_tg_id] : (id || settings[:admin_chat_id])
     @bot_token = settings[:tg_token]
     @msg_id    = msg_id
@@ -28,6 +25,12 @@ class TelegramService
   end
 
   private
+
+  def settings
+    Rails.cache.fetch(:settings, expires_in: 6.hours) do
+      Setting.pluck(:variable, :value).to_h.transform_keys(&:to_sym)
+    end
+  end
 
   def delete_message
     Telegram::Bot::Client.run(@bot_token) do |bot|
