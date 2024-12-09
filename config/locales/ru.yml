@@ -16,3 +16,11 @@ ru:
     approve_payment: "Оплата пришла"
     submit_tracking: "Привязать трек"
   empty_cart: "Ваша корзина пустая!"
+  order:
+    statuses:
+      unpaid: "Ожидание платежа"
+      pending: "Ожидание подтверждения платежа"
+      processing: "В процессе отправки"
+      shipped: "Отправлено"
+      cancelled: "Отменено"
+      refunded: "Возвращено"
