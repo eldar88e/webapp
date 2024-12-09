@@ -3,7 +3,7 @@ module Admin
     before_action :set_product, only: %i[edit update destroy]
 
     def index
-      @products = Product.all
+      @products = Product.includes(:image_attachment)
     end
 
     def new
@@ -11,11 +11,16 @@ module Admin
     end
 
     def create
+      @product = Product.new(product_params)
 
+      if @product.save
+        redirect_to admin_products_path, notice: "Product was successfully created."
+      else
+        render :new, status: :unprocessable_entity
+      end
     end
 
-    def edit
-    end
+    def edit; end
 
     def update
       if @product.update(product_params)
@@ -26,7 +31,8 @@ module Admin
     end
 
     def destroy
-
+      @product.destroy!
+      redirect_to admin_products_path, status: :see_other, notice: "Product was successfully destroyed."
     end
 
     private
