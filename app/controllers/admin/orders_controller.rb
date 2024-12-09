@@ -4,7 +4,7 @@ module Admin
     include Pagy::Backend
 
     def index
-      @pagy, @orders = pagy(Order.includes(:user).order(:created_at), items: 20)
+      @pagy, @orders = pagy(Order.includes(:user).order(created_at: :desc), items: 20)
     end
 
     def edit; end
