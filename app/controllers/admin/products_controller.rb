@@ -18,7 +18,11 @@ module Admin
     end
 
     def update
-
+      if @product.update(product_params)
+        redirect_to @product, notice: "Product was successfully updated."
+      else
+        render :edit, status: :unprocessable_entity
+      end
     end
 
     def destroy
