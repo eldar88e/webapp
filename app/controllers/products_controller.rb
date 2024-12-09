@@ -69,5 +69,6 @@ class ProductsController < ApplicationController
 
     def authenticate_dev!
       sign_in(User.first) if Rails.env.development?
+      Rails.logger.info "Current user: #{current_user.email} for development!"
     end
 end

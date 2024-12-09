@@ -21,10 +21,16 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "products#index"
 
-  resources :products, only: [ :index, :show, :create, :update, :destroy, :new, :edit ] # TODO: убрать :show, :create, :update, :destroy :edit
+  resources :products, only: [ :index ]
   resources :carts, only: [ :index, :show ]
   resources :cart_items, only: [ :create, :update, :destroy ]
   resources :orders, only: [ :index, :create, :update ]
 
   post "/auth/telegram", to: "auth#telegram_auth"
+
+  namespace :admin do
+    get "/dashboard", to: "dashboard#index"
+    get "/", to: "dashboard#index"
+    resources :products
+  end
 end

@@ -1,5 +1,6 @@
 <% content_for :title, "Products" %>
 
 <div id="products">
+  <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: 'btn btn-primary' %>
   <%= render @products %>
 </div>

@@ -1,0 +1,16 @@
+<nav class="nav-bar">
+  <div class="nav-wrapper">
+    <div class="flex justify-between items-center">
+      <div class="flex items-center justify-start">
+        <button class="btn-menu">
+          <%= image_tag image_path('admin/menu.svg') %>
+        </button>
+        <%= link_to '/admin' do %>
+          <%= image_tag image_path('admin/logo.svg') %>
+        <% end %>
+        <div style="height: 46px;"></div>
+      </div>
+      <div data-action="click->dark#change">dark</div>
+    </div>
+  </div>
+</nav>

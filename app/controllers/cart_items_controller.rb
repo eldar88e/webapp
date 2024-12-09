@@ -76,10 +76,10 @@ class CartItemsController < ApplicationController
     def update_counters(id)
       @cart_items ||= current_user.cart.cart_items.order(:product_id)
       [
-        turbo_stream.replace(:cart_logo, partial: '/layouts/partial/cart'),
+        turbo_stream.replace(:cart_logo, partial: '/layouts/partials/cart'),
         turbo_stream.replace(
           "cart_item_#{id}_counter",
-          partial: '/layouts/partial/cart_item_counter', locals: { id: id }
+          partial: '/layouts/partials/cart_item_counter', locals: { id: id }
         ),
         turbo_stream.replace(:cart_items, partial: '/carts/cart_items')
       ]

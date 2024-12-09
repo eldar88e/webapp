@@ -2,23 +2,13 @@ class AuthController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def telegram_auth
-    puts "=" * 80
-    puts cookies.to_hash
-    puts current_user
-    puts "+" * 80
-
     unless user_signed_in?
-      data = params.to_unsafe_h.except(:controller, :action)
-
-      puts "=" * 80
-      puts data
-      puts "+" * 80
-
+      data      = params.to_unsafe_h.except(:controller, :action)
       init_data = URI.decode_www_form(data["initData"]).to_h
-      return render json: { error: true, msg: "App for Telegram!" } if init_data.blank?
+      return redirect_to 'https://t.me/atominexbot' if init_data.blank? # TODO: url to settings
 
-      tg_user   = JSON.parse init_data["user"]
-      user      = User.find_or_create_by(tg_id: tg_user["id"]) do |u|
+      tg_user = JSON.parse init_data["user"]
+      user    = User.find_or_create_by(tg_id: tg_user["id"]) do |u|
         u.username    = tg_user["username"]
         u.first_name  = tg_user["first_name"]
         u.middle_name = tg_user["last_name"]
@@ -35,7 +25,7 @@ class AuthController < ApplicationController
 
   def valid_telegram_data?(data, secret_key)
     check_string = data.sort.map { |k, v| "#{k}=#{v}" }.join("\n")
-    hmac = OpenSSL::HMAC.hexdigest(OpenSSL::Digest::SHA256.new, secret_key, check_string)
+    hmac         = OpenSSL::HMAC.hexdigest(OpenSSL::Digest::SHA256.new, secret_key, check_string)
     hmac == data["hash"]
   end
 

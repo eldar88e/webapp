@@ -21,7 +21,7 @@
       <%= button_to 'strattera bot', root_path, class: 'logo', method: :get %>
 
       <% if user_signed_in? %>
-        <%= render '/layouts/partial/cart' %>
+        <%= render '/layouts/partials/cart' %>
       <% else %>
         <%= image_tag image_path('cart.svg') %>
       <% end %>

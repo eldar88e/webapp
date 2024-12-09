@@ -4,8 +4,6 @@ export default class extends Controller {
   static targets = ["form", "agreement", "check_box"];
 
   connect() {
-    //this.element.textContent = "Hello World!"
-    console.log(this.element);
   }
 
   visible(event) {
