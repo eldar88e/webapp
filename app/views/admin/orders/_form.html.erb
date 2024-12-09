@@ -1,0 +1,22 @@
+<%= form_with(model: @order, url: admin_order_path(@order)) do |form| %>
+  <% if @order.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(@order.errors.count, "error") %> prohibited this order from being saved:</h2>
+
+      <ul>
+        <% @order.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-4">
+    <%= form.label :status, class: 'form-label' %>
+    <%= form.select :status, Order.statuses.keys.map { |key| [I18n.t("order.statuses.#{key}"), key] }, {}, { class: 'form-select' } %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.submit "Сохранить", class: "px-4 py-2 bg-blue-500 text-white font-semibold rounded" %>
+  </div>
+<% end %>

@@ -25,6 +25,8 @@ Rails.application.routes.draw do
     get "/dashboard", to: "dashboard#index"
     get "/", to: "dashboard#index"
     resources :products
+    resources :settings
+    resources :orders
   end
 
   match '*unmatched', to: 'application#redirect_to_telegram', via: :all,
