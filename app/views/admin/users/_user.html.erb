@@ -2,6 +2,10 @@
   <div class="text-light-dark flex p-4 gap-4">
     <div><%= user.id %></div>
     <div ><%= user.full_name %></div>
+    <div ><%= user.username %></div>
+    <div ><%= user.phone_number %></div>
+    <div ><%= user.address %></div>
+    <div ><%= format_date user.created_at %></div>
 
     <%= link_to edit_admin_user_path(user), class: 'h-5 w-5' do %>
       <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

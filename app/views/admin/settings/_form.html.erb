@@ -1,0 +1,32 @@
+<%= form_with(model: setting, url: (method == :patch ? admin_setting_path(setting) : admin_settings_path)) do |form| %>
+  <% if setting.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(setting.errors.count, "error") %> prohibited this setting from being saved:</h2>
+
+      <ul>
+        <% setting.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-4">
+    <%= form.label :variable, style: "display: block" %>
+    <%= form.text_field :variable %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :value, style: "display: block" %>
+    <%= form.text_field :value %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :description, style: "display: block" %>
+    <%= form.text_field :description %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.submit "Сохранить", class: "px-4 py-2 bg-blue-500 text-white font-semibold rounded" %>
+  </div>
+<% end %>

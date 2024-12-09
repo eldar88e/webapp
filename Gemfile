@@ -23,6 +23,7 @@ gem 'exception-track'
 gem "telegram-bot-ruby", require: false
 gem "i18n"
 gem "sidekiq"
+gem 'pagy'
 gem "pry"
 
 group :development, :test do

@@ -1,9 +1,10 @@
 module Admin
   class UsersController < Admin::ApplicationController
     before_action :set_user, only: %i[edit update destroy]
+    include Pagy::Backend
 
     def index
-      @users = User.all
+      @pagy, @users = pagy(User.all, items: 20)
     end
 
     def new

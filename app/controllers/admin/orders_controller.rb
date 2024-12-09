@@ -1,9 +1,10 @@
 module Admin
   class OrdersController < Admin::ApplicationController
     before_action :set_order, only: %i[edit update destroy]
+    include Pagy::Backend
 
     def index
-      @orders = Order.includes(:user)
+      @pagy, @orders = pagy(Order.includes(:user), items: 20)
     end
 
     def edit; end
