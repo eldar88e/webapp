@@ -10,7 +10,15 @@
         <% end %>
         <div style="height: 46px;"></div>
       </div>
-      <div data-action="click->dark#change">dark</div>
+      <div class="flex items-center">
+        <div class="flex items-center" style="margin-right: 5px;">
+          <div style="margin-right: 5px;">
+            Hello<span style="font-weight: bold;"> <%= current_user.email %></span>!
+          </div>
+          <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: 'btn btn-primary' %>
+        </div>
+        <div data-action="click->dark#change">dark</div>
+      </div>
     </div>
   </div>
 </nav>

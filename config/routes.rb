@@ -35,4 +35,7 @@ Rails.application.routes.draw do
     get "/", to: "dashboard#index"
     resources :products
   end
+
+  match '*unmatched', to: 'application#redirect_to_telegram', via: :all,
+        constraints: lambda { |req| !req.path.start_with?('/rails/active_storage') }
 end

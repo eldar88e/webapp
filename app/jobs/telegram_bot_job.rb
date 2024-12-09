@@ -105,13 +105,13 @@ class TelegramBotJob < ApplicationJob
   def initialize_first_btn(chat_id)
     [
       [ Telegram::Bot::Types::InlineKeyboardButton.new(
-        text: 'Каталог', url: "https://t.me/atominexbot?startapp=#{chat_id}"
+        text: 'Каталог', url: "https://t.me/#{settings[:tg_main_bot]}?startapp=#{chat_id}"
       ) ],
       [ Telegram::Bot::Types::InlineKeyboardButton.new(
-        text: 'Перейти в СДВГ-чат', url: 'https://t.me/+EbVQcAOIdsk1Njhk'
+        text: 'Перейти в СДВГ-чат', url: 'https://t.me/+EbVQcAOIdsk1Njhk' # TODO: move to settings
       ) ],
       [ Telegram::Bot::Types::InlineKeyboardButton.new(
-        text: 'Задать вопрос', url: 'https://t.me/eczane_store'
+        text: 'Задать вопрос', url: 'https://t.me/eczane_store' # TODO: move to settings
       ) ]
     ]
   end

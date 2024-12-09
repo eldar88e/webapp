@@ -2,7 +2,6 @@ require 'telegram/bot'
 
 class TelegramService
   MESSAGE_LIMIT = 4_090
-  BOT_NAME = 'atominexbot' # TODO: перенести в Settings
 
   def initialize(message, id = nil, msg_id = nil)
     @message   = message
@@ -93,7 +92,7 @@ class TelegramService
     text = I18n.t("tg_btn.#{@markup}")
     result = [[Telegram::Bot::Types::InlineKeyboardButton.new(text: text, callback_data: @markup)]]
     result << [ Telegram::Bot::Types::InlineKeyboardButton.new(
-      text: 'Изменить заказ', url: "https://t.me/#{BOT_NAME}?startapp=#{@chat_id}&start=cart"
+      text: 'Изменить заказ', url: "https://t.me/#{settings[:tg_main_bot]}?startapp=#{@chat_id}&start=cart"
     ) ] if @markup == 'i_paid'
     result
   end

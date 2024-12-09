@@ -5,6 +5,9 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <%= javascript_tag do %>
+      window.tg_main_bot = "https://t.me/<%= settings[:tg_main_bot] %>"
+    <% end %>
   </head>
 
   <body>
