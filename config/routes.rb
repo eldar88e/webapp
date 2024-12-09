@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
   # Defines the root path route ("/")
-  root "products#index"
+  root "auth#login" # "products#index"
 
   resources :products, only: [ :index ]
   resources :carts, only: [ :index, :show ]
@@ -27,8 +27,10 @@ Rails.application.routes.draw do
   resources :orders, only: [ :index, :create, :update ]
 
   post "/auth/telegram", to: "auth#telegram_auth"
+  get "/login", to: "auth#login"
 
   namespace :admin do
+    get "/login", to: "dashboard#login"
     get "/dashboard", to: "dashboard#index"
     get "/", to: "dashboard#index"
     resources :products

@@ -32,7 +32,7 @@ module Admin
     end
 
     def product_params
-      params # TODO: дописать
+      params.require(:product).permit(:name, :description, :price, :stock_quantity, :image)
     end
   end
 end
