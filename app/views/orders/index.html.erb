@@ -2,15 +2,12 @@
 
 <% content_for :title, "Заказы" %>
 
-<h1>Заказы</h1>
+<h1 class="mb-5">Заказы</h1>
 
 <% if @orders.present? %>
   <div id="orders">
     <% @orders.each do |order| %>
       <%= render order %>
-      <p>
-        <%= link_to "Show this order", order %>
-      </p>
     <% end %>
   </div>
 <% else %>

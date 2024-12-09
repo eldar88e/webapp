@@ -3,8 +3,8 @@ class CartsController < ApplicationController
   before_action :set_cart
 
   def index
-    @cart_items = current_user.cart.cart_items
-    @products   = Product.all
+    @cart_items = current_user.cart.cart_items.includes(:product).order(:created_at)
+    @products   = Product.includes(:image_attachment)
   end
 
   def show

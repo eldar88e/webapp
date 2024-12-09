@@ -1,8 +1,7 @@
 class CartItemsController < ApplicationController
   DELIVERY_ID = 5 # TODO: вывести в Setting
-  before_action :set_cart_item, only: %i[ update destroy ]
+  before_action :set_cart_item, only: %i[ update ]
 
-  # POST /order_items or /order_items.json
   def create
     cart      = current_user.cart
     cart_item = cart.cart_items.find_or_initialize_by(product_id: cart_item_params[:product_id])
@@ -10,7 +9,7 @@ class CartItemsController < ApplicationController
     cart_item.quantity += 1 if cart_item.persisted?
 
     if cart_item.save
-      @cart_items = current_user.cart.cart_items.order(:product_id)
+      @cart_items = current_user.cart.cart_items.order(:created_at).includes(:product)
       render turbo_stream: [
         turbo_stream.update(:cart, partial: '/carts/cart'),
         success_notice('Товар добавлен в корзину.')
@@ -20,21 +19,10 @@ class CartItemsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /order_items/1 or /order_items/1.json
   def update
     cart      = Cart.includes(:cart_items).find(current_user.cart.id)
     cart_item = cart.cart_items.find(params[:id])
     params[:quantity] != "0" ? handle_update_carts(cart_item) : handle_remove_item(cart, cart_item)
-  end
-
-  # DELETE /order_items/1 or /order_items/1.json
-  def destroy
-    @order_item.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to order_items_path, status: :see_other, notice: "Order item was successfully destroyed." }
-      format.json { head :no_content }
-    end
   end
 
   private
@@ -52,7 +40,7 @@ class CartItemsController < ApplicationController
     def handle_remove_item(cart, cart_item)
       id = cart_item.product.id
       cart_item.destroy
-      @cart_items = current_user.cart.cart_items.order(:product_id)
+      @cart_items = current_user.cart.cart_items.order(:created_at).includes(:product)
       if @cart_items.where.not(product_id: DELIVERY_ID).size.positive?
         return render turbo_stream: [ turbo_stream.remove("cart_item_#{cart_item.id}") ] + update_counters(id)
       end
@@ -74,7 +62,7 @@ class CartItemsController < ApplicationController
     end
 
     def update_counters(id)
-      @cart_items ||= current_user.cart.cart_items.order(:product_id)
+      @cart_items ||= current_user.cart.cart_items.order(:created_at).includes(:product)
       [
         turbo_stream.replace(:cart_logo, partial: '/layouts/partials/cart'),
         turbo_stream.replace(

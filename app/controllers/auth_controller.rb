@@ -3,7 +3,11 @@ class AuthController < ApplicationController
   skip_before_action :check_authenticate_user!
   layout 'login'
   def login
-    redirect_to products_path if current_user
+    # redirect_to products_path if current_user
+    if current_user
+      @products = Product.all
+      render 'products/index', layout: 'application'
+    end
   end
 
   def telegram_auth

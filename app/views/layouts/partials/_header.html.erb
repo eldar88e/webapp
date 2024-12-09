@@ -18,7 +18,7 @@
         <%= image_tag image_path('user.svg') %>
       <% end %>
 
-      <%= button_to 'strattera bot', root_path, class: 'logo', method: :get %>
+      <%= button_to 'strattera bot', products_path, class: 'logo', method: :get %>
 
       <% if user_signed_in? %>
         <%= render '/layouts/partials/cart' %>

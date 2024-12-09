@@ -1,10 +1,8 @@
 class OrdersController < ApplicationController
-  # GET /orders or /orders.json
   def index
     @orders = current_user.orders
   end
 
-  # POST /orders or /orders.json
   def create
     return handle_user_info if params[:page].to_i == 1
     return error_notice("Вы не согласны с нашими условиями!") if params[:user][:agreement] != "1"
@@ -23,17 +21,7 @@ class OrdersController < ApplicationController
   private
 
     def calculate_total_price(cart)
-      cart.cart_items.sum { |item| item.product.price * item.quantity }
-    end
-
-    # Use callbacks to share common setup or constraints between actions.
-    def set_order
-      @order = current_user.orders.find(params[:id])
-    end
-
-    # Only allow a list of trusted parameters through.
-    def order_params
-      params.require(:order).permit(:user_id, :total_amount, :status)
+      cart.cart_items.includes(:product).sum { |item| item.product.price * item.quantity }
     end
 
     def handle_user_info
