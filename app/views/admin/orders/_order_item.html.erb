@@ -1,0 +1,20 @@
+<div id="<%= dom_id order_item %>" class="product">
+  <div class="text-light-dark flex p-4 gap-4">
+    <div><%= order_item.product.id %></div>
+
+    <div class="product-img">
+      <% if order_item.product.image.attached? %>
+        <%= image_tag url_for(order_item.product.image), alt: order_item.product.name, style: 'width: 50px;' %>
+      <% else %>
+        <p>No image</p>
+      <% end %>
+    </div>
+
+    <div class="product-title">
+      <%= order_item.product.name %>
+    </div>
+    <div class="product-exist"><%= order_item.quantity %>шт.</div>
+
+    <div class="price"><%= order_item.price.to_i %><span style="margin-left: 3px">₽</span></div>
+  </div>
+</div>

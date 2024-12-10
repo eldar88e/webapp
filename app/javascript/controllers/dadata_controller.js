@@ -12,8 +12,8 @@ export default class extends Controller {
       return;
     }
 
-    let url   = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
-    let token = "bbec7e427009a796a2ef0a4d9bd8315f3db7fa87";
+    let url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
+    let token = dadata_token;
 
     let options = {
       method: "POST",

@@ -44,11 +44,14 @@ class OrdersController < ApplicationController
     def create_order
       cart  = current_user.cart
       order = current_user.orders.find_or_create_by(status: :unpaid)
-      order.update!(total_amount: calculate_total_price(cart))
+      order.order_items.destroy_all
 
       cart.cart_items.each do |cart_item|
-        order_item = order.order_items.find_or_create_by(product: cart_item.product)
-        order_item.update(quantity: cart_item.quantity, price: cart_item.product.price)
+        order.order_items.create(
+          product: cart_item.product,
+          quantity: cart_item.quantity,
+          price: cart_item.product.price
+        )
       end
     end
 end

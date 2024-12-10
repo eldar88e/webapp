@@ -108,10 +108,10 @@ class TelegramBotJob < ApplicationJob
         text: 'Каталог', url: "https://t.me/#{settings[:tg_main_bot]}?startapp=#{chat_id}"
       ) ],
       [ Telegram::Bot::Types::InlineKeyboardButton.new(
-        text: 'Перейти в СДВГ-чат', url: 'https://t.me/+EbVQcAOIdsk1Njhk' # TODO: move to settings
+        text: 'Перейти в СДВГ-чат', url: settings[:tg_group]
       ) ],
       [ Telegram::Bot::Types::InlineKeyboardButton.new(
-        text: 'Задать вопрос', url: 'https://t.me/eczane_store' # TODO: move to settings
+        text: 'Задать вопрос', url: settings[:tg_support]
       ) ]
     ]
   end
