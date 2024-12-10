@@ -53,5 +53,6 @@ class OrdersController < ApplicationController
           price: cart_item.product.price
         )
       end
+      order.update!(total_amount: calculate_total_price(cart))
     end
 end
