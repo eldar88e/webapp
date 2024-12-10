@@ -2,7 +2,7 @@ require 'telegram/bot'
 
 class TelegramBotJob < ApplicationJob
   queue_as :bot_queue
-  VIDEO_URL          = 'https://webapp.open-ps.ru/videos/first_animation.mp4'
+  VIDEO_URL          = 'https://strattera.tgapp.online/videos/first_animation.mp4'
   TRACK_CACHE_PERIOD = 5.minutes
 
   def perform(*args)
