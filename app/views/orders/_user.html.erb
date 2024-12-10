@@ -21,7 +21,7 @@
       <div class="mt-6 address-wrapper">
         <%= f.text_field :address, autocomplete: "street-address", placeholder: 'Город, улица, дом, квартира',
                          class: "input-str", data: { dadata_target: "address", action: "input->dadata#search" } %>
-        <div class="suggestions-wrapper" data-dadata-target="suggestions">
+        <div class="suggestions-wrapper scrollable" data-dadata-target="suggestions">
           <div class="suggestions-suggestions" style="display: none;"></div>
         </div>
       </div>

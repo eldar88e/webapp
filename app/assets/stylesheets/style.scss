@@ -437,6 +437,7 @@ main {
     .suggestion-item {
       padding: 5px 0;
       cursor: pointer;
+      font-size: 14px;
 
       &:hover {
         color: #9ca3af;
@@ -446,6 +447,7 @@ main {
     .suggestion-item:first-child {
       color: #808080;
       cursor: default;
+      font-size: 12px;
 
       &:hover {
         color: #808080;
