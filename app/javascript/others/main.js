@@ -6,6 +6,10 @@ window.openModal = function() {
     document.getElementById('modal').style.display = 'block';
 };
 
+window.clearModal = function() {
+    document.getElementById('modal').textContent = '';
+};
+
 window.leftModal = function() {
     document.getElementById('modal').classList.add('left');
     document.getElementById('modal').classList.remove('right');

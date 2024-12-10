@@ -26,7 +26,6 @@ class OrdersController < ApplicationController
 
     def handle_user_info
       render turbo_stream: turbo_stream.update(:modal, partial: 'orders/user')
-
       # turbo_stream.append(:modal, "<script>history.pushState(null, null, '/');</script>".html_safe)
     end
 

@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   root "auth#login"
 
   resources :products, only: [ :index ]
-  resources :carts, only: [ :index, :show ]
+  resources :carts, only: [ :index ]
   resources :cart_items, only: [ :create, :update ]
   resources :orders, only: [ :index, :create, :update ]
 

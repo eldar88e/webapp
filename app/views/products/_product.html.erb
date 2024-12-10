@@ -24,7 +24,7 @@
 
         <div class="product-footer">
           <% if user_signed_in? %>
-            <%= button_to cart_items_path(cart_item: { product_id: product.id }), class: 'btn-order' do %>
+            <%= button_to cart_items_path, params: { cart_item: { product_id: product.id } }, class: 'btn-order' do %>
               <div class="title-btn">Заказать</div>
               <div class="plus">
                 <%= image_tag image_path('plus.svg') %>

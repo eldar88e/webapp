@@ -1,5 +1,5 @@
-<%= button_to cart_path(current_user.cart), id: 'cart_logo', method: :get,
-              data: { controller: 'buttons', action: 'click->buttons#rightAction', turbo_prefetch: false } do %>
+<%= button_to carts_path, id: 'cart_logo', method: :get,
+              data: { turbo: true, controller: 'buttons', action: 'click->buttons#rightAction', turbo_prefetch: false } do %>
   <div class="cart-logo">
     <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g clip-path="url(#clip0_0_1)">

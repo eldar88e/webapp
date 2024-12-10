@@ -8,8 +8,8 @@ export default class extends Controller {
   }
 
   rightAction() {
-    rightModal();
     this.toTop();
+    rightModal();
     openModal();
   }
 
