@@ -41,6 +41,8 @@ export default class extends Controller {
       this.append("Выберите один из вариантов...", true);
       suggestions.forEach((value) => { this.append(value["unrestricted_value"]); });
       this.suggestionsTarget.style = "display: block;"
+    } else {
+      this.suggestionsTarget.style = "display: none;"
     }
   }
 
