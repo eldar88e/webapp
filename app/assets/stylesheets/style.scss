@@ -156,6 +156,54 @@ main {
   position: relative;
 }
 
+.left {
+  border-top-left-radius: 0;
+
+  &:after {
+    content: '';
+    position: absolute;
+    width: 1.5px;
+    height: 11.5px;
+    top: 20px;
+    left: 20px;
+    background-color: rgba(71, 132, 252, 1);
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    width: 11.5px;
+    height: 1.5px;
+    top: 20px;
+    left: 20px;
+    background-color: rgba(71, 132, 252, 1);
+  }
+}
+
+.right {
+  border-top-right-radius: 0;
+
+  &:after {
+    content: '';
+    position: absolute;
+    width: 1.5px;
+    height: 11.5px;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(71, 132, 252, 1);
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    width: 11.5px;
+    height: 1.5px;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(71, 132, 252, 1);
+  }
+}
+
 .scrollable {
   padding-right: 18px;
   margin-right: -18px;

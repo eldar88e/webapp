@@ -9,14 +9,9 @@ class CartsController < ApplicationController
 
   def show
     @cart_items = @cart.cart_items.includes(:product)
-    if @cart_items.present?
-      render turbo_stream: [
-        turbo_stream.update(:modal, partial: "/carts/cart"),
-        turbo_stream.append(:modal, "<script>openModal();</script>".html_safe)
-      ]
-    else
-      render turbo_stream: success_notice('Ваша корзина пуста!')
-    end
+    return render turbo_stream: turbo_stream.update(:modal, partial: "/carts/cart") if @cart_items.present?
+
+    render turbo_stream: success_notice('Ваша корзина пуста!')
   end
 
   private

@@ -10,4 +10,5 @@
   <%= render 'carts/cart_items' %>
 </div>
 
-<%= button_to "Оформить заказ", orders_path(page: 1), class: 'btn mb-3' %>
+<%= button_to "Оформить заказ", orders_path(page: 1), class: 'btn mb-3',
+              data: { controller: 'buttons', action: 'click->buttons#leftAction' } %>

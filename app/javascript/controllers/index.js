@@ -9,3 +9,6 @@ application.register("agreement", AgreementController)
 
 import DadataController from "./dadata_controller"
 application.register("dadata", DadataController)
+
+import ButtonsController from "./buttons_controller"
+application.register("buttons", ButtonsController)
