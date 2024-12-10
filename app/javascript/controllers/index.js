@@ -6,3 +6,6 @@ import { application } from "./application"
 
 import AgreementController from "./agreement_controller"
 application.register("agreement", AgreementController)
+
+import DadataController from "./dadata_controller"
+application.register("dadata", DadataController)

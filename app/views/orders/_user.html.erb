@@ -1,6 +1,7 @@
 <div data-controller="agreement">
   <div class="form" data-agreement-target="form">
-    <%= form_with(model: current_user, url: orders_path(page: 2), method: :post, class: 'mb-3') do |f| %>
+    <%= form_with(model: current_user, url: orders_path(page: 2), method: :post, class: 'mb-3',
+                  data: { controller: "dadata" }) do |f| %>
       <div class="">
         <%= f.text_field :middle_name, autocomplete: "name", placeholder: 'Фамилия', class: "input-str" %>
       </div>
@@ -17,12 +18,17 @@
         <%= f.number_field :phone_number, autocomplete: "tel", placeholder: 'Номер телефона', class: "input-str" %>
       </div>
 
-      <div class="mt-6">
-        <%= f.text_field :address, autocomplete: "street-address", placeholder: 'Город, улица, дом, квартира', class: "input-str" %>
+      <div class="mt-6 address-wrapper">
+        <%= f.text_field :address, autocomplete: "street-address", placeholder: 'Город, улица, дом, квартира',
+                         class: "input-str", data: { dadata_target: "address", action: "input->dadata#search" } %>
+        <div class="suggestions-wrapper" data-dadata-target="suggestions">
+          <div class="suggestions-suggestions" style="display: none;"></div>
+        </div>
       </div>
 
       <div class="mt-6">
-        <%= f.number_field :postal_code, autocomplete: "postal-code", placeholder: 'Почтовый индекс', class: "input-str", max: 999999 %>
+        <%= f.number_field :postal_code, autocomplete: "postal-code", data: { dadata_target: "post_code" },
+                           placeholder: 'Почтовый индекс', class: "input-str", max: 999999 %>
       </div>
 
       <div class="mt-6 flex items-center gap-4">

@@ -134,7 +134,7 @@ class Order < ApplicationRecord
         raise StandardError, msg
       end
       if product.stock_quantity < 10
-        msg = "Осталось #{product.stock_quantity}шт. #{product.name} на складе!"
+        msg = "‼️Осталось #{product.stock_quantity}шт. #{product.name} на складе!"
         Rails.logger.info msg
         TelegramService.call(msg)
       end

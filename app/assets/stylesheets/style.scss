@@ -422,3 +422,38 @@ main {
   text-transform: uppercase;
   color: rgba(71, 132, 252, 1);
 }
+
+.address-wrapper {
+  position: relative;
+
+  .suggestions-wrapper {
+    display: none;
+    position: absolute;
+    background: #000001;
+    padding: 10px 20px;
+    z-index: 2;
+    width: 100%;
+
+    .suggestion-item {
+      padding: 5px 0;
+      cursor: pointer;
+
+      &:hover {
+        color: #9ca3af;
+      }
+    }
+
+    .suggestion-item:first-child {
+      color: #808080;
+      cursor: default;
+
+      &:hover {
+        color: #808080;
+      }
+    }
+  }
+}
+
+#notices > div {
+  z-index: 3;
+}
