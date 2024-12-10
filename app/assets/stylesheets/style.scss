@@ -43,6 +43,11 @@ body {
     font-family: Montserrat, sans-serif;
     display: inline-block;
     color: rgba(0, 0, 0, 1);
+
+    @media screen and (max-width: 300px) {
+      font-size: 15px;
+      padding: 13px;
+    }
   }
 }
 
@@ -55,6 +60,10 @@ main {
   background: linear-gradient(180.54deg, rgba(71, 132, 252, 0.65) 0.47%, rgba(71, 132, 252, 0) 97.09%);
   border-radius: 56px;
   margin-bottom: -50px;
+
+  @media screen and (max-width: 300px) {
+    border-radius: 46px;
+  }
 }
 
 .product {
@@ -62,6 +71,12 @@ main {
   background: linear-gradient(150.15deg, #2E2B3D -7.7%, #000000 73.15%);
   padding: 36px;
   padding-bottom: 110px;
+
+  @media screen and (max-width: 300px) {
+    border-radius: 46px;
+    padding: 26px;
+    padding-bottom: 110px;
+  }
 
   .product-title {
     font-size: 20px;
@@ -102,6 +117,10 @@ main {
       align-items: center;
       gap: 18px;
 
+      @media screen and (max-width: 300px) {
+        gap: 8px;
+      }
+
       &:hover, &:focus {
         background: transparent;
       }
@@ -111,17 +130,28 @@ main {
         line-height: 22px;
         padding-left: 20px;
         text-transform: uppercase;
+
+        @media screen and (max-width: 300px) {
+          padding-left: 10px;
+          font-size: 14px;
+          line-height: 17px;
+        }
       }
 
       .plus {
         width: 40px;
         height: 40px;
         background-color: white;
-        border-radius: 50px;
+        border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
         position: relative;
+
+        @media screen and (max-width: 300px) {
+          width: 30px;
+          height: 30px;
+        }
 
         .cart-item-counter {
           position: absolute;
@@ -136,6 +166,14 @@ main {
           display: flex;
           justify-content: center;
           align-items: center;
+
+          @media screen and (max-width: 300px) {
+            font-size: 12px;
+            left: -1px;
+            top: -1px;
+            width: 13px;
+            height: 13px;
+          }
         }
       }
     }
@@ -154,6 +192,9 @@ main {
   padding: 50px 35px 60px 35px;
   margin-bottom: 20px;
   position: relative;
+  @media screen and (max-width: 300px) {
+    padding: 40px 35px 50px 25px;
+  }
 }
 
 .left {
@@ -304,6 +345,9 @@ main {
       padding-bottom: 16px;
       position: relative;
       display: inline-block;
+      @media screen and (max-width: 300px) {
+        font-size: 12px;
+      }
 
       &:after {
         content: '';
@@ -325,6 +369,10 @@ main {
     line-height: 17px;
     padding: 15px 0;
     border-bottom: rgba(71, 132, 252, 1) 1px solid;
+    @media screen and (max-width: 300px) {
+      font-size: 12px;
+      line-height: 15px;
+    }
 
     .quantity {
       display: flex;
@@ -337,6 +385,16 @@ main {
         font-size: 18px;
         line-height: 22px;
         padding: 5px 16px;
+        @media screen and (max-width: 300px) {
+          padding: 5px 8px;
+        }
+      }
+
+      span {
+        padding: 8.5px 31.2px;
+        @media screen and (max-width: 300px) {
+          padding: 9.5px 18.5px;
+        }
       }
 
       .num {

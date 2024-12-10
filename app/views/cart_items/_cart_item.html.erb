@@ -4,7 +4,7 @@
   </div>
   <div class="quantity">
     <% if cart_item.product.name == 'Доставка' %>
-      <span style="padding: 8.5px 31.2px;">Услуга</span>
+      <span>Услуга</span>
     <% else %>
       <%= button_to '-', cart_item_path(id: cart_item.id), params: { quantity: cart_item.quantity - 1 }, method: :patch, class: 'plus' %>
       <div class="num"><%= cart_item.quantity %></div>
