@@ -15,11 +15,12 @@
       </div>
 
       <div class="mt-6">
-        <%= f.number_field :phone_number, autocomplete: "tel", placeholder: 'Номер телефона', class: "input-str" %>
+        <%= f.text_field :phone_number, autocomplete: "tel", placeholder: 'Номер телефона', class: "input-str", minlength: "22",
+            data: { controller: "phone_mask", action: "input->phone_mask#mask" }%>
       </div>
 
       <div class="mt-6 address-wrapper">
-        <%= f.text_field :address, autocomplete: "street-address", placeholder: 'Город, улица, дом, квартира',
+        <%= f.text_field :address, autocomplete: "street-address", placeholder: 'Регион',
                          class: "input-str", data: { dadata_target: "address", action: "input->dadata#search" } %>
         <div class="suggestions-wrapper scrollable" data-dadata-target="suggestions">
           <div class="suggestions-suggestions" style="display: none;"></div>
@@ -27,8 +28,37 @@
       </div>
 
       <div class="mt-6">
-        <%= f.number_field :postal_code, autocomplete: "postal-code", data: { dadata_target: "post_code" },
-                           placeholder: 'Почтовый индекс', class: "input-str", max: 999999 %>
+        <%= f.text_field :city, autocomplete: "city", placeholder: 'Город, поселок',
+                         class: "input-str", data: { dadata_target: "city" } %>
+      </div>
+
+      <div class="flex gap-4">
+        <div class="w-1/2">
+          <div class="mt-6">
+            <%= f.number_field :home, data: { dadata_target: "home" },
+                               placeholder: 'Дом', class: "input-str", max: 9999 %>
+          </div>
+        </div>
+        <div class="w-1/2">
+          <div class="mt-6">
+            <%= f.number_field :apartment, data: { dadata_target: "apartment" },
+                               placeholder: 'Квартира', class: "input-str", max: 999 %>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-4">
+        <div class="w-1/2">
+          <div class="mt-6">
+            <%= f.text_field :korpus, data: { dadata_target: "korpus" }, placeholder: 'Корпус', class: "input-str" %>
+          </div>
+        </div>
+        <div class="w-1/2">
+          <div class="mt-6">
+            <%= f.number_field :postal_code, autocomplete: "postal-code", data: { dadata_target: "post_code" },
+                               placeholder: 'Индекс', class: "input-str", max: 999999 %>
+          </div>
+        </div>
       </div>
 
       <div class="mt-6 flex items-center gap-4">

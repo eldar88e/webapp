@@ -12,3 +12,6 @@ application.register("dadata", DadataController)
 
 import ButtonsController from "./buttons_controller"
 application.register("buttons", ButtonsController)
+
+import PhoneMaskController from "./phone_mask_controller"
+application.register("phone_mask", PhoneMaskController)
