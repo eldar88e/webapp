@@ -35,5 +35,16 @@ class User < ApplicationRecord
       u.email       = "telegram_user_#{tg_user["id"]}@example.com"
       u.password    = Devise.friendly_token[0, 20]
     end
+
+    def save_tg(chat)
+      self.find_or_create_by(tg_id: chat.id) do |user|
+        user.username    = chat.username
+        user.first_name  = chat.first_name
+        user.last_name   = chat.last_name
+        user.middle_name = chat.last_name
+        user.email       = generate_email(chat.id)
+        user.password    = Devise.friendly_token[0, 20]
+      end
+    end
   end
 end
