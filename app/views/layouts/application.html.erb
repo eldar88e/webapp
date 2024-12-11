@@ -33,5 +33,6 @@
     </main>
 
     <%= render partial: '/layouts/partials/footer' %>
+    <%= render partial: '/layouts/partials/yandex_metrika' if Rails.env.production? %>
   </body>
 </html>

@@ -1,6 +1,6 @@
 module Admin
   class OrdersController < Admin::ApplicationController
-    before_action :set_order, only: %i[edit update destroy]
+    before_action :set_order, only: %i[edit update ]
     include Pagy::Backend
 
     def index
@@ -15,11 +15,6 @@ module Admin
       else
         render :edit, status: :unprocessable_entity
       end
-    end
-
-    def destroy
-      @order.destroy!
-      redirect_to admin_orders_path, status: :see_other, notice: "Order was successfully destroyed."
     end
 
     private

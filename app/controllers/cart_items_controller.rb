@@ -1,5 +1,4 @@
 class CartItemsController < ApplicationController
-  DELIVERY_ID = 5 # TODO: вывести в Setting
   before_action :set_cart_item, only: %i[ update ]
 
   def create
@@ -41,7 +40,8 @@ class CartItemsController < ApplicationController
       id = cart_item.product.id
       cart_item.destroy
       @cart_items = current_user.cart.cart_items.order(:created_at).includes(:product)
-      if @cart_items.where.not(product_id: DELIVERY_ID).size.positive?
+      deliver_id  = Setting.fetch_value(:delivery_id)
+      if @cart_items.where.not(product_id: deliver_id).size.positive?
         return render turbo_stream: [ turbo_stream.remove("cart_item_#{cart_item.id}") ] + update_counters(id)
       end
 

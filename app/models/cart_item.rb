@@ -1,6 +1,4 @@
 class CartItem < ApplicationRecord
-  DELIVERY_ID = 5 # TODO: вывести в Setting
-
   belongs_to :cart
   belongs_to :product
 
@@ -9,11 +7,12 @@ class CartItem < ApplicationRecord
   private
 
   def add_delivery_item_if_needed
-    non_delivery_items = cart.cart_items.where.not(product_id: DELIVERY_ID)
+    delivery_id        = Setting.fetch_value(:delivery_id)
+    non_delivery_items = cart.cart_items.where.not(product_id: delivery_id)
     if non_delivery_items.count == 1 && non_delivery_items.first.quantity == 1
-      cart.cart_items.find_or_create_by(product_id: DELIVERY_ID)
+      cart.cart_items.find_or_create_by(product_id: delivery_id)
     else
-      cart.cart_items.find_by(product_id: DELIVERY_ID)&.destroy
+      cart.cart_items.find_by(product_id: delivery_id)&.destroy
     end
   end
 end

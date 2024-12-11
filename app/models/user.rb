@@ -18,6 +18,8 @@ class User < ApplicationRecord
   end
 
   def full_address
+    return if address.blank?
+
     result = "#{address}, #{street}, дом #{home}"
     result += ", Квартира #{apartment}" if apartment.present?
     result += ", Корпус #{build}" if build.present?
