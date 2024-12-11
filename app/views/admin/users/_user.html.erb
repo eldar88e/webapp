@@ -1,11 +1,11 @@
 <div id="<%= dom_id user %>" class="product">
   <div class="text-light-dark flex p-4 gap-4">
     <div><%= user.id %></div>
-    <div ><%= user.full_name %></div>
-    <div ><%= user.username %></div>
-    <div ><%= user.phone_number %></div>
-    <div ><%= user.full_address %></div>
-    <div ><%= format_date user.created_at %></div>
+    <div><%= user.full_name %></div>
+    <div><%= link_to user.username, "https://t.me/#{user.phone_number}" if user.phone_number.present? %></div>
+    <div><%= user.phone_number %></div>
+    <div><%= user.full_address %></div>
+    <div><%= format_date user.created_at %></div>
 
     <%= link_to edit_admin_user_path(user), class: 'h-5 w-5' do %>
       <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
