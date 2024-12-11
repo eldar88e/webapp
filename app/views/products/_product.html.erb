@@ -1,4 +1,4 @@
-<% if product.id != settings[:delivery_id] %>
+<% if product.id != settings[:delivery_id].to_i %>
   <div id="<%= dom_id product %>">
     <div class="product-wrapper">
       <div class="product">
