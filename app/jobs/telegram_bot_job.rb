@@ -29,7 +29,8 @@ class TelegramBotJob < ApplicationJob
   end
 
   def handle_message(bot, message)
-    save_user(message.chat) # TODO: временно для перехода всех пользователей
+    #save_user(message.chat) # TODO: временно для перехода всех пользователей
+    User.find_or_create_by_tg(message.chat)
 
     case message.text
     when '/start'
@@ -121,7 +122,6 @@ class TelegramBotJob < ApplicationJob
     User.find_or_create_by(tg_id: chat.id) do |user|
       user.username    = chat.username
       user.first_name  = chat.first_name
-      user.last_name   = chat.last_name
       user.middle_name = chat.last_name
       user.email       = generate_email(chat.id)
       user.password    = Devise.friendly_token[0, 20]

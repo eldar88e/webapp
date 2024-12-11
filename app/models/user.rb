@@ -28,23 +28,12 @@ class User < ApplicationRecord
 
   def self.find_or_create_by_tg(tg_user)
     binding.pry
-    self.find_or_create_by(tg_id: tg_user["id"]) do |u|
-      u.username    = tg_user["username"]
-      u.first_name  = tg_user["first_name"]
-      u.middle_name = tg_user["last_name"]
-      u.email       = "telegram_user_#{tg_user["id"]}@example.com"
-      u.password    = Devise.friendly_token[0, 20]
-    end
-
-    def save_tg(chat)
-      self.find_or_create_by(tg_id: chat.id) do |user|
-        user.username    = chat.username
-        user.first_name  = chat.first_name
-        user.last_name   = chat.last_name
-        user.middle_name = chat.last_name
-        user.email       = generate_email(chat.id)
-        user.password    = Devise.friendly_token[0, 20]
-      end
+    self.find_or_create_by(tg_id: tg_user["id"]) do |user|
+      user.username    = tg_user["username"]
+      user.first_name  = tg_user["first_name"]
+      user.middle_name = tg_user["last_name"]
+      user.email       = "telegram_user_#{tg_user["id"]}@example.com"
+      user.password    = Devise.friendly_token[0, 20]
     end
   end
 end
