@@ -1,4 +1,4 @@
-<% if product.name != 'Доставка' %>
+<% if product.id != settings[:delivery_id] %>
   <div id="<%= dom_id product %>">
     <div class="product-wrapper">
       <div class="product">
