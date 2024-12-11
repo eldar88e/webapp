@@ -29,10 +29,11 @@ class TelegramBotJob < ApplicationJob
   end
 
   def handle_message(bot, message)
+    save_user(message.chat) # TODO: временно для перехода всех пользователей
+
     case message.text
     when '/start'
-      user = User.find_by(tg_id: message.chat.id)
-      save_user(message.chat) if user.blank?
+      # save_user(message.chat)
       send_firs_msg(bot, message.chat.id)
     else
       if message.chat.id == settings[:courier_tg_id].to_i
@@ -117,15 +118,14 @@ class TelegramBotJob < ApplicationJob
   end
 
   def save_user(chat)
-    User.create(
-      tg_id: chat.id,
-      username: chat.username,
-      first_name: chat.first_name,
-      last_name: chat.last_name,
-      middle_name: chat.last_name,
-      email: generate_email(chat.id),
-      password: Devise.friendly_token[0, 20]
-    )
+    User.find_or_create_by(tg_id: chat.id) do |user|
+      user.username    = chat.username
+      user.first_name  = chat.first_name
+      user.last_name   = chat.last_name
+      user.middle_name = chat.last_name
+      user.email       = generate_email(chat.id)
+      user.password    = Devise.friendly_token[0, 20]
+    end
   end
 
   def generate_email(chat_id)
