@@ -30,7 +30,7 @@ class TelegramBotJob < ApplicationJob
 
   def handle_message(bot, message)
     save_user(message.chat) # TODO: временно для перехода всех пользователей
-    binding.pry
+
     case message.text
     when '/start'
       # save_user(message.chat)
@@ -133,7 +133,7 @@ class TelegramBotJob < ApplicationJob
   end
 
   def settings
-    Rails.cache.fetch(:settings, expires_in: 1.hours) do
+    Rails.cache.fetch(:settings, expires_in: 6.hours) do
       Setting.pluck(:variable, :value).to_h.transform_keys(&:to_sym)
     end
   end
