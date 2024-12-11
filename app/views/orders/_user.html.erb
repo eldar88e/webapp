@@ -35,14 +35,13 @@
       <div class="flex gap-4">
         <div class="w-1/2">
           <div class="mt-6">
-            <%= f.number_field :home, data: { dadata_target: "home" },
-                               placeholder: 'Дом', class: "input-str", max: 9999 %>
+            <%= f.text_field :home, data: { dadata_target: "home" }, placeholder: 'Дом', class: "input-str" %>
           </div>
         </div>
         <div class="w-1/2">
           <div class="mt-6">
-            <%= f.number_field :apartment, data: { dadata_target: "apartment" },
-                               placeholder: 'Квартира', class: "input-str", max: 999 %>
+            <%= f.text_field :apartment, data: { dadata_target: "apartment" },
+                               placeholder: 'Квартира', class: "input-str" %>
           </div>
         </div>
       </div>
@@ -50,7 +49,7 @@
       <div class="flex gap-4">
         <div class="w-1/2">
           <div class="mt-6">
-            <%= f.text_field :korpus, data: { dadata_target: "korpus" }, placeholder: 'Корпус', class: "input-str" %>
+            <%= f.text_field :build, data: { dadata_target: "build" }, placeholder: 'Корпус', class: "input-str" %>
           </div>
         </div>
         <div class="w-1/2">

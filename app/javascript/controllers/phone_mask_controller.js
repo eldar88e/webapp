@@ -17,15 +17,15 @@ export default class extends Controller {
     if (length > 0) formattedValue += "+7"
     if (length > 1) formattedValue += " (" + rawValue.slice(1, 4);
     if (length > 4) formattedValue += ") " + rawValue.slice(4, 7);
-    if (length > 7) formattedValue += " - " + rawValue.slice(7, 9);
-    if (length > 9) formattedValue += " - " + rawValue.slice(9, 11);
+    if (length > 7) formattedValue += "-" + rawValue.slice(7, 9);
+    if (length > 9) formattedValue += "-" + rawValue.slice(9, 11);
 
-    this.element.value = formattedValue.substring(0, 22);
+    this.element.value = formattedValue.substring(0, 18);
   }
 
   check() {
     let input = this.element;
-    if (input.value.length < 22) {
+    if (input.value.length < 18) {
       input.setCustomValidity("Введите полный номер телефона.");
     } else {
       input.setCustomValidity("");

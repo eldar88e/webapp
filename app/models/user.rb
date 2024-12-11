@@ -16,4 +16,11 @@ class User < ApplicationRecord
   def full_name
     "#{middle_name} #{first_name} #{last_name}"
   end
+
+  def full_address
+    result = "#{address}, #{street}, дом #{home}"
+    result += ", Квартира #{apartment}" if apartment.present?
+    result += ", Корпус #{build}" if build.present?
+    result
+  end
 end

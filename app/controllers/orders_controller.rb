@@ -6,7 +6,9 @@ class OrdersController < ApplicationController
   def create
     return handle_user_info if params[:page].to_i == 1
     return error_notice("Вы не согласны с нашими условиями!") if params[:user][:agreement] != "1"
-    return error_notice("Заполните пожалуйста все обязательные поля!") if filtered_params.size < 6
+
+    check_params = filtered_params.reject { |key, _val| %w[apartment build].include?(key) }
+    return error_notice("Заполните пожалуйста все обязательные поля!") if check_params.size < 8
 
     update_user
     create_order
@@ -26,7 +28,8 @@ class OrdersController < ApplicationController
     end
 
     def user_params
-      params.require(:user).permit(:first_name, :middle_name, :last_name, :address, :phone_number, :postal_code)
+      params.require(:user).permit(:first_name, :middle_name, :last_name, :phone_number,
+                                   :address, :street, :home, :postal_code, :apartment, :build)
     end
 
     def filtered_params
