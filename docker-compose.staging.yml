@@ -1,0 +1,70 @@
+services:
+  pg:
+    image: postgres:16.1
+    container_name: s-miniapp-pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      TZ: Europe/Moscow
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - net
+
+  s-miniapp:
+    tty: true
+    stdin_open: true
+    image: s-miniapp
+    build: .
+    container_name: s-miniapp
+    env_file: ./.env
+    depends_on:
+      - pg
+      - redis
+    volumes:
+      - gems:/usr/local/bundle
+      - .:/app
+    networks:
+      net:
+      proxy-net:
+        ipv4_address: 172.29.0.11
+    restart: always
+
+  sidekiq:
+    tty: true
+    stdin_open: true
+    image: miniapp
+    build: .
+    container_name: s-miniapp-bot-sidekiq
+    env_file: ./.env
+    depends_on:
+      - pg
+      - redis
+    volumes:
+      - gems:/usr/local/bundle
+      - .:/app
+    command: bundle exec sidekiq -C config/sidekiq_bot.yml
+    networks:
+      net:
+    restart: always
+
+  redis:
+    image: redis:latest
+    container_name: s-miniapp-redis
+    command: redis-server
+    restart: unless-stopped
+    networks:
+      - net
+    volumes:
+      - redis:/data
+
+volumes:
+  db_data:
+  redis:
+  gems:
+
+networks:
+  net:
+  proxy-net:
+    external: true

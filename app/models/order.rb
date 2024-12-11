@@ -53,26 +53,29 @@ class Order < ApplicationRecord
     Rails.logger.info "Order #{id} is now unpaid"
   end
 
-  def on_pending # is paid and on pending
-    # Логика для статуса "оплачен"
-    self.user.cart.destroy # удаляем корзину после оплаты
-    msg           = I18n.t(
-      'tg_msg.paid_admin',
-      order: id,
-      price: total_amount,
-      items: order_items_str,
-      address: user.full_address,
-      fio: user.full_name,
-      phone: user.phone_number
-    )
-    TelegramService.call(msg, nil, markup: 'approve_payment') # send to admin
-    msg_id = TelegramService.call(I18n.t('tg_msg.paid_client'), user.tg_id) # send client
-    update_columns(msg_id: msg_id)
-    Rails.logger.info "Order #{id} is now paid"
+  # Логика для статуса "на этапе проверки платежа"
+  def on_pending
+    ActiveRecord::Base.transaction do
+      deduct_stock
+      self.user.cart.destroy
+      msg           = I18n.t(
+        'tg_msg.paid_admin',
+        order: id,
+        price: total_amount,
+        items: order_items_str,
+        address: user.full_address,
+        fio: user.full_name,
+        phone: user.phone_number
+      )
+      TelegramService.call(msg, nil, markup: 'approve_payment') # send to admin
+      msg_id = TelegramService.call(I18n.t('tg_msg.paid_client'), user.tg_id) # send client
+      update_columns(msg_id: msg_id)
+      Rails.logger.info "Order #{id} is now paid"
+    end
   end
 
+  # Логика для статуса "в обработке"
   def on_processing
-    # Логика для статуса "в обработке"
     msg = I18n.t(
       'tg_msg.on_processing_courier',
       order: id,
@@ -101,7 +104,6 @@ class Order < ApplicationRecord
                  phone: user.phone_number,
                  track: tracking_number
     )
-    deduct_stock
     TelegramService.call(msg, user.tg_id)
     Rails.logger.info "Order #{id} has been shipped"
   end
@@ -127,12 +129,12 @@ class Order < ApplicationRecord
   end
 
   def deduct_stock
-    order_items.each do |order_item|
+    order_items.includes(:product).each do |order_item|
       product = order_item.product
       if product.stock_quantity >= order_item.quantity
         product.update!(stock_quantity: product.stock_quantity - order_item.quantity)
       else
-        msg = "Insufficient stock for product: #{product.name}"
+        msg = "Недостаток в остатках для продукта: #{product.name} в заказе #{self.id}"
         Rails.logger.info msg
         TelegramService.call(msg)
         raise StandardError, msg
