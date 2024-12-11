@@ -30,7 +30,7 @@ class TelegramBotJob < ApplicationJob
 
   def handle_message(bot, message)
     save_user(message.chat) # TODO: временно для перехода всех пользователей
-
+    binding.pry
     case message.text
     when '/start'
       # save_user(message.chat)
