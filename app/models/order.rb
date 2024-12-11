@@ -56,7 +56,6 @@ class Order < ApplicationRecord
   # Логика для статуса "на этапе проверки платежа"
   def on_pending
     ActiveRecord::Base.transaction do
-      deduct_stock
       self.user.cart.destroy
       msg           = I18n.t(
         'tg_msg.paid_admin',
@@ -76,20 +75,23 @@ class Order < ApplicationRecord
 
   # Логика для статуса "в обработке"
   def on_processing
-    msg = I18n.t(
-      'tg_msg.on_processing_courier',
-      order: id,
-      postal_code: user.postal_code,
-      items: order_items_str,
-      address: user.full_address,
-      fio: user.full_name,
-      phone: user.phone_number
-    )
-    TelegramService.call(msg, :courier, markup: 'submit_tracking') # send to deliver
-    TelegramService.delete_msg('', user.tg_id, self.msg_id)
-    msg_id = TelegramService.call(I18n.t('tg_msg.on_processing_client', order: id), user.tg_id)
-    update_columns(msg_id: msg_id)
-    Rails.logger.info "Order #{id} is being processed"
+    ActiveRecord::Base.transaction do
+      deduct_stock
+      msg = I18n.t(
+        'tg_msg.on_processing_courier',
+        order: id,
+        postal_code: user.postal_code,
+        items: order_items_str,
+        address: user.full_address,
+        fio: user.full_name,
+        phone: user.phone_number
+      )
+      TelegramService.call(msg, :courier, markup: 'submit_tracking') # send to deliver
+      TelegramService.delete_msg('', user.tg_id, self.msg_id)
+      msg_id = TelegramService.call(I18n.t('tg_msg.on_processing_client', order: id), user.tg_id)
+      update_columns(msg_id: msg_id)
+      Rails.logger.info "Order #{id} is being processed"
+    end
   end
 
   def on_shipped
