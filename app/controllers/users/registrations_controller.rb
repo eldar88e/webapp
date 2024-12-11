@@ -39,7 +39,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :phone_number, :address, :postal_code])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :phone_number, :address, :postal_code])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [
+      :first_name, :middle_name, :last_name, :phone_number, :address, :postal_code, :street, :home, :apartment, :build
+    ])
+    devise_parameter_sanitizer.permit(:account_update, keys: [
+      :first_name, :middle_name, :last_name, :phone_number, :address, :postal_code, :street, :home, :apartment, :build
+    ])
   end
 end
