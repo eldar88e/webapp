@@ -15,12 +15,12 @@
       </div>
 
       <div class="mt-6">
-        <%= f.text_field :phone_number, autocomplete: "tel", placeholder: 'Номер телефона', class: "input-str", minlength: "22",
-            data: { controller: "phone_mask", action: "input->phone_mask#mask" }%>
+        <%= f.text_field :phone_number, autocomplete: "tel", placeholder: 'Номер телефона', class: "input-str", minlength: 22,
+            data: { controller: "phone_mask", action: "input->phone_mask#mask blur->phone_mask#check" }%>
       </div>
 
       <div class="mt-6 address-wrapper">
-        <%= f.text_field :address, autocomplete: "street-address", placeholder: 'Регион',
+        <%= f.text_field :address, autocomplete: "city-address", placeholder: 'Регион, Город, Поселок',
                          class: "input-str", data: { dadata_target: "address", action: "input->dadata#search" } %>
         <div class="suggestions-wrapper scrollable" data-dadata-target="suggestions">
           <div class="suggestions-suggestions" style="display: none;"></div>
@@ -28,8 +28,8 @@
       </div>
 
       <div class="mt-6">
-        <%= f.text_field :city, autocomplete: "city", placeholder: 'Город, поселок',
-                         class: "input-str", data: { dadata_target: "city" } %>
+        <%= f.text_field :street, autocomplete: "street-address", placeholder: 'Улица',
+                         class: "input-str", data: { dadata_target: "street" } %>
       </div>
 
       <div class="flex gap-4">
@@ -76,7 +76,7 @@
   </div>
 
   <div class="agreement-text scrollable" data-agreement-target="agreement">
-    <div class="close" data-action="click->agreement#close" ></div>
+    <div class="close" data-action="click->agreement#close"></div>
     <p>ДОГОВОР ОФЕРТЫ</p><br>
     <p>Настоящий договор является официальным предложением (публичной офертой) продавца, осуществляющего продажу товаров через Telegram-бот t.me/strattera_bot, в адрес любого физического или юридического лица, имеющего намерение приобрести товары на условиях, изложенных ниже.</p><br>
     <p>1. Общие положения</p><br>

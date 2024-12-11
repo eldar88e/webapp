@@ -23,7 +23,7 @@
         </div>
 
         <div class="product-footer">
-          <% if user_signed_in? %>
+          <% if product.stock_quantity.positive?  %>
             <%= button_to cart_items_path, params: { cart_item: { product_id: product.id } }, class: 'btn-order' do %>
               <div class="title-btn">Заказать</div>
               <div class="plus">

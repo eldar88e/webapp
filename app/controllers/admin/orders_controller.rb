@@ -11,7 +11,7 @@ module Admin
 
     def update
       if @order.update(order_params)
-        redirect_to admin_orders_path, notice: "Order was successfully updated."
+        redirect_to admin_orders_path, notice: "Заказ был успешно обновлен."
       else
         render :edit, status: :unprocessable_entity
       end

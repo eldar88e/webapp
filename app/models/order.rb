@@ -5,10 +5,14 @@ class Order < ApplicationRecord
   validates :status, presence: true
   validates :total_amount, presence: true
 
-  enum status: { unpaid: 0, pending: 1, processing: 2, shipped: 3, cancelled: 4, refunded: 5 }
+  enum status: { initialized: 0, unpaid: 1, pending: 2, processing: 3, shipped: 4, cancelled: 5, refunded: 6 }
 
   after_update :check_status_change
   after_create :on_unpaid
+
+  def order_items_with_product
+    order_items.includes(:product)
+  end
 
   private
 
@@ -33,13 +37,13 @@ class Order < ApplicationRecord
   def on_unpaid
     # Логика для статуса "не оплачен"
     TelegramService.delete_msg('', self.user.tg_id, self.msg_id) if self.msg_id
-    card = Setting.find_by(variable: 'card').value # TODO: через cache
-    msg  = I18n.t(
+    card  = Setting.fetch_value(:card)
+    msg   = I18n.t(
       'tg_msg.unpaid',
       order: id,
       card: card,
       price: total_amount,
-      items: order_items_str(user.cart.cart_items),
+      items: order_items_str,
       address: user.address,
       fio: user.full_name,
       phone: user.phone_number
@@ -105,20 +109,20 @@ class Order < ApplicationRecord
   def on_cancelled
     # Логика для статуса "отменен"
     msg = "Order #{id} has been cancelled"
-    TelegramService.call msg # TODO: указать ID клиента и админа
+    TelegramService.call msg # TODO: шлет уведомление только админу
     Rails.logger.info msg
   end
 
   def on_refunded
     # Логика для статуса "возвращен"
     msg = "Order #{id} has been refunded"
-    TelegramService.call msg # TODO: указать ID клиента и админа
+    TelegramService.call msg # TODO: шлет уведомление только админу
     Rails.logger.info msg
   end
 
-  def order_items_str(items = nil)
-    (items || order_items).map.with_index(1) do |i, idx|
-      "#{idx}. #{i.product.name} #{i.product.name != 'Доставка' ? (i.quantity.to_s + 'шт.') : 'услуга' } #{items ? i.product.price : i.price}₽"
+  def order_items_str
+    order_items.includes(:product).map.with_index(1) do |i, idx|
+      "#{idx}. #{i.product.name} #{i.product.name != 'Доставка' ? (i.quantity.to_s + 'шт.') : 'услуга' } #{i.price}₽"
     end.join(",\n")
   end
 

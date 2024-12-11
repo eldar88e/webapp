@@ -18,6 +18,7 @@ ru:
   empty_cart: "Ваша корзина пустая!"
   order:
     statuses:
+      initialized: "Инициализирован"
       unpaid: "Ожидание платежа"
       pending: "Ожидание подтверждения платежа"
       processing: "В процессе отправки"

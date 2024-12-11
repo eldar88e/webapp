@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["suggestions", "address", "post_code"];
+  static targets = ["suggestions", "address", "street", "post_code", "house", "apartment"];
 
   search(event) {
     const query = event.target.value.trim();
@@ -39,6 +39,9 @@ export default class extends Controller {
     this.suggestionsTarget.textContent = '';
     if (suggestions.length > 0) {
       this.append("Выберите один из вариантов...", true);
+      ///
+      window.suggestions = suggestions;
+      ///
       suggestions.forEach((value) => { this.append(value["unrestricted_value"]); });
       this.suggestionsTarget.style = "display: block;"
     } else {
