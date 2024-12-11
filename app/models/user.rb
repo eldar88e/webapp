@@ -27,7 +27,6 @@ class User < ApplicationRecord
   end
 
   def self.find_or_create_by_tg(tg_user)
-    binding.pry
     tg_user = tg_user.as_json if tg_user.instance_of?(Telegram::Bot::Types::Chat)
     self.find_or_create_by(tg_id: tg_user["id"]) do |user|
       user.username    = tg_user["username"]
