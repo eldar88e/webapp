@@ -17,13 +17,7 @@ class AuthController < ApplicationController
       return redirect_to "https://t.me/#{settings[:tg_main_bot]}" if init_data.blank?
 
       tg_user = JSON.parse init_data["user"]
-      user    = User.find_or_create_by(tg_id: tg_user["id"]) do |u|
-        u.username    = tg_user["username"]
-        u.first_name  = tg_user["first_name"]
-        u.middle_name = tg_user["last_name"]
-        u.email       = generate_email(tg_user["id"])
-        u.password    = Devise.friendly_token[0, 20]
-      end
+      user    = User.find_or_create_by_tg(tg_user)
       sign_in(user)
     end
 
@@ -36,9 +30,5 @@ class AuthController < ApplicationController
     check_string = data.sort.map { |k, v| "#{k}=#{v}" }.join("\n")
     hmac         = OpenSSL::HMAC.hexdigest(OpenSSL::Digest::SHA256.new, secret_key, check_string)
     hmac == data["hash"]
-  end
-
-  def generate_email(telegram_id)
-    "telegram_user_#{telegram_id}@example.com"
   end
 end

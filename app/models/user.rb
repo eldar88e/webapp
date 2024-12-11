@@ -25,4 +25,15 @@ class User < ApplicationRecord
     result += ", Корпус #{build}" if build.present?
     result
   end
+
+  def self.find_or_create_by_tg(tg_user)
+    binding.pry
+    self.find_or_create_by(tg_id: tg_user["id"]) do |u|
+      u.username    = tg_user["username"]
+      u.first_name  = tg_user["first_name"]
+      u.middle_name = tg_user["last_name"]
+      u.email       = "telegram_user_#{tg_user["id"]}@example.com"
+      u.password    = Devise.friendly_token[0, 20]
+    end
+  end
 end
