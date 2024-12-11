@@ -27,9 +27,12 @@
         </div>
       </div>
 
-      <div class="mt-6">
+      <div class="mt-6 address-wrapper">
         <%= f.text_field :street, autocomplete: "street-address", placeholder: 'Улица',
-                         class: "input-str", data: { dadata_target: "street" } %>
+                         class: "input-str", data: { dadata_target: "street", action: "input->dadata#search_street" } %>
+        <div class="suggestions-wrapper scrollable" data-dadata-target="suggestions_street">
+          <div class="suggestions-suggestions" style="display: none;"></div>
+        </div>
       </div>
 
       <div class="flex gap-4">
@@ -40,8 +43,7 @@
         </div>
         <div class="w-1/2">
           <div class="mt-6">
-            <%= f.text_field :apartment, data: { dadata_target: "apartment" },
-                               placeholder: 'Квартира', class: "input-str" %>
+            <%= f.text_field :apartment, data: { dadata_target: "apartment" }, placeholder: 'Квартира', class: "input-str" %>
           </div>
         </div>
       </div>

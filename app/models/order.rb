@@ -44,7 +44,7 @@ class Order < ApplicationRecord
       card: card,
       price: total_amount,
       items: order_items_str,
-      address: user.address,
+      address: user.full_address,
       fio: user.full_name,
       phone: user.phone_number
     )
@@ -61,7 +61,7 @@ class Order < ApplicationRecord
       order: id,
       price: total_amount,
       items: order_items_str,
-      address: user.address,
+      address: user.full_address,
       fio: user.full_name,
       phone: user.phone_number
     )
@@ -78,7 +78,7 @@ class Order < ApplicationRecord
       order: id,
       postal_code: user.postal_code,
       items: order_items_str,
-      address: user.address,
+      address: user.full_address,
       fio: user.full_name,
       phone: user.phone_number
     )
@@ -96,7 +96,7 @@ class Order < ApplicationRecord
                  order: id,
                  price: total_amount,
                  items: order_items_str,
-                 address: user.address,
+                 address: user.full_address,
                  fio: user.full_name,
                  phone: user.phone_number,
                  track: tracking_number

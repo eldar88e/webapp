@@ -14,15 +14,51 @@
   </div>
 
   <div class="mt-6">
-    <%= f.number_field :phone_number, autocomplete: "tel", placeholder: 'Номер телефона', class: "input-str" %>
+    <%= f.text_field :phone_number, autocomplete: "tel", placeholder: 'Номер телефона', class: "input-str", minlength: 22,
+                     data: { controller: "phone_mask", action: "input->phone_mask#mask blur->phone_mask#check" }%>
   </div>
 
-  <div class="mt-6">
-    <%= f.text_field :address, autocomplete: "street-address", placeholder: 'Город, улица, дом, квартира', class: "input-str" %>
+  <div class="mt-6 address-wrapper">
+    <%= f.text_field :address, autocomplete: "city-address", placeholder: 'Регион, Город, Поселок',
+                     class: "input-str", data: { dadata_target: "address", action: "input->dadata#search" } %>
+    <div class="suggestions-wrapper scrollable" data-dadata-target="suggestions">
+      <div class="suggestions-suggestions" style="display: none;"></div>
+    </div>
   </div>
 
-  <div class="mt-6">
-    <%= f.number_field :postal_code, autocomplete: "postal-code", placeholder: 'Почтовый индекс', class: "input-str", max: 999999 %>
+  <div class="mt-6 address-wrapper">
+    <%= f.text_field :street, autocomplete: "street-address", placeholder: 'Улица',
+                     class: "input-str", data: { dadata_target: "street", action: "input->dadata#search_street" } %>
+    <div class="suggestions-wrapper scrollable" data-dadata-target="suggestions_street">
+      <div class="suggestions-suggestions" style="display: none;"></div>
+    </div>
+  </div>
+
+  <div class="flex gap-4">
+    <div class="w-1/2">
+      <div class="mt-6">
+        <%= f.text_field :home, data: { dadata_target: "home" }, placeholder: 'Дом', class: "input-str" %>
+      </div>
+    </div>
+    <div class="w-1/2">
+      <div class="mt-6">
+        <%= f.text_field :apartment, data: { dadata_target: "apartment" }, placeholder: 'Квартира', class: "input-str" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex gap-4">
+    <div class="w-1/2">
+      <div class="mt-6">
+        <%= f.text_field :build, data: { dadata_target: "build" }, placeholder: 'Корпус', class: "input-str" %>
+      </div>
+    </div>
+    <div class="w-1/2">
+      <div class="mt-6">
+        <%= f.number_field :postal_code, autocomplete: "postal-code", data: { dadata_target: "post_code" },
+                           placeholder: 'Индекс', class: "input-str", max: 999999 %>
+      </div>
+    </div>
   </div>
 
   <div class="mt-6">
