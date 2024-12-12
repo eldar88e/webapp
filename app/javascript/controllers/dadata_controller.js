@@ -1,33 +1,31 @@
 import { Controller } from "@hotwired/stimulus"
-import {data} from "autoprefixer";
 
 export default class extends Controller {
   static targets = ["suggestions", "suggestions_street", "address", "street", "post_code", "home", "apartment", "build"];
-  static values = { id: Number }
 
   search(event) {
     const query = event.target.value.trim();
     let suggestions = this.suggestionsTarget;
-
     this.form_connection(query, suggestions);
   }
 
   search_street(event) {
     let query = event.target.value.trim();
     let suggestions = this.suggestions_streetTarget;
-    let address = this.addressTarget.value.trim();
-    if (address.length > 1) { query = `${address} ${query}`; }
-
-    this.form_connection(query, suggestions);
+    this.form_connection(query, suggestions, true);
   }
 
-  form_connection(query, suggestions) {
+  form_connection(query, suggestions, prefixStreet=false) {
     if (!query) {
       suggestions.textContent = '';
       suggestions.style = "display: none;"
       return;
     }
 
+    if (prefixStreet) {
+      let address = this.addressTarget.value.trim();
+      if (address.length > 1) { query = `${address} ${query}`; }
+    }
     let url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
     let token = dadata_token;
 

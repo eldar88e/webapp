@@ -14,7 +14,7 @@ class OrdersController < ApplicationController
     create_order
 
     render turbo_stream: [
-      success_notice("Ваш заказ успешно оформлен!"),
+      success_notice("Ваш заказ успешно оформлен."),
       turbo_stream.append(:modal, "<script>closeModal();</script>".html_safe),
       turbo_stream.append(:modal, "<script>closeMiniApp();</script>".html_safe)
     ]

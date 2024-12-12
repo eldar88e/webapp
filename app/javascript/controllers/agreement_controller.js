@@ -8,6 +8,7 @@ export default class extends Controller {
     this.agreementTarget.style = "display: block;"
     this.formTarget.style = "display: none;"
     document.getElementById('modal').classList.remove('left');
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   agree(event) {

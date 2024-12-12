@@ -15,3 +15,6 @@ application.register("buttons", ButtonsController)
 
 import PhoneMaskController from "./phone_mask_controller"
 application.register("phone_mask", PhoneMaskController)
+
+import NoticesController from "./notices_controller"
+application.register("notices", NoticesController)
