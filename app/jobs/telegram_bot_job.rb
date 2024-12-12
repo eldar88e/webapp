@@ -8,6 +8,7 @@ class TelegramBotJob < ApplicationJob
   def perform(*args)
     Telegram::Bot::Client.run(settings[:tg_token]) do |bot|
       bot.listen do |message|
+        binding.pry
         case message
         when Telegram::Bot::Types::CallbackQuery
           handle_callback(bot, message)
