@@ -1,26 +1,26 @@
 <div class="input-container">
-  <%= f.text_field :middle_name, autocomplete: "name", placeholder: '', class: "input-str" %>
+  <%= f.text_field :middle_name, autocomplete: "name", placeholder: '', class: "input-str", required: true %>
   <%= f.label :middle_name, 'Фамилия' %>
 </div>
 
 <div class="input-container">
-  <%= f.text_field :first_name, autocomplete: "name", placeholder: '', class: "input-str" %>
+  <%= f.text_field :first_name, autocomplete: "name", placeholder: '', class: "input-str", required: true %>
   <%= f.label :first_name, 'Имя' %>
 </div>
 
 <div class="input-container">
-  <%= f.text_field :last_name, autocomplete: "name", placeholder: '', class: "input-str" %>
+  <%= f.text_field :last_name, autocomplete: "name", placeholder: '', class: "input-str", required: true %>
   <%= f.label :last_name %>
 </div>
 
 <div class="input-container">
-  <%= f.text_field :phone_number, autocomplete: "tel", placeholder: '', class: "input-str", minlength: 22,
+  <%= f.text_field :phone_number, autocomplete: "tel", placeholder: '', class: "input-str", required: true,
                    data: { controller: "phone_mask", action: "input->phone_mask#mask blur->phone_mask#check" }%>
   <%= f.label :phone_number %>
 </div>
 
 <div class="input-container address-wrapper">
-  <%= f.text_field :address, autocomplete: "city-address", placeholder: '',
+  <%= f.text_field :address, autocomplete: "city-address", placeholder: '', required: true,
                    class: "input-str", data: { dadata_target: "address", action: "input->dadata#search" } %>
   <%= f.label :address %>
   <div class="suggestions-wrapper scrollable" data-dadata-target="suggestions">
@@ -29,7 +29,7 @@
 </div>
 
 <div class="input-container address-wrapper">
-  <%= f.text_field :street, autocomplete: "street-address", placeholder: '',
+  <%= f.text_field :street, autocomplete: "street-address", placeholder: '', required: true,
                    class: "input-str", data: { dadata_target: "street", action: "input->dadata#search_street" } %>
   <%= f.label :street %>
   <div class="suggestions-wrapper scrollable" data-dadata-target="suggestions_street">
@@ -40,7 +40,7 @@
 <div class="flex gap-4">
   <div class="w-1/2">
     <div class="input-container">
-      <%= f.text_field :home, data: { dadata_target: "home" }, placeholder: '', class: "input-str" %>
+      <%= f.text_field :home, data: { dadata_target: "home" }, placeholder: '', class: "input-str", required: true %>
       <%= f.label :home %>
     </div>
   </div>
@@ -61,7 +61,7 @@
   </div>
   <div class="w-1/2">
     <div class="input-container">
-      <%= f.number_field :postal_code, autocomplete: "postal-code", data: { dadata_target: "post_code" },
+      <%= f.number_field :postal_code, autocomplete: "postal-code", data: { dadata_target: "post_code" }, required: true,
                          placeholder: '', class: "input-str", max: 999999 %>
       <%= f.label :postal_code %>
     </div>
