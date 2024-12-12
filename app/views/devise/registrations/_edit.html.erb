@@ -1,15 +1,19 @@
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: 'mb-3', data: { controller: "dadata" } }) do |f| %>
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name),
+             html: { method: :put, class: 'mb-3', data: { controller: "dadata label_toggle" } }) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
 
   <div class="">
+    <%= f.label :middle_name, 'Фамилия', class: "ms-5 p-1" %>
     <%= f.text_field :middle_name, autocomplete: "name", placeholder: 'Фамилия', class: "input-str" %>
   </div>
 
   <div class="mt-6">
+    <%= f.label :first_name, 'Имя', class: "ms-5 p-1" %>
     <%= f.text_field :first_name, autocomplete: "name", placeholder: 'Имя', class: "input-str" %>
   </div>
 
   <div class="mt-6">
+    <%= f.label :last_name, 'Отчество', class: "ms-5 p-1" %>
     <%= f.text_field :last_name, autocomplete: "name", placeholder: 'Отчество', class: "input-str" %>
   </div>
 

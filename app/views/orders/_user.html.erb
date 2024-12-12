@@ -1,16 +1,19 @@
 <div data-controller="agreement">
   <div class="form" data-agreement-target="form">
     <%= form_with(model: current_user, url: orders_path, method: :post, class: 'mb-3',
-                  data: { controller: "dadata" }) do |f| %>
+                  data: { controller: "dadata label_toggle" }) do |f| %>
       <div class="">
+        <%= f.label :middle_name, 'Фамилия', class: "ms-5 p-1" %>
         <%= f.text_field :middle_name, autocomplete: "name", placeholder: 'Фамилия', class: "input-str" %>
       </div>
 
       <div class="mt-6">
+        <%= f.label :first_name, 'Имя', class: "ms-5 p-1" %>
         <%= f.text_field :first_name, autocomplete: "name", placeholder: 'Имя', class: "input-str" %>
       </div>
 
       <div class="mt-6">
+        <%= f.label :last_name, 'Отчество', class: "ms-5 p-1" %>
         <%= f.text_field :last_name, autocomplete: "name", placeholder: 'Отчество', class: "input-str" %>
       </div>
 

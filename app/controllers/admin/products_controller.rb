@@ -15,7 +15,7 @@ module Admin
       @product = Product.new(product_params)
 
       if @product.save
-        redirect_to admin_products_path, notice: "Product was successfully created."
+        redirect_to admin_products_path, notice: "Товар был успешно добавлен."
       else
         render :new, status: :unprocessable_entity
       end
@@ -25,7 +25,7 @@ module Admin
 
     def update
       if @product.update(product_params)
-        redirect_to admin_products_path, notice: "Product was successfully updated."
+        redirect_to admin_products_path, notice: "Товар был успешно обновлен."
       else
         render :edit, status: :unprocessable_entity
       end
@@ -33,7 +33,7 @@ module Admin
 
     def destroy
       @product.destroy!
-      redirect_to admin_products_path, status: :see_other, notice: "Product was successfully destroyed."
+      redirect_to admin_products_path, status: :see_other, notice: "Товар был успешно удален."
     end
 
     private

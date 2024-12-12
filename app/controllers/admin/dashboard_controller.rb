@@ -9,8 +9,7 @@ module Admin
     end
 
     def index
-      return redirect_to admin_login_path unless user_signed_in?
-      # binding.pry
+      redirect_to admin_login_path unless user_signed_in?
     end
   end
 end
