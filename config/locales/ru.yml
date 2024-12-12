@@ -35,7 +35,7 @@ ru:
         first_name: "Имя"
         last_name: "Отчество"
         phone_number: "Номер телефона"
-        address: "Регион, Город, Поселок"
+        address: "Регион, город, поселок"
         street: "Улица"
         home: "Дом"
         apartment: "Квартира"
