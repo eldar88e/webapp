@@ -24,7 +24,10 @@ class TelegramBotJob < ApplicationJob
   private
 
   def save_preview_video(bot, message)
-    binding.pry
+    return unless settings[:admin_ids].split(',').include?(message.chat.id.to_s)
+
+    bot.api.send_message(chat_id: message.chat.id, text: "ID Вашего видео:\n#{message.video.file_id}")
+    true
   end
 
   def handle_callback(bot, message)
@@ -39,10 +42,11 @@ class TelegramBotJob < ApplicationJob
       # User.find_or_create_by_tg(message.chat)
       send_firs_msg(bot, message.chat.id)
     else
-      save_preview_video(bot, message) if message.video.present?
       if message.chat.id == settings[:courier_tg_id].to_i
         input_tracking_number(bot, message)
       else
+        return save_preview_video(bot, message) if message.video.present?
+
         send_firs_msg(bot, message.chat.id)
       end
     end
@@ -57,9 +61,9 @@ class TelegramBotJob < ApplicationJob
         chat_id: message.chat.id,
         text: I18n.t('tg_msg.track_num_save', order: user_state[:order_id], fio: user_state[:full_name], num: message.text)
       )
-      bot.api.delete_message(chat_id: message.chat.id, message_id: user_state[:msg_id])
-      bot.api.delete_message(chat_id: message.chat.id, message_id: user_state[:h_msg])
-      bot.api.delete_message(chat_id: message.chat.id, message_id: message.message_id)
+      [ user_state[:msg_id], user_state[:h_msg], message.message_id ].each do |id|
+        bot.api.delete_message(chat_id: message.chat.id, message_id: id)
+      end
       Rails.cache.delete("user_#{message.chat.id}_state")
     end
   end
@@ -73,10 +77,10 @@ class TelegramBotJob < ApplicationJob
 
   def approve_payment(bot, message)
     order_number = parse_order_number(message.message.text)
-    fio          = parse_full_name(message.message.text)
     order        = Order.find(order_number)
     order.update(status: :processing)
     bot.api.delete_message(chat_id: message.message.chat.id, message_id: message.message.message_id)
+    # fio = parse_full_name(message.message.text)
     # bot.api.send_message(chat_id: message.message.chat.id, text: I18n.t('tg_msg.approved_pay', order: order_number, fio: fio))
   end
 
