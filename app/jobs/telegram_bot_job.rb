@@ -2,13 +2,12 @@ require 'telegram/bot'
 
 class TelegramBotJob < ApplicationJob
   queue_as :bot_queue
-  VIDEO_URL          = 'https://strattera.tgapp.online/videos/first_animation.mp4'
+  VIDEO_URL          = "BAACAgIAAxkBAAIH62da72ne-e1fpkj5cBQmQqtDQYl3AAJnYwAC48HZStvkuFM6xt6LNgQ"
   TRACK_CACHE_PERIOD = 5.minutes
 
   def perform(*args)
     Telegram::Bot::Client.run(settings[:tg_token]) do |bot|
       bot.listen do |message|
-        binding.pry
         case message
         when Telegram::Bot::Types::CallbackQuery
           handle_callback(bot, message)
