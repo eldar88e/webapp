@@ -2,7 +2,6 @@ require 'telegram/bot'
 
 class TelegramBotJob < ApplicationJob
   queue_as :bot_queue
-  VIDEO_URL          = "BAACAgIAAxkBAAIH62da72ne-e1fpkj5cBQmQqtDQYl3AAJnYwAC48HZStvkuFM6xt6LNgQ"
   TRACK_CACHE_PERIOD = 5.minutes
 
   def perform(*args)
@@ -24,6 +23,10 @@ class TelegramBotJob < ApplicationJob
 
   private
 
+  def save_preview_video(bot, message)
+    binding.pry
+  end
+
   def handle_callback(bot, message)
     self.send(message.data.to_sym, bot, message) if self.respond_to?(message.data.to_sym, true)
   end
@@ -36,6 +39,7 @@ class TelegramBotJob < ApplicationJob
       # User.find_or_create_by_tg(message.chat)
       send_firs_msg(bot, message.chat.id)
     else
+      save_preview_video(bot, message) if message.video.present?
       if message.chat.id == settings[:courier_tg_id].to_i
         input_tracking_number(bot, message)
       else
@@ -100,7 +104,9 @@ class TelegramBotJob < ApplicationJob
   def send_firs_msg(bot, chat_id)
     first_btn = initialize_first_btn(chat_id)
     markup    = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: first_btn)
-    bot.api.send_video(chat_id: chat_id, video: VIDEO_URL, caption: I18n.t('tg_msg.start'), reply_markup: markup)
+    bot.api.send_video(
+      chat_id: chat_id, video: settings[:first_video_id], caption: I18n.t('tg_msg.start'), reply_markup: markup
+    )
   end
 
   def initialize_first_btn(chat_id)
