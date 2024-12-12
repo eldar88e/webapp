@@ -3,6 +3,11 @@
   <%= render "devise/shared/error_messages", resource: resource %>
 
   <%= render partial: 'devise/registrations/form_items', locals: { f: form } %>
+
+
+  <div class="mt-6">
+    <%= form.submit "Сохранить", class: "btn" %>
+  </div>
 <% end %>
 
 <%#= link_to 'Мои заказы', orders_path %>
