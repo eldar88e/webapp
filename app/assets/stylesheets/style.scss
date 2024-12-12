@@ -325,14 +325,32 @@ main {
 form label {
   color: rgba(255, 255, 255, 0.5);
   font-weight: 200;
-  font-size: 0.8rem;
+  font-size: 1rem;
+}
+
+.input-container {
+  position: relative;
+  margin-top: 2.25rem;
+}
+
+.input-container label {
+  position: absolute;
+  top: 14px;
+  left: 18px;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.input-container input:focus + label,
+.input-container input:not(:placeholder-shown) + label {
+  top: -23px;
+  font-size: 0.9rem;
 }
 
 /* Для старых браузеров */
 .input-str:-ms-input-placeholder { /* Internet Explorer 10-11 */
   color: rgba(255, 255, 255, 0.5);
   font-weight: 200;
-
 }
 
 .input-str::-ms-input-placeholder { /* Microsoft Edge */

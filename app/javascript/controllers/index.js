@@ -18,6 +18,3 @@ application.register("phone_mask", PhoneMaskController)
 
 import NoticesController from "./notices_controller"
 application.register("notices", NoticesController)
-
-import LabelToggleController from "./label_toggle_controller"
-application.register("label_toggle", LabelToggleController)

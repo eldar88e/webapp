@@ -16,6 +16,7 @@ ru:
     approve_payment: "Оплата пришла"
     submit_tracking: "Привязать трек"
   empty_cart: "Ваша корзина пустая!"
+  required_fields: "Заполните пожалуйста все обязательные поля!"
   order:
     statuses:
       initialized: "Инициализирован"
@@ -25,3 +26,19 @@ ru:
       shipped: "Отправлено"
       cancelled: "Отменено"
       refunded: "Возвращено"
+  helpers:
+    label:
+      user:
+        password: "Пароль"
+        email: "Электронная почта"
+        middle_name: "Фамилия"
+        first_name: "Имя"
+        last_name: "Отчество"
+        phone_number: "Номер телефона"
+        address: "Регион, Город, Поселок"
+        street: "Улица"
+        home: "Дом"
+        apartment: "Квартира"
+        build: "Корпус"
+        postal_code: "Индекс"
+

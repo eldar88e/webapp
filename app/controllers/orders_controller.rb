@@ -6,9 +6,7 @@ class OrdersController < ApplicationController
   def create
     return handle_user_info if params[:page].to_i == 1
     return error_notice("Вы не согласны с нашими условиями!") if params[:user][:agreement] != "1"
-
-    check_params = filtered_params.reject { |key, _val| %w[apartment build].include?(key) }
-    return error_notice("Заполните пожалуйста все обязательные поля!") if check_params.size < 8
+    return error_notice(t('required_fields')) unless required_fields_filled?
 
     update_user
     create_order
@@ -25,15 +23,6 @@ class OrdersController < ApplicationController
     def handle_user_info
       render turbo_stream: turbo_stream.update(:modal, partial: 'orders/user')
       # turbo_stream.append(:modal, "<script>history.pushState(null, null, '/');</script>".html_safe)
-    end
-
-    def user_params
-      params.require(:user).permit(:first_name, :middle_name, :last_name, :phone_number,
-                                   :address, :street, :home, :postal_code, :apartment, :build)
-    end
-
-    def filtered_params
-      user_params.to_h.reject { |_key, value| value.blank? }
     end
 
     def update_user

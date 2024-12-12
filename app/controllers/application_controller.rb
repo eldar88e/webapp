@@ -25,6 +25,19 @@ class ApplicationController < ActionController::Base
     redirect_to_telegram unless current_user
   end
 
+  def user_params
+    params.require(:user).permit(:first_name, :middle_name, :last_name, :phone_number,
+                                 :address, :street, :home, :postal_code, :apartment, :build)
+  end
+
+  def filtered_params
+    user_params.to_h.reject { |_key, value| value.blank? }
+  end
+
+  def required_fields_filled?
+    filtered_params.except(:apartment, :build).values.compact_blank.size >= 8
+  end
+
   def settings
     Rails.cache.fetch(:settings, expires_in: 6.hours) do
       Setting.pluck(:variable, :value).to_h.transform_keys(&:to_sym)

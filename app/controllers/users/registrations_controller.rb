@@ -8,6 +8,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def update
+    return error_notice(t('required_fields')) unless required_fields_filled?
+
     self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
     prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
 
