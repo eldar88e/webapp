@@ -1,18 +1,20 @@
 <%= render '/layouts/partials/notices' %>
 
-<nav class="nav-bar">
+<nav class="nav-bar bg-white border-gray-300 dark:bg-gray-800 dark:border-gray-700">
   <div class="nav-wrapper">
     <div class="flex justify-between items-center">
       <div class="flex items-center justify-start">
-        <button class="btn-menu" data-controller="menu-btn" data-action="click->menu-btn#showMenu">
-          <%= image_tag image_path('admin/menu.svg') %>
+        <button class="btn-menu text-gray-600 dark:text-gray-400" data-controller="menu-btn" data-action="click->menu-btn#showMenu">
+          <svg class="w-6 h-6 " fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+          </svg>
         </button>
         <%= link_to '/admin' do %>
           <%= image_tag image_path('admin/logo.svg') %>
         <% end %>
         <div style="height: 46px;"></div>
       </div>
-      <div class="flex items-center">
+      <div class="flex items-center text-gray-900 dark:text-white">
         <div class="flex items-center" style="margin-right: 5px;">
           <div style="margin-right: 5px;">
             Hello<span style="font-weight: bold;"> <%= current_user.email %></span>!

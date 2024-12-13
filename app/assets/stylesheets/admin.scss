@@ -2,12 +2,8 @@
 
 .dark {
   .nav-bar {
-    background-color: rgb(31 41 55 / var(--tw-bg-opacity));
-    border-color: rgb(55 65 81 / var(--tw-border-opacity));
-
     .nav-bar {
       .btn-menu {
-        color: rgb(156 163 175 / var(--tw-text-opacity));
       }
     }
   }
@@ -50,8 +46,6 @@
   border-bottom-width: 1px;
   --tw-bg-opacity: 1;
   --tw-border-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-  border-color: rgb(229 231 235 / var(--tw-border-opacity));
   width: 100%;
   z-index: 30;
   position: fixed;
@@ -68,7 +62,6 @@
 
     .btn-menu {
       --tw-text-opacity: 1;
-      color: rgb(75 85 99 / var(--tw-text-opacity));
       padding: .5rem;
       cursor: pointer;
       margin-right: .75rem;
