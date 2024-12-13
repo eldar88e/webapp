@@ -47,6 +47,7 @@ class TelegramBotJob < ApplicationJob
       else
         return save_preview_video(bot, message) if message.video.present?
 
+        raise "Test exception for Sidekiq"
         send_firs_msg(bot, message.chat.id)
       end
     end

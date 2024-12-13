@@ -31,7 +31,7 @@
           ID
         </th>
         <th scope="col" class="px-6 py-3">
-          Клиент
+          <%= sort_link(@q_ads, :first_name, 'Клиент', data: { turbo_prefetch: false }) %>
         </th>
         <th scope="col" class="px-6 py-3">
           Телефон
