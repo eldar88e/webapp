@@ -106,7 +106,7 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
-    dotenv (3.1.4)
+    dotenv (3.1.6)
     drb (2.2.1)
     dry-core (1.0.2)
       concurrent-ruby (~> 1.0)
@@ -350,6 +350,7 @@ GEM
 PLATFORMS
   aarch64-linux
   arm64-darwin
+  x86_64-linux
   x86_64-linux-musl
 
 DEPENDENCIES
