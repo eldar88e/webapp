@@ -36,4 +36,12 @@ class User < ApplicationRecord
       user.password    = Devise.friendly_token[0, 20]
     end
   end
+
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[first_name middle_name last_name username]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    %w[]
+  end
 end

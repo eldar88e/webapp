@@ -6,3 +6,6 @@ import { application } from "./application"
 
 import DarkController from "./dark_controller"
 application.register("dark", DarkController)
+
+import MenuBtnController from "./menu_btn_controller"
+application.register("menu-btn", MenuBtnController)

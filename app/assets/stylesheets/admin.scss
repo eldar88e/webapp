@@ -13,10 +13,8 @@
   }
 
   body {
-    background-color: rgb(31 41 55 / var(--tw-bg-opacity));
 
     .body {
-      background-color: rgb(17 24 39 / var(--tw-bg-opacity));
 
       .sidebar {
         .wraper-menu {
@@ -74,7 +72,6 @@
       padding: .5rem;
       cursor: pointer;
       margin-right: .75rem;
-      display: none;
 
       @media (min-width: 1024px) {
         display: inline;
@@ -89,13 +86,9 @@
 }
 
 body {
-  --tw-bg-opacity: 1;
-  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
 
   .body {
     padding-top: 4rem;
-    --tw-bg-opacity: 1;
-    background-color: rgb(249 250 251 / var(--tw-bg-opacity));
 
     .sidebar {
       transition-duration: 75ms;
@@ -105,13 +98,14 @@ body {
       flex-direction: column;
       flex-shrink: 0;
       height: 100%;
-      display: flex;
       z-index: 20;
+      display: none;
       top: 0;
       left: 0;
       position: fixed;
       @media (min-width: 1024px) {
         width: 16rem;
+        display: flex;
       }
 
       .wraper-menu {
@@ -190,13 +184,13 @@ body {
     }
 
     .main-content {
-      margin-left: 16rem;
-      --tw-bg-opacity: 1;
-      background-color: rgb(249 250 251 / var(--tw-bg-opacity));
       overflow-y: auto;
       width: 100%;
       height: 100%;
       position: relative;
+      @media (min-width: 1024px) {
+        padding-left: 16rem;
+      }
     }
   }
 }
@@ -222,4 +216,21 @@ body {
   --tw-divide-y-reverse: 0;
   border-bottom-width: calc(1px* var(--tw-divide-y-reverse));
   border-top-width: calc(1px*(1 - var(--tw-divide-y-reverse)));
+}
+
+.pagy {
+  a {
+    margin: 0 10px;
+  }
+}
+
+.sidebarBackdrop {
+  z-index: 10;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  display: none;
+  background-color: rgba(17, 24, 39, .5);
+  position: fixed;
 }

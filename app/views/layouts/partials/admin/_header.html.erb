@@ -4,7 +4,7 @@
   <div class="nav-wrapper">
     <div class="flex justify-between items-center">
       <div class="flex items-center justify-start">
-        <button class="btn-menu">
+        <button class="btn-menu" data-controller="menu-btn" data-action="click->menu-btn#showMenu">
           <%= image_tag image_path('admin/menu.svg') %>
         </button>
         <%= link_to '/admin' do %>

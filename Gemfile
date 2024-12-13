@@ -25,7 +25,7 @@ gem "i18n"
 gem "sidekiq"
 gem 'pagy'
 gem "pry"
-# gem 'ransack'
+gem 'ransack'
 
 group :development, :test do
   gem "rubocop-rails-omakase", require: false

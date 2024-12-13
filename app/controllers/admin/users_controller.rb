@@ -4,7 +4,8 @@ module Admin
     include Pagy::Backend
 
     def index
-      @pagy, @users = pagy(User.all, items: 20)
+      @q_users = User.all.order(created_at: :desc).ransack(params[:q])
+      @pagy, @users = pagy(@q_users.result, items: 20)
     end
 
     def new
