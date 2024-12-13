@@ -37,10 +37,10 @@
           Телефон
         </th>
         <th scope="col" class="px-6 py-3">
-          Адрес
+          <%= sort_link(@q_users, :address, 'Адрес', data: { turbo_prefetch: false }) %>
         </th>
         <th scope="col" class="px-6 py-3">
-          Дата регистрации
+          <%= sort_link(@q_users, :created_at, 'Дата регистрации', data: { turbo_prefetch: false }) %>
         </th>
         <!--
         <th scope="col" class="px-6 py-3">
