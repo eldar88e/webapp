@@ -11,7 +11,9 @@
         </svg>
       <% end %>
 
-      <button class="logo" data-controller="buttons" data-action="click->buttons#mainPage">strattera bot</button>
+      <button class="logo" data-controller="buttons" data-action="click->buttons#mainPage">
+        <%= settings[:app_name] %>
+      </button>
 
       <%= render '/layouts/partials/cart' %>
     </div>

@@ -118,6 +118,7 @@ main {
       display: flex;
       align-items: center;
       gap: 18px;
+      transition: all 0.3s;
 
       @media screen and (max-width: 300px) {
         gap: 8px;
@@ -300,6 +301,11 @@ main {
   padding: 14px 26px;
   border-radius: 48px;
   cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+    background-color: #3565c5;
+  }
 }
 
 .input-str {

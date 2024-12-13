@@ -14,7 +14,7 @@ class AuthController < ApplicationController
     unless user_signed_in?
       data      = params.to_unsafe_h.except(:controller, :action)
       init_data = URI.decode_www_form(data["initData"]).to_h
-      return redirect_to "https://t.me/#{settings[:tg_main_bot]}" if init_data.blank?
+      return redirect_to "https://t.me/#{settings[:tg_main_bot]}", allow_other_host: true if init_data.blank?
 
       tg_user = JSON.parse init_data["user"]
       user    = User.find_or_create_by_tg(tg_user)
