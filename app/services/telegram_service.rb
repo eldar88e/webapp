@@ -10,7 +10,7 @@ class TelegramService
     @msg_id    = msg_id
   end
 
-  def self.call(msg, id=nil, **args)
+  def self.call(msg, id = nil, **args)
     new(msg, id).report(args[:markup])
   end
 
@@ -18,7 +18,7 @@ class TelegramService
     new(msg, id, msg_id).send(:delete_message)
   end
 
-  def report(markup=nil)
+  def report(markup = nil)
     @markup = markup
     tg_send if @message.present? && credential_exists?
   end

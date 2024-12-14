@@ -21,7 +21,7 @@ class CartItemsController < ApplicationController
   def update
     cart      = Cart.includes(:cart_items).find(current_user.cart.id)
     cart_item = cart.cart_items.find(params[:id])
-    params[:quantity] != "0" ? handle_update_carts(cart_item) : handle_remove_item(cart, cart_item)
+    params[:quantity] != '0' ? handle_update_carts(cart_item) : handle_remove_item(cart, cart_item)
   end
 
   private
@@ -46,7 +46,7 @@ class CartItemsController < ApplicationController
       end
 
       render turbo_stream: [
-        turbo_stream.append(:modal, "<script>closeModal();</script>".html_safe),
+        turbo_stream.append(:modal, '<script>closeModal();</script>'.html_safe),
         success_notice('Ваша корзина пуста!')
       ] + update_counters(id)
     end

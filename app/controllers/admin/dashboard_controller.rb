@@ -5,7 +5,7 @@ module Admin
     def login
       return redirect_to admin_dashboard_path if current_user
 
-      render layout: "admin_authorize"
+      render layout: 'admin_authorize'
     end
 
     def index

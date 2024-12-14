@@ -5,16 +5,16 @@ class OrdersController < ApplicationController
 
   def create
     return handle_user_info if params[:page].to_i == 1
-    return error_notice("Вы не согласны с нашими условиями!") if params[:user][:agreement] != "1"
+    return error_notice('Вы не согласны с нашими условиями!') if params[:user][:agreement] != '1'
     return error_notice(t('required_fields')) unless required_fields_filled?
 
     update_user
     create_order
 
     render turbo_stream: [
-      success_notice("Ваш заказ успешно оформлен."),
-      turbo_stream.append(:modal, "<script>closeModal();</script>".html_safe),
-      turbo_stream.append(:modal, "<script>closeMiniApp();</script>".html_safe)
+      success_notice('Ваш заказ успешно оформлен.'),
+      turbo_stream.append(:modal, '<script>closeModal();</script>'.html_safe),
+      turbo_stream.append(:modal, '<script>closeMiniApp();</script>'.html_safe)
     ]
   end
 

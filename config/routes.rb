@@ -10,20 +10,20 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
-  root "auth#login"
+  root 'auth#login'
 
   resources :products, only: [ :index ]
   resources :carts, only: [ :index ]
   resources :cart_items, only: [ :create, :update ]
   resources :orders, only: [ :index, :create, :update ]
 
-  post "/auth/telegram", to: "auth#telegram_auth"
-  get "/login", to: "auth#login"
+  post '/auth/telegram', to: 'auth#telegram_auth'
+  get '/login', to: 'auth#login'
 
   namespace :admin do
-    get "/login", to: "dashboard#login"
-    get "/dashboard", to: "dashboard#index"
-    get "/", to: "dashboard#index"
+    get '/login', to: 'dashboard#login'
+    get '/dashboard', to: 'dashboard#index'
+    get '/', to: 'dashboard#index'
     resources :products
     resources :settings
     resources :orders

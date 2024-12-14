@@ -14,7 +14,7 @@ module Admin
       @setting = Setting.new(setting_params)
 
       if @setting.save
-        redirect_to admin_settings_path, notice: "Setting was successfully created."
+        redirect_to admin_settings_path, notice: 'Setting was successfully created.'
       else
         render :new, status: :unprocessable_entity
       end
@@ -24,7 +24,7 @@ module Admin
 
     def update
       if @setting.update(setting_params)
-        redirect_to admin_settings_path, notice: "Setting was successfully updated."
+        redirect_to admin_settings_path, notice: 'Setting was successfully updated.'
       else
         render :edit, status: :unprocessable_entity
       end
@@ -32,7 +32,7 @@ module Admin
 
     def destroy
       @setting.destroy!
-      redirect_to admin_settings_path, status: :see_other, notice: "Setting was successfully destroyed."
+      redirect_to admin_settings_path, status: :see_other, notice: 'Setting was successfully destroyed.'
     end
 
     private

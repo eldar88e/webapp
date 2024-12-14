@@ -4,7 +4,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_permitted_parameters
 
   def edit
-    render turbo_stream: turbo_stream.update(:modal, partial: "/devise/registrations/edit")
+    render turbo_stream: turbo_stream.update(:modal, partial: '/devise/registrations/edit')
   end
 
   def update
@@ -20,7 +20,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       bypass_sign_in resource, scope: resource_name if sign_in_after_change_password?
 
       render turbo_stream: [
-        turbo_stream.append(:modal, "<script>closeModal();</script>".html_safe),
+        turbo_stream.append(:modal, '<script>closeModal();</script>'.html_safe),
         success_notice('Ваша учетная запись изменена.')
       ]
     else
