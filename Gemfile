@@ -3,7 +3,8 @@ source 'https://rubygems.org'
 ruby '3.3.3'
 gem 'rails', '~> 7.2.2'
 
-gem 'sprockets-rails'
+# gem 'sprockets-rails'
+gem 'vite_rails'
 gem 'pg', '~> 1.5'
 gem 'puma', '~> 6.5'
 gem 'jsbundling-rails'
@@ -16,10 +17,9 @@ gem 'tzinfo-data', platforms: %i[ windows jruby ]
 gem 'bootsnap', require: false
 
 # gem "image_processing", "~> 1.2"
-# gem "administrate"
 gem 'dotenv'
 gem 'devise'
-gem 'exception-track'
+# gem 'exception-track'
 gem 'telegram-bot-ruby', require: false
 gem 'i18n'
 gem 'sidekiq'

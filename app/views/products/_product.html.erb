@@ -7,7 +7,7 @@
         </div>
         <div class="product-exist">
           <% if product.stock_quantity.positive? %>
-            <%= image_tag image_path('have.svg') %>
+            <%= image_tag vite_asset_path('images/have.svg') %>
             <%= 'В наличии' %>
           <% else %>
             <%= 'Нет в наличии' %>
@@ -27,7 +27,7 @@
             <%= button_to cart_items_path, params: { cart_item: { product_id: product.id } }, class: 'btn-order' do %>
               <div class="title-btn">Заказать</div>
               <div class="plus">
-                <%= image_tag image_path('plus.svg') %>
+                <%= image_tag vite_asset_path('images/plus.svg') %>
                 <%= render partial: '/layouts/partials/cart_item_counter', locals: { id: product.id } %>
               </div>
             <% end %>

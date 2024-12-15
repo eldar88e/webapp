@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
-    <title><%= content_for(:title) || "Webapp" %></title>
+    <title><%= content_for(:title) || "Mini app" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
@@ -13,13 +13,13 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "style", "data-turbo-track": "reload" %>
+
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
-    <%= javascript_tag do %>
-      window.dadata_token = "<%= settings[:dadata_token] %>"
-    <% end %>
+
+    <%= vite_client_tag %>
+    <%= vite_stylesheet_tag 'application' %>
+    <%= vite_stylesheet_tag 'style' %>
+    <%= vite_javascript_tag 'application' %>
   </head>
 
   <body>
