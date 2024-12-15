@@ -34,7 +34,7 @@ services:
   sidekiq:
     tty: true
     stdin_open: true
-    image: miniapp
+    image: s-miniapp
     build: .
     container_name: s-miniapp-bot-sidekiq
     env_file: ./.env
