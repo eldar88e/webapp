@@ -32,19 +32,16 @@ COPY . .
 
 # RUN bundle exec bootsnap precompile app/ lib/
 
-# RUN bundle exec rails assets:precompile
-# RUN rm -rf node_modules
+RUN bundle exec rails assets:precompile
+RUN rm -rf node_modules
+
+ENTRYPOINT ["/app/bin/docker-entrypoint"]
 
 RUN addgroup -g 1000 deploy && \
     adduser -u 1000 -G deploy -D -s /bin/sh deploy && \
     chown -R deploy:deploy db log storage tmp
 
-RUN chmod +x /app/bin/docker-entrypoint && \
-    chown deploy:deploy /app/bin/docker-entrypoint \
-
 USER deploy:deploy
-
-ENTRYPOINT ["/app/bin/docker-entrypoint"]
 
 EXPOSE 3000
 
