@@ -14,6 +14,14 @@ class Order < ApplicationRecord
     order_items.includes(:product)
   end
 
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[total_amount updated_at created_at]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    %w[user]
+  end
+
   private
 
   # Проверка изменений статуса и выполнение соответствующих действий

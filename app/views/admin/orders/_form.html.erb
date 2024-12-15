@@ -1,4 +1,4 @@
-<%= form_with(model: @order, url: admin_order_path(@order)) do |form| %>
+<%= form_with(model: @order, url: admin_order_path(@order), class: 'max-w-sm') do |form| %>
   <% if @order.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(@order.errors.count, "error") %> prohibited this order from being saved:</h2>
@@ -11,17 +11,19 @@
     </div>
   <% end %>
 
-  <div class="mb-4">
-    <%= form.label :status, class: 'form-label' %>
-    <%= form.select :status, Order.statuses.keys.map { |key| [I18n.t("order.statuses.#{key}"), key] }, {}, { class: 'form-select' } %>
+  <div class="mb-5">
+    <%= form.label :status, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+    <%= form.select :status,
+                    Order.statuses.keys.map { |key| [I18n.t("order.statuses.#{key}"), key] }, {},
+                    { class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' } %>
   </div>
 
-  <div class="mb-4">
+  <div class="mb-5">
     <%= form.submit "Сохранить", class: "px-4 py-2 bg-blue-500 text-white font-semibold rounded" %>
   </div>
+<% end %>
 
-  <h2 class="text-2xl font-bold mt-6">Состав заказа:</h2>
-  <% @order.order_items.includes(product: :image_attachment).each do |order_item| %>
-    <%= render partial: '/admin/orders/order_item', locals: { order_item: order_item } %>
-  <% end %>
+<h2 class="text-2xl font-bold dark:text-white mt-6">Состав заказа:</h2>
+<% @order.order_items.includes(product: :image_attachment).each do |order_item| %>
+  <%= render partial: '/admin/orders/order_item', locals: { order_item: order_item } %>
 <% end %>
