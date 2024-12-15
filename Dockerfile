@@ -32,7 +32,7 @@ COPY . .
 
 # RUN bundle exec bootsnap precompile app/ lib/
 
-RUN bundle exec rails assets:precompile
+RUN yarn vite build
 RUN rm -rf node_modules
 
 ENTRYPOINT ["/app/bin/docker-entrypoint"]
