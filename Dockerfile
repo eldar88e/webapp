@@ -35,7 +35,7 @@ COPY . .
 RUN yarn vite build
 RUN rm -rf node_modules
 
-ENTRYPOINT ["/app/bin/docker-entrypoint"]
+# ENTRYPOINT ["/app/bin/docker-entrypoint"]
 
 RUN addgroup -g 1000 deploy && \
     adduser -u 1000 -G deploy -D -s /bin/sh deploy && \
