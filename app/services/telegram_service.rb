@@ -89,11 +89,18 @@ class TelegramService
   end
 
   def form_keyboard
-    text = I18n.t("tg_btn.#{@markup}")
-    result = [[Telegram::Bot::Types::InlineKeyboardButton.new(text: text, callback_data: @markup)]]
-    result << [ Telegram::Bot::Types::InlineKeyboardButton.new(
+    result =
+      if @markup == 'overdue'
+        [[Telegram::Bot::Types::InlineKeyboardButton.new(
+          text: 'Перейти в каталог', url: "https://t.me/#{settings[:tg_main_bot]}?startapp"
+        )]]
+      else
+        [[Telegram::Bot::Types::InlineKeyboardButton.new(text: I18n.t("tg_btn.#{@markup}"), callback_data: @markup)]]
+      end
+    result << [Telegram::Bot::Types::InlineKeyboardButton.new(
       text: 'Изменить заказ', url: "https://t.me/#{settings[:tg_main_bot]}?startapp=#{@chat_id}&start=cart"
-    ) ] if @markup == 'i_paid'
+    )] if @markup == 'i_paid'
+    result << [Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Задать вопрос', url: "#{settings[:tg_support]}")]
     result
   end
 

@@ -31,12 +31,12 @@ services:
         ipv4_address: 172.29.0.11
     restart: always
 
-  sidekiq:
+  bot:
     tty: true
     stdin_open: true
     image: s-miniapp
     build: .
-    container_name: s-miniapp-bot-sidekiq
+    container_name: s-miniapp-bot
     env_file: ./.env
     depends_on:
       - pg
@@ -45,6 +45,24 @@ services:
       - gems:/usr/local/bundle
       - .:/app
     command: bundle exec sidekiq -C config/sidekiq_bot.yml
+    networks:
+      net:
+    restart: always
+
+  job:
+    tty: true
+    stdin_open: true
+    image: s-miniapp
+    build: .
+    container_name: s-miniapp-job
+    env_file: ./.env
+    depends_on:
+      - pg
+      - redis
+    volumes:
+      - gems:/usr/local/bundle
+      - .:/app
+    command: bundle exec sidekiq
     networks:
       net:
     restart: always

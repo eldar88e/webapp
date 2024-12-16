@@ -1,11 +1,12 @@
 class Order < ApplicationRecord
+  ONE_WAIT = 1.minute # 3.hours
   belongs_to :user
   has_many :order_items, dependent: :destroy
 
   validates :status, presence: true
   validates :total_amount, presence: true
 
-  enum status: { initialized: 0, unpaid: 1, pending: 2, processing: 3, shipped: 4, cancelled: 5, refunded: 6 }
+  enum status: { initialized: 0, unpaid: 1, pending: 2, processing: 3, shipped: 4, cancelled: 5, refunded: 6, overdue: 7 }
 
   after_update :check_status_change
   after_create :on_unpaid
@@ -20,6 +21,12 @@ class Order < ApplicationRecord
 
   def self.ransackable_associations(_auth_object = nil)
     %w[user]
+  end
+
+  def order_items_str
+    order_items.includes(:product).map do |i|
+      "• #{i.product.name} — #{i.product.name != 'Доставка' ? (i.quantity.to_s + 'шт.') : 'услуга' } — #{i.price}₽"
+    end.join(",\n")
   end
 
   private
@@ -39,25 +46,29 @@ class Order < ApplicationRecord
       on_cancelled
     when 'refunded'
       on_refunded
+    when 'overdue'
+      on_overdue
     end
   end
 
   def on_unpaid
     # Логика для статуса "не оплачен"
     TelegramService.delete_msg('', self.user.tg_id, self.msg_id) if self.msg_id
-    card  = Setting.fetch_value(:card)
-    msg   = I18n.t(
-      'tg_msg.unpaid',
-      order: id,
+    card = Setting.fetch_value(:card)
+    msg  = "#{I18n.t('tg_msg.unpaid.msg', order: id)}\n\n"
+    msg  += I18n.t(
+      'tg_msg.unpaid.main',
       card: card,
       price: total_amount,
       items: order_items_str,
       address: user.full_address,
+      postal_code: user.postal_code,
       fio: user.full_name,
       phone: user.phone_number
     )
     msg_id = TelegramService.call(msg, self.user.tg_id, markup: 'i_paid')
     self.update_columns(msg_id: msg_id)
+    AbandonedCartReminderJob.set(wait: ONE_WAIT).perform_later(order_id: 67, msg_type: :one)
     Rails.logger.info "Order #{id} is now unpaid"
   end
 
@@ -74,6 +85,7 @@ class Order < ApplicationRecord
         fio: user.full_name,
         phone: user.phone_number
       )
+      TelegramService.delete_msg('', self.user.tg_id, self.msg_id) if self.msg_id
       TelegramService.call(msg, nil, markup: 'approve_payment') # send to admin
       msg_id = TelegramService.call(I18n.t('tg_msg.paid_client'), user.tg_id) # send client
       update_columns(msg_id: msg_id)
@@ -104,6 +116,7 @@ class Order < ApplicationRecord
 
   def on_shipped
     # Логика для статуса "отправлен"
+    Rails.logger.info "Order #{id} has been shipped"
     TelegramService.delete_msg('', user.tg_id, self.msg_id)
     msg = I18n.t('tg_msg.on_shipped_courier',
                  order: id,
@@ -115,27 +128,29 @@ class Order < ApplicationRecord
                  track: tracking_number
     )
     TelegramService.call(msg, user.tg_id)
-    Rails.logger.info "Order #{id} has been shipped"
   end
 
   def on_cancelled
     # Логика для статуса "отменен"
     msg = "Order #{id} has been cancelled"
-    TelegramService.call msg # TODO: шлет уведомление только админу
     Rails.logger.info msg
+    TelegramService.call msg # TODO: шлет уведомление только админу
   end
 
   def on_refunded
     # Логика для статуса "возвращен"
     msg = "Order #{id} has been refunded"
-    TelegramService.call msg # TODO: шлет уведомление только админу
     Rails.logger.info msg
+    TelegramService.call msg # TODO: шлет уведомление только админу
   end
 
-  def order_items_str
-    order_items.includes(:product).map.with_index(1) do |i, idx|
-      "#{idx}. #{i.product.name} #{i.product.name != 'Доставка' ? (i.quantity.to_s + 'шт.') : 'услуга' } #{i.price}₽"
-    end.join(",\n")
+  def on_overdue
+    # Логика для статуса "просрочен"
+    Rails.logger.info "Order #{id} has been overdue"
+    TelegramService.delete_msg('', user.tg_id, self.msg_id)
+    msg    = I18n.t('tg_msg.unpaid.reminder.overdue', order: id)
+    msg_id = TelegramService.call(msg, user.tg_id, markup: 'overdue')
+    update_columns(msg_id: msg_id)
   end
 
   def deduct_stock

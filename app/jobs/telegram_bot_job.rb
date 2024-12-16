@@ -79,7 +79,7 @@ class TelegramBotJob < ApplicationJob
     order_number = parse_order_number(message.message.text)
     order        = Order.find(order_number)
     order.update(status: :processing)
-    bot.api.delete_message(chat_id: message.message.chat.id, message_id: message.message.message_id)
+    # bot.api.delete_message(chat_id: message.message.chat.id, message_id: message.message.message_id)
     # fio = parse_full_name(message.message.text)
     # bot.api.send_message(chat_id: message.message.chat.id, text: I18n.t('tg_msg.approved_pay', order: order_number, fio: fio))
   end

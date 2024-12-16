@@ -20,32 +20,36 @@ class OrdersController < ApplicationController
 
   private
 
-    def handle_user_info
-      render turbo_stream: turbo_stream.update(:modal, partial: 'orders/user')
-      # turbo_stream.append(:modal, "<script>history.pushState(null, null, '/');</script>".html_safe)
-    end
+  def handle_user_info
+    render turbo_stream: turbo_stream.update(:modal, partial: 'orders/user')
+    # turbo_stream.append(:modal, "<script>history.pushState(null, null, '/');</script>".html_safe)
+  end
 
-    def update_user
-      current_user.update(filtered_params) if filtered_params.any?
-    end
+  def update_user
+    current_user.update(filtered_params) if filtered_params.any?
+  end
 
-    def create_order
-      cart             = current_user.cart
-      cart_items       = cart.cart_items_with_product
-      cart_product_ids = cart_items.pluck(:product_id)
-      ActiveRecord::Base.transaction do
-        order = current_user.orders.find_or_initialize_by(status: :unpaid)
-        order.order_items.where.not(product_id: cart_product_ids).destroy_all
-        order.update!(total_amount: cart.calculate_total_price, status: :initialized)
+  def create_order
+    cart             = current_user.cart
+    cart_items       = cart.cart_items_with_product
+    cart_product_ids = cart_items.pluck(:product_id)
+    ActiveRecord::Base.transaction do
+      order = current_user.orders.find_or_initialize_by(status: :unpaid)
+      order.order_items.where.not(product_id: cart_product_ids).destroy_all
+      order.update!(total_amount: cart.calculate_total_price, status: :initialized)
 
-        cart_items.each do |cart_item|
-          quantity = cart_item.product.stock_quantity >= cart_item.quantity ? cart_item.quantity : cart_item.product.stock_quantity
-          order_item = order.order_items_with_product.find_or_initialize_by(product: cart_item.product)
-          order_item.destroy! && next if quantity.zero? || quantity.negative?
+      cart_items.each do |cart_item|
+        quantity   = calculate_quantity(cart_item)
+        order_item = order.order_items_with_product.find_or_initialize_by(product: cart_item.product)
+        order_item.destroy! && next if quantity.zero? || quantity.negative?
 
-          order_item.update!(quantity: quantity, price: cart_item.product.price)
-        end
-        order.update!(status: :unpaid)
+        order_item.update!(quantity: quantity, price: cart_item.product.price)
       end
+      order.update!(status: :unpaid)
     end
+  end
+
+  def calculate_quantity(cart_item)
+    cart_item.product.stock_quantity >= cart_item.quantity ? cart_item.quantity : cart_item.product.stock_quantity
+  end
 end
