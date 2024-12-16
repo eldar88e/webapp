@@ -4,7 +4,7 @@
 
 <div id="products" class="pt-6">
   <%= render @products %>
-  <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
-  <%== pagy_info(@pagy) %>
+
+  <%= render partial: '/layouts/partials/admin/pagy' %>
 </div>
 

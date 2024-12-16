@@ -55,9 +55,6 @@
     </table>
   </div>
 
-  <div class="py-4 px-6 text-gray-500 dark:text-gray-400">
-    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
-    <%== pagy_info(@pagy) %>
-  </div>
+  <%= render partial: '/layouts/partials/admin/pagy' %>
 </div>
 

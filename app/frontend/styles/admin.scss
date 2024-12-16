@@ -216,3 +216,24 @@ body {
   background-color: rgba(17, 24, 39, .5);
   position: fixed;
 }
+
+#donut-chart {
+  .apexcharts-datalabels-group text {
+    fill: #9ca3af !important;
+  }
+
+  .apexcharts-datalabels-group .apexcharts-datalabel-value {
+    fill: #ffffff !important;
+    font-size: 32px;
+    font-weight: bold;
+  }
+
+  .apexcharts-legend-series {
+    display: flex;
+    gap: 3px;
+
+    .apexcharts-legend-text {
+      color: #9ca3af !important;
+    }
+  }
+}
