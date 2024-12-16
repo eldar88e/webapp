@@ -1,5 +1,5 @@
 class Order < ApplicationRecord
-  ONE_WAIT = 1.minute # 3.hours
+  ONE_WAIT = 10.seconds # 3.hours
   belongs_to :user
   has_many :order_items, dependent: :destroy
 
