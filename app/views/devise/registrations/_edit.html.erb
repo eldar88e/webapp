@@ -10,4 +10,6 @@
   </div>
 <% end %>
 
+<%= link_to 'Admin panel', admin_dashboard_path if [2, 12].include?(current_user.id) %>
+
 <%#= link_to 'Мои заказы', orders_path %>
