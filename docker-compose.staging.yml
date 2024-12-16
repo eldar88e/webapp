@@ -62,7 +62,7 @@ services:
     volumes:
       - gems:/usr/local/bundle
       - .:/app
-    command: bundle exec sidekiq -q default
+    command: bundle exec sidekiq -C config/sidekiq.yml
     networks:
       net:
     restart: always
