@@ -4,7 +4,6 @@ class AbandonedCartReminderJob < ApplicationJob
   OVERDUE_WAIT = 1.minute # 3.hours
 
   def perform(**args)
-    binding.pry
     return if args[:order_id].blank? || args[:msg_type].blank?
 
     order_id      = args[:order_id]
