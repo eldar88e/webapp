@@ -1,7 +1,6 @@
 class AbandonedCartReminderJob < ApplicationJob
   queue_as :default
-  TWO_WAIT = 1.minute # 48.hours TODO: исправить
-  OVERDUE_WAIT = 1.minute # 3.hours
+  STEPS = { one: { wait: 15.seconds, msg_type: :two }, two: { wait: 15.seconds, msg_type: :overdue } }.freeze
 
   def perform(**args)
     return if args[:order_id].blank? || args[:msg_type].blank?
@@ -19,15 +18,19 @@ class AbandonedCartReminderJob < ApplicationJob
       TelegramService.delete_msg('', current_tg_id, current_order.msg_id)
       msg_id = TelegramService.call(msg, current_tg_id, markup: 'i_paid')
       current_order.update_columns(msg_id: msg_id)
-      if args[:msg_type] == :one
-        AbandonedCartReminderJob.set(wait: TWO_WAIT).perform_later(order_id: args[:order_id], msg_type: :two)
-      elsif args[:msg_type] == :two
-        AbandonedCartReminderJob.set(wait: OVERDUE_WAIT).perform_later(order_id: args[:order_id], msg_type: :overdue)
-      end
+      set_reminders(args)
     end
   end
 
   private
+
+  def set_reminders(args)
+    next_step = STEPS[args[:msg_type]]
+    return unless next_step
+
+    AbandonedCartReminderJob.set(wait: next_step[:wait])
+                            .perform_later(order_id: args[:order_id], msg_type: next_step[:msg_type])
+  end
 
   def form_msg(msg_type, order, user)
     card = Setting.fetch_value(:card)
