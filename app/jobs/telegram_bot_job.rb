@@ -1,7 +1,7 @@
 require 'telegram/bot'
 
 class TelegramBotJob < ApplicationJob
-  queue_as :bot_queue
+  queue_as :bot
   TRACK_CACHE_PERIOD = 5.minutes
 
   def perform(*args)
