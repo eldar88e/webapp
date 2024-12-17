@@ -146,6 +146,7 @@ class Order < ApplicationRecord
 
   def on_overdue
     # Логика для статуса "просрочен"
+    self.user.cart.destroy
     Rails.logger.info "Order #{id} has been overdue"
     TelegramService.delete_msg('', user.tg_id, self.msg_id)
     msg    = I18n.t('tg_msg.unpaid.reminder.overdue', order: id)
