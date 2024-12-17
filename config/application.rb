@@ -43,7 +43,7 @@ module Webapp
     config.active_job.queue_adapter = :sidekiq
 
     config.after_initialize do
-      if Rails.env.production? || Rails.env.development?
+      if defined?(Sidekiq::CLI) && (Rails.env.production? || Rails.env.development?)
         Rails.logger.info 'Run TelegramBotWorker after initialize...'
         TelegramBotWorker.perform_async
       end
