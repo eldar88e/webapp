@@ -41,10 +41,5 @@ module Webapp
     config.generators.system_tests = nil
     config.i18n.default_locale = :ru
     config.active_job.queue_adapter = :sidekiq
-
-    config.after_initialize do
-      Rails.logger.info 'Запуск TelegramBotJob через Sidekiq...'
-      TelegramBotJob.perform_later
-    end
   end
 end

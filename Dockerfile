@@ -1,4 +1,4 @@
-FROM ruby:3.3.3-alpine AS chat
+FROM ruby:3.3.3-alpine AS miniapp
 
 RUN apk --update add --no-cache \
     build-base \

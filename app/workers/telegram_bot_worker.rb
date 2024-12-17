@@ -1,10 +1,10 @@
 require 'telegram/bot'
 
-class TelegramBotJob < ApplicationJob
-  queue_as :bot
+class TelegramBotWorker
+  include Sidekiq::Worker
   TRACK_CACHE_PERIOD = 5.minutes
 
-  def perform(*args)
+  def perform
     Telegram::Bot::Client.run(settings[:tg_token]) do |bot|
       bot.listen do |message|
         case message
