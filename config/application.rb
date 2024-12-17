@@ -41,5 +41,12 @@ module Webapp
     config.generators.system_tests = nil
     config.i18n.default_locale = :ru
     config.active_job.queue_adapter = :sidekiq
+
+    config.after_initialize do
+      if Rails.env.production? || Rails.env.development?
+        Rails.logger.info 'Run TelegramBotWorker after initialize...'
+        TelegramBotWorker.perform_async
+      end
+    end
   end
 end
