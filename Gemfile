@@ -23,6 +23,7 @@ gem 'devise'
 gem 'telegram-bot-ruby', require: false
 gem 'i18n'
 gem 'sidekiq'
+gem 'sidekiq-unique-jobs'
 gem 'pagy'
 gem 'pry'
 gem 'ransack'
