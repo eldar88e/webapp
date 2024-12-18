@@ -18591,7 +18591,7 @@ var notices_controller_default = class extends Controller {
   startTimer() {
     this.timer = setInterval(() => {
       this.fadeOutAndRemove();
-    }, 7e3);
+    }, 5e3);
   }
   fadeOutAndRemove() {
     this.element.classList.add("fade-out");

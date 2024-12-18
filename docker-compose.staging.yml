@@ -43,7 +43,7 @@ services:
     volumes:
       - gems:/usr/local/bundle
       - .:/app
-    command: bundle exec sidekiq -q default,4 bot,1
+    command: bundle exec sidekiq
     networks:
       net:
     restart: unless-stopped

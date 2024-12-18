@@ -34,8 +34,9 @@ class OrdersController < ApplicationController
     cart_items       = cart.cart_items_with_product
     cart_product_ids = cart_items.pluck(:product_id)
     ActiveRecord::Base.transaction do
-      order = current_user.orders.find_or_initialize_by(status: :unpaid)
-      order.order_items.where.not(product_id: cart_product_ids).destroy_all
+      order = current_user.orders.find_by(status: :unpaid)
+      order.order_items.where.not(product_id: cart_product_ids).destroy_all if order
+      order = current_user.orders.create!(status: :initialized, total_amount: 0) if order.nil?
       order.update!(total_amount: cart.calculate_total_price, status: :initialized)
 
       cart_items.each do |cart_item|

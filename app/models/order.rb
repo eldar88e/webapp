@@ -9,7 +9,6 @@ class Order < ApplicationRecord
   enum status: { initialized: 0, unpaid: 1, pending: 2, processing: 3, shipped: 4, cancelled: 5, refunded: 6, overdue: 7 }
 
   after_update :check_status_change
-  after_create :on_unpaid
 
   def order_items_with_product
     order_items.includes(:product)

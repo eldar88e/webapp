@@ -8,6 +8,7 @@ class TelegramBotWorker
 
   def perform
     Telegram::Bot::Client.run(settings[:tg_token]) do |bot|
+      Rails.application.config.telegram_bot = bot
       bot.listen do |message|
         case message
         when Telegram::Bot::Types::CallbackQuery
@@ -15,7 +16,7 @@ class TelegramBotWorker
         when Telegram::Bot::Types::Message
           handle_message(bot, message)
         else
-          bot.api.send_message(chat_id: message.from.id, text: I18n.t('tg_msg.error_data'))
+          # bot.api.send_message(chat_id: message.from.id, text: I18n.t('tg_msg.error_data'))
         end
       rescue => e
         Rails.logger.error "#{self.class} | #{e.message}"

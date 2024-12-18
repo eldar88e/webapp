@@ -8,7 +8,7 @@ export default class extends Controller {
     startTimer() {
         this.timer = setInterval(() => {
             this.fadeOutAndRemove();
-        }, 7000)
+        }, 5000)
     }
 
     fadeOutAndRemove() {
