@@ -52,7 +52,6 @@ class Order < ApplicationRecord
 
   def on_unpaid
     # Логика для статуса "не оплачен"
-    TelegramService.delete_msg('', self.user.tg_id, self.msg_id) if self.msg_id
     card = Setting.fetch_value(:card)
     msg  = "#{I18n.t('tg_msg.unpaid.msg', order: id)}\n\n"
     msg  += I18n.t(
@@ -65,6 +64,7 @@ class Order < ApplicationRecord
       fio: user.full_name,
       phone: user.phone_number
     )
+    TelegramService.delete_msg('', self.user.tg_id, self.msg_id) if self.msg_id
     msg_id = TelegramService.call(msg, self.user.tg_id, markup: 'i_paid')
     self.update_columns(msg_id: msg_id)
     AbandonedCartReminderJob.set(wait: ONE_WAIT).perform_later(order_id: id, msg_type: :one)
@@ -115,8 +115,6 @@ class Order < ApplicationRecord
 
   def on_shipped
     # Логика для статуса "отправлен"
-    Rails.logger.info "Order #{id} has been shipped"
-    TelegramService.delete_msg('', user.tg_id, self.msg_id)
     msg = I18n.t('tg_msg.on_shipped_courier',
                  order: id,
                  price: total_amount,
@@ -126,7 +124,10 @@ class Order < ApplicationRecord
                  phone: user.phone_number,
                  track: tracking_number
     )
-    TelegramService.call(msg, user.tg_id)
+    TelegramService.delete_msg('', user.tg_id, self.msg_id)
+    msg_id = TelegramService.call(msg, user.tg_id)
+    update_columns(msg_id: msg_id)
+    Rails.logger.info "Order #{id} has been shipped"
   end
 
   def on_cancelled
