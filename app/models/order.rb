@@ -107,7 +107,7 @@ class Order < ApplicationRecord
       )
       TelegramService.call(msg, :courier, markup: 'submit_tracking') # send to deliver
       TelegramService.delete_msg('', user.tg_id, self.msg_id)
-      msg_id = TelegramService.call(I18n.t('tg_msg.on_processing_client', order: id), user.tg_id)
+      msg_id = TelegramService.call(I18n.t('tg_msg.on_processing_client', order: id), user.tg_id, markup: 'new_order')
       update_columns(msg_id: msg_id)
       Rails.logger.info "Order #{id} is being processed"
     end
