@@ -9,6 +9,10 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def available_products
+    @products = Product.includes(:image_attachment).available
+  end
+
   def error_notice(msg, status = :unprocessable_entity)
     render turbo_stream: send_notice(msg, 'danger'), status:
   end

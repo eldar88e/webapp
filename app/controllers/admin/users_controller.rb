@@ -26,7 +26,7 @@ module Admin
 
     def update
       if @user.update(user_params)
-        redirect_to admin_users_path, notice: 'User was successfully updated.'
+        redirect_to admin_users_path, notice: 'Данные пользователя успешно обновлены.'
       else
         render :edit, status: :unprocessable_entity
       end
@@ -34,7 +34,7 @@ module Admin
 
     def destroy
       @user.destroy!
-      redirect_to admin_users_path, status: :see_other, notice: 'User was successfully destroyed.'
+      redirect_to admin_users_path, status: :see_other, notice: 'Пользователь успешно удален.'
     end
 
     private

@@ -32,7 +32,7 @@ module Admin
     end
 
     def destroy
-      @product.destroy!
+      @product.destroy
       redirect_to admin_products_path, status: :see_other, notice: 'Товар был успешно удален.'
     end
 

@@ -1,7 +1,7 @@
 class ProductsController < ApplicationController
-  def index
-    return redirect_to carts_path if params[:start] == 'cart'
+  before_action :available_products
 
-    @products = Product.includes(:image_attachment).order(updated_at: :desc)
+  def index
+    redirect_to carts_path if params[:start] == 'cart'
   end
 end
