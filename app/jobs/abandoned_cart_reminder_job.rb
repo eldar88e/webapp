@@ -1,6 +1,6 @@
 class AbandonedCartReminderJob < ApplicationJob
   queue_as :default
-  STEPS = { one: { wait: 10.seconds, msg_type: :two }, two: { wait: 10.seconds, msg_type: :overdue } }.freeze
+  STEPS = { one: { wait: 48.hours, msg_type: :two }, two: { wait: 3.hours, msg_type: :overdue } }.freeze
 
   def perform(**args)
     return if args[:order_id].blank? || args[:msg_type].blank?
