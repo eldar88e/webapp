@@ -18372,6 +18372,16 @@ var application = Application.start();
 application.debug = false;
 window.Stimulus = application;
 
+// app/frontend/js/controllers_admin/confirm_controller.js
+var confirm_controller_default = class extends Controller {
+  call(e) {
+    let message = this.element.getAttribute("data-confirm");
+    if (!confirm(message)) {
+      e.preventDefault();
+    }
+  }
+};
+
 // app/frontend/js/controllers_admin/dark_controller.js
 var dark_controller_default = class extends Controller {
   change() {
@@ -18399,6 +18409,7 @@ var menu_btn_controller_default = class extends Controller {
 };
 
 // app/frontend/js/controllers_admin/index.js
+application.register("confirm", confirm_controller_default);
 application.register("dark", dark_controller_default);
 application.register("menu-btn", menu_btn_controller_default);
 

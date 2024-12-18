@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import ConfirmController from "./confirm_controller"
+application.register("confirm", ConfirmController)
+
 import DarkController from "./dark_controller"
 application.register("dark", DarkController)
 

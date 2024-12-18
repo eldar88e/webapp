@@ -22,8 +22,3 @@
     <%= form.submit "Сохранить", class: "px-4 py-2 bg-blue-500 text-white font-semibold rounded" %>
   </div>
 <% end %>
-
-<h2 class="text-2xl font-bold dark:text-white mt-6">Состав заказа:</h2>
-<% @order.order_items.includes(product: :image_attachment).each do |order_item| %>
-  <%= render partial: '/admin/orders/order_item', locals: { order_item: order_item } %>
-<% end %>

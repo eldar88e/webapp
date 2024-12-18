@@ -125,7 +125,7 @@ class Order < ApplicationRecord
                  track: tracking_number
     )
     TelegramService.delete_msg('', user.tg_id, self.msg_id)
-    msg_id = TelegramService.call(msg, user.tg_id)
+    msg_id = TelegramService.call(msg, user.tg_id, markup: 'new_order')
     update_columns(msg_id: msg_id)
     Rails.logger.info "Order #{id} has been shipped"
   end
@@ -149,7 +149,7 @@ class Order < ApplicationRecord
     Rails.logger.info "Order #{id} has been overdue"
     TelegramService.delete_msg('', user.tg_id, self.msg_id)
     msg    = I18n.t('tg_msg.unpaid.reminder.overdue', order: id)
-    msg_id = TelegramService.call(msg, user.tg_id, markup: 'overdue')
+    msg_id = TelegramService.call(msg, user.tg_id, markup: 'new_order')
     update_columns(msg_id: msg_id)
   end
 
