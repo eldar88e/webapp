@@ -1,4 +1,4 @@
-class AbandonedCartReminderJob < ApplicationJob
+class AbandonedOrderReminderJob < ApplicationJob
   queue_as :default
   STEPS = { one: { wait: 48.hours, msg_type: :two }, two: { wait: 3.hours, msg_type: :overdue } }.freeze
 
@@ -28,7 +28,7 @@ class AbandonedCartReminderJob < ApplicationJob
     next_step = STEPS[args[:msg_type]]
     return unless next_step
 
-    AbandonedCartReminderJob.set(wait: next_step[:wait])
+    AbandonedOrderReminderJob.set(wait: next_step[:wait])
                             .perform_later(order_id: args[:order_id], msg_type: next_step[:msg_type])
   end
 

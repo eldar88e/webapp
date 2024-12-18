@@ -67,7 +67,7 @@ class Order < ApplicationRecord
     TelegramService.delete_msg('', self.user.tg_id, self.msg_id) if self.msg_id
     msg_id = TelegramService.call(msg, self.user.tg_id, markup: 'i_paid')
     self.update_columns(msg_id: msg_id)
-    AbandonedCartReminderJob.set(wait: ONE_WAIT).perform_later(order_id: id, msg_type: :one)
+    AbandonedOrderReminderJob.set(wait: ONE_WAIT).perform_later(order_id: id, msg_type: :one)
     Rails.logger.info "Order #{id} is now unpaid"
   end
 
