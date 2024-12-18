@@ -92,7 +92,7 @@ class TelegramService
     result =
       if @markup == 'overdue'
         [[Telegram::Bot::Types::InlineKeyboardButton.new(
-          text: 'Перейти в каталог', url: "https://t.me/#{settings[:tg_main_bot]}?startapp"
+          text: 'Новый заказ', url: "https://t.me/#{settings[:tg_main_bot]}?startapp"
         )]]
       else
         [[Telegram::Bot::Types::InlineKeyboardButton.new(text: I18n.t("tg_btn.#{@markup}"), callback_data: @markup)]]

@@ -9,7 +9,11 @@ class OrdersController < ApplicationController
     return error_notice(t('required_fields')) unless required_fields_filled?
 
     update_user
-    create_order
+    cart       = current_user.cart
+    cart_items = cart.cart_items_with_product
+    return redirect_to products_path, alert: 'Ваша корзина пуста' if cart_items.blank?
+
+    create_order(cart, cart_items)
 
     render turbo_stream: [
       success_notice('Ваш заказ успешно оформлен.'),
@@ -29,9 +33,7 @@ class OrdersController < ApplicationController
     current_user.update(filtered_params) if filtered_params.any?
   end
 
-  def create_order
-    cart             = current_user.cart
-    cart_items       = cart.cart_items_with_product
+  def create_order(cart, cart_items)
     cart_product_ids = cart_items.pluck(:product_id)
     ActiveRecord::Base.transaction do
       order = current_user.orders.find_by(status: :unpaid)
