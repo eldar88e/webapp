@@ -346,6 +346,7 @@ PLATFORMS
   aarch64-linux
   arm64-darwin
   x86_64-linux-musl
+  x86_64-linux
 
 DEPENDENCIES
   better_errors
