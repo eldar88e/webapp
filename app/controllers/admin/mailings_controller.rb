@@ -9,7 +9,7 @@ module Admin
 
       if @mailing.valid?
         # TODO: set scheduled_at: @mailing.scheduled_at
-        MailingJob.perform_now(       # TODO: later
+        MailingJob.perform_later(
           filter: @mailing.filter.to_sym,
           message: @mailing.message
         )
