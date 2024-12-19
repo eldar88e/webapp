@@ -28,10 +28,10 @@ class User < ApplicationRecord
 
   def self.find_or_create_by_tg(tg_user)
     tg_user = tg_user.as_json if tg_user.instance_of?(Telegram::Bot::Types::Chat)
-    self.find_or_create_by(tg_id: tg_user["id"]) do |user|
-      user.username    = tg_user["username"]
-      user.first_name  = tg_user["first_name"]
-      user.middle_name = tg_user["last_name"]
+    self.find_or_create_by(tg_id: tg_user['id']) do |user|
+      user.username    = tg_user['username']
+      user.first_name  = tg_user['first_name']
+      user.middle_name = tg_user['last_name']
       user.email       = "telegram_user_#{tg_user["id"]}@example.com"
       user.password    = Devise.friendly_token[0, 20]
     end

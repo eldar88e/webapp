@@ -1,20 +1,26 @@
 module Admin
   class OrdersController < Admin::ApplicationController
-    before_action :set_order, only: %i[edit update ]
+    before_action :set_order, only: %i[edit update destroy]
     include Pagy::Backend
 
     def index
-      @pagy, @orders = pagy(Order.includes(:user).order(created_at: :desc), items: 20)
+      @q_orders = Order.includes(:user).order(created_at: :desc).ransack(params[:q])
+      @pagy, @orders = pagy(@q_orders.result, items: 20)
     end
 
     def edit; end
 
     def update
       if @order.update(order_params)
-        redirect_to admin_orders_path, notice: "Заказ был успешно обновлен."
+        redirect_to admin_orders_path, notice: 'Заказ был успешно обновлен.'
       else
         render :edit, status: :unprocessable_entity
       end
+    end
+
+    def destroy
+      @order.destroy!
+      redirect_to admin_orders_path, status: :see_other, notice: 'Заказ был успешно удален.'
     end
 
     private

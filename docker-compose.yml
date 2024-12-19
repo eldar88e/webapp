@@ -44,7 +44,7 @@ services:
     volumes:
       - gems:/usr/local/bundle
       - .:/app
-    command: bundle exec sidekiq -C config/sidekiq_bot.yml
+    command: bundle exec sidekiq
     networks:
       net:
     restart: always

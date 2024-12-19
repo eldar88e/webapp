@@ -10,7 +10,7 @@ class TelegramService
     @msg_id    = msg_id
   end
 
-  def self.call(msg, id=nil, **args)
+  def self.call(msg, id = nil, **args)
     new(msg, id).report(args[:markup])
   end
 
@@ -18,7 +18,7 @@ class TelegramService
     new(msg, id, msg_id).send(:delete_message)
   end
 
-  def report(markup=nil)
+  def report(markup = nil)
     @markup = markup
     tg_send if @message.present? && credential_exists?
   end
@@ -89,12 +89,25 @@ class TelegramService
   end
 
   def form_keyboard
-    text = I18n.t("tg_btn.#{@markup}")
-    result = [[Telegram::Bot::Types::InlineKeyboardButton.new(text: text, callback_data: @markup)]]
-    result << [ Telegram::Bot::Types::InlineKeyboardButton.new(
-      text: 'Изменить заказ', url: "https://t.me/#{settings[:tg_main_bot]}?startapp=#{@chat_id}&start=cart"
-    ) ] if @markup == 'i_paid'
-    result
+    buttons = []
+    if @markup != 'new_order'
+      buttons << [Telegram::Bot::Types::InlineKeyboardButton.new(text: I18n.t("tg_btn.#{@markup}"), callback_data: @markup)]
+      buttons += [order_btn, ask_btn] if @markup == 'i_paid'
+    else
+      buttons += [order_btn(true), ask_btn]
+    end
+    buttons
+  end
+
+  def order_btn(new = false)
+    url  = "https://t.me/#{settings[:tg_main_bot]}?startapp"
+    text = "#{new ? 'Новый' : 'Изменить'} заказ"
+    # TODO: Добавить переход в корзину при new == false
+    [Telegram::Bot::Types::InlineKeyboardButton.new(text: text, url: url)]
+  end
+
+  def ask_btn
+    [Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Задать вопрос', url: "#{settings[:tg_support]}")]
   end
 
   def form_markup

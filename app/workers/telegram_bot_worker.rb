@@ -1,11 +1,14 @@
 require 'telegram/bot'
 
-class TelegramBotJob < ApplicationJob
-  queue_as :bot_queue
+class TelegramBotWorker
+  include Sidekiq::Worker
+  sidekiq_options queue: 'telegram_bot', retry: true, lock: :until_executed
+
   TRACK_CACHE_PERIOD = 5.minutes
 
-  def perform(*args)
+  def perform
     Telegram::Bot::Client.run(settings[:tg_token]) do |bot|
+      Rails.application.config.telegram_bot = bot
       bot.listen do |message|
         case message
         when Telegram::Bot::Types::CallbackQuery
@@ -13,7 +16,7 @@ class TelegramBotJob < ApplicationJob
         when Telegram::Bot::Types::Message
           handle_message(bot, message)
         else
-          bot.api.send_message(chat_id: message.from.id, text: I18n.t('tg_msg.error_data'))
+          # bot.api.send_message(chat_id: message.from.id, text: I18n.t('tg_msg.error_data'))
         end
       rescue => e
         Rails.logger.error "#{self.class} | #{e.message}"
@@ -108,7 +111,7 @@ class TelegramBotJob < ApplicationJob
   def send_firs_msg(bot, chat_id)
     first_btn = initialize_first_btn(chat_id)
     markup    = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: first_btn)
-    caption   = settings[:preview_msg]&.gsub("\\n", "\n") # I18n.t('tg_msg.start')
+    caption   = settings[:preview_msg]&.gsub('\\n', "\n") # I18n.t('tg_msg.start')
     bot.api.send_video(
       chat_id: chat_id, video: settings[:first_video_id], caption: caption, reply_markup: markup
     )

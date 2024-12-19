@@ -2,7 +2,6 @@ services:
   pg:
     image: postgres:16.1
     container_name: s-miniapp-pg
-    restart: unless-stopped
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
@@ -11,6 +10,7 @@ services:
       - db_data:/var/lib/postgresql/data
     networks:
       - net
+    restart: unless-stopped
 
   s-miniapp:
     tty: true
@@ -20,8 +20,7 @@ services:
     container_name: s-miniapp
     env_file: ./.env
     depends_on:
-      - pg
-      - redis
+      - sidekiq
     volumes:
       - gems:/usr/local/bundle
       - .:/app
@@ -34,9 +33,9 @@ services:
   sidekiq:
     tty: true
     stdin_open: true
-    image: miniapp
+    image: s-miniapp
     build: .
-    container_name: s-miniapp-bot-sidekiq
+    container_name: s-miniapp-sidekiq
     env_file: ./.env
     depends_on:
       - pg
@@ -44,20 +43,20 @@ services:
     volumes:
       - gems:/usr/local/bundle
       - .:/app
-    command: bundle exec sidekiq -C config/sidekiq_bot.yml
+    command: bundle exec sidekiq
     networks:
       net:
-    restart: always
+    restart: unless-stopped
 
   redis:
     image: redis:latest
     container_name: s-miniapp-redis
     command: redis-server
-    restart: unless-stopped
     networks:
       - net
     volumes:
       - redis:/data
+    restart: unless-stopped
 
 volumes:
   db_data:

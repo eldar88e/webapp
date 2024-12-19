@@ -19,6 +19,10 @@
   <%= f.label :phone_number %>
 </div>
 
+<%= javascript_tag do %>
+  window.dadata_token = "<%= settings[:dadata_token] %>"
+<% end %>
+
 <div class="input-container address-wrapper">
   <%= f.text_field :address, autocomplete: "city-address", placeholder: '', required: true,
                    class: "input-str", data: { dadata_target: "address", action: "input->dadata#search" } %>

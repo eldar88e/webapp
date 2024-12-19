@@ -2,22 +2,25 @@
   "name": "app",
   "private": true,
   "devDependencies": {
-    "esbuild": "^0.24.0"
+    "vite": "^5.0.0",
+    "vite-plugin-ruby": "^5.1.0"
   },
   "scripts": {
-    "build": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
-    "build:css:tailwind": "tailwindcss -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/application.css --minify",
-    "build:css:compile": "sass ./app/assets/stylesheets/style.scss:./app/assets/builds/style.css --no-source-map --load-path=node_modules",
-    "build:css:prefix": "postcss ./app/assets/builds/style.css --use=autoprefixer --output=./app/assets/builds/style.css",
-    "build:css:admin:compile": "sass ./app/assets/stylesheets/admin.scss:./app/assets/builds/admin.css --no-source-map --load-path=node_modules",
-    "build:css:admin:prefix": "postcss ./app/assets/builds/admin.css --use=autoprefixer --output=./app/assets/builds/admin.css",
+    "build": "esbuild app/frontend/js/*.* --bundle --sourcemap --format=esm --outdir=app/frontend/entrypoints --public-path=/",
+    "build:css:tailwind": "tailwindcss -i ./app/frontend/styles/application.tailwind.css -o ./app/frontend/entrypoints/application.css --minify",
+    "build:css:compile": "sass ./app/frontend/styles/style.scss:./app/frontend/entrypoints/style.css --no-source-map --load-path=node_modules",
+    "build:css:prefix": "postcss ./app/frontend/entrypoints/style.css --use=autoprefixer --output=./app/frontend/entrypoints/style.css",
+    "build:css:admin:compile": "sass ./app/frontend/styles/admin.scss:./app/frontend/entrypoints/admin.css --no-source-map --load-path=node_modules",
+    "build:css:admin:prefix": "postcss ./app/frontend/entrypoints/admin.css --use=autoprefixer --output=./app/frontend/entrypoints/admin.css",
     "build:css": "yarn build:css:tailwind && yarn build:css:compile && yarn build:css:prefix && yarn build:css:admin:compile && yarn build:css:admin:prefix",
-    "watch:css": "nodemon --watch ./app/assets/stylesheets/ --ext scss --exec \"yarn build:css\""
+    "watch:css": "nodemon --watch ./app/frontend/styles/ --ext scss --exec \"yarn build:css\""
   },
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.12",
+    "apexcharts": "^4.2.0",
     "autoprefixer": "^10.4.20",
+    "chart.js": "^4.4.7",
     "nodemon": "^3.1.7",
     "postcss": "^8.4.49",
     "postcss-cli": "^11.0.0",

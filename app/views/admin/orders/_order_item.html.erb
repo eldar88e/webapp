@@ -1,5 +1,5 @@
-<div id="<%= dom_id order_item %>" class="product">
-  <div class="text-light-dark flex p-4 gap-4">
+<div id="<%= dom_id order_item %>" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+  <div class="flex p-4 gap-4 text-sm font-medium text-gray-900 truncate dark:text-white">
     <div><%= order_item.product.id %></div>
 
     <div class="product-img">
@@ -10,11 +10,11 @@
       <% end %>
     </div>
 
-    <div class="product-title">
+    <div class="">
       <%= order_item.product.name %>
     </div>
-    <div class="product-exist"><%= order_item.quantity %>шт.</div>
+    <div class=""><%= order_item.quantity %>шт.</div>
 
-    <div class="price"><%= order_item.price.to_i %><span style="margin-left: 3px">₽</span></div>
+    <div class=""><%= order_item.price.to_i %><span style="margin-left: 3px">₽</span></div>
   </div>
 </div>

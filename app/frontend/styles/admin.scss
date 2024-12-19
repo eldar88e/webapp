@@ -14,19 +14,14 @@
 
       .sidebar {
         .wraper-menu {
-          background-color: rgb(31 41 55 / var(--tw-bg-opacity));
-          border-color: rgb(55 65 81 / var(--tw-border-opacity));
 
           .main-sidebar {
             .slidebar-menu {
-              color: rgb(229 231 235 / var(--tw-text-opacity));
 
               li {
                 a {
-                  color: rgb(229 231 235 / var(--tw-text-opacity));
 
                   svg {
-                    color: rgb(156 163 175 / var(--tw-text-opacity));
                   }
                 }
               }
@@ -104,9 +99,7 @@ body {
       .wraper-menu {
         padding-top: 0;
         --tw-bg-opacity: 1;
-        background-color: rgb(255 255 255 / var(--tw-bg-opacity));
         --tw-border-opacity: 1;
-        border-color: rgb(229 231 235 / var(--tw-border-opacity));
         border-right-width: 1px;
         flex-direction: column;
         flex: 1 1 0%;
@@ -124,19 +117,16 @@ body {
 
           .slidebar-menu {
             --tw-text-opacity: 1;
-            color: rgb(17 24 39 / var(--tw-text-opacity));
             font-weight: 400;
             font-size: 1rem;
             line-height: 1.5rem;
             padding: .5rem;
-            border-radius: .5rem;
-            align-items: center;
-            display: flex;
 
             li {
+              padding-bottom: .5rem;
+
               a {
                 --tw-text-opacity: 1;
-                color: rgb(17 24 39 / var(--tw-text-opacity));
                 font-weight: 400;
                 font-size: 1rem;
                 line-height: 1.5rem;
@@ -152,7 +142,6 @@ body {
                   transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
                   transition-timing-function: cubic-bezier(.4,0,.2,1);
                   --tw-text-opacity: 1;
-                  color: rgb(107 114 128 / var(--tw-text-opacity));
                   width: 1.5rem;
                   height: 1.5rem;
                 }
@@ -213,7 +202,8 @@ body {
 
 .pagy {
   a {
-    margin: 0 10px;
+    padding: 5px;
+    margin: 0 5px;
   }
 }
 
@@ -226,4 +216,25 @@ body {
   display: none;
   background-color: rgba(17, 24, 39, .5);
   position: fixed;
+}
+
+#donut-chart {
+  .apexcharts-datalabels-group text {
+    fill: #9ca3af !important;
+  }
+
+  .apexcharts-datalabels-group .apexcharts-datalabel-value {
+    fill: #ffffff !important;
+    font-size: 32px;
+    font-weight: bold;
+  }
+
+  .apexcharts-legend-series {
+    display: flex;
+    gap: 3px;
+
+    .apexcharts-legend-text {
+      color: #9ca3af !important;
+    }
+  }
 }

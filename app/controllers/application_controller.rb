@@ -9,16 +9,20 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def available_products
+    @products = Product.includes(:image_attachment).available
+  end
+
   def error_notice(msg, status = :unprocessable_entity)
-    render turbo_stream: send_notice(msg, "danger"), status:
+    render turbo_stream: send_notice(msg, 'danger'), status:
   end
 
   def success_notice(msg)
-    send_notice(msg, "success")
+    send_notice(msg, 'success')
   end
 
   def send_notice(msg, key)
-    turbo_stream.append(:notices, partial: "/notices/notice", locals: { notices: msg, key: })
+    turbo_stream.append(:notices, partial: '/notices/notice', locals: { notices: msg, key: })
   end
 
   def check_authenticate_user!

@@ -1,13 +1,7 @@
-<% if user_signed_in? %>
-  <div id="user"></div>
-<% end %>
-
 <script>
+    const tg_main_bot = "https://t.me/<%= settings[:tg_main_bot] %>";
     document.addEventListener("DOMContentLoaded", () => {
-        const user = document.getElementById('user');
-        if (user) {
-            window.location.href = "/products";
-        } else if ( typeof Telegram !== "undefined" && Telegram.WebApp) {
+        if ( typeof Telegram !== "undefined" && Telegram.WebApp) {
             const initData = Telegram.WebApp.initData || "";
 
             fetch("/auth/telegram", {
@@ -25,15 +19,15 @@
                         window.location.href = "/products";
                     } else {
                         console.log("Authentication failed: " + data.error);
-                        window.location.href = window.tg_main_bot;
+                        window.location.href = tg_main_bot;
                     }
                 })
                 .catch((error) => {
                     console.log("Error during authentication:", error);
-                    window.location.href = window.tg_main_bot;
+                    window.location.href = tg_main_bot;
                 });
         } else {
-            window.location.href = window.tg_main_bot;
+            window.location.href = tg_main_bot;
         }
     });
 </script>

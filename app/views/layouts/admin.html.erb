@@ -8,12 +8,13 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "admin", "data-turbo-track": "reload" %>
-    <%= javascript_include_tag "admin", "data-turbo-track": "reload", type: "module" %>
+    <%= vite_client_tag %>
+    <%= vite_stylesheet_tag "application" %>
+    <%= vite_stylesheet_tag "admin" %>
+    <%= vite_javascript_tag "admin" %>
   </head>
 
-  <body>
+  <body class="bg-white dark:bg-gray-900 antialiased">
     <header>
       <%= render partial: '/layouts/partials/admin/header' %>
     </header>
@@ -23,7 +24,7 @@
 
       <div class="sidebarBackdrop" id="sidebarBackdrop"></div>
 
-      <div class="main-content bg-white border-b dark:bg-gray-800" id="main-content">
+      <div class="main-content bg-white dark:bg-gray-800" style="<%= yield :style %>" id="main-content">
         <main>
           <%= yield %>
         </main>
