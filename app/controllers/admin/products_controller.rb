@@ -4,7 +4,7 @@ module Admin
     include Pagy::Backend
 
     def index
-      @pagy, @products = pagy(Product.includes(:image_attachment), items: 20)
+      @pagy, @products = pagy(Product.includes(:image_attachment).order(:created_at), items: 20)
     end
 
     def new

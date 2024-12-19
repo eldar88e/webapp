@@ -3,7 +3,7 @@ module Admin
     before_action :set_setting, only: %i[edit update destroy]
 
     def index
-      @settings = Setting.all
+      @settings = Setting.all.order(:created_at)
     end
 
     def new
