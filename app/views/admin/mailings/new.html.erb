@@ -1,0 +1,7 @@
+<div class="px-4 pt-6">
+  <h1 class="text-3xl font-extrabold dark:text-white mb-10">Новая рассылка</h1>
+  <%= render "form", setting: @setting, method: :post %>
+  <br>
+  <%= link_to "Назад в рассылки", admin_mailings_path, class: "px-4 py-2 bg-blue-500 text-white font-semibold rounded" %>
+  <div class="pt-6"></div>
+</div>

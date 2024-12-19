@@ -90,7 +90,7 @@ class TelegramService
 
   def form_keyboard
     buttons = []
-    if @markup != 'new_order'
+    if @markup != 'new_order' && @markup != 'mailing'
       buttons << [Telegram::Bot::Types::InlineKeyboardButton.new(text: I18n.t("tg_btn.#{@markup}"), callback_data: @markup)]
       buttons += [order_btn('Изменить заказ'), ask_btn] if @markup == 'i_paid'
     else

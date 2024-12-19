@@ -5,14 +5,23 @@ class MailingJob < ApplicationJob
   def perform(**args)
     filter  = args[:filter] # :ordered no_ordered
     message = args[:message]
+
     clients =
-      if filter == :ordered
-        User.joins(:orders).where(orders: :ordered).distinct
+      case filter
+      when :ordered
+        User.joins(:orders).where.not(orders: { id: nil }).distinct
+      when :no_ordered
+        User.left_joins(:orders).where(orders: { id: nil }).distinct
+      when :all
+        User.all
       else
-        User.joins(:orders).where.not(orders: :ordered).distinct
+        return Rails.logger.warn("#{self.class} | #{filter} is not a valid filter")
       end
+
     clients.each do |client|
-      TelegramService.call(message, client.id, markup: MARKUP)
+      TelegramService.call(message, client.tg_id, markup: MARKUP)
+      sleep 0.5
     end
+    nil
   end
 end
