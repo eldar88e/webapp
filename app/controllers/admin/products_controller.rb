@@ -24,7 +24,10 @@ module Admin
     def edit; end
 
     def update
-      if @product.update(product_params)
+      if params[:restore]
+        @product.restore
+        redirect_to admin_products_path, notice: 'Товар был успешно восстановлен.'
+      elsif @product.update(product_params)
         redirect_to admin_products_path, notice: 'Товар был успешно обновлен.'
       else
         render :edit, status: :unprocessable_entity

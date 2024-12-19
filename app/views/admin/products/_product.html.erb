@@ -1,7 +1,14 @@
-<div id="<%= dom_id product %>" class="product">
-  <div class="text-light-dark flex p-4 gap-4">
-    <div><%= product.id %></div>
-
+<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 truncate dark:text-white">
+  <td class="w-4 p-4">
+    <div class="flex items-center">
+      <input id="checkbox-table-search-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+      <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+    </div>
+  </td>
+  <td class="px-6 py-4">
+    <%= product.id %>
+  </td>
+  <th scope="row" class="px-6 py-4">
     <div class="product-img">
       <% if product.image.attached? %>
         <%= image_tag url_for(product.image), alt: product.name, style: 'width: 50px;' %>
@@ -9,33 +16,39 @@
         <p>No image</p>
       <% end %>
     </div>
-
-    <div class="product-title">
-      <%= product.name %>
-    </div>
-    <div class="product-exist"><%= product.stock_quantity %>шт.</div>
-
+  </th>
+  <td class="px-6 py-4">
+    <%= product.name %>
+  </td>
+  <td class="px-6 py-4">
+    <%= product.stock_quantity %>шт.
+  </td>
+  <td class="px-6 py-4">
     <div class="price"><%= product.price.to_i %><span style="margin-left: 3px">₽</span></div>
+  </td>
+  <td class="flex gap-3 px-6 py-4">
+    <%= link_to edit_admin_product_path(product), class: 'px-4 py-2 bg-blue-500 text-white font-semibold rounded' do %>
+      <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
+        <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path>
+      </svg>
+    <% end %>
 
-    <div class="flex items-center justify-center gap-3">
-      <%= link_to edit_admin_product_path(product), class: 'px-4 py-2 bg-blue-500 text-white font-semibold rounded' do %>
-        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
-          <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path>
+    <% unless product.deleted? %>
+      <%= button_to admin_product_path(product), method: :delete, class: 'px-4 py-2 bg-red-500 text-white font-semibold rounded',
+                    data: { confirm: 'Вы уверены, что хотите удалить данный товар?',
+                            controller: 'confirm', action: 'click->confirm#call' } do %>
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
         </svg>
       <% end %>
-
-      <% unless product.deleted? %>
-        <%= button_to admin_product_path(product), method: :delete, class: 'px-4 py-2 bg-red-500 text-white font-semibold rounded',
-                      data: { confirm: 'Вы уверены, что хотите удалить данный товар?',
-                              controller: 'confirm', action: 'click->confirm#call' } do %>
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-          </svg>
-        <% end %>
-      <% else %>
-        <span class="text-red-500">удален</span>
+    <% else %>
+      <%= button_to admin_product_path(product, restore: true), method: :patch,
+                    class: 'px-4 py-2 bg-blue-500 text-white font-semibold rounded' do %>
+        <svg class="w-5 h-5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M14.502 7.046h-2.5v-.928a2.122 2.122 0 0 0-1.199-1.954 1.827 1.827 0 0 0-1.984.311L3.71 8.965a2.2 2.2 0 0 0 0 3.24L8.82 16.7a1.829 1.829 0 0 0 1.985.31 2.121 2.121 0 0 0 1.199-1.959v-.928h1a2.025 2.025 0 0 1 1.999 2.047V19a1 1 0 0 0 1.275.961 6.59 6.59 0 0 0 4.662-7.22 6.593 6.593 0 0 0-6.437-5.695Z"/>
+        </svg>
       <% end %>
-    </div>
-  </div>
-</div>
+    <% end %>
+  </td>
+</tr>
