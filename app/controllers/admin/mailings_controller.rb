@@ -15,7 +15,7 @@ module Admin
         )
         redirect_to admin_mailings_path, notice: 'Рассылка успешно запланирована!'
       else
-        render :new, status: :unprocessable_entity
+        error_notice(@mailing.errors.messages[:message], :unprocessable_entity)
       end
     end
 

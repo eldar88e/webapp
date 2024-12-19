@@ -19,9 +19,10 @@ class MailingJob < ApplicationJob
       end
 
     clients.each do |client|
-      TelegramService.call(message, client.tg_id, markup: MARKUP)
-      sleep 0.5
+      result = TelegramService.call(message, client.tg_id, markup: MARKUP)
+      sleep 0.3
+      result # TODO: можно записать в БД содержит или tg_msg_id или ошибку
     end
-    nil
+    TelegramService.call('Рассылка успешно завершена.', Setting.fetch_value(:admin_ids))
   end
 end
