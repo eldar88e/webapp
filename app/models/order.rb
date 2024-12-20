@@ -29,7 +29,7 @@ class Order < ApplicationRecord
       resust = "• #{i.product.name} — #{i.product.name != 'Доставка' ? (i.quantity.to_s + 'шт.') : 'услуга' }"
       resust += " — #{i.price.to_i}₽" unless courier
       resust
-    end.join(",\n")
+    end.compact.join(",\n")
   end
 
   private
