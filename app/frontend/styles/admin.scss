@@ -1,42 +1,5 @@
 @use "notice";
 
-.dark {
-  .nav-bar {
-    .nav-bar {
-      .btn-menu {
-      }
-    }
-  }
-
-  body {
-
-    .body {
-
-      .sidebar {
-        .wraper-menu {
-
-          .main-sidebar {
-            .slidebar-menu {
-
-              li {
-                a {
-
-                  svg {
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      .main-content {
-        background-color: rgb(17 24 39 / var(--tw-bg-opacity));
-      }
-    }
-  }
-}
-
 .nav-bar {
   border-bottom-width: 1px;
   --tw-bg-opacity: 1;
