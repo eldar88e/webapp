@@ -22,9 +22,13 @@ class Order < ApplicationRecord
     %w[user]
   end
 
-  def order_items_str
+  def order_items_str(courier = false)
     order_items.includes(:product).map do |i|
-      "• #{i.product.name} — #{i.product.name != 'Доставка' ? (i.quantity.to_s + 'шт.') : 'услуга' } — #{i.price}₽"
+      next if i.product.name == 'Доставка' && courier
+
+      resust = "• #{i.product.name} — #{i.product.name != 'Доставка' ? (i.quantity.to_s + 'шт.') : 'услуга' }"
+      resust += " — #{i.price.to_i}₽" unless courier
+      resust
     end.join(",\n")
   end
 
@@ -100,7 +104,7 @@ class Order < ApplicationRecord
         'tg_msg.on_processing_courier',
         order: id,
         postal_code: user.postal_code,
-        items: order_items_str,
+        items: order_items_str(true),
         address: user.full_address,
         fio: user.full_name,
         phone: user.phone_number

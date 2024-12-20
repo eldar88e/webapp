@@ -14,7 +14,7 @@
     <%= vite_javascript_tag "admin" %>
   </head>
 
-  <body class="bg-white dark:bg-gray-900 antialiased">
+  <body class="bg-white dark:bg-gray-900 antialiased" data-controller="menu-btn">
     <header>
       <%= render partial: '/layouts/partials/admin/header' %>
     </header>
@@ -22,9 +22,9 @@
     <div class="body">
       <aside id="sidebar" class="sidebar"><%= render partial: '/layouts/partials/admin/aside' %></aside>
 
-      <div class="sidebarBackdrop" id="sidebarBackdrop"></div>
+      <div class="sidebarBackdrop bg-gray-900/50 dark:bg-gray-900/90" id="sidebarBackdrop"></div>
 
-      <div class="main-content bg-white dark:bg-gray-800" style="<%= yield :style %>" id="main-content">
+      <div class="main-content bg-white dark:bg-gray-800" style="<%= yield :style %>" id="main-content" data-menu-btn-target="body">
         <main>
           <%= yield %>
         </main>

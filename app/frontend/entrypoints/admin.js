@@ -18395,15 +18395,17 @@ var dark_controller_default = class extends Controller {
 
 // app/frontend/js/controllers_admin/menu_btn_controller.js
 var menu_btn_controller_default = class extends Controller {
+  static targets = ["body"];
   showMenu() {
     let sidebarBackdrop = document.getElementById("sidebarBackdrop");
     let sidebar = document.getElementById("sidebar");
-    if (sidebar.style.display === "none" && sidebar.style.display === "none") {
-      sidebar.style = "display: block;";
-      sidebarBackdrop.style = "display: block;";
+    if (sidebar.style.display === "flex") {
     } else {
-      sidebar.style = "display: none;";
-      sidebarBackdrop.style = "display: none;";
+    }
+    if (this.element.classList.contains("aside-hide")) {
+      this.element.classList.remove("aside-hide");
+    } else {
+      this.element.classList.add("aside-hide");
     }
   }
 };
