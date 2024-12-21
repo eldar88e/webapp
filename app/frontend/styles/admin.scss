@@ -87,6 +87,10 @@ body {
                 align-items: center;
                 display: flex;
 
+                &.active {
+                  background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+                }
+
                 svg {
                   transition-duration: 75ms;
                   transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
@@ -175,7 +179,7 @@ body {
   }
 
   .apexcharts-datalabels-group .apexcharts-datalabel-value {
-    fill: #ffffff !important;
+    fill: #bec2ca !important;
     font-size: 32px;
     font-weight: bold;
   }

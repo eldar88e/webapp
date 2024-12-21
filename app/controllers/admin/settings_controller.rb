@@ -8,31 +8,40 @@ module Admin
 
     def new
       @setting = Setting.new
+      render turbo_stream: [
+        turbo_stream.update(:modal_title, 'Добавить настройку'),
+        turbo_stream.update(:modal_body, partial: '/admin/settings/form', locals: { method: :post })
+      ]
     end
 
     def create
       @setting = Setting.new(setting_params)
 
       if @setting.save
-        redirect_to admin_settings_path, notice: 'Setting was successfully created.'
+        redirect_to admin_settings_path, notice: 'Настройка была успешно создана.'
       else
-        render :new, status: :unprocessable_entity
+        error_notice(@setting.errors.full_messages, :unprocessable_entity)
       end
     end
 
-    def edit; end
+    def edit
+      render turbo_stream: [
+        turbo_stream.update(:modal_title, 'Редактировать настройку'),
+        turbo_stream.update(:modal_body, partial: '/admin/settings/form', locals: { method: :patch })
+      ]
+    end
 
     def update
       if @setting.update(setting_params)
-        redirect_to admin_settings_path, notice: 'Setting was successfully updated.'
+        redirect_to admin_settings_path, notice: 'Настройка была успешно обновлена.'
       else
-        render :edit, status: :unprocessable_entity
+        error_notice(@setting.errors.full_messages, :unprocessable_entity)
       end
     end
 
     def destroy
       @setting.destroy!
-      redirect_to admin_settings_path, status: :see_other, notice: 'Setting was successfully destroyed.'
+      redirect_to admin_settings_path, status: :see_other, notice: 'Настройка была успешно удалена.'
     end
 
     private

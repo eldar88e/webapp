@@ -1,7 +1,13 @@
 module Admin
   class MailingsController < Admin::ApplicationController
-    def index
+    def index; end
+
+    def new
       @mailing = Mailing.new
+      render turbo_stream: [
+        turbo_stream.update(:modal_title, 'Запустить рассылку'),
+        turbo_stream.update(:modal_body, partial: '/admin/mailings/new')
+      ]
     end
 
     def create
@@ -15,7 +21,7 @@ module Admin
         )
         redirect_to admin_mailings_path, notice: 'Рассылка успешно запланирована!'
       else
-        error_notice(@mailing.errors.messages[:message], :unprocessable_entity)
+        error_notice(@mailing.errors.full_messages, :unprocessable_entity)
       end
     end
 
