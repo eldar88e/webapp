@@ -9,6 +9,10 @@ module Admin
 
     def new
       @product = Product.new
+      render turbo_stream: [
+        turbo_stream.update(:modal_title, 'Добавить товар'),
+        turbo_stream.update(:modal_body, partial: '/admin/products/new')
+      ]
     end
 
     def create
@@ -17,20 +21,28 @@ module Admin
       if @product.save
         redirect_to admin_products_path, notice: 'Товар был успешно добавлен.'
       else
-        render :new, status: :unprocessable_entity
+        error_notice(@product.errors.full_messages, :unprocessable_entity)
       end
     end
 
-    def edit; end
+    def edit
+      render turbo_stream: [
+        turbo_stream.update(:modal_title, 'Редактировать товар'),
+        turbo_stream.update(:modal_body, partial: '/admin/products/edit')
+      ]
+    end
 
     def update
       if params[:restore]
         @product.restore
         redirect_to admin_products_path, notice: 'Товар был успешно восстановлен.'
       elsif @product.update(product_params)
-        redirect_to admin_products_path, notice: 'Товар был успешно обновлен.'
+        render turbo_stream: [
+          success_notice('Данные пользователя успешно обновлены.'),
+          turbo_stream.replace(@product, partial: '/admin/products/product', locals: { product: @product })
+        ]
       else
-        render :edit, status: :unprocessable_entity
+        error_notice(@product.errors.full_messages, :unprocessable_entity)
       end
     end
 

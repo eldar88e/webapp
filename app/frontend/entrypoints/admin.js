@@ -18401,10 +18401,37 @@ var menu_btn_controller_default = class extends Controller {
   }
 };
 
+// app/frontend/js/controllers_admin/modal_btn_controller.js
+var modal_btn_controller_default = class extends Controller {
+  open() {
+    const modal = document.getElementById("modal");
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+  }
+};
+
+// app/frontend/js/controllers_admin/modal_controller.js
+var modal_controller_default = class extends Controller {
+  connect() {
+    this.element.addEventListener("click", (event) => {
+      if (event.target === this.element) {
+        this.element.classList.add("hidden");
+        this.element.classList.remove("flex");
+      }
+    });
+  }
+  close() {
+    this.element.classList.add("hidden");
+    this.element.classList.remove("flex");
+  }
+};
+
 // app/frontend/js/controllers_admin/index.js
 application.register("confirm", confirm_controller_default);
 application.register("dark", dark_controller_default);
 application.register("menu-btn", menu_btn_controller_default);
+application.register("modal-btn", modal_btn_controller_default);
+application.register("modal", modal_controller_default);
 
 // app/frontend/js/controllers/application.js
 var application2 = Application.start();

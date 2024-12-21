@@ -1,7 +1,8 @@
 <div class="pt-6 px-4">
   <h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-4">Товары</h1>
 
-  <%= link_to 'Создать', new_admin_product_path, class: "px-4 py-2 bg-blue-500 text-white font-semibold rounded" %>
+  <%= link_to 'Создать', new_admin_product_path, class: "px-4 py-2 bg-blue-500 text-white font-semibold rounded",
+              data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false } %>
 </div>
 
 <div id="products" class="pt-6">

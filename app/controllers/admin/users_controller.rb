@@ -22,13 +22,19 @@ module Admin
       end
     end
 
-    def edit; end
+    def edit
+      render turbo_stream: [
+        turbo_stream.update(:modal_title, 'Редактирование пользователя'),
+        turbo_stream.update(:modal_body, partial: '/admin/users/edit')
+      ]
+    end
 
     def update
       if @user.update(user_params)
-        redirect_to admin_users_path, notice: 'Данные пользователя успешно обновлены.'
+        render turbo_stream: success_notice('Данные пользователя успешно обновлены.')
+        # TODO: обновить во фронте обновленного пользователя
       else
-        render :edit, status: :unprocessable_entity
+        error_notice(@user.errors.full_messages, :unprocessable_entity)
       end
     end
 
@@ -44,7 +50,7 @@ module Admin
     end
 
     def user_params
-      params.require(:user).permit(:first_name, :middle_name, :last_name) # TODO: нужное выбрать
+      params.require(:user).permit(:first_name, :middle_name, :last_name, :email) # TODO: нужное выбрать
     end
   end
 end

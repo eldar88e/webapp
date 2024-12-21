@@ -12,3 +12,9 @@ application.register("dark", DarkController)
 
 import MenuBtnController from "./menu_btn_controller"
 application.register("menu-btn", MenuBtnController)
+
+import ModalBtnController from "./modal_btn_controller"
+application.register("modal-btn", ModalBtnController)
+
+import ModalController from "./modal_controller"
+application.register("modal", ModalController)
