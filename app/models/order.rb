@@ -137,10 +137,6 @@ class Order < ApplicationRecord
 
   def on_cancelled
     # Логика для статуса "отменен"
-    msg = "❌ Заказ #{id} был отменен!\nОстатки были обновлены."
-    TelegramService.call msg
-    TelegramService.delete_msg('', user.tg_id, self.msg_id)
-    TelegramService.call(I18n.t('tg_msg.cancel', order: id), user.tg_id, markup: 'new_order')
     ActiveRecord::Base.transaction do
       self.order_items.includes(:product).each do |item|
         product = item.product
@@ -150,6 +146,10 @@ class Order < ApplicationRecord
       end
     end
     Rails.logger.info "Order #{id} has been cancelled"
+    msg = "❌ Заказ #{id} был отменен!\nОстатки были обновлены."
+    TelegramService.call msg
+    TelegramService.delete_msg('', user.tg_id, self.msg_id)
+    TelegramService.call(I18n.t('tg_msg.cancel', order: id), user.tg_id, markup: 'new_order')
   end
 
   def on_refunded
