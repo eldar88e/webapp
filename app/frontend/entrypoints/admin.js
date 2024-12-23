@@ -18445,6 +18445,9 @@ var revenue_chart_controller_default = class extends Controller {
         type: "line",
         height: 350
       },
+      stroke: {
+        curve: "smooth"
+      },
       series: [
         {
           name: "\u041F\u0440\u043E\u0434\u0430\u0436\u0438",

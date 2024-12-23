@@ -22,6 +22,9 @@ export default class extends Controller {
         type: "line",
         height: 350,
       },
+      stroke: {
+        curve: 'smooth',
+      },
       series: [
         {
           name: "Продажи",
