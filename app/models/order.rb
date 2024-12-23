@@ -137,8 +137,8 @@ class Order < ApplicationRecord
 
   def on_cancelled
     # Логика для статуса "отменен"
-    msg = "❌ Заказ #{id} был отменен!"
-    TelegramService.call msg + "\n Остатки были обновлены."
+    msg = "❌ Заказ #{id} был отменен!\nОстатки были обновлены."
+    TelegramService.call msg
     TelegramService.delete_msg('', user.tg_id, self.msg_id)
     TelegramService.call(I18n.t('tg_msg.cancel', order: id), user.tg_id, markup: 'new_order')
     ActiveRecord::Base.transaction do
