@@ -1,13 +1,20 @@
 module Admin
   class AnalyticsController < Admin::ApplicationController
     def index
-      start_date, end_date, group_by = calculate_date_range_and_group_by(params[:period])
-      revenue_data = Order.revenue_by_date(start_date, end_date, group_by).sort.to_h
+      cache_key    = "revenue_json_#{params[:period]}"
+      cache_expiry = 1.hour
 
-      render json: {
-        dates: revenue_data.keys,
-        revenues: revenue_data.values
-      }
+      cached_data = Rails.cache.fetch(cache_key, expires_in: cache_expiry) do
+        start_date, end_date, group_by = calculate_date_range_and_group_by(params[:period])
+        revenue_data = Order.revenue_by_date(start_date, end_date, group_by).sort.to_h
+
+        {
+          dates: revenue_data.keys,
+          revenues: revenue_data.values
+        }
+      end
+
+      render json: cached_data
     end
 
     private
