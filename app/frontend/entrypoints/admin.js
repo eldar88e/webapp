@@ -18426,12 +18426,55 @@ var modal_controller_default = class extends Controller {
   }
 };
 
+// app/frontend/js/controllers_admin/revenue_chart_controller.js
+var import_apexcharts = __toESM(require_apexcharts_common());
+var revenue_chart_controller_default = class extends Controller {
+  static targets = ["chart"];
+  connect() {
+    console.log("hi!");
+    this.fetchRevenueData();
+  }
+  async fetchRevenueData() {
+    const response = await fetch("/admin/analytics");
+    const data = await response.json();
+    this.renderChart(data.dates, data.revenues);
+  }
+  renderChart(dates, revenues) {
+    const options = {
+      chart: {
+        type: "line",
+        height: 350
+      },
+      series: [
+        {
+          name: "\u041F\u0440\u043E\u0434\u0430\u0436\u0438",
+          data: revenues
+        }
+      ],
+      xaxis: {
+        categories: dates,
+        title: {
+          text: "\u0414\u0430\u0442\u0430"
+        }
+      },
+      yaxis: {
+        title: {
+          text: "\u041F\u0440\u043E\u0434\u0430\u0436\u0438"
+        }
+      }
+    };
+    const chart = new import_apexcharts.default(this.chartTarget, options);
+    chart.render();
+  }
+};
+
 // app/frontend/js/controllers_admin/index.js
 application.register("confirm", confirm_controller_default);
 application.register("dark", dark_controller_default);
 application.register("menu-btn", menu_btn_controller_default);
 application.register("modal-btn", modal_btn_controller_default);
 application.register("modal", modal_controller_default);
+application.register("revenue-chart", revenue_chart_controller_default);
 
 // app/frontend/js/controllers/application.js
 var application2 = Application.start();
@@ -18637,7 +18680,7 @@ var notices_controller_default = class extends Controller {
 };
 
 // app/frontend/js/controllers/charts_controller.js
-var import_apexcharts = __toESM(require_apexcharts_common());
+var import_apexcharts2 = __toESM(require_apexcharts_common());
 var charts_controller_default = class extends Controller {
   static targets = ["total", "unpaid", "pending", "processing", "shipped"];
   connect() {
@@ -18729,8 +18772,8 @@ var charts_controller_default = class extends Controller {
         }
       };
     };
-    if (document.getElementById("donut-chart") && typeof import_apexcharts.default !== "undefined") {
-      const chart = new import_apexcharts.default(document.getElementById("donut-chart"), getChartOptions());
+    if (document.getElementById("donut-chart") && typeof import_apexcharts2.default !== "undefined") {
+      const chart = new import_apexcharts2.default(document.getElementById("donut-chart"), getChartOptions());
       chart.render();
       const checkboxes = document.querySelectorAll('#devices input[type="checkbox"]');
       checkboxes.forEach((checkbox) => {

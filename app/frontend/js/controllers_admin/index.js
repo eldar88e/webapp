@@ -18,3 +18,6 @@ application.register("modal-btn", ModalBtnController)
 
 import ModalController from "./modal_controller"
 application.register("modal", ModalController)
+
+import RevenueChartController from "./revenue_chart_controller"
+application.register("revenue-chart", RevenueChartController)

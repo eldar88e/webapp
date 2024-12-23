@@ -6,12 +6,19 @@ class Order < ApplicationRecord
   validates :status, presence: true
   validates :total_amount, presence: true
 
-  enum status: { initialized: 0, unpaid: 1, pending: 2, processing: 3, shipped: 4, cancelled: 5, refunded: 6, overdue: 7 }
+  enum status: { initialized: 0, unpaid: 1, pending: 2, processing: 3, shipped: 4, cancelled: 5, overdue: 7 } # refunded: 6,
 
   after_update :check_status_change
 
   def order_items_with_product
     order_items.includes(:product)
+  end
+
+  def self.revenue_by_date(start_date, end_date, group_by)
+    joins(:order_items)
+      .where(updated_at: start_date..end_date, status: :shipped)
+      .group(group_by)
+      .sum('order_items.quantity * order_items.price')
   end
 
   def self.ransackable_attributes(_auth_object = nil)
