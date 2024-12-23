@@ -15,10 +15,9 @@ class Order < ApplicationRecord
   end
 
   def self.revenue_by_date(start_date, end_date, group_by)
-    joins(:order_items)
-      .where(updated_at: start_date..end_date, status: :shipped)
+    where(updated_at: start_date..end_date, status: :shipped)
       .group(group_by)
-      .sum('order_items.quantity * order_items.price')
+      .sum(:total_amount)
   end
 
   def self.ransackable_attributes(_auth_object = nil)

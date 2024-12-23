@@ -18431,7 +18431,6 @@ var import_apexcharts = __toESM(require_apexcharts_common());
 var revenue_chart_controller_default = class extends Controller {
   static targets = ["chart"];
   connect() {
-    console.log("hi!");
     this.fetchRevenueData();
   }
   async fetchRevenueData() {
@@ -18450,16 +18449,11 @@ var revenue_chart_controller_default = class extends Controller {
       },
       markers: {
         size: 6,
-        // Размер точек
         colors: ["#0f80de"],
-        // Цвет точек
         strokeColors: "#eef7ff",
-        // Цвет обводки точек
         strokeWidth: 2,
-        // Ширина обводки
         hover: {
           size: 8
-          // Размер точки при наведении
         }
       },
       series: [
