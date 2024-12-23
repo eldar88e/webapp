@@ -18395,16 +18395,34 @@ var dark_controller_default = class extends Controller {
 
 // app/frontend/js/controllers_admin/menu_btn_controller.js
 var menu_btn_controller_default = class extends Controller {
+  static targets = ["body"];
   showMenu() {
-    let sidebarBackdrop = document.getElementById("sidebarBackdrop");
-    let sidebar = document.getElementById("sidebar");
-    if (sidebar.style.display === "none" && sidebar.style.display === "none") {
-      sidebar.style = "display: block;";
-      sidebarBackdrop.style = "display: block;";
-    } else {
-      sidebar.style = "display: none;";
-      sidebarBackdrop.style = "display: none;";
-    }
+    this.element.classList.toggle("aside-hide");
+  }
+};
+
+// app/frontend/js/controllers_admin/modal_btn_controller.js
+var modal_btn_controller_default = class extends Controller {
+  open() {
+    const modal = document.getElementById("modal");
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+  }
+};
+
+// app/frontend/js/controllers_admin/modal_controller.js
+var modal_controller_default = class extends Controller {
+  connect() {
+    this.element.addEventListener("click", (event) => {
+      if (event.target === this.element) {
+        this.element.classList.add("hidden");
+        this.element.classList.remove("flex");
+      }
+    });
+  }
+  close() {
+    this.element.classList.add("hidden");
+    this.element.classList.remove("flex");
   }
 };
 
@@ -18412,6 +18430,8 @@ var menu_btn_controller_default = class extends Controller {
 application.register("confirm", confirm_controller_default);
 application.register("dark", dark_controller_default);
 application.register("menu-btn", menu_btn_controller_default);
+application.register("modal-btn", modal_btn_controller_default);
+application.register("modal", modal_controller_default);
 
 // app/frontend/js/controllers/application.js
 var application2 = Application.start();
@@ -18727,6 +18747,42 @@ application2.register("buttons", buttons_controller_default);
 application2.register("phone_mask", phone_mask_controller_default);
 application2.register("notices", notices_controller_default);
 application2.register("charts", charts_controller_default);
+
+// app/frontend/js/others/admin_custom.js
+if (localStorage.getItem("color-theme") === "dark" || !("color-theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+  document.documentElement.classList.add("dark");
+} else {
+  document.documentElement.classList.remove("dark");
+}
+var themeToggleDarkIcon = document.getElementById("theme-toggle-dark-icon");
+var themeToggleLightIcon = document.getElementById("theme-toggle-light-icon");
+if (localStorage.getItem("color-theme") === "dark" || !("color-theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+  themeToggleLightIcon.classList.remove("hidden");
+} else {
+  themeToggleDarkIcon.classList.remove("hidden");
+}
+var themeToggleBtn = document.getElementById("theme-toggle");
+themeToggleBtn.addEventListener("click", function() {
+  themeToggleDarkIcon.classList.toggle("hidden");
+  themeToggleLightIcon.classList.toggle("hidden");
+  if (localStorage.getItem("color-theme")) {
+    if (localStorage.getItem("color-theme") === "light") {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("color-theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("color-theme", "light");
+    }
+  } else {
+    if (document.documentElement.classList.contains("dark")) {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("color-theme", "light");
+    } else {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("color-theme", "dark");
+    }
+  }
+});
 /*! Bundled license information:
 
 apexcharts/dist/apexcharts.common.js:

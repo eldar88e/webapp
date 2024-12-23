@@ -1,37 +1,25 @@
 <%= form_with(model: product, url: (method == :patch ? admin_product_path(product) : admin_products_path)) do |form| %>
-  <% if product.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(product.errors.count, "error") %> prohibited this product from being saved:</h2>
-
-      <ul>
-        <% product.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="mb-4">
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
+  <div class="mb-5">
+    <%= form.label :name, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+    <%= form.text_field :name, class: 'shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light' %>
   </div>
 
-  <div class="mb-4">
-    <%= form.label :image, style: "display: block" %>
-    <%= form.file_field :image %>
+  <div class="mb-5">
+    <%= form.label :image, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+    <%= form.file_field :image, class: 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400' %>
   </div>
 
-  <div class="mb-4">
-    <%= form.label :price, style: "display: block" %>
-    <%= form.text_field :price %>
+  <div class="mb-5">
+    <%= form.label :price, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+    <%= form.number_field :price, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
   </div>
 
-  <div class="mb-4">
-    <%= form.label :stock_quantity, style: "display: block" %>
-    <%= form.number_field :stock_quantity %>
+  <div class="mb-5">
+    <%= form.label :stock_quantity, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+    <%= form.number_field :stock_quantity, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
   </div>
 
-  <div class="mb-4">
-    <%= form.submit "Сохранить", class: "px-4 py-2 bg-blue-500 text-white font-semibold rounded" %>
+  <div>
+    <%= form.submit "Сохранить", data: { action: "click->modal#close" }, class: blue_btn_styles %>
   </div>
 <% end %>

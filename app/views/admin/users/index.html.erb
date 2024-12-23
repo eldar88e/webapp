@@ -1,4 +1,6 @@
 <div class="pt-6 px-4">
+  <h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-4">Пользователи</h1>
+
   <%= search_form_for @q_users, url: admin_users_path, method: :get, class: "max-w-md mx-auto" do |f| %>
     <%= f.label :first_name_or_middle_name_or_last_name_cont_any, class: "mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white" %>
     <div class="relative">

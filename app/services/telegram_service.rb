@@ -83,6 +83,8 @@ class TelegramService
           reply_markup: markup
         )
         message_id = response.message_id
+      rescue Telegram::Bot::Exceptions::ResponseError => e
+        message_id = e
       end
     end
     message_id
@@ -90,20 +92,20 @@ class TelegramService
 
   def form_keyboard
     buttons = []
-    if @markup != 'new_order'
+    if @markup != 'new_order' && @markup != 'mailing'
       buttons << [Telegram::Bot::Types::InlineKeyboardButton.new(text: I18n.t("tg_btn.#{@markup}"), callback_data: @markup)]
-      buttons += [order_btn, ask_btn] if @markup == 'i_paid'
+      buttons += [order_btn('Изменить заказ'), ask_btn] if @markup == 'i_paid'
     else
-      buttons += [order_btn(true), ask_btn]
+      text_btn = @markup != 'mailing' ? 'Новый заказ' : 'Перейти в каталог'
+      buttons += [order_btn(text_btn), ask_btn]
     end
     buttons
   end
 
-  def order_btn(new = false)
+  def order_btn(btn_text)
     url  = "https://t.me/#{settings[:tg_main_bot]}?startapp"
-    text = "#{new ? 'Новый' : 'Изменить'} заказ"
     # TODO: Добавить переход в корзину при new == false
-    [Telegram::Bot::Types::InlineKeyboardButton.new(text: text, url: url)]
+    [Telegram::Bot::Types::InlineKeyboardButton.new(text: btn_text, url: url)]
   end
 
   def ask_btn

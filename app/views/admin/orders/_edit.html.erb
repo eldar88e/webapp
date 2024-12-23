@@ -1,0 +1,32 @@
+<%= render "form" %>
+
+<h2 class="text-2xl font-bold dark:text-white mt-6 mb-3">Состав заказа:</h2>
+
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+  <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <tr>
+        <th scope="col" class="px-6 py-3">
+          №
+        </th>
+        <th scope="col" class="px-6 py-3">
+          Картинка
+        </th>
+        <th scope="col" class="px-6 py-3">
+          Название
+        </th>
+        <th scope="col" class="px-6 py-3">
+          Количество
+        </th>
+        <th scope="col" class="px-6 py-3">
+          Цена
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @order.order_items.includes(product: :image_attachment).each_with_index do |order_item, idx| %>
+        <%= render partial: '/admin/orders/order_item', locals: { order_item: order_item, idx: idx } %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

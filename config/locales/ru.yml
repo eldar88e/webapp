@@ -48,6 +48,21 @@ ru:
         apartment: "Квартира"
         build: "Корпус"
         postal_code: "Индекс"
+      order:
+        status: "Статус"
+      product:
+        name: "Название товара"
+        image: "Картинка"
+        price: "Цена"
+        stock_quantity: "Остаток на складе"
+      setting:
+        variable: "Переменная"
+        value: "Значение"
+        description: "Описание"
+  filters:
+    ordered: "Клиенты с заказами"
+    no_ordered: "Клиенты без заказов"
+    all: "Все клиенты"
   pagy:
     aria_label:
       nav:

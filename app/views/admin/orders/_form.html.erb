@@ -1,16 +1,4 @@
 <%= form_with(model: @order, url: admin_order_path(@order), class: 'max-w-sm') do |form| %>
-  <% if @order.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(@order.errors.count, "error") %> prohibited this order from being saved:</h2>
-
-      <ul>
-        <% @order.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
   <div class="mb-5">
     <%= form.label :status, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
     <%= form.select :status,
@@ -18,7 +6,15 @@
                     { class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' } %>
   </div>
 
-  <div class="mb-5">
-    <%= form.submit "Сохранить", class: "px-4 py-2 bg-blue-500 text-white font-semibold rounded" %>
+  <div class="mb-5 flex align-center gap-3">
+    <%= form.submit "Сохранить", class: blue_btn_styles %>
+
+    <%= button_to admin_order_path, method: :delete, class: 'text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800',
+                  data: { confirm: 'Вы уверены, что хотите удалить данный заказ?',
+                          controller: 'confirm', action: 'click->confirm#call' } do %>
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+      </svg>
+    <% end %>
   </div>
 <% end %>

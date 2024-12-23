@@ -1,5 +1,5 @@
 <div class="pt-6 px-4">
-
+  <h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-10">Заказы</h1>
 </div>
 
 <div id="orders" class="pt-6">
@@ -32,7 +32,7 @@
           <%= sort_link(@q_orders, :updated_at, 'Дата изменения статуса', data: { turbo_prefetch: false }) %>
         </th>
         <th scope="col" class="px-6 py-3">
-          Action
+          Действия
         </th>
       </tr>
       </thead>

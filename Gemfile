@@ -17,6 +17,7 @@ gem 'tzinfo-data', platforms: %i[ windows jruby ]
 gem 'bootsnap', require: false
 
 # gem "image_processing", "~> 1.2"
+gem 'active_link_to'
 gem 'dotenv'
 gem 'devise'
 # gem 'exception-track'

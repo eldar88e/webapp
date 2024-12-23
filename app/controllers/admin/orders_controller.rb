@@ -8,13 +8,21 @@ module Admin
       @pagy, @orders = pagy(@q_orders.result, items: 20)
     end
 
-    def edit; end
+    def edit
+      render turbo_stream: [
+        turbo_stream.update(:modal_title, 'Редактировать заказ'),
+        turbo_stream.update(:modal_body, partial: '/admin/orders/edit')
+      ]
+    end
 
     def update
       if @order.update(order_params)
-        redirect_to admin_orders_path, notice: 'Заказ был успешно обновлен.'
+        render turbo_stream: [
+          success_notice('Заказ был успешно обновлен.'),
+          turbo_stream.replace(@order, partial: '/admin/orders/order', locals: { order: @order })
+        ]
       else
-        render :edit, status: :unprocessable_entity
+        error_notice(@order.errors.full_messages, :unprocessable_entity)
       end
     end
 

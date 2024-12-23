@@ -1,7 +1,8 @@
-<div id="<%= dom_id order_item %>" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-  <div class="flex p-4 gap-4 text-sm font-medium text-gray-900 truncate dark:text-white">
-    <div><%= order_item.product.id %></div>
-
+<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+  <td class="px-6 py-4">
+    <%= idx + 1 %>
+  </td>
+  <td class="px-6 py-4">
     <div class="product-img">
       <% if order_item.product.image.attached? %>
         <%= image_tag url_for(order_item.product.image), alt: order_item.product.name, style: 'width: 50px;' %>
@@ -9,12 +10,14 @@
         <p>No image</p>
       <% end %>
     </div>
-
-    <div class="">
-      <%= order_item.product.name %>
-    </div>
-    <div class=""><%= order_item.quantity %>шт.</div>
-
-    <div class=""><%= order_item.price.to_i %><span style="margin-left: 3px">₽</span></div>
-  </div>
-</div>
+  </td>
+  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+    <%= order_item.product.name %>
+  </th>
+  <td class="px-6 py-4">
+    <%= order_item.quantity %>шт.
+  </td>
+  <td class="px-6 py-4">
+    <%= order_item.price.to_i %><span style="margin-left: 3px">₽</span>
+  </td>
+</tr>
