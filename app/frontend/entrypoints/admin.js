@@ -18448,6 +18448,20 @@ var revenue_chart_controller_default = class extends Controller {
       stroke: {
         curve: "smooth"
       },
+      markers: {
+        size: 6,
+        // Размер точек
+        colors: ["#0f80de"],
+        // Цвет точек
+        strokeColors: "#eef7ff",
+        // Цвет обводки точек
+        strokeWidth: 2,
+        // Ширина обводки
+        hover: {
+          size: 8
+          // Размер точки при наведении
+        }
+      },
       series: [
         {
           name: "\u041F\u0440\u043E\u0434\u0430\u0436\u0438",
@@ -18463,6 +18477,18 @@ var revenue_chart_controller_default = class extends Controller {
       yaxis: {
         title: {
           text: "\u041F\u0440\u043E\u0434\u0430\u0436\u0438"
+        },
+        labels: {
+          formatter: function(value) {
+            return `\u20BD${value}`;
+          }
+        }
+      },
+      tooltip: {
+        y: {
+          formatter: function(value) {
+            return `\u20BD${value}`;
+          }
         }
       }
     };

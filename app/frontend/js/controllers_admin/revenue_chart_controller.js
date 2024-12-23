@@ -25,6 +25,15 @@ export default class extends Controller {
       stroke: {
         curve: 'smooth',
       },
+      markers: {
+        size: 6,           // Размер точек
+        colors: ['#0f80de'], // Цвет точек
+        strokeColors: '#eef7ff', // Цвет обводки точек
+        strokeWidth: 2,    // Ширина обводки
+        hover: {
+          size: 8,         // Размер точки при наведении
+        },
+      },
       series: [
         {
           name: "Продажи",
@@ -40,6 +49,18 @@ export default class extends Controller {
       yaxis: {
         title: {
           text: "Продажи",
+        },
+        labels: {
+          formatter: function (value) {
+            return `₽${value}`;
+          },
+        },
+      },
+      tooltip: {
+        y: {
+          formatter: function (value) {
+            return `₽${value}`;
+          },
         },
       },
     };
