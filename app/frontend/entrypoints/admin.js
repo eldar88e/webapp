@@ -15974,8 +15974,8 @@ function extendEvent(event) {
   }
 }
 var Dispatcher = class {
-  constructor(application3) {
-    this.application = application3;
+  constructor(application2) {
+    this.application = application2;
     this.eventListenerMaps = /* @__PURE__ */ new Map();
     this.started = false;
   }
@@ -17479,8 +17479,8 @@ function blessDefinition(definition) {
   };
 }
 var Module = class {
-  constructor(application3, definition) {
-    this.application = application3;
+  constructor(application2, definition) {
+    this.application = application2;
     this.definition = blessDefinition(definition);
     this.contextsByScope = /* @__PURE__ */ new WeakMap();
     this.connectedContexts = /* @__PURE__ */ new Set();
@@ -17800,8 +17800,8 @@ var ScopeObserver = class {
   }
 };
 var Router = class {
-  constructor(application3) {
-    this.application = application3;
+  constructor(application2) {
+    this.application = application2;
     this.scopeObserver = new ScopeObserver(this.element, this.schema, this);
     this.scopesByIdentifier = new Multimap();
     this.modulesByIdentifier = /* @__PURE__ */ new Map();
@@ -17917,9 +17917,9 @@ var Application = class {
     this.actionDescriptorFilters = Object.assign({}, defaultActionDescriptorFilters);
   }
   static start(element, schema) {
-    const application3 = new this(element, schema);
-    application3.start();
-    return application3;
+    const application2 = new this(element, schema);
+    application2.start();
+    return application2;
   }
   async start() {
     await domReady();
@@ -18372,6 +18372,28 @@ var application = Application.start();
 application.debug = false;
 window.Stimulus = application;
 
+// app/frontend/js/controllers/notices_controller.js
+var notices_controller_default = class extends Controller {
+  connect() {
+    this.startTimer();
+  }
+  startTimer() {
+    this.timer = setInterval(() => {
+      this.fadeOutAndRemove();
+    }, 5e3);
+  }
+  fadeOutAndRemove() {
+    this.element.classList.add("fade-out");
+    setTimeout(() => {
+      this.element.remove();
+    }, 1e3);
+  }
+  close() {
+    clearInterval(this.timer);
+    this.fadeOutAndRemove();
+  }
+};
+
 // app/frontend/js/controllers_admin/confirm_controller.js
 var confirm_controller_default = class extends Controller {
   call(e) {
@@ -18492,327 +18514,13 @@ var revenue_chart_controller_default = class extends Controller {
 };
 
 // app/frontend/js/controllers_admin/index.js
+application.register("notices", notices_controller_default);
 application.register("confirm", confirm_controller_default);
 application.register("dark", dark_controller_default);
 application.register("menu-btn", menu_btn_controller_default);
 application.register("modal-btn", modal_btn_controller_default);
 application.register("modal", modal_controller_default);
 application.register("revenue-chart", revenue_chart_controller_default);
-
-// app/frontend/js/controllers/application.js
-var application2 = Application.start();
-application2.debug = false;
-window.Stimulus = application2;
-
-// app/frontend/js/controllers/agreement_controller.js
-var agreement_controller_default = class extends Controller {
-  static targets = ["form", "agreement", "check_box"];
-  visible(event) {
-    event.preventDefault();
-    this.agreementTarget.style = "display: block;";
-    this.formTarget.style = "display: none;";
-    document.getElementById("modal").classList.remove("left");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-  agree(event) {
-    event.preventDefault();
-    this.check_boxTarget.checked = true;
-    this.formTarget.style = "display: block;";
-    this.agreementTarget.style = "display: none;";
-    document.getElementById("modal").classList.add("left");
-  }
-  close() {
-    this.formTarget.style = "display: block;";
-    this.agreementTarget.style = "display: none;";
-    document.getElementById("modal").classList.add("left");
-  }
-};
-
-// app/frontend/js/controllers/dadata_controller.js
-var dadata_controller_default = class extends Controller {
-  static targets = ["suggestions", "suggestions_street", "address", "street", "post_code", "home", "apartment", "build"];
-  search(event) {
-    const query = event.target.value.trim();
-    let suggestions = this.suggestionsTarget;
-    this.form_connection(query, suggestions);
-  }
-  search_street(event) {
-    let query = event.target.value.trim();
-    let suggestions = this.suggestions_streetTarget;
-    this.form_connection(query, suggestions, true);
-  }
-  form_connection(query, suggestions, prefixStreet = false) {
-    if (!query) {
-      suggestions.textContent = "";
-      suggestions.style = "display: none;";
-      return;
-    }
-    if (prefixStreet) {
-      let address = this.addressTarget.value.trim();
-      if (address.length > 1) {
-        query = `${address} ${query}`;
-      }
-    }
-    let url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
-    let token = dadata_token;
-    let options = {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "Authorization": "Token " + token
-      },
-      body: JSON.stringify({ query })
-    };
-    this.fetch_dadata(url, options, suggestions);
-  }
-  pull_data(data, suggestions) {
-    suggestions.textContent = "";
-    if (data.length > 0) {
-      this.append("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043E\u0434\u0438\u043D \u0438\u0437 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u043E\u0432...", suggestions);
-      window.suggestions_cache = data;
-      data.forEach((value, index) => {
-        this.append(value["unrestricted_value"], suggestions, index);
-      });
-      suggestions.style = "display: block;";
-    } else {
-      suggestions.style = "display: none;";
-    }
-  }
-  append(text, suggestions, id = false) {
-    let suggestionElement = document.createElement("div");
-    suggestionElement.classList.add("suggestion-item");
-    if (id !== false) {
-      suggestionElement.setAttribute("data-dadata-id-value", id);
-      suggestionElement.setAttribute("data-action", "click->dadata#setAddress");
-    }
-    suggestionElement.textContent = text;
-    suggestions.appendChild(suggestionElement);
-  }
-  setAddress(event) {
-    const idValue = event.target.dataset.dadataIdValue;
-    const address = suggestions_cache[idValue]["data"];
-    if (address["region_with_type"]) {
-      this.addressTarget.value = address["region_with_type"];
-      if (address["area_with_type"]) {
-        this.addressTarget.value += `, ${address["area_with_type"]}`;
-      }
-      if (address["city_with_type"] && address["region_with_type"] !== address["city_with_type"]) {
-        this.addressTarget.value += `, ${address["city_with_type"]}`;
-      }
-      if (address["settlement_with_type"]) {
-        this.addressTarget.value += `, ${address["settlement_with_type"]}`;
-      }
-    } else {
-      this.addressTarget.value = "";
-    }
-    this.streetTarget.value = address["street_with_type"] ? address["street_with_type"] : "";
-    this.post_codeTarget.value = address["postal_code"] ? address["postal_code"] : "";
-    this.homeTarget.value = address["house"] ? address["house"] : "";
-    this.apartmentTarget.value = address["flat"] ? address["flat"] : "";
-    this.buildTarget.value = address["stead"] ? address["stead"] : "";
-    this.suggestionsTarget.style = "display: none;";
-    this.suggestions_streetTarget.style = "display: none;";
-  }
-  fetch_dadata(url, options, suggestions) {
-    fetch(url, options).then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    }).then((data) => {
-      this.pull_data(data.suggestions, suggestions);
-    }).catch((error2) => {
-      console.error("Error fetching suggestions:", error2);
-    });
-  }
-};
-
-// app/frontend/js/controllers/buttons_controller.js
-var buttons_controller_default = class extends Controller {
-  leftAction() {
-    leftModal();
-    this.toTop();
-    openModal();
-  }
-  rightAction() {
-    this.toTop();
-    rightModal();
-    openModal();
-  }
-  mainPage() {
-    closeModal();
-    this.toTop();
-  }
-  toTop() {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-};
-
-// app/frontend/js/controllers/phone_mask_controller.js
-var phone_mask_controller_default = class extends Controller {
-  mask() {
-    this.element.setCustomValidity("");
-    let rawValue = this.element.value.replace(/\D/g, "");
-    if (rawValue.startsWith("8")) {
-      rawValue = "7" + rawValue.slice(1);
-    } else if (!rawValue.startsWith("7") && rawValue.length > 0) {
-      rawValue = "7" + rawValue;
-    }
-    const length = rawValue.length;
-    let formattedValue = "";
-    if (length > 0) formattedValue += "+7";
-    if (length > 1) formattedValue += " (" + rawValue.slice(1, 4);
-    if (length > 4) formattedValue += ") " + rawValue.slice(4, 7);
-    if (length > 7) formattedValue += "-" + rawValue.slice(7, 9);
-    if (length > 9) formattedValue += "-" + rawValue.slice(9, 11);
-    this.element.value = formattedValue.substring(0, 18);
-  }
-  check() {
-    let input = this.element;
-    if (input.value.length < 18) {
-      input.setCustomValidity("\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043F\u043E\u043B\u043D\u044B\u0439 \u043D\u043E\u043C\u0435\u0440 \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0430.");
-    } else {
-      input.setCustomValidity("");
-    }
-    input.reportValidity();
-  }
-};
-
-// app/frontend/js/controllers/notices_controller.js
-var notices_controller_default = class extends Controller {
-  connect() {
-    this.startTimer();
-  }
-  startTimer() {
-    this.timer = setInterval(() => {
-      this.fadeOutAndRemove();
-    }, 5e3);
-  }
-  fadeOutAndRemove() {
-    this.element.classList.add("fade-out");
-    setTimeout(() => {
-      this.element.remove();
-    }, 1e3);
-  }
-  close() {
-    clearInterval(this.timer);
-    this.fadeOutAndRemove();
-  }
-};
-
-// app/frontend/js/controllers/charts_controller.js
-var import_apexcharts2 = __toESM(require_apexcharts_common());
-var charts_controller_default = class extends Controller {
-  static targets = ["total", "unpaid", "pending", "processing", "shipped"];
-  connect() {
-    const total = Number(this.totalTarget.textContent) || 0;
-    const unpaid = Number(this.unpaidTarget.textContent) || 0;
-    const pending = Number(this.pendingTarget.textContent) || 0;
-    const processing = Number(this.processingTarget.textContent) || 0;
-    const shipped = Number(this.shippedTarget.textContent) || 0;
-    const getChartOptions = () => {
-      return {
-        series: [unpaid, pending, processing, shipped],
-        colors: ["#1C64F2", "#16BDCA", "#FDBA8C", "#E74694"],
-        chart: {
-          height: 320,
-          width: "100%",
-          type: "donut"
-        },
-        stroke: {
-          colors: ["transparent"],
-          lineCap: ""
-        },
-        plotOptions: {
-          pie: {
-            donut: {
-              labels: {
-                show: true,
-                name: {
-                  show: true,
-                  fontFamily: "Inter, sans-serif",
-                  offsetY: 20
-                },
-                total: {
-                  showAlways: true,
-                  show: true,
-                  label: "\u0417\u0430\u043A\u0430\u0437\u043E\u0432",
-                  fontFamily: "Inter, sans-serif",
-                  formatter: function(w) {
-                    const sum = w.globals.seriesTotals.reduce((a, b) => {
-                      return a + b;
-                    }, 0);
-                    return total;
-                  }
-                },
-                value: {
-                  show: true,
-                  fontFamily: "Inter, sans-serif",
-                  offsetY: -20,
-                  formatter: function(value) {
-                    return value + "%";
-                  }
-                }
-              },
-              size: "80%"
-            }
-          }
-        },
-        grid: {
-          padding: {
-            top: -2
-          }
-        },
-        labels: ["\u041E\u0436\u0438\u0434\u0430\u043D\u0438\u0435 \u043F\u043B\u0430\u0442\u0435\u0436\u0430", "\u041E\u0436\u0438\u0434\u0430\u043D\u0438\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044F \u043F\u043B\u0430\u0442\u0435\u0436\u0430", "\u0412 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438", "\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E"],
-        dataLabels: {
-          enabled: false
-        },
-        legend: {
-          position: "bottom",
-          fontFamily: "Inter, sans-serif"
-        },
-        yaxis: {
-          labels: {
-            formatter: function(value) {
-              return value + "%";
-            }
-          }
-        },
-        xaxis: {
-          labels: {
-            formatter: function(value) {
-              return value + "%";
-            }
-          },
-          axisTicks: {
-            show: false
-          },
-          axisBorder: {
-            show: false
-          }
-        }
-      };
-    };
-    if (document.getElementById("donut-chart") && typeof import_apexcharts2.default !== "undefined") {
-      const chart = new import_apexcharts2.default(document.getElementById("donut-chart"), getChartOptions());
-      chart.render();
-      const checkboxes = document.querySelectorAll('#devices input[type="checkbox"]');
-      checkboxes.forEach((checkbox) => {
-        checkbox.addEventListener("change", (event) => handleCheckboxChange(event, chart));
-      });
-    }
-  }
-};
-
-// app/frontend/js/controllers/index.js
-application2.register("agreement", agreement_controller_default);
-application2.register("dadata", dadata_controller_default);
-application2.register("buttons", buttons_controller_default);
-application2.register("phone_mask", phone_mask_controller_default);
-application2.register("notices", notices_controller_default);
-application2.register("charts", charts_controller_default);
 
 // app/frontend/js/others/admin_custom.js
 if (localStorage.getItem("color-theme") === "dark" || !("color-theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches) {

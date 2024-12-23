@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import NoticesController from "../controllers/notices_controller"
+application.register("notices", NoticesController)
+
 import ConfirmController from "./confirm_controller"
 application.register("confirm", ConfirmController)
 
