@@ -88,7 +88,11 @@ body {
                 display: flex;
 
                 &.active {
-                  background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+                  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+
+                  @media (prefers-color-scheme: dark) {
+                    background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+                  }
                 }
 
                 svg {
@@ -100,6 +104,27 @@ body {
                   --tw-text-opacity: 1;
                   width: 1.5rem;
                   height: 1.5rem;
+                  color: rgb(156 163 175 / var(--tw-text-opacity));
+
+                  @media (prefers-color-scheme: dark) {
+                    color: rgb(107 114 128 / var(--tw-text-opacity));
+                  }
+                }
+
+                &:hover {
+                  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+
+                  @media (prefers-color-scheme: dark) {
+                    background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+                  }
+
+                  svg {
+                    color: rgb(17 24 39 / var(--tw-text-opacity));
+
+                    @media (prefers-color-scheme: dark) {
+                      color: rgb(255 255 255 / var(--tw-text-opacity));
+                    }
+                  }
                 }
               }
             }
