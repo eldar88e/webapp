@@ -17,13 +17,13 @@ module Admin
       when 'week'
         start_date = 4.weeks.ago.beginning_of_week
         end_date = Date.today.end_of_week
-        group_by = 'YEARWEEK(orders.created_at)'
+        group_by = "DATE_TRUNC('week', orders.created_at)"
       when 'month'
         start_date = Date.today.beginning_of_year
         end_date = Date.today.end_of_month
         group_by = "DATE_FORMAT(orders.created_at, '%Y-%m')"
       else
-        start_date = Date.today.prev_day(7)
+        start_date = 7.days.ago.beginning_of_day
         end_date = Date.today.end_of_month
         group_by = 'DATE(orders.created_at)'
       end
