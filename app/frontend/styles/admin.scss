@@ -68,14 +68,8 @@ body {
         .main-sidebar {
 
           .slidebar-menu {
-            --tw-text-opacity: 1;
-            font-weight: 400;
-            font-size: 1rem;
-            line-height: 1.5rem;
-            padding: .5rem;
-
             li {
-              padding-bottom: .5rem;
+              padding-top: .5rem;
 
               a {
                 --tw-text-opacity: 1;
@@ -104,10 +98,10 @@ body {
                   --tw-text-opacity: 1;
                   width: 1.5rem;
                   height: 1.5rem;
-                  color: rgb(156 163 175 / var(--tw-text-opacity));
+                  color: rgb(107 114 128 / var(--tw-text-opacity));
 
                   @media (prefers-color-scheme: dark) {
-                    color: rgb(107 114 128 / var(--tw-text-opacity));
+                    color: rgb(156 163 175 / var(--tw-text-opacity));
                   }
                 }
 
@@ -251,13 +245,7 @@ body.aside-hide {
       }
 
       .main-sidebar {
-        @media (min-width: 1024px) {
-          padding-right: 0;
-          padding-left: 0;
-        }
-
         .slidebar-menu {
-
           li {
             a {
               span {

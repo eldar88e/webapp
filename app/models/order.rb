@@ -119,14 +119,15 @@ class Order < ApplicationRecord
 
   def on_shipped
     # Логика для статуса "отправлен"
-    msg = I18n.t('tg_msg.on_shipped_courier',
-                 order: id,
-                 price: total_amount,
-                 items: order_items_str,
-                 address: user.full_address,
-                 fio: user.full_name,
-                 phone: user.phone_number,
-                 track: tracking_number
+    msg = I18n.t(
+      'tg_msg.on_shipped_courier',
+      order: id,
+      price: total_amount,
+      items: order_items_str,
+      address: user.full_address,
+      fio: user.full_name,
+      phone: user.phone_number,
+      track: tracking_number
     )
     TelegramService.delete_msg('', user.tg_id, self.msg_id)
     msg_id = TelegramService.call(msg, user.tg_id, markup: 'new_order')
@@ -136,9 +137,19 @@ class Order < ApplicationRecord
 
   def on_cancelled
     # Логика для статуса "отменен"
-    msg = "Order #{id} has been cancelled"
-    Rails.logger.info msg
-    TelegramService.call msg # TODO: шлет уведомление только админу
+    ActiveRecord::Base.transaction do
+      self.order_items.includes(:product).each do |item|
+        product = item.product
+        next unless product
+
+        product.increment!(:stock_quantity, item.quantity)
+      end
+    end
+    Rails.logger.info "Order #{id} has been cancelled"
+    msg = "❌ Заказ #{id} был отменен!\nОстатки были обновлены."
+    TelegramService.call msg
+    TelegramService.delete_msg('', user.tg_id, self.msg_id)
+    TelegramService.call(I18n.t('tg_msg.cancel', order: id), user.tg_id, markup: 'new_order')
   end
 
   def on_refunded
