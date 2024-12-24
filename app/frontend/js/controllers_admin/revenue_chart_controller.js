@@ -33,6 +33,11 @@ export default class extends Controller {
           size: 8,
         },
       },
+      grid: {
+        show: true, // Показывать сетку
+        borderColor: '#374151', // Цвет линий сетки
+        strokeDashArray: 1, // Длина штрихов (пунктир)
+      },
       series: [
         {
           name: "Продажи",
@@ -42,16 +47,28 @@ export default class extends Controller {
       xaxis: {
         categories: dates,
         title: {
-          text: "Дата",
+          //text: "Дата",
+        },
+        labels: {
+          style: {
+            colors: 'rgb(156, 163, 175);',
+            fontSize: '14px',
+            fontWeight: 700,
+          },
         },
       },
       yaxis: {
         title: {
-          text: "Продажи",
+          // text: "Продажи",
         },
         labels: {
           formatter: function (value) {
             return `₽${value}`;
+          },
+          style: {
+            colors: 'rgb(156, 163, 175);',
+            fontSize: '14px',
+            fontWeight: 700,
           },
         },
       },

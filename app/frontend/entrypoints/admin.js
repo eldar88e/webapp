@@ -18478,6 +18478,14 @@ var revenue_chart_controller_default = class extends Controller {
           size: 8
         }
       },
+      grid: {
+        show: true,
+        // Показывать сетку
+        borderColor: "#374151",
+        // Цвет линий сетки
+        strokeDashArray: 1
+        // Длина штрихов (пунктир)
+      },
       series: [
         {
           name: "\u041F\u0440\u043E\u0434\u0430\u0436\u0438",
@@ -18487,16 +18495,28 @@ var revenue_chart_controller_default = class extends Controller {
       xaxis: {
         categories: dates,
         title: {
-          text: "\u0414\u0430\u0442\u0430"
+          //text: "Дата",
+        },
+        labels: {
+          style: {
+            colors: "rgb(156, 163, 175);",
+            fontSize: "14px",
+            fontWeight: 700
+          }
         }
       },
       yaxis: {
         title: {
-          text: "\u041F\u0440\u043E\u0434\u0430\u0436\u0438"
+          // text: "Продажи",
         },
         labels: {
           formatter: function(value) {
             return `\u20BD${value}`;
+          },
+          style: {
+            colors: "rgb(156, 163, 175);",
+            fontSize: "14px",
+            fontWeight: 700
           }
         }
       },
@@ -18513,6 +18533,110 @@ var revenue_chart_controller_default = class extends Controller {
   }
 };
 
+// app/frontend/js/controllers_admin/charts_controller.js
+var import_apexcharts2 = __toESM(require_apexcharts_common());
+var charts_controller_default = class extends Controller {
+  static targets = ["total", "unpaid", "pending", "processing", "shipped"];
+  connect() {
+    const total = Number(this.totalTarget.textContent) || 0;
+    const unpaid = Number(this.unpaidTarget.textContent) || 0;
+    const pending = Number(this.pendingTarget.textContent) || 0;
+    const processing = Number(this.processingTarget.textContent) || 0;
+    const shipped = Number(this.shippedTarget.textContent) || 0;
+    const getChartOptions = () => {
+      return {
+        series: [unpaid, pending, processing, shipped],
+        colors: ["#1C64F2", "#16BDCA", "#FDBA8C", "#E74694"],
+        chart: {
+          height: 320,
+          width: "100%",
+          type: "donut"
+        },
+        stroke: {
+          colors: ["transparent"],
+          lineCap: ""
+        },
+        plotOptions: {
+          pie: {
+            donut: {
+              labels: {
+                show: true,
+                name: {
+                  show: true,
+                  fontFamily: "Inter, sans-serif",
+                  offsetY: 20
+                },
+                total: {
+                  showAlways: true,
+                  show: true,
+                  label: "\u0417\u0430\u043A\u0430\u0437\u043E\u0432",
+                  fontFamily: "Inter, sans-serif",
+                  formatter: function(w) {
+                    const sum = w.globals.seriesTotals.reduce((a, b) => {
+                      return a + b;
+                    }, 0);
+                    return total;
+                  }
+                },
+                value: {
+                  show: true,
+                  fontFamily: "Inter, sans-serif",
+                  offsetY: -20,
+                  formatter: function(value) {
+                    return value + "%";
+                  }
+                }
+              },
+              size: "80%"
+            }
+          }
+        },
+        grid: {
+          padding: {
+            top: -2
+          }
+        },
+        labels: ["\u041E\u0436\u0438\u0434\u0430\u043D\u0438\u0435 \u043F\u043B\u0430\u0442\u0435\u0436\u0430", "\u041E\u0436\u0438\u0434\u0430\u043D\u0438\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044F \u043F\u043B\u0430\u0442\u0435\u0436\u0430", "\u0412 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438", "\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E"],
+        dataLabels: {
+          enabled: false
+        },
+        legend: {
+          position: "bottom",
+          fontFamily: "Inter, sans-serif"
+        },
+        yaxis: {
+          labels: {
+            formatter: function(value) {
+              return value + "%";
+            }
+          }
+        },
+        xaxis: {
+          labels: {
+            formatter: function(value) {
+              return value + "%";
+            }
+          },
+          axisTicks: {
+            show: false
+          },
+          axisBorder: {
+            show: false
+          }
+        }
+      };
+    };
+    if (document.getElementById("donut-chart") && typeof import_apexcharts2.default !== "undefined") {
+      const chart = new import_apexcharts2.default(document.getElementById("donut-chart"), getChartOptions());
+      chart.render();
+      const checkboxes = document.querySelectorAll('#devices input[type="checkbox"]');
+      checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", (event) => handleCheckboxChange(event, chart));
+      });
+    }
+  }
+};
+
 // app/frontend/js/controllers_admin/index.js
 application.register("notices", notices_controller_default);
 application.register("confirm", confirm_controller_default);
@@ -18521,6 +18645,7 @@ application.register("menu-btn", menu_btn_controller_default);
 application.register("modal-btn", modal_btn_controller_default);
 application.register("modal", modal_controller_default);
 application.register("revenue-chart", revenue_chart_controller_default);
+application.register("charts", charts_controller_default);
 
 // app/frontend/js/others/admin_custom.js
 if (localStorage.getItem("color-theme") === "dark" || !("color-theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches) {

@@ -24,3 +24,6 @@ application.register("modal", ModalController)
 
 import RevenueChartController from "./revenue_chart_controller"
 application.register("revenue-chart", RevenueChartController)
+
+import CartsController from "./charts_controller"
+application.register("charts", CartsController)
