@@ -1,10 +1,8 @@
 if Rails.env.development?
-  User.create(
-    email: 'test@test.tt',
-    password: '12345678',
-    username: 'Eldar',
-    photo_url: 'https://lh3.googleusercontent.com/ogw/AF2bZygKjbapzeLmtGT_6oQoNtNO4apdp3AxYUVfBzZsoqznVbbm=s64-c-mo'
-  )
+  User.find_or_create_by!(email: 'test@test.tt') do |user|
+    user.password = '12345678'
+    user.username = 'Eldar'
+  end
 
   user = User.first
 
@@ -13,19 +11,19 @@ if Rails.env.development?
       user_id: user.id,
       status: :shipped,
       total_amount: 300,
-      updated_at: 3.days.ago
+      updated_at: 1.month.ago
     },
     {
       user_id: user.id,
       status: :shipped,
       total_amount: 150,
-      updated_at: 5.days.ago
+      updated_at: 1.month.ago
     },
     {
       user_id: user.id,
       status: :shipped,
       total_amount: 500,
-      updated_at: 6.days.ago
+      updated_at: 5.days.ago
     }
   ])
 

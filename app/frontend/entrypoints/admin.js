@@ -18448,15 +18448,38 @@ var modal_controller_default = class extends Controller {
   }
 };
 
-// app/frontend/js/controllers_admin/revenue_chart_controller.js
+// app/frontend/js/controllers_admin/dropdown_controller.js
+var dropdown_controller_default = class extends Controller {
+  static targets = ["menu"];
+  toggle() {
+    this.menuTarget.classList.toggle("hidden");
+  }
+  close(event) {
+    if (!this.element.contains(event.target)) {
+      this.menuTarget.classList.add("hidden");
+    }
+  }
+  update(event) {
+    event.preventDefault();
+    const selectedText = event.target.textContent.trim();
+    this.element.querySelector("button").textContent = selectedText;
+    this.menuTarget.classList.add("hidden");
+  }
+};
+
+// app/frontend/js/controllers_admin/chart_revenue_controller.js
 var import_apexcharts = __toESM(require_apexcharts_common());
-var revenue_chart_controller_default = class extends Controller {
+var chart_revenue_controller_default = class extends Controller {
   static targets = ["chart"];
   connect() {
     this.fetchRevenueData();
   }
-  async fetchRevenueData() {
-    const response = await fetch("/admin/analytics");
+  last_month(event) {
+    event.preventDefault();
+    this.fetchRevenueData("&period=month");
+  }
+  async fetchRevenueData(params = "") {
+    const response = await fetch(`/admin/analytics?type=revenue${params}`);
     const data = await response.json();
     this.renderChart(data.dates, data.revenues);
   }
@@ -18533,9 +18556,9 @@ var revenue_chart_controller_default = class extends Controller {
   }
 };
 
-// app/frontend/js/controllers_admin/charts_controller.js
+// app/frontend/js/controllers_admin/chart_orders_controller.js
 var import_apexcharts2 = __toESM(require_apexcharts_common());
-var charts_controller_default = class extends Controller {
+var chart_orders_controller_default = class extends Controller {
   static targets = ["total", "unpaid", "pending", "processing", "shipped"];
   connect() {
     const total = Number(this.totalTarget.textContent) || 0;
@@ -18637,6 +18660,168 @@ var charts_controller_default = class extends Controller {
   }
 };
 
+// app/frontend/js/controllers_admin/chart_sold_controller.js
+var import_apexcharts3 = __toESM(require_apexcharts_common());
+var chart_sold_controller_default = class extends Controller {
+  static targets = ["chart"];
+  connect() {
+    this.fetchRevenueData();
+  }
+  last_month(event) {
+    event.preventDefault();
+    this.fetchRevenueData("&period=month");
+  }
+  async fetchRevenueData(params = "") {
+    const response = await fetch(`/admin/analytics?type=sold${params}`);
+    const data = await response.json();
+    this.renderChart(data.dates, data.solds);
+  }
+  renderChart(dates, solds) {
+    const options = {
+      chart: {
+        type: "line",
+        height: 320
+      },
+      stroke: {
+        curve: "smooth"
+      },
+      markers: {
+        size: 6,
+        colors: ["#0f80de"],
+        strokeColors: "#eef7ff",
+        strokeWidth: 2,
+        hover: {
+          size: 8
+        }
+      },
+      grid: {
+        show: true,
+        // Показывать сетку
+        borderColor: "#374151",
+        // Цвет линий сетки
+        strokeDashArray: 1
+        // Длина штрихов (пунктир)
+      },
+      series: [
+        {
+          name: "\u0422\u043E\u0432\u0430\u0440\u044B",
+          data: solds
+        }
+      ],
+      xaxis: {
+        categories: dates,
+        title: {
+          //text: "Дата",
+        },
+        labels: {
+          style: {
+            colors: "rgb(156, 163, 175);",
+            fontSize: "14px",
+            fontWeight: 700
+          }
+        }
+      },
+      yaxis: {
+        title: {
+          // text: "Продажи",
+        },
+        labels: {
+          formatter: function(value) {
+            return `${value}`;
+          },
+          style: {
+            colors: "rgb(156, 163, 175);",
+            fontSize: "14px",
+            fontWeight: 700
+          }
+        }
+      },
+      tooltip: {
+        y: {
+          formatter: function(value) {
+            return `${value}`;
+          }
+        }
+      }
+    };
+    const chart = new import_apexcharts3.default(this.chartTarget, options);
+    chart.render();
+  }
+};
+
+// app/frontend/js/controllers_admin/chart_repeat_controller.js
+var import_apexcharts4 = __toESM(require_apexcharts_common());
+var chart_repeat_controller_default = class extends Controller {
+  static targets = ["chart"];
+  connect() {
+    this.fetchRevenueData();
+  }
+  last_month(event) {
+    event.preventDefault();
+    this.fetchRevenueData("&period=month");
+  }
+  async fetchRevenueData(params = "") {
+    const response = await fetch(`/admin/analytics?type=repeat${params}`);
+    const data = await response.json();
+    this.renderChart(data[0], data[1] - data[0]);
+  }
+  renderChart(repeat, one) {
+    const options = {
+      series: [repeat, one],
+      colors: ["#1C64F2", "#16BDCA"],
+      chart: {
+        height: 320,
+        width: "100%",
+        type: "pie"
+      },
+      stroke: {
+        colors: ["white"],
+        lineCap: ""
+      },
+      plotOptions: {
+        pie: {
+          labels: {
+            show: true
+          },
+          size: "100%",
+          dataLabels: {
+            offset: -25
+          }
+        }
+      },
+      labels: ["\u041F\u043E\u0432\u0442\u043E\u0440\u043D\u044B\u0435", "\u0415\u0434\u0438\u043D\u043E\u0440\u0430\u0437\u043E\u0432\u044B\u0435"],
+      dataLabels: {
+        enabled: true
+      },
+      legend: {
+        position: "bottom"
+      },
+      yaxis: {
+        labels: {
+          formatter: function(value) {
+            return value + "%";
+          }
+        }
+      },
+      xaxis: {
+        labels: {
+          formatter: function(value) {
+            return value + "%";
+          }
+        },
+        axisTicks: {
+          show: false
+        },
+        axisBorder: {
+          show: false
+        }
+      }
+    };
+    const chart = new import_apexcharts4.default(this.chartTarget, options);
+    chart.render();
+  }
+};
+
 // app/frontend/js/controllers_admin/index.js
 application.register("notices", notices_controller_default);
 application.register("confirm", confirm_controller_default);
@@ -18644,8 +18829,11 @@ application.register("dark", dark_controller_default);
 application.register("menu-btn", menu_btn_controller_default);
 application.register("modal-btn", modal_btn_controller_default);
 application.register("modal", modal_controller_default);
-application.register("revenue-chart", revenue_chart_controller_default);
-application.register("charts", charts_controller_default);
+application.register("dropdown", dropdown_controller_default);
+application.register("chart-revenue", chart_revenue_controller_default);
+application.register("chart-orders", chart_orders_controller_default);
+application.register("chart-sold", chart_sold_controller_default);
+application.register("chart-repeat", chart_repeat_controller_default);
 
 // app/frontend/js/others/admin_custom.js
 if (localStorage.getItem("color-theme") === "dark" || !("color-theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches) {

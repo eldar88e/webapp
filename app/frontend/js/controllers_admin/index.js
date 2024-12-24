@@ -22,8 +22,17 @@ application.register("modal-btn", ModalBtnController)
 import ModalController from "./modal_controller"
 application.register("modal", ModalController)
 
-import RevenueChartController from "./revenue_chart_controller"
-application.register("revenue-chart", RevenueChartController)
+import DropdownController from "./dropdown_controller"
+application.register("dropdown", DropdownController)
 
-import CartsController from "./charts_controller"
-application.register("charts", CartsController)
+import ChartRevenueController from "./chart_revenue_controller"
+application.register("chart-revenue", ChartRevenueController)
+
+import ChartOrdersController from "./chart_orders_controller"
+application.register("chart-orders", ChartOrdersController)
+
+import ChartSoldController from "./chart_sold_controller"
+application.register("chart-sold", ChartSoldController)
+
+import ChartRepeatController from "./chart_repeat_controller"
+application.register("chart-repeat", ChartRepeatController)

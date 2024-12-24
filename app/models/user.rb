@@ -26,6 +26,24 @@ class User < ApplicationRecord
     result
   end
 
+  def self.repeat_order_rate(start_date, end_date)
+    total_customers = joins(:orders)
+                        .where(orders: { created_at: start_date..end_date })
+                        .distinct
+                        .count
+
+    return 0 if total_customers.zero?
+
+    repeat_customers = joins(:orders)
+                         .where(orders: { created_at: start_date..end_date })
+                         .group('users.id')
+                         .having('COUNT(orders.id) > 1')
+                         .count
+                         .size
+
+    [repeat_customers.to_f, total_customers.to_f] # .round(2)
+  end
+
   def self.find_or_create_by_tg(tg_user)
     tg_user = tg_user.as_json if tg_user.instance_of?(Telegram::Bot::Types::Chat)
     self.find_or_create_by(tg_id: tg_user['id']) do |user|

@@ -1,51 +1,30 @@
 <% content_for :style, "background: transparent;" %>
 
-<div class="pt-6 px-4 border-none" data-controller="charts">
-  <div class="hidden" data-charts-total-value="">
-    <div data-charts-target="total"><%= @total_orders %></div>
-    <% @percentages.each do |key, val| %>
-      <div data-charts-target="<%= key %>"><%= val %></div>
-    <% end %>
-  </div>
-
-  <div class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
-    <div class="flex justify-between mb-3">
-      <div class="flex justify-center items-center">
-        <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white pe-1">Статистика заказов</h5>
-      </div>
+<div class="pt-6 px-4 border-none">
+  <div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+    <h1 class="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">Выручка (оборот)</h1>
+    <div data-controller="chart-revenue">
+      <div data-chart-revenue-target="chart" class="w-full h-96"></div>
     </div>
-
-    <div class="py-6" id="donut-chart"></div>
-
+    
     <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
-      <div class="flex justify-between items-center pt-5">
-        <button
-            id="dropdownDefaultButton"
-            data-dropdown-toggle="lastDaysdropdown"
-            data-dropdown-placement="bottom"
-            class="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 text-center inline-flex items-center dark:hover:text-white"
-            type="button">
-          За все время
+      <div data-controller="dropdown" class="flex justify-between items-center pt-5 relative">
+        <button data-action="click->dropdown#toggle" id="dropdownDefaultButton" data-dropdown-toggle="lastDaysdropdown" data-dropdown-placement="bottom" class="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 text-center inline-flex items-center dark:hover:text-white" type="button">
+          За последние 7 дней
           <svg class="w-2.5 m-2.5 ms-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"></path>
           </svg>
         </button>
-        <div id="lastDaysdropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+        <div data-dropdown-target="menu" id="lastDaysdropdown" class="absolute z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
           <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
             <li>
-              <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Yesterday</a>
+              <a href="#" data-action="click->revenue-chart#last_month click->dropdown#update" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">За последние 7 дней</a>
             </li>
             <li>
-              <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Today</a>
+              <a href="#" data-action="click->revenue-chart#last_month" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">За последний месяц</a>
             </li>
             <li>
-              <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last 7 days</a>
-            </li>
-            <li>
-              <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last 30 days</a>
-            </li>
-            <li>
-              <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last 90 days</a>
+              <a href="#" data-action="click->revenue-chart#last_month click->dropdown#update" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">За последний год</a>
             </li>
           </ul>
         </div>
@@ -54,13 +33,12 @@
   </div>
 </div>
 
-<div class="pt-6 px-4 border-none">
-  <div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
-    <h1 class="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">Выручка (оборот)</h1>
-    <div data-controller="revenue-chart">
-      <div data-revenue-chart-target="chart" class="w-full h-96"></div>
-    </div>
-  </div>
+<div class="flex">
+  <%= render '/admin/dashboard/chart_orders' %>
+
+  <%= render '/admin/dashboard/chart_sold' %>
+
+  <%= render '/admin/dashboard/chart_repeat' %>
 </div>
 
 <p class="my-10 text-gray-500 text-center text-sm leading-5">© 2023-2024 <a href="https://osama.agency/" class="" target="_blank">Osama.agency</a>. All rights reserved.</p>

@@ -8,8 +8,14 @@ export default class extends Controller {
     this.fetchRevenueData();
   }
 
-  async fetchRevenueData() {
-    const response = await fetch("/admin/analytics");
+  last_month(event) {
+    event.preventDefault();
+    //console.log('sdf');
+    this.fetchRevenueData('&period=month');
+  }
+
+  async fetchRevenueData(params='') {
+    const response = await fetch(`/admin/analytics?type=revenue${params}`);
     const data = await response.json();
 
     this.renderChart(data.dates, data.revenues);
