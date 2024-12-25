@@ -36,3 +36,6 @@ application.register("chart-sold", ChartSoldController)
 
 import ChartRepeatController from "./chart_repeat_controller"
 application.register("chart-repeat", ChartRepeatController)
+
+import ChartUsersController from "./chart_users_controller"
+application.register("chart-users", ChartUsersController)

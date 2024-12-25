@@ -1,6 +1,6 @@
 class ChartsService
-  def initialize(period)
-    @start_date, @end_date, @group_by = calculate_date_range_and_group_by(period)
+  def initialize(period, users = nil)
+    @start_date, @end_date, @group_by = calculate_date_range_and_group_by(period, users=nil)
   end
 
   def revenue
@@ -19,26 +19,33 @@ class ChartsService
     User.repeat_order_rate(@start_date, @end_date)
   end
 
+  def users
+    users = User.registered_count_grouped_by_period(@start_date, @end_date, @group_by)
+
+    { dates: users.keys, users: users.values }
+  end
+
   private
 
-  def calculate_date_range_and_group_by(period)
+  def calculate_date_range_and_group_by(period, users = nil)
+    column = users.nil? ? 'orders.updated_at' : 'created_at'
     case period
     when 'week'
       start_date = 4.weeks.ago.beginning_of_week
       end_date   = Date.today.end_of_week
-      group_by   = "DATE_TRUNC('week', orders.updated_at)"
+      group_by   = "DATE_TRUNC('week', #{column})"
     when 'month'
       start_date = 3.months.ago.beginning_of_month
       end_date   = Date.today.end_of_month
-      group_by   = "DATE_TRUNC('month', orders.updated_at)"
+      group_by   = "DATE_TRUNC('month', #{column})"
     when 'year'
       start_date = Date.today.beginning_of_year
       end_date   = Date.today.beginning_of_day
-      group_by   = "DATE_TRUNC('year', orders.updated_at)"
+      group_by   = "DATE_TRUNC('year', #{column})"
     else
       start_date = 7.days.ago.beginning_of_day
-      end_date   = Date.today.beginning_of_day
-      group_by   = 'DATE(orders.updated_at)'
+      end_date   = Date.today.end_of_day
+      group_by   = "DATE(#{column})"
     end
     [start_date, end_date, group_by]
   end

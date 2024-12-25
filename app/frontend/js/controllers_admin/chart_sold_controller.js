@@ -21,7 +21,7 @@ export default class extends Controller {
     this.renderChart(data.dates, data.solds);
   }
 
-  renderChart(dates, solds) {
+  renderChart(dates, revenues) {
     const options = {
       chart: {
         type: "line",
@@ -46,8 +46,8 @@ export default class extends Controller {
       },
       series: [
         {
-          name: "Товары",
-          data: solds,
+          name: "Продажи",
+          data: revenues,
         },
       ],
       xaxis: {
@@ -69,7 +69,7 @@ export default class extends Controller {
         },
         labels: {
           formatter: function (value) {
-            return `${value}`;
+            return `₽${value}`;
           },
           style: {
             colors: 'rgb(156, 163, 175);',
@@ -81,7 +81,7 @@ export default class extends Controller {
       tooltip: {
         y: {
           formatter: function (value) {
-            return `${value}`;
+            return `₽${value}`;
           },
         },
       },

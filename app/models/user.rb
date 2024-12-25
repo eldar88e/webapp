@@ -44,6 +44,12 @@ class User < ApplicationRecord
     [repeat_customers.to_f, total_customers.to_f] # .round(2)
   end
 
+  def self.registered_count_grouped_by_period(start_date, end_date, period)
+    where(created_at: start_date..end_date)
+      .group('DATE(created_at)')
+      .count
+  end
+
   def self.find_or_create_by_tg(tg_user)
     tg_user = tg_user.as_json if tg_user.instance_of?(Telegram::Bot::Types::Chat)
     self.find_or_create_by(tg_id: tg_user['id']) do |user|

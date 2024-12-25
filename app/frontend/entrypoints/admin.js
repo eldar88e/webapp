@@ -18676,7 +18676,7 @@ var chart_sold_controller_default = class extends Controller {
     const data = await response.json();
     this.renderChart(data.dates, data.solds);
   }
-  renderChart(dates, solds) {
+  renderChart(dates, revenues) {
     const options = {
       chart: {
         type: "line",
@@ -18704,8 +18704,8 @@ var chart_sold_controller_default = class extends Controller {
       },
       series: [
         {
-          name: "\u0422\u043E\u0432\u0430\u0440\u044B",
-          data: solds
+          name: "\u041F\u0440\u043E\u0434\u0430\u0436\u0438",
+          data: revenues
         }
       ],
       xaxis: {
@@ -18727,7 +18727,7 @@ var chart_sold_controller_default = class extends Controller {
         },
         labels: {
           formatter: function(value) {
-            return `${value}`;
+            return `\u20BD${value}`;
           },
           style: {
             colors: "rgb(156, 163, 175);",
@@ -18739,7 +18739,7 @@ var chart_sold_controller_default = class extends Controller {
       tooltip: {
         y: {
           formatter: function(value) {
-            return `${value}`;
+            return `\u20BD${value}`;
           }
         }
       }
@@ -18822,6 +18822,89 @@ var chart_repeat_controller_default = class extends Controller {
   }
 };
 
+// app/frontend/js/controllers_admin/chart_users_controller.js
+var import_apexcharts5 = __toESM(require_apexcharts_common());
+var chart_users_controller_default = class extends Controller {
+  static targets = ["chart"];
+  connect() {
+    this.fetchRevenueData();
+  }
+  last_month(event) {
+    event.preventDefault();
+    this.fetchRevenueData("&period=month");
+  }
+  async fetchRevenueData(params = "") {
+    const response = await fetch(`/admin/analytics?type=users${params}`);
+    const data = await response.json();
+    this.renderChart(data.dates, data.users);
+  }
+  renderChart(dates, users) {
+    const options = {
+      chart: {
+        type: "line",
+        height: 350
+      },
+      stroke: {
+        curve: "smooth"
+      },
+      markers: {
+        size: 6,
+        colors: ["#0f80de"],
+        strokeColors: "#eef7ff",
+        strokeWidth: 2,
+        hover: {
+          size: 8
+        }
+      },
+      grid: {
+        show: true,
+        borderColor: "#374151",
+        strokeDashArray: 1
+      },
+      series: [
+        {
+          name: "\u041F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u0435\u0439",
+          data: users
+        }
+      ],
+      xaxis: {
+        categories: dates,
+        labels: {
+          style: {
+            colors: "rgb(156, 163, 175);",
+            fontSize: "14px",
+            fontWeight: 700
+          }
+        }
+      },
+      yaxis: {
+        title: {
+          // text: "Продажи",
+        },
+        labels: {
+          formatter: function(value) {
+            return `\u20BD${value}`;
+          },
+          style: {
+            colors: "rgb(156, 163, 175);",
+            fontSize: "14px",
+            fontWeight: 700
+          }
+        }
+      },
+      tooltip: {
+        y: {
+          formatter: function(value) {
+            return `\u20BD${value}`;
+          }
+        }
+      }
+    };
+    const chart = new import_apexcharts5.default(this.chartTarget, options);
+    chart.render();
+  }
+};
+
 // app/frontend/js/controllers_admin/index.js
 application.register("notices", notices_controller_default);
 application.register("confirm", confirm_controller_default);
@@ -18834,6 +18917,7 @@ application.register("chart-revenue", chart_revenue_controller_default);
 application.register("chart-orders", chart_orders_controller_default);
 application.register("chart-sold", chart_sold_controller_default);
 application.register("chart-repeat", chart_repeat_controller_default);
+application.register("chart-users", chart_users_controller_default);
 
 // app/frontend/js/others/admin_custom.js
 if (localStorage.getItem("color-theme") === "dark" || !("color-theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches) {
