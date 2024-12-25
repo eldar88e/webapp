@@ -30,17 +30,17 @@ class ChartsService
   def calculate_date_range_and_group_by(period, users)
     column = users ? 'created_at' : 'orders.updated_at'
     case period
-    when 'week'
-      start_date = 4.weeks.ago.beginning_of_week
-      end_date   = Date.today.end_of_week
-      group_by   = "DATE_TRUNC('week', #{column})"
     when 'month'
-      start_date = 3.months.ago.beginning_of_month
+      start_date = Date.today.beginning_of_month
       end_date   = Date.today.end_of_month
-      group_by   = "DATE_TRUNC('month', #{column})"
+      group_by   = "DATE(#{column})"
     when 'year'
       start_date = Date.today.beginning_of_year
-      end_date   = Date.today.beginning_of_day
+      end_date   = Date.today.end_of_day
+      group_by   = "DATE_TRUNC('month', #{column})"
+    when 'all'
+      start_date = User.minimum(column)
+      end_date   = Date.today.end_of_day
       group_by   = "DATE_TRUNC('year', #{column})"
     else
       start_date = 7.days.ago.beginning_of_day

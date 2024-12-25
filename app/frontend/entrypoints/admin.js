@@ -18827,13 +18827,22 @@ var import_apexcharts5 = __toESM(require_apexcharts_common());
 var chart_users_controller_default = class extends Controller {
   static targets = ["chart"];
   connect() {
+    this.last_week();
+  }
+  last_week(event) {
     this.fetchRevenueData();
   }
   last_month(event) {
-    event.preventDefault();
     this.fetchRevenueData("&period=month");
   }
+  last_year(event) {
+    this.fetchRevenueData("&period=year");
+  }
+  all(event) {
+    this.fetchRevenueData("&period=all");
+  }
   async fetchRevenueData(params = "") {
+    console.log(params);
     const response = await fetch(`/admin/analytics?type=users${params}`);
     const data = await response.json();
     this.renderChart(data.dates, data.users);
@@ -18885,6 +18894,7 @@ var chart_users_controller_default = class extends Controller {
         }
       }
     };
+    this.chartTarget.textContent = "";
     const chart = new import_apexcharts5.default(this.chartTarget, options);
     chart.render();
   }
