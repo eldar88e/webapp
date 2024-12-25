@@ -18880,16 +18880,6 @@ var chart_users_controller_default = class extends Controller {
       yaxis: {
         title: {
           // text: "Продажи",
-        },
-        labels: {
-          formatter: function(value) {
-            return `\u20BD${value}`;
-          },
-          style: {
-            colors: "rgb(156, 163, 175);",
-            fontSize: "14px",
-            fontWeight: 700
-          }
         }
       },
       tooltip: {

@@ -64,16 +64,6 @@ export default class extends Controller {
         title: {
           // text: "Продажи",
         },
-        labels: {
-          formatter: function (value) {
-            return `₽${value}`;
-          },
-          style: {
-            colors: 'rgb(156, 163, 175);',
-            fontSize: '14px',
-            fontWeight: 700,
-          },
-        },
       },
       tooltip: {
         y: {
