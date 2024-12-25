@@ -46,7 +46,7 @@ class User < ApplicationRecord
 
   def self.registered_count_grouped_by_period(start_date, end_date, period)
     where(created_at: start_date..end_date)
-      .group('DATE(created_at)')
+      .group(period)
       .count
   end
 

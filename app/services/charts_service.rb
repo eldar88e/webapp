@@ -1,6 +1,6 @@
 class ChartsService
   def initialize(period, users = nil)
-    @start_date, @end_date, @group_by = calculate_date_range_and_group_by(period, users=nil)
+    @start_date, @end_date, @group_by = calculate_date_range_and_group_by(period, users)
   end
 
   def revenue
@@ -27,8 +27,8 @@ class ChartsService
 
   private
 
-  def calculate_date_range_and_group_by(period, users = nil)
-    column = users.nil? ? 'orders.updated_at' : 'created_at'
+  def calculate_date_range_and_group_by(period, users)
+    column = users ? 'created_at' : 'orders.updated_at'
     case period
     when 'week'
       start_date = 4.weeks.ago.beginning_of_week
