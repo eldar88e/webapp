@@ -4,7 +4,6 @@ module Admin
       cache_key    = "#{params[:type]}_#{params[:period]}_"
       cache_expiry = 1.hour
       users        = params[:type] == 'users'
-binding.pry
       cached_data = Rails.cache.fetch(cache_key, expires_in: cache_expiry) do
         # ChartsService.new(params[:period], users).send(params[:type].to_sym)
       end
