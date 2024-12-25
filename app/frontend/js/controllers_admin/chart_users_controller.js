@@ -60,15 +60,10 @@ export default class extends Controller {
           },
         },
       },
-      yaxis: {
-        title: {
-          // text: "Продажи",
-        },
-      },
       tooltip: {
         y: {
           formatter: function (value) {
-            return `₽${value}`;
+            return value;
           },
         },
       },
