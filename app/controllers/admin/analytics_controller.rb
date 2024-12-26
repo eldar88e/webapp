@@ -12,8 +12,7 @@ module Admin
         return render json: { error: 'Invalid type parameter' }, status: :unprocessable_entity
       end
 
-
-      cached_data  = Rails.cache.fetch(cache_key, expires_in: cache_expiry) do
+      cached_data = Rails.cache.fetch(cache_key, expires_in: cache_expiry) do
         ChartsService.new(params[:period], users).send(type.to_sym)
       end
 
