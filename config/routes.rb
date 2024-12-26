@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     resources :orders
     resources :users
     resources :mailings
+    resources :analytics, only: [:index]
   end
 
   match '*unmatched', to: 'application#redirect_to_telegram', via: :all,

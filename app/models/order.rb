@@ -6,12 +6,31 @@ class Order < ApplicationRecord
   validates :status, presence: true
   validates :total_amount, presence: true
 
-  enum status: { initialized: 0, unpaid: 1, pending: 2, processing: 3, shipped: 4, cancelled: 5, refunded: 6, overdue: 7 }
+  enum status: { initialized: 0, unpaid: 1, pending: 2, processing: 3, shipped: 4, cancelled: 5, overdue: 7 } # refunded: 6,
 
   after_update :check_status_change
 
   def order_items_with_product
     order_items.includes(:product)
+  end
+
+  def self.revenue_by_date(start_date, end_date, group_by)
+    where(updated_at: start_date..end_date, status: :shipped)
+      .group(group_by)
+      .sum(:total_amount)
+  end
+
+  def self.count_order_with_status(start_date, end_date)
+    total_orders = where(updated_at: start_date..end_date).count
+    result       = statuses.keys.each_with_object({}) do |status, hash|
+      status_count = Order.where(status: Order.statuses[status])
+                          .where(updated_at: start_date..end_date)
+                          .count
+      next if status_count.zero?
+
+      hash[status.to_sym] = ((status_count.to_f / total_orders) * 100).round(2)
+    end
+    [result, total_orders]
   end
 
   def self.ransackable_attributes(_auth_object = nil)
@@ -34,7 +53,6 @@ class Order < ApplicationRecord
 
   private
 
-  # Проверка изменений статуса и выполнение соответствующих действий
   def check_status_change
     case status
     when 'unpaid'

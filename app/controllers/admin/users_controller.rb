@@ -8,20 +8,6 @@ module Admin
       @pagy, @users = pagy(@q_users.result, items: 20)
     end
 
-    def new
-      @user = User.new
-    end
-
-    def create
-      @user = User.new(user_params)
-
-      if @user.save
-        redirect_to admin_users_path, notice: 'User was successfully created.'
-      else
-        render :new, status: :unprocessable_entity
-      end
-    end
-
     def edit
       render turbo_stream: [
         turbo_stream.update(:modal_title, 'Редактирование пользователя'),
@@ -31,8 +17,10 @@ module Admin
 
     def update
       if @user.update(user_params)
-        render turbo_stream: success_notice('Данные пользователя успешно обновлены.')
-        # TODO: обновить во фронте обновленного пользователя
+        render turbo_stream: [
+          turbo_stream.replace(@user, partial: '/admin/users/user', locals: { user: @user }),
+          success_notice('Данные пользователя успешно обновлены.')
+        ]
       else
         error_notice(@user.errors.full_messages, :unprocessable_entity)
       end
@@ -50,7 +38,8 @@ module Admin
     end
 
     def user_params
-      params.require(:user).permit(:first_name, :middle_name, :last_name, :email) # TODO: нужное выбрать
+      params.require(:user).permit(:first_name, :middle_name, :last_name, :phone_number, :address,
+                                   :postal_code, :street, :home, :apartment, :build, :email, :tg_id, :user_name)
     end
   end
 end

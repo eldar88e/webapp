@@ -2,23 +2,47 @@ import { Controller } from "@hotwired/stimulus"
 import ApexCharts from "apexcharts"
 
 export default class extends Controller {
-    static targets = ["total", "unpaid", "pending", "processing", "shipped"];
+    static targets = ["chart"];
 
     connect() {
-        const total = Number(this.totalTarget.textContent) || 0;
-        const unpaid = Number(this.unpaidTarget.textContent) || 0;
-        const pending = Number(this.pendingTarget.textContent) || 0;
-        const processing = Number(this.processingTarget.textContent) || 0;
-        const shipped = Number(this.shippedTarget.textContent) || 0;
+        this.last_week();
+    }
 
-        const getChartOptions = () => {
-            return {
-                series: [unpaid, pending, processing, shipped],
-                colors: ["#1C64F2", "#16BDCA", "#FDBA8C", "#E74694"],
-                chart: {
-                height: 320,
-                    width: "100%",
-                    type: "donut",
+    last_week(event) {
+        this.fetchRevenueData();
+    }
+
+    last_month(event) {
+        this.fetchRevenueData('&period=month');
+    }
+
+    last_year(event) {
+        this.fetchRevenueData('&period=year');
+    }
+
+    all(event) {
+        this.fetchRevenueData('&period=all');
+    }
+
+    async fetchRevenueData(params='') {
+        const response = await fetch(`/admin/analytics?type=orders${params}`);
+        const data = await response.json();
+
+        this.renderChart(data.dates, data.orders, data.total);
+    }
+    
+    renderChart(labels, orders, total) {
+        const label_translate = { "initialized": "Инициализирован", "unpaid": "Ожидание платежа",
+            "pending": "Ожидание подтверждения платежа", "processing": "В процессе отправки", "shipped": "Отправлен",
+            "cancelled": "Отменен", "overdue": "Просрочен" }
+        const labels_rus = labels.map(label => label_translate[label] || label);
+        const options = {
+            series: orders,
+            colors: ["#1C64F2", "#16BDCA", "#FDBA8C", "#E74694", "#775dd0"],
+            chart: {
+            height: 320,
+                width: "100%",
+                type: "donut",
             },
             stroke: {
                 colors: ["transparent"],
@@ -64,7 +88,7 @@ export default class extends Controller {
                     top: -2,
                 },
             },
-            labels: ["Ожидание платежа", "Ожидание подтверждения платежа", "В процессе отправки", "Отправлено"],
+            labels: labels_rus,
                 dataLabels: {
                 enabled: false,
             },
@@ -93,19 +117,9 @@ export default class extends Controller {
                 },
             },
         }
-        }
 
-        if (document.getElementById("donut-chart") && typeof ApexCharts !== 'undefined') {
-            const chart = new ApexCharts(document.getElementById("donut-chart"), getChartOptions());
-            chart.render();
-
-            // Get all the checkboxes by their class name
-            const checkboxes = document.querySelectorAll('#devices input[type="checkbox"]');
-
-            // Attach the event listener to each checkbox
-            checkboxes.forEach((checkbox) => {
-                checkbox.addEventListener('change', (event) => handleCheckboxChange(event, chart));
-            });
-        }
+        this.chartTarget.textContent = '';
+        const chart = new ApexCharts(this.chartTarget, options);
+        chart.render();
     }
 }

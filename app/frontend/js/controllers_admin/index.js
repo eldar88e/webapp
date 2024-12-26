@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import NoticesController from "../controllers/notices_controller"
+application.register("notices", NoticesController)
+
 import ConfirmController from "./confirm_controller"
 application.register("confirm", ConfirmController)
 
@@ -18,3 +21,21 @@ application.register("modal-btn", ModalBtnController)
 
 import ModalController from "./modal_controller"
 application.register("modal", ModalController)
+
+import DropdownController from "./dropdown_controller"
+application.register("dropdown", DropdownController)
+
+import ChartRevenueController from "./chart_revenue_controller"
+application.register("chart-revenue", ChartRevenueController)
+
+import ChartOrdersController from "./chart_orders_controller"
+application.register("chart-orders", ChartOrdersController)
+
+import ChartSoldController from "./chart_sold_controller"
+application.register("chart-sold", ChartSoldController)
+
+import ChartRepeatController from "./chart_repeat_controller"
+application.register("chart-repeat", ChartRepeatController)
+
+import ChartUsersController from "./chart_users_controller"
+application.register("chart-users", ChartUsersController)

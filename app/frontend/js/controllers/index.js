@@ -18,6 +18,3 @@ application.register("phone_mask", PhoneMaskController)
 
 import NoticesController from "./notices_controller"
 application.register("notices", NoticesController)
-
-import CartsController from "./charts_controller"
-application.register("charts", CartsController)

@@ -26,7 +26,7 @@ RUN bundle check || bundle install
 RUN bundle clean --force
 
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile --production
 #RUN yarn vite build
 # RUN rm -rf node_modules
 
