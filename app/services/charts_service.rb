@@ -26,7 +26,7 @@ class ChartsService
   end
 
   def users
-    users = User.registered_count_grouped_by_period(@start_date, @end_date, @group_by)
+    users = User.registered_count_grouped_by_period(@start_date, @end_date, @group_by).sort.to_h
 
     { dates: users.keys, users: users.values }
   end
