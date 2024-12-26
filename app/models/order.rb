@@ -20,6 +20,19 @@ class Order < ApplicationRecord
       .sum(:total_amount)
   end
 
+  def self.count_order_with_status(start_date, end_date)
+    total_orders = where(updated_at: start_date..end_date).count
+    result       = statuses.keys.each_with_object({}) do |status, hash|
+      status_count = Order.where(status: Order.statuses[status])
+                          .where(updated_at: start_date..end_date)
+                          .count
+      next if status_count.zero?
+
+      hash[status.to_sym] = ((status_count.to_f / total_orders) * 100).round(2)
+    end
+    [result, total_orders]
+  end
+
   def self.ransackable_attributes(_auth_object = nil)
     %w[total_amount updated_at created_at]
   end
@@ -40,7 +53,6 @@ class Order < ApplicationRecord
 
   private
 
-  # Проверка изменений статуса и выполнение соответствующих действий
   def check_status_change
     case status
     when 'unpaid'

@@ -5,13 +5,23 @@ export default class extends Controller {
   static targets = ["chart"];
 
   connect() {
-    this.fetchRevenueData();
+      this.last_week();
+  }
+
+  last_week(event) {
+      this.fetchRevenueData();
   }
 
   last_month(event) {
-    event.preventDefault();
-    //console.log('sdf');
-    this.fetchRevenueData('&period=month');
+      this.fetchRevenueData('&period=month');
+  }
+
+  last_year(event) {
+      this.fetchRevenueData('&period=year');
+  }
+
+  all(event) {
+      this.fetchRevenueData('&period=all');
   }
 
   async fetchRevenueData(params='') {
@@ -74,6 +84,7 @@ export default class extends Controller {
       },
     };
 
+    this.chartTarget.textContent = '';
     const chart = new ApexCharts(this.chartTarget, options);
     chart.render();
   }

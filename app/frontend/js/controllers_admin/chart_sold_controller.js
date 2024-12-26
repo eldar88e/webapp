@@ -8,10 +8,20 @@ export default class extends Controller {
     this.fetchRevenueData();
   }
 
+  last_week(event) {
+    this.fetchRevenueData();
+  }
+
   last_month(event) {
-    event.preventDefault();
-    //console.log('sdf');
     this.fetchRevenueData('&period=month');
+  }
+
+  last_year(event) {
+    this.fetchRevenueData('&period=year');
+  }
+
+  all(event) {
+    this.fetchRevenueData('&period=all');
   }
 
   async fetchRevenueData(params='') {
@@ -63,30 +73,16 @@ export default class extends Controller {
           },
         },
       },
-      yaxis: {
-        title: {
-          // text: "Продажи",
-        },
-        labels: {
-          formatter: function (value) {
-            return `₽${value}`;
-          },
-          style: {
-            colors: 'rgb(156, 163, 175);',
-            fontSize: '14px',
-            fontWeight: 700,
-          },
-        },
-      },
       tooltip: {
         y: {
           formatter: function (value) {
-            return `₽${value}`;
+            return `${value} шт.`;
           },
         },
       },
     };
 
+    this.chartTarget.textContent = '';
     const chart = new ApexCharts(this.chartTarget, options);
     chart.render();
   }

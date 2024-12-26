@@ -3,6 +3,12 @@ class ChartsService
     @start_date, @end_date, @group_by = calculate_date_range_and_group_by(period, users)
   end
 
+  def orders
+    orders = Order.count_order_with_status(@start_date, @end_date)
+
+    { dates: orders[0].keys, orders: orders[0].values, total:  orders[1] }
+  end
+
   def revenue
     revenue_data = Order.revenue_by_date(@start_date, @end_date, @group_by).sort.to_h
 
@@ -39,7 +45,7 @@ class ChartsService
       end_date   = Date.today.end_of_day
       group_by   = "DATE_TRUNC('month', #{column})"
     when 'all'
-      start_date = User.minimum(column)
+      start_date = column.include?('order') ? Order.minimum(column) : User.minimum(column)
       end_date   = Date.today.end_of_day
       group_by   = "DATE_TRUNC('year', #{column})"
     else

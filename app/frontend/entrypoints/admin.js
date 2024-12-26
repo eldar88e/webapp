@@ -18472,11 +18472,19 @@ var import_apexcharts = __toESM(require_apexcharts_common());
 var chart_revenue_controller_default = class extends Controller {
   static targets = ["chart"];
   connect() {
+    this.last_week();
+  }
+  last_week(event) {
     this.fetchRevenueData();
   }
   last_month(event) {
-    event.preventDefault();
     this.fetchRevenueData("&period=month");
+  }
+  last_year(event) {
+    this.fetchRevenueData("&period=year");
+  }
+  all(event) {
+    this.fetchRevenueData("&period=all");
   }
   async fetchRevenueData(params = "") {
     const response = await fetch(`/admin/analytics?type=revenue${params}`);
@@ -18551,6 +18559,7 @@ var chart_revenue_controller_default = class extends Controller {
         }
       }
     };
+    this.chartTarget.textContent = "";
     const chart = new import_apexcharts.default(this.chartTarget, options);
     chart.render();
   }
@@ -18559,104 +18568,123 @@ var chart_revenue_controller_default = class extends Controller {
 // app/frontend/js/controllers_admin/chart_orders_controller.js
 var import_apexcharts2 = __toESM(require_apexcharts_common());
 var chart_orders_controller_default = class extends Controller {
-  static targets = ["total", "unpaid", "pending", "processing", "shipped"];
+  static targets = ["chart"];
   connect() {
-    const total = Number(this.totalTarget.textContent) || 0;
-    const unpaid = Number(this.unpaidTarget.textContent) || 0;
-    const pending = Number(this.pendingTarget.textContent) || 0;
-    const processing = Number(this.processingTarget.textContent) || 0;
-    const shipped = Number(this.shippedTarget.textContent) || 0;
-    const getChartOptions = () => {
-      return {
-        series: [unpaid, pending, processing, shipped],
-        colors: ["#1C64F2", "#16BDCA", "#FDBA8C", "#E74694"],
-        chart: {
-          height: 320,
-          width: "100%",
-          type: "donut"
-        },
-        stroke: {
-          colors: ["transparent"],
-          lineCap: ""
-        },
-        plotOptions: {
-          pie: {
-            donut: {
-              labels: {
+    this.last_week();
+  }
+  last_week(event) {
+    this.fetchRevenueData();
+  }
+  last_month(event) {
+    this.fetchRevenueData("&period=month");
+  }
+  last_year(event) {
+    this.fetchRevenueData("&period=year");
+  }
+  all(event) {
+    this.fetchRevenueData("&period=all");
+  }
+  async fetchRevenueData(params = "") {
+    console.log(params);
+    const response = await fetch(`/admin/analytics?type=orders${params}`);
+    const data = await response.json();
+    this.renderChart(data.dates, data.orders, data.total);
+  }
+  renderChart(labels, orders, total) {
+    const label_translate = {
+      "initialized": "\u0418\u043D\u0438\u0446\u0438\u0430\u043B\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u043D",
+      "unpaid": "\u041E\u0436\u0438\u0434\u0430\u043D\u0438\u0435 \u043F\u043B\u0430\u0442\u0435\u0436\u0430",
+      "pending": "\u041E\u0436\u0438\u0434\u0430\u043D\u0438\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044F \u043F\u043B\u0430\u0442\u0435\u0436\u0430",
+      "processing": "\u0412 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438",
+      "shipped": "\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E",
+      "cancelled": "\u041E\u0442\u043C\u0435\u043D\u0435\u043D",
+      "overdue": "\u0412\u043E\u0437\u0432\u0440\u0430\u0449\u0435\u043D"
+    };
+    const labels_rus = labels.map((label) => label_translate[label] || label);
+    const options = {
+      series: orders,
+      colors: ["#1C64F2", "#16BDCA", "#FDBA8C", "#E74694", "#775dd0"],
+      chart: {
+        height: 320,
+        width: "100%",
+        type: "donut"
+      },
+      stroke: {
+        colors: ["transparent"],
+        lineCap: ""
+      },
+      plotOptions: {
+        pie: {
+          donut: {
+            labels: {
+              show: true,
+              name: {
                 show: true,
-                name: {
-                  show: true,
-                  fontFamily: "Inter, sans-serif",
-                  offsetY: 20
-                },
-                total: {
-                  showAlways: true,
-                  show: true,
-                  label: "\u0417\u0430\u043A\u0430\u0437\u043E\u0432",
-                  fontFamily: "Inter, sans-serif",
-                  formatter: function(w) {
-                    const sum = w.globals.seriesTotals.reduce((a, b) => {
-                      return a + b;
-                    }, 0);
-                    return total;
-                  }
-                },
-                value: {
-                  show: true,
-                  fontFamily: "Inter, sans-serif",
-                  offsetY: -20,
-                  formatter: function(value) {
-                    return value + "%";
-                  }
+                fontFamily: "Inter, sans-serif",
+                offsetY: 20
+              },
+              total: {
+                showAlways: true,
+                show: true,
+                label: "\u0417\u0430\u043A\u0430\u0437\u043E\u0432",
+                fontFamily: "Inter, sans-serif",
+                formatter: function(w) {
+                  const sum = w.globals.seriesTotals.reduce((a, b) => {
+                    return a + b;
+                  }, 0);
+                  return total;
                 }
               },
-              size: "80%"
-            }
-          }
-        },
-        grid: {
-          padding: {
-            top: -2
-          }
-        },
-        labels: ["\u041E\u0436\u0438\u0434\u0430\u043D\u0438\u0435 \u043F\u043B\u0430\u0442\u0435\u0436\u0430", "\u041E\u0436\u0438\u0434\u0430\u043D\u0438\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044F \u043F\u043B\u0430\u0442\u0435\u0436\u0430", "\u0412 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438", "\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E"],
-        dataLabels: {
-          enabled: false
-        },
-        legend: {
-          position: "bottom",
-          fontFamily: "Inter, sans-serif"
-        },
-        yaxis: {
-          labels: {
-            formatter: function(value) {
-              return value + "%";
-            }
-          }
-        },
-        xaxis: {
-          labels: {
-            formatter: function(value) {
-              return value + "%";
-            }
-          },
-          axisTicks: {
-            show: false
-          },
-          axisBorder: {
-            show: false
+              value: {
+                show: true,
+                fontFamily: "Inter, sans-serif",
+                offsetY: -20,
+                formatter: function(value) {
+                  return value + "%";
+                }
+              }
+            },
+            size: "80%"
           }
         }
-      };
+      },
+      grid: {
+        padding: {
+          top: -2
+        }
+      },
+      labels: labels_rus,
+      dataLabels: {
+        enabled: false
+      },
+      legend: {
+        position: "bottom",
+        fontFamily: "Inter, sans-serif"
+      },
+      yaxis: {
+        labels: {
+          formatter: function(value) {
+            return value + "%";
+          }
+        }
+      },
+      xaxis: {
+        labels: {
+          formatter: function(value) {
+            return value + "%";
+          }
+        },
+        axisTicks: {
+          show: false
+        },
+        axisBorder: {
+          show: false
+        }
+      }
     };
-    if (document.getElementById("donut-chart") && typeof import_apexcharts2.default !== "undefined") {
-      const chart = new import_apexcharts2.default(document.getElementById("donut-chart"), getChartOptions());
-      chart.render();
-      const checkboxes = document.querySelectorAll('#devices input[type="checkbox"]');
-      checkboxes.forEach((checkbox) => {
-        checkbox.addEventListener("change", (event) => handleCheckboxChange(event, chart));
-      });
-    }
+    this.chartTarget.textContent = "";
+    const chart = new import_apexcharts2.default(this.chartTarget, options);
+    chart.render();
   }
 };
 
@@ -18667,9 +18695,17 @@ var chart_sold_controller_default = class extends Controller {
   connect() {
     this.fetchRevenueData();
   }
+  last_week(event) {
+    this.fetchRevenueData();
+  }
   last_month(event) {
-    event.preventDefault();
     this.fetchRevenueData("&period=month");
+  }
+  last_year(event) {
+    this.fetchRevenueData("&period=year");
+  }
+  all(event) {
+    this.fetchRevenueData("&period=all");
   }
   async fetchRevenueData(params = "") {
     const response = await fetch(`/admin/analytics?type=sold${params}`);
@@ -18721,29 +18757,15 @@ var chart_sold_controller_default = class extends Controller {
           }
         }
       },
-      yaxis: {
-        title: {
-          // text: "Продажи",
-        },
-        labels: {
-          formatter: function(value) {
-            return `\u20BD${value}`;
-          },
-          style: {
-            colors: "rgb(156, 163, 175);",
-            fontSize: "14px",
-            fontWeight: 700
-          }
-        }
-      },
       tooltip: {
         y: {
           formatter: function(value) {
-            return `\u20BD${value}`;
+            return `${value} \u0448\u0442.`;
           }
         }
       }
     };
+    this.chartTarget.textContent = "";
     const chart = new import_apexcharts3.default(this.chartTarget, options);
     chart.render();
   }
@@ -18754,11 +18776,19 @@ var import_apexcharts4 = __toESM(require_apexcharts_common());
 var chart_repeat_controller_default = class extends Controller {
   static targets = ["chart"];
   connect() {
+    this.last_week();
+  }
+  last_week(event) {
     this.fetchRevenueData();
   }
   last_month(event) {
-    event.preventDefault();
     this.fetchRevenueData("&period=month");
+  }
+  last_year(event) {
+    this.fetchRevenueData("&period=year");
+  }
+  all(event) {
+    this.fetchRevenueData("&period=all");
   }
   async fetchRevenueData(params = "") {
     const response = await fetch(`/admin/analytics?type=repeat${params}`);
@@ -18817,6 +18847,7 @@ var chart_repeat_controller_default = class extends Controller {
         }
       }
     };
+    this.chartTarget.textContent = "";
     const chart = new import_apexcharts4.default(this.chartTarget, options);
     chart.render();
   }
