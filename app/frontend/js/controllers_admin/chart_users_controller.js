@@ -25,7 +25,6 @@ export default class extends Controller {
     }
 
     async fetchRevenueData(params='') {
-        console.log(params);
         const response = await fetch(`/admin/analytics?type=users${params}`);
         const data = await response.json();
 

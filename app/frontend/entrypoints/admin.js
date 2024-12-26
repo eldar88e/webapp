@@ -18585,7 +18585,6 @@ var chart_orders_controller_default = class extends Controller {
     this.fetchRevenueData("&period=all");
   }
   async fetchRevenueData(params = "") {
-    console.log(params);
     const response = await fetch(`/admin/analytics?type=orders${params}`);
     const data = await response.json();
     this.renderChart(data.dates, data.orders, data.total);
@@ -18873,7 +18872,6 @@ var chart_users_controller_default = class extends Controller {
     this.fetchRevenueData("&period=all");
   }
   async fetchRevenueData(params = "") {
-    console.log(params);
     const response = await fetch(`/admin/analytics?type=users${params}`);
     const data = await response.json();
     this.renderChart(data.dates, data.users);
