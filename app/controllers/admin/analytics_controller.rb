@@ -3,10 +3,10 @@ module Admin
     ALLOWED_TYPES = %w[users orders revenue sold repeat].freeze
 
     def index
-      cache_key    = "#{params[:type]}_#{params[:period]}"
-      cache_expiry = 1.hour
       type         = params[:type]
       users        = type == 'users'
+      cache_expiry = 30.minutes
+      cache_key    = "#{type}_#{params[:period]}"
 
       unless ALLOWED_TYPES.include?(type)
         return render json: { error: 'Invalid type parameter' }, status: :unprocessable_entity
