@@ -38,7 +38,8 @@ module Admin
     end
 
     def user_params
-      params.require(:user).permit(:first_name, :middle_name, :last_name, :email) # TODO: нужное выбрать
+      params.require(:user).permit(:first_name, :middle_name, :last_name, :phone_number, :address,
+                                   :postal_code, :street, :home, :apartment, :build, :email, :tg_id, :user_name)
     end
   end
 end
