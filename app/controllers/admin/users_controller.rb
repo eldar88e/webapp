@@ -1,7 +1,6 @@
 module Admin
   class UsersController < Admin::ApplicationController
     before_action :set_user, only: %i[edit update destroy]
-    include Pagy::Backend
 
     def index
       @q_users = User.all.order(created_at: :desc).ransack(params[:q])

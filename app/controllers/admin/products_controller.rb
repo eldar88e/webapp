@@ -1,7 +1,6 @@
 module Admin
   class ProductsController < Admin::ApplicationController
     before_action :set_product, only: %i[edit update destroy]
-    include Pagy::Backend
 
     def index
       @pagy, @products = pagy(Product.includes(:image_attachment).order(:created_at), items: 20)

@@ -50,6 +50,7 @@ class TelegramBotWorker
       else
         return save_preview_video(bot, message) if message.video.present?
 
+        Message.create(tg_id: message.from.id, text: message.text) if message.text.present?
         send_firs_msg(bot, message.chat.id)
       end
     end
