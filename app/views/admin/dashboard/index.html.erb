@@ -1,8 +1,10 @@
 <% content_for :style, "background: transparent;" %>
 
-<%= render partial: '/admin/dashboard/chart', locals: { title: 'Выручка (оборот)', controller: 'revenue' } %>
+<div class="pt-4 px-2">
+  <%= render partial: '/admin/dashboard/chart', locals: { title: 'Выручка (оборот)', controller: 'revenue' } %>
+</div>
 
-<div class="flex flex-wrap">
+<div class="flex flex-wrap px-2">
   <% charts_config.each do |item| %>
     <div class="w-full sm:w-1/2 lg:w-1/3">
       <%= render partial: '/admin/dashboard/chart', locals: { title: "#{item[:title]}", controller: "#{item[:controller]}" } %>
@@ -10,6 +12,8 @@
   <% end %>
 </div>
 
-<%= render partial: '/admin/dashboard/chart', locals: { title: 'Зарегистрировано пользователей', controller: 'users' } %>
+<div class="px-2">
+  <%= render partial: '/admin/dashboard/chart', locals: { title: 'Зарегистрировано пользователей', controller: 'users' } %>
+</div>
 
 <p class="my-10 text-gray-500 text-center text-sm leading-5">© 2023-2024 <a href="https://osama.agency/" class="" target="_blank">Osama.agency</a>. All rights reserved.</p>
