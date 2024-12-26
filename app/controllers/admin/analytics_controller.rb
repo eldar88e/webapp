@@ -6,7 +6,7 @@ module Admin
       users        = params[:type] == 'users'
 
       cached_data  = Rails.cache.fetch(cache_key, expires_in: cache_expiry) do
-        # ChartsService.new(params[:period], users).send(params[:type].to_sym)
+        # ChartsService.new(params[:period], users).send(params[:type].to_sym) TODO: использовать кэш
       end
 
       cached_data = ChartsService.new(params[:period], users).send(params[:type].to_sym)
