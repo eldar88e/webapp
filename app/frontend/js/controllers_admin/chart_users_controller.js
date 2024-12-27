@@ -8,19 +8,19 @@ export default class extends Controller {
         this.last_week();
     }
 
-    last_week(event) {
+    last_week() {
         this.fetchRevenueData();
     }
 
-    last_month(event) {
+    last_month() {
         this.fetchRevenueData('&period=month');
     }
 
-    last_year(event) {
+    last_year() {
         this.fetchRevenueData('&period=year');
     }
 
-    all(event) {
+    all() {
         this.fetchRevenueData('&period=all');
     }
 
