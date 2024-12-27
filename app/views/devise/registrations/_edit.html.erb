@@ -1,5 +1,5 @@
 <%= link_to 'Admin panel', admin_dashboard_path,
-            class: 'btn mb-6 inline-block', data: { turbo: false } if [2, 12].include?(current_user.id) %>
+            class: 'btn mb-6 inline-block', data: { turbo: false } if current_user.admin_or_moderator_or_manager? %>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name),
              html: { method: :put, class: 'mb-3', data: { controller: "dadata label_toggle" } }) do |form| %>

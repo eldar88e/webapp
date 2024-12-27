@@ -26,6 +26,7 @@ gem 'i18n'
 gem 'sidekiq'
 gem 'sidekiq-unique-jobs'
 gem 'pagy'
+gem 'pundit'
 gem 'pry'
 gem 'ransack'
 

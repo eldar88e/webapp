@@ -19,7 +19,7 @@
         <% end %>
       </li>
 
-      <% if current_user.id == 2 %>
+      <% if current_user.admin? %>
         <li>
           <%= active_link_to admin_messages_path do %>
             <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">

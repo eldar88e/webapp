@@ -12,7 +12,6 @@ module Admin
 
     def create
       @mailing = Mailing.new(mailing_params)
-
       if @mailing.valid?
         # TODO: set scheduled_at: @mailing.scheduled_at
         MailingJob.perform_later(
@@ -28,7 +27,7 @@ module Admin
     private
 
     def mailing_params
-      params.permit(:filter, :message, :scheduled_at) # TODO: .require(:mailing)
+      params.require(:mailing).permit(:filter, :message, :scheduled_at)
     end
   end
 end

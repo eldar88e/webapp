@@ -41,6 +41,9 @@
           <%= sort_link(@q_users, :created_at, 'Дата регистрации', data: { turbo_prefetch: false }) %>
         </th>
         <th scope="col" class="px-6 py-3">
+          <%= sort_link(@q_users, :role, 'Роль', data: { turbo_prefetch: false }) %>
+        </th>
+        <th scope="col" class="px-6 py-3">
           Действия
         </th>
       </tr>

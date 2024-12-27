@@ -49,6 +49,7 @@ ru:
         apartment: "Квартира"
         build: "Корпус"
         postal_code: "Индекс"
+        role: "Роль"
       order:
         status: "Статус"
       product:
@@ -87,3 +88,8 @@ ru:
       multiple_pages: "Всего %{count} %{item_name}, показаны с %{from} по %{to}"
     combo_nav_js: "Страница %{page_input} из %{pages}"
     limit_selector_js: "Показать %{limit_input} %{item_name} на странице"
+  roles:
+    user: "Пользователь"
+    manager: "Менеджер"
+    moderator: "Модератор"
+    admin: "Администратор"
