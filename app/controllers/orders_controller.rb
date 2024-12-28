@@ -48,6 +48,7 @@ class OrdersController < ApplicationController
 
         order_item.update!(quantity: quantity, price: cart_item.product.price)
       end
+      # TODO: Проверить есть ли в заказе товары если нет или есть только доставка удалить order and cart
       order.update!(status: :unpaid)
     end
   end

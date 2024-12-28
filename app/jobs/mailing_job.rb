@@ -32,7 +32,7 @@ class MailingJob < ApplicationJob
   end
 
   def fetch_users(filter)
-    case filter
+    case filter.to_sym
     when :ordered
       User.joins(:orders).where.not(orders: { id: nil }).distinct
     when :no_ordered
