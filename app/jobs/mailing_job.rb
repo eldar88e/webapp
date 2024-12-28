@@ -46,7 +46,7 @@ class MailingJob < ApplicationJob
 
   def save_message_or_status(result, user, message)
     if result.instance_of?(Integer)
-      Message.create(tg_id: user.tg_id, text: message, is_incoming: false)
+      Message.create(tg_id: user.tg_id, text: message, is_incoming: false, tg_msg_id: result)
       user.update(is_blocked: false)
     else
       return user.update(is_blocked: true) if result.instance_of?(Telegram::Bot::Exceptions::ResponseError)
