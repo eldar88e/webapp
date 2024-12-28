@@ -8,7 +8,7 @@ class MailingJob < ApplicationJob
     return if message.blank? || !Mailing::FILTERS.include?(filter)
 
     user_id = args[:user_id]
-    return send_message(message, user_id) if user_id && filter == :user
+    return send_message(message, user_id) if user_id && filter == 'user'
 
     clients = fetch_users(filter)
 

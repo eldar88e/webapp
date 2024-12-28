@@ -62,10 +62,10 @@ ru:
         value: "Значение"
         description: "Описание"
   filters:
-    ordered: "Клиенты с заказами"
-    no_ordered: "Клиенты без заказов"
-    all: "Все клиенты"
-    is_blocked: "Заблокированные пользователи"
+    ordered: "С заказами"
+    no_ordered: "Без заказов"
+    all: "Все"
+    is_blocked: "Заблокированные"
     user: "Пользователь"
   pagy:
     aria_label:

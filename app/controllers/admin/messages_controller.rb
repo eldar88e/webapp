@@ -12,7 +12,7 @@ module Admin
     end
 
     def create
-      MailingJob.perform_later(filter: :user, message: message_params[:text], user_id: message_params[:user_id])
+      MailingJob.perform_later(filter: 'user', message: message_params[:text], user_id: message_params[:user_id])
       render turbo_stream: success_notice('Сообщение успешно отправленно в очередь!')
     end
 

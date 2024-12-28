@@ -1,6 +1,6 @@
 module Admin
   class ApplicationController < ActionController::Base
-    include Pundit
+    include Pundit::Authorization
 
     before_action :authenticate_user!
     before_action :authorize_admin_access!

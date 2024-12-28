@@ -15,7 +15,7 @@ module Admin
       if @mailing.valid?
         # TODO: set scheduled_at: @mailing.scheduled_at
         MailingJob.perform_later(
-          filter: @mailing.filter.to_sym,
+          filter: @mailing.filter,
           message: @mailing.message
         )
         redirect_to admin_mailings_path, notice: 'Рассылка успешно запланирована!'
