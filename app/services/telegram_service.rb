@@ -83,7 +83,7 @@ class TelegramService
           reply_markup: markup
         )
         message_id = response.message_id
-      rescue Telegram::Bot::Exceptions::ResponseError => e
+      rescue => e
         message_id = e
       end
     end

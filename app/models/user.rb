@@ -81,7 +81,7 @@ class User < ApplicationRecord
   end
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[first_name middle_name last_name username address created_at role]
+    %w[first_name middle_name last_name username address created_at role is_blocked]
   end
 
   def self.ransackable_associations(_auth_object = nil)
