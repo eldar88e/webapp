@@ -1,12 +1,12 @@
 import { Controller } from "@hotwired/stimulus";
 import ApexCharts from "apexcharts";
-import { I18n } from "i18n-js";
-import ru from "./ru.json";
+import Localization from "./localization";
 
 export default class extends Controller {
   static targets = ["chart"];
 
   async connect() {
+    this.localization = new Localization("ru");
     await this.last_week();
   }
 
@@ -66,12 +66,12 @@ export default class extends Controller {
       },
       yaxis: {
         labels: {
-          formatter: (value) => this.orderTitle(value),
+          formatter: (value) => this.localization.orderTitle(value),
         },
       },
       xaxis: {
         labels: {
-          formatter: (value) => this.orderTitle(value),
+          formatter: (value) => this.localization.orderTitle(value),
         },
         axisTicks: {
           show: false,
@@ -90,27 +90,5 @@ export default class extends Controller {
     } catch (error) {
       console.error("Error rendering chart:", error);
     }
-  }
-
-  getPluralForm(count) {
-    const mod10 = count % 10;
-    const mod100 = count % 100;
-
-    if (mod10 === 1 && mod100 !== 11) {
-      return "one";
-    } else if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) {
-      return "few";
-    } else {
-      return "many";
-    }
-  }
-
-  orderTitle(count) {
-    const i18n = new I18n();
-    i18n.translations = { ru };
-    i18n.locale = "ru";
-    const pluralKey = this.getPluralForm(count);
-    const result = i18n.t(`order.${pluralKey}`, { count });
-    return `${count} ${result}`
   }
 }

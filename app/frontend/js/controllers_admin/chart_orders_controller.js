@@ -1,37 +1,39 @@
 import { Controller } from "@hotwired/stimulus"
 import ApexCharts from "apexcharts"
+import Localization from "./localization";
 
 export default class extends Controller {
     static targets = ["chart"];
 
-    connect() {
-        this.last_week();
+    async connect() {
+        this.localization = new Localization("ru");
+        await this.last_week();
     }
 
-    last_week() {
-        this.fetchRevenueData();
+    async last_week() {
+        await this.fetchRevenueData();
     }
 
-    last_month() {
-        this.fetchRevenueData('&period=month');
+    async last_month() {
+        await this.fetchRevenueData('&period=month');
     }
 
-    last_year() {
-        this.fetchRevenueData('&period=year');
+    async last_year() {
+        await this.fetchRevenueData('&period=year');
     }
 
-    all() {
-        this.fetchRevenueData('&period=all');
+    async all() {
+        await this.fetchRevenueData('&period=all');
     }
 
     async fetchRevenueData(params='') {
         const response = await fetch(`/admin/analytics?type=orders${params}`);
         const data = await response.json();
 
-        this.renderChart(data.dates, data.orders, data.total);
+        await this.renderChart(data.dates, data.orders, data.total);
     }
-    
-    renderChart(labels, orders, total) {
+
+    async renderChart(labels, orders, total) {
         const label_translate = { "initialized": "Инициализирован", "unpaid": "Ожидание платежа",
             "pending": "Ожидание подтверждения платежа", "processing": "В процессе отправки", "shipped": "Отправлен",
             "cancelled": "Отменен", "overdue": "Просрочен" }
@@ -72,11 +74,9 @@ export default class extends Controller {
                             },
                             value: {
                                 show: true,
-                                    fontFamily: "Inter, sans-serif",
-                                    offsetY: -20,
-                                    formatter: function (value) {
-                                    return value + "%"
-                                },
+                                fontFamily: "Inter, sans-serif",
+                                offsetY: -20,
+                                formatter: (value) => this.localization.orderTitle(value),
                             },
                         },
                         size: "80%",
@@ -98,9 +98,7 @@ export default class extends Controller {
             },
             yaxis: {
                 labels: {
-                    formatter: function (value) {
-                        return value + "%"
-                    },
+                    formatter: (value) => this.localization.orderTitle(value),
                 },
             },
             xaxis: {
@@ -120,6 +118,11 @@ export default class extends Controller {
 
         this.chartTarget.textContent = '';
         const chart = new ApexCharts(this.chartTarget, options);
-        chart.render();
+
+        try {
+            await chart.render();
+        } catch (error) {
+            console.error("Error rendering chart:", error);
+        }
     }
 }

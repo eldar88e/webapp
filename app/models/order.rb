@@ -28,7 +28,7 @@ class Order < ApplicationRecord
                           .count
       next if status_count.zero?
 
-      hash[status.to_sym] = ((status_count.to_f / total_orders) * 100).round(2)
+      hash[status.to_sym] = status_count # ((status_count.to_f / total_orders) * 100).round(2)
     end
     [result, total_orders]
   end
