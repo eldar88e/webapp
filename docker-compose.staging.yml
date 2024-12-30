@@ -30,6 +30,10 @@ services:
       net:
       proxy-net:
         ipv4_address: 172.29.0.11
+      s3:
+        ipv4_address: 172.20.0.5
+    extra_hosts:
+      - "${MINIO_DOMAIN}:${MINIO_IP}"
     restart: always
 
   sidekiq:
@@ -68,4 +72,6 @@ volumes:
 networks:
   net:
   proxy-net:
+    external: true
+  s3:
     external: true
