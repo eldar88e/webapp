@@ -16,7 +16,15 @@
 
         <div class="product-img">
           <% if product.image.attached? %>
-            <%= image_tag url_for(product.image), alt: product.name %>
+            <div style="
+              background-image: url('<%= storage_path(product.image) %>');
+              background-size: contain;
+              background-repeat: no-repeat;
+              background-position: center;
+              width:196px;
+              height: 196px;
+              margin: 0 auto;
+            "></div>
           <% else %>
             <p>No image available</p>
           <% end %>
