@@ -12,11 +12,10 @@ module Admin
 
     def create
       @mailing = Mailing.new(mailing_params)
-
       if @mailing.valid?
         # TODO: set scheduled_at: @mailing.scheduled_at
         MailingJob.perform_later(
-          filter: @mailing.filter.to_sym,
+          filter: @mailing.filter,
           message: @mailing.message
         )
         redirect_to admin_mailings_path, notice: 'Рассылка успешно запланирована!'
@@ -28,7 +27,7 @@ module Admin
     private
 
     def mailing_params
-      params.permit(:filter, :message, :scheduled_at) # TODO: .require(:mailing)
+      params.require(:mailing).permit(:filter, :message, :scheduled_at)
     end
   end
 end

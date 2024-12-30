@@ -1,7 +1,6 @@
 module Admin
   class UsersController < Admin::ApplicationController
     before_action :set_user, only: %i[edit update destroy]
-    include Pagy::Backend
 
     def index
       @q_users = User.all.order(created_at: :desc).ransack(params[:q])
@@ -38,8 +37,8 @@ module Admin
     end
 
     def user_params
-      params.require(:user).permit(:first_name, :middle_name, :last_name, :phone_number, :address,
-                                   :postal_code, :street, :home, :apartment, :build, :email, :tg_id, :user_name)
+      params.require(:user).permit(:first_name, :middle_name, :last_name, :phone_number, :address, :postal_code,
+                                   :street, :home, :apartment, :build, :email, :tg_id, :user_name, :role)
     end
   end
 end

@@ -1,13 +1,32 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
+
+  enum role: { user: 0, manager: 1, moderator: 2, admin: 3 }
+
   has_many :orders, dependent: :destroy
+  has_many :messages, primary_key: :tg_id, foreign_key: :tg_id
   has_one :cart, dependent: :destroy
 
   validates :tg_id, presence: true, uniqueness: true
   validates :postal_code, numericality: { only_integer: true, allow_nil: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999 }
+
+  def admin?
+    role == 'admin'
+  end
+
+  def moderator?
+    role == 'moderator'
+  end
+
+  def manager?
+    role == 'manager'
+  end
+
+  def admin_or_moderator_or_manager?
+    moderator? || admin? || manager?
+  end
 
   def cart
     super || create_cart
@@ -62,7 +81,7 @@ class User < ApplicationRecord
   end
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[first_name middle_name last_name username address created_at]
+    %w[first_name middle_name last_name username address created_at role is_blocked]
   end
 
   def self.ransackable_associations(_auth_object = nil)

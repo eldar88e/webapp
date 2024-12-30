@@ -1,37 +1,39 @@
 import { Controller } from "@hotwired/stimulus";
 import ApexCharts from "apexcharts";
+import Localization from "./localization";
 
 export default class extends Controller {
   static targets = ["chart"];
 
-  connect() {
-      this.last_week();
+  async connect() {
+    this.localization = new Localization("ru");
+    await this.last_week();
   }
 
-  last_week(event) {
-      this.fetchRevenueData();
+  async last_week() {
+    await this.fetchRevenueData();
   }
 
-  last_month(event) {
-      this.fetchRevenueData('&period=month');
+  async last_month() {
+    await this.fetchRevenueData('&period=month');
   }
 
-  last_year(event) {
-      this.fetchRevenueData('&period=year');
+  async last_year() {
+    await this.fetchRevenueData('&period=year');
   }
 
-  all(event) {
-      this.fetchRevenueData('&period=all');
+  async all() {
+    await this.fetchRevenueData('&period=all');
   }
 
   async fetchRevenueData(params='') {
     const response = await fetch(`/admin/analytics?type=repeat${params}`);
     const data = await response.json();
 
-    this.renderChart(data[0], data[1]-data[0]);
+    await this.renderChart(data[0], data[1]-data[0]);
   }
 
-  renderChart(repeat, one) {
+  async renderChart(repeat, one) {
     const options = {
       series: [repeat, one],
       colors: ["#1C64F2", "#16BDCA"],
@@ -64,16 +66,12 @@ export default class extends Controller {
       },
       yaxis: {
         labels: {
-          formatter: function (value) {
-            return value + "%"
-          },
+          formatter: (value) => this.localization.orderTitle(value),
         },
       },
       xaxis: {
         labels: {
-          formatter: function (value) {
-            return value  + "%"
-          },
+          formatter: (value) => this.localization.orderTitle(value),
         },
         axisTicks: {
           show: false,
@@ -86,6 +84,11 @@ export default class extends Controller {
 
     this.chartTarget.textContent = '';
     const chart = new ApexCharts(this.chartTarget, options);
-    chart.render();
+
+    try {
+      await chart.render();
+    } catch (error) {
+      console.error("Error rendering chart:", error);
+    }
   }
 }

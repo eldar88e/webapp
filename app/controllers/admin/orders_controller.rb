@@ -1,7 +1,6 @@
 module Admin
   class OrdersController < Admin::ApplicationController
     before_action :set_order, only: %i[edit update destroy]
-    include Pagy::Backend
 
     def index
       @q_orders = Order.includes(:user).order(created_at: :desc).ransack(params[:q])
