@@ -22,6 +22,7 @@ services:
     depends_on:
       - pg
       - redis
+      - sidekiq
     volumes:
       - gems:/usr/local/bundle
       - .:/app
@@ -29,6 +30,10 @@ services:
       net:
       proxy-net:
         ipv4_address: 172.29.0.10
+      s3:
+        ipv4_address: 172.20.0.6
+        extra_hosts:
+          - "${MINIO_DOMAIN}:${MINIO_IP}"
     restart: always
 
   sidekiq:
@@ -67,4 +72,6 @@ volumes:
 networks:
   net:
   proxy-net:
+    external: true
+  s3:
     external: true
