@@ -5,7 +5,7 @@ class TransferFilesToMinioJob < ApplicationJob
 
   def perform(**args)
     klass = args[:klass].camelize.constantize
-    items = fetch_items(klass, args[:column], args[:limit] || 100)
+    items = fetch_items(klass, args[:column], args[:limit])
     count = transfer(items, klass, args[:column])
     msg   = "✅ Exported to MinIO #{count} for #{klass} attachments"
     TelegramService.call(msg)
