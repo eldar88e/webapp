@@ -4,15 +4,15 @@ class Message < ApplicationRecord
   validates :text, presence: true
 
   ransacker :user_first_name do
-    Arel.sql("users.first_name")
+    Arel.sql('users.first_name')
   end
 
   ransacker :user_middle_name do
-    Arel.sql("users.middle_name")
+    Arel.sql('users.middle_name')
   end
 
   ransacker :user_last_name do
-    Arel.sql("users.last_name")
+    Arel.sql('users.last_name')
   end
 
   def self.ransackable_attributes(_auth_object = nil)
