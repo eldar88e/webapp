@@ -32,7 +32,7 @@ services:
         ipv4_address: 172.29.0.10
       s3:
         ipv4_address: 172.20.0.6
-        extra_hosts:
+    extra_hosts:
           - "${MINIO_DOMAIN}:${MINIO_IP}"
     restart: always
 
