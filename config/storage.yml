@@ -8,8 +8,8 @@ local:
 
 minio:
   service: S3
-  access_key_id: <%= ENV.fetch('MINIO_ROOT_USER') %>
-  secret_access_key: <%= ENV.fetch('MINIO_ROOT_PASSWORD') %>
+  access_key_id: <%= ENV.fetch('MINIO_KEY') %>
+  secret_access_key: <%= ENV.fetch('MINIO_SECRET') %>
   region: us-east-1
   endpoint: <%= ENV.fetch('MINIO_HOST') %>
   bucket: <%= ENV.fetch('MINIO_BUCKET') %>
