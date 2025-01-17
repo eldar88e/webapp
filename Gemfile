@@ -3,9 +3,7 @@ source 'https://rubygems.org'
 ruby '3.3.3'
 gem 'rails', '~> 7.2.2'
 
-# gem 'sprockets-rails'
-gem 'vite_rails'
-gem 'pg', '~> 1.5'
+gem 'bootsnap', require: false
 gem 'puma', '~> 6.5'
 gem 'jsbundling-rails'
 gem 'turbo-rails'
@@ -14,9 +12,9 @@ gem 'cssbundling-rails'
 gem 'jbuilder'
 gem 'redis', '~> 5.2'
 gem 'tzinfo-data', platforms: %i[ windows jruby ]
-gem 'bootsnap', require: false
+gem 'pg', '~> 1.5'
+gem 'vite_rails'
 
-# gem "image_processing", "~> 1.2"
 gem 'aws-sdk-s3'
 gem 'active_link_to'
 gem 'dotenv'
@@ -28,10 +26,12 @@ gem 'sidekiq'
 gem 'sidekiq-unique-jobs'
 gem 'pagy'
 gem 'pundit'
-gem 'pry'
 gem 'ransack'
+gem 'lograge'
+gem 'logstash-logger'
 
 group :development, :test do
+  gem 'pry'
   gem 'rubocop-rails-omakase', require: false
 end
 

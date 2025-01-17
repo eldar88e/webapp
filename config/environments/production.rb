@@ -38,7 +38,7 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :minio # local
+  config.active_storage.service = :minio
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
@@ -74,6 +74,20 @@ Rails.application.configure do
     namespace: 'cache',
     expires_in: 2.hours
   }
+
+  config.lograge.enabled = true
+  config.lograge.formatter = Lograge::Formatters::Logstash.new
+  config.lograge.custom_options = lambda do |event|
+    {
+      host: { ip: event.payload[:ip], remote_ip: event.payload[:remote_ip] || 'unknown', host: event.payload[:host] },
+      process_id: Process.pid,
+      request_id: event.payload[:headers]['action_dispatch.request_id']
+    }
+  end
+  config.lograge.custom_payload do |controller|
+    { user_id: controller.current_user.try(:id) }
+  end
+  config.lograge.logger = LogStashLogger.new(type: :udp, host: ENV['LOGSTASH_HOST'], port: ENV['LOGSTASH_PORT'])
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter = :resque
