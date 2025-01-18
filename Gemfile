@@ -30,6 +30,7 @@ gem 'pagy'
 gem 'pundit'
 gem 'pry'
 gem 'ransack'
+gem 'ancestry'
 
 group :development, :test do
   gem 'rubocop-rails-omakase', require: false
