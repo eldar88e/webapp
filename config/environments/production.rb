@@ -55,25 +55,31 @@ Rails.application.configure do
   # Skip http-to-https redirect for the default health check endpoint.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 
-  # Log to STDOUT by default
-  config.logger = ActiveSupport::Logger.new(STDOUT)
-    .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
-    .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
-
-  # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
-
-  # "info" includes generic and useful information about system operation, but avoids logging too much
-  # information to avoid inadvertent exposure of personally identifiable information (PII). If you
-  # want to log everything, set the level to "debug".
-  config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
-
   # Use a different cache store in production.
   config.cache_store = :redis_cache_store, {
     url: ENV.fetch('REDIS_URL') { 'redis://localhost:6379/1' },
     namespace: 'cache',
     expires_in: 2.hours
   }
+
+  logstash_logger = LogStashLogger.new(
+    type: :udp,
+    host: ENV['LOGSTASH_HOST'],
+    port: ENV['LOGSTASH_PORT'].to_i,
+    formatter: :json_lines,
+    customize_event: lambda do |event|
+      event['host'] = { name: Socket.gethostname }
+      event['service'] = ['app']
+    end
+  )
+
+  # Log to STDOUT by default
+  # .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
+  # .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
+
+  config.logger    = ActiveSupport::TaggedLogging.new(logstash_logger)
+  config.log_tags  = [:request_id]
+  config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
 
   config.lograge.enabled = true
   config.lograge.formatter = Lograge::Formatters::Logstash.new
@@ -89,10 +95,6 @@ Rails.application.configure do
     { user_id: controller.current_user.try(:id) }
   end
   config.lograge.logger = LogStashLogger.new(type: :udp, host: ENV['LOGSTASH_HOST'], port: ENV['LOGSTASH_PORT'])
-
-  # Use a real queuing backend for Active Job (and separate queues per environment).
-  # config.active_job.queue_adapter = :resque
-  # config.active_job.queue_name_prefix = "webapp_production"
 
   # Disable caching for Action Mailer templates even if Action Controller
   # caching is enabled.
