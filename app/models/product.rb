@@ -38,4 +38,12 @@ class Product < ApplicationRecord
       errors.add(:image, 'должно быть JPEG или PNG или WEBP')
     end
   end
+
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[id name stock_quantity price ancestry]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    %w[]
+  end
 end

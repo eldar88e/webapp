@@ -27,6 +27,7 @@ class CartItemsController < ApplicationController
   private
 
     def handle_update_carts(cart_item)
+      # TODO: проверить есть столько в остатках
       cart_item.update(quantity: params[:quantity])
       render turbo_stream: [
         turbo_stream.replace(

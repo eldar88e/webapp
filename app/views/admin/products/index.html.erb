@@ -17,19 +17,22 @@
           </div>
         </th>
         <th scope="col" class="px-6 py-3">
-          ИД
+          <%= sort_link(@q_products, :id, 'ИД', data: { turbo_prefetch: false }) %>
         </th>
         <th scope="col" class="px-6 py-3">
           Картинка
         </th>
         <th scope="col" class="px-6 py-3">
-          Название
+          <%= sort_link(@q_products, :name, 'Название', data: { turbo_prefetch: false }) %>
         </th>
         <th scope="col" class="px-6 py-3">
-          Остаток
+          <%= sort_link(@q_products, :stock_quantity, 'Остаток', data: { turbo_prefetch: false }) %>
         </th>
         <th scope="col" class="px-6 py-3">
-          Цена
+          <%= sort_link(@q_products, :price, 'Цена', data: { turbo_prefetch: false }) %>
+        </th>
+        <th scope="col" class="px-6 py-3">
+          <%= sort_link(@q_products, :ancestry, 'Категория', data: { turbo_prefetch: false }) %>
         </th>
         <th scope="col" class="px-6 py-3">
           Действия

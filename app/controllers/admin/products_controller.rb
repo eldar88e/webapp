@@ -3,7 +3,8 @@ module Admin
     before_action :set_product, only: %i[edit update destroy]
 
     def index
-      @pagy, @products = pagy(Product.includes(:image_attachment).order(:created_at), items: 20)
+      @q_products = Product.includes(:image_attachment).order(:created_at).ransack(params[:q])
+      @pagy, @products = pagy(@q_products.result, items: 20)
     end
 
     def new
