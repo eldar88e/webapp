@@ -37,8 +37,11 @@ module Admin
     end
 
     def user_params
-      params.require(:user).permit(:first_name, :middle_name, :last_name, :phone_number, :address, :postal_code,
-                                   :street, :home, :apartment, :build, :email, :tg_id, :user_name, :role)
+      permitted = params.require(:user).permit(:first_name, :middle_name, :last_name, :phone_number, :address,
+                                               :postal_code, :street, :home, :apartment, :build, :email, :user_name)
+      return permitted unless current_user.admin?
+
+      permitted.merge(params.require(:user).permit(:role, :tg_id))
     end
   end
 end

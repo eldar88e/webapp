@@ -33,7 +33,7 @@ services:
       s3:
         ipv4_address: 172.20.0.6
     extra_hosts:
-          - "${MINIO_DOMAIN}:${MINIO_IP}"
+      - "${MINIO_DOMAIN}:${MINIO_IP}"
     restart: always
 
   sidekiq:
