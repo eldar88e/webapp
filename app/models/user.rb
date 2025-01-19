@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  SHIPPED = 4
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
@@ -8,6 +9,7 @@ class User < ApplicationRecord
   has_many :orders, dependent: :destroy
   has_many :messages, primary_key: :tg_id, foreign_key: :tg_id
   has_one :cart, dependent: :destroy
+  has_many :reviews, dependent: :destroy
 
   validates :tg_id, presence: true, uniqueness: true
   validates :postal_code, numericality: { only_integer: true, allow_nil: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999 }
@@ -26,6 +28,10 @@ class User < ApplicationRecord
 
   def admin_or_moderator_or_manager?
     moderator? || admin? || manager?
+  end
+
+  def purchased_product?(product)
+    orders.joins(:order_items).where(status: SHIPPED, order_items: { product_id: product.id }).exists?
   end
 
   def cart

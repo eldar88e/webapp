@@ -11,9 +11,7 @@
         </svg>
       <% end %>
 
-      <button class="logo" data-controller="buttons" data-action="click->buttons#mainPage">
-        <%= settings[:app_name] %>
-      </button>
+      <%= button_to settings[:app_name], root_path, class: 'logo', title: 'На главную', method: :get %>
 
       <%= render '/layouts/partials/cart' %>
     </div>

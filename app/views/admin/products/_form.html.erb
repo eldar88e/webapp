@@ -5,19 +5,35 @@
   </div>
 
   <div class="mb-5">
+    <%= form.label :ancestry, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+    <%= form.number_field :ancestry, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
+  </div>
+
+  <div class="mb-5">
     <%= form.label :image, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
     <%= form.file_field :image, accept: 'image/jpeg,image/png,image/webp',
                         class: 'shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:shadow-sm-light' %>
   </div>
 
-  <div class="mb-5">
-    <%= form.label :price, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
-    <%= form.number_field :price, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
+  <div class="flex gap-4">
+    <div class="w-1/2">
+      <div class="mb-5">
+        <%= form.label :price, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+        <%= form.number_field :price, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
+      </div>
+    </div>
+
+    <div class="w-1/2">
+      <div class="mb-5">
+        <%= form.label :stock_quantity, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+        <%= form.number_field :stock_quantity, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
+      </div>
+    </div>
   </div>
 
   <div class="mb-5">
-    <%= form.label :stock_quantity, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
-    <%= form.number_field :stock_quantity, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
+    <%= form.label :description, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+    <%= form.text_area :description, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
   </div>
 
   <div>

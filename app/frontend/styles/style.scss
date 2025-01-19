@@ -14,6 +14,20 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Montserrat';
+  src: url('../fonts/montserrat_medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('../fonts/montserrat_bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
 body {
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
@@ -99,8 +113,9 @@ main {
     padding-top: 30px;
     padding-bottom: 45px;
 
-    img {
+    & div.relative, & div.relative .img {
       width: 196px;
+      height: 196px;
       margin: 0 auto;
     }
   }
@@ -130,6 +145,7 @@ main {
 
       .title-btn {
         font-size: 18px;
+        font-weight: 500;
         line-height: 22px;
         padding-left: 20px;
         text-transform: uppercase;
@@ -583,4 +599,92 @@ form label {
       }
     }
   }
+}
+
+.product-description {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.product-reviews .reviews-header .text {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.product-reviews .review .text {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.product-reviews .reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  padding-bottom: 36px;
+}
+
+.product-reviews .average-rating {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 36px;
+}
+
+.product-reviews .percentages {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.product-reviews .percentages .percentage-wrap {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.product-reviews .percentages .percentage-wrap .rating {
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 12px;
+}
+
+.product-reviews .percentages .percentage {
+  background-color: #666666;
+  height: 4px;
+  border-radius: 2px;
+  width: 157px;
+  overflow: hidden;
+}
+
+.product-reviews .percentages .percentage > div {
+  background-color: white;
+  height: 100%;
+}
+
+.product-reviews .review-count .text {
+  color: #8e8d93;
+}
+
+.product-reviews .review {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.product-reviews .review .title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 5px;
+}
+
+.product-reviews .review .avatar {
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: red;
+  border-radius: 50%;
+  flex: 0 0 auto;
 }

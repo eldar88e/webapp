@@ -76,7 +76,6 @@ class TelegramBotWorker
     user  = User.find_by(tg_id: message.from.id)
     order = user.orders.find_by(msg_id: message.message.message_id)
     order.update(status: :pending)
-    bot.api.delete_message(chat_id: message.from.id, message_id: message.message.message_id)
   end
 
   def approve_payment(bot, message)
@@ -84,8 +83,6 @@ class TelegramBotWorker
     order        = Order.find(order_number)
     order.update(status: :processing)
     bot.api.delete_message(chat_id: message.message.chat.id, message_id: message.message.message_id)
-    # fio = parse_full_name(message.message.text)
-    # bot.api.send_message(chat_id: message.message.chat.id, text: I18n.t('tg_msg.approved_pay', order: order_number, fio: fio))
   end
 
   def submit_tracking(bot, message)

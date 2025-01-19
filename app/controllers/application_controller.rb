@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   private
 
   def available_products
-    @products = Product.includes(:image_attachment).available.all
+    @products = Product.includes(:image_attachment).available.children_only
   end
 
   def error_notice(msg, status = :unprocessable_entity)

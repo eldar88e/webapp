@@ -72,11 +72,11 @@ class Order < ApplicationRecord
     end
   end
 
+  # Логика для статуса "не оплачен"
   def on_unpaid
-    # Логика для статуса "не оплачен"
     card = Setting.fetch_value(:card)
     msg  = "#{I18n.t('tg_msg.unpaid.msg', order: id)}\n\n"
-    msg  += I18n.t(
+    msg += I18n.t(
       'tg_msg.unpaid.main',
       card: card,
       price: total_amount,
@@ -86,26 +86,28 @@ class Order < ApplicationRecord
       fio: user.full_name,
       phone: user.phone_number
     )
-    TelegramService.delete_msg('', self.user.tg_id, self.msg_id) if self.msg_id
-    msg_id = TelegramService.call(msg, self.user.tg_id, markup: 'i_paid')
-    self.update_columns(msg_id: msg_id)
-    AbandonedOrderReminderJob.set(wait: ONE_WAIT).perform_later(order_id: id, msg_type: :one)
-    Rails.logger.info "Order #{id} is now unpaid"
+    ActiveRecord::Base.transaction do
+      TelegramService.delete_msg('', self.user.tg_id, self.msg_id) if self.msg_id
+      msg_id = TelegramService.call(msg, self.user.tg_id, markup: 'i_paid')
+      self.update_columns(msg_id: msg_id)
+      AbandonedOrderReminderJob.set(wait: ONE_WAIT).perform_later(order_id: id, msg_type: :one)
+      Rails.logger.info "Order #{id} is now unpaid"
+    end
   end
 
   # Логика для статуса "на этапе проверки платежа"
   def on_pending
+    msg = I18n.t(
+      'tg_msg.paid_admin',
+      order: id,
+      price: total_amount,
+      items: order_items_str,
+      address: user.full_address,
+      fio: user.full_name,
+      phone: user.phone_number
+    )
     ActiveRecord::Base.transaction do
       self.user.cart.destroy
-      msg           = I18n.t(
-        'tg_msg.paid_admin',
-        order: id,
-        price: total_amount,
-        items: order_items_str,
-        address: user.full_address,
-        fio: user.full_name,
-        phone: user.phone_number
-      )
       TelegramService.delete_msg('', self.user.tg_id, self.msg_id) if self.msg_id
       TelegramService.call(msg, nil, markup: 'approve_payment') # send to admin
       msg_id = TelegramService.call(I18n.t('tg_msg.paid_client'), user.tg_id) # send client
@@ -116,17 +118,17 @@ class Order < ApplicationRecord
 
   # Логика для статуса "в обработке"
   def on_processing
+    msg = I18n.t(
+      'tg_msg.on_processing_courier',
+      order: id,
+      postal_code: user.postal_code,
+      items: order_items_str(true),
+      address: user.full_address,
+      fio: user.full_name,
+      phone: user.phone_number
+    )
     ActiveRecord::Base.transaction do
       deduct_stock
-      msg = I18n.t(
-        'tg_msg.on_processing_courier',
-        order: id,
-        postal_code: user.postal_code,
-        items: order_items_str(true),
-        address: user.full_address,
-        fio: user.full_name,
-        phone: user.phone_number
-      )
       TelegramService.call(msg, :courier, markup: 'submit_tracking') # send to deliver
       TelegramService.delete_msg('', user.tg_id, self.msg_id)
       msg_id = TelegramService.call(I18n.t('tg_msg.on_processing_client', order: id), user.tg_id, markup: 'new_order')

@@ -12,10 +12,10 @@ Rails.application.routes.draw do
 
   root 'auth#login'
 
-  resources :products, only: [ :index ]
-  resources :carts, only: [ :index ]
-  resources :cart_items, only: [ :create, :update ]
-  resources :orders, only: [ :index, :create, :update ]
+  resources :products, only: [:index, :show]
+  resources :carts, only: [:index]
+  resources :cart_items, only: [:create, :update]
+  resources :orders, only: [:index, :create, :update]
 
   post '/auth/telegram', to: 'auth#telegram_auth'
   get '/login', to: 'auth#login'
