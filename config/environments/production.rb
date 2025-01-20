@@ -68,7 +68,7 @@ Rails.application.configure do
     port: ENV['LOGSTASH_PORT'].to_i,
     formatter: :json_lines,
     customize_event: lambda do |event|
-      event['host'] = { name: Socket.gethostname, remote_ip: event.payload&.dig(:request)&.remote_ip }
+      event['host'] = { name: Socket.gethostname, remote_ip: event&.payload&.dig(:request)&.remote_ip }
       event['service'] = defined?(Sidekiq::CLI) ? 'sidekiq' : 'app' # ['app']
     end
   )
