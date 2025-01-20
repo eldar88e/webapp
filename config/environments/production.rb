@@ -68,14 +68,10 @@ Rails.application.configure do
     port: ENV['LOGSTASH_PORT'].to_i,
     formatter: :json_lines,
     customize_event: lambda do |event|
-      event['host'] = { name: Socket.gethostname }
+      event['host'] = { name: Socket.gethostname, remote_ip: event.payload&.dig(:request)&.remote_ip }
       event['service'] = defined?(Sidekiq::CLI) ? 'sidekiq' : 'app' # ['app']
     end
   )
-
-  # Log to STDOUT by default
-  # .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
-  # .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
 
   config.logger    = ActiveSupport::TaggedLogging.new(logstash_logger)
   config.log_tags  = [:request_id]
@@ -84,16 +80,12 @@ Rails.application.configure do
   config.lograge.enabled = true
   config.lograge.formatter = Lograge::Formatters::Logstash.new
   config.lograge.custom_options = lambda do |event|
-    {
-      host: { ip: event.payload[:ip], remote_ip: event.payload[:request].remote_ip || 'unknown', host: event.payload[:host] },
+    { # ip: event.payload[:ip], host: event.payload[:host]
       process_id: Process.pid,
-      request_id: event.payload[:headers]['action_dispatch.request_id'],
-      service: ['app']
+      request_id: event.payload[:headers]['action_dispatch.request_id']
     }
   end
-  config.lograge.custom_payload do |controller|
-    { user_id: controller.current_user.try(:id) }
-  end
+  config.lograge.custom_payload { |controller| { user_id: controller.current_user.try(:id) } }
   config.lograge.logger = logstash_logger # LogStashLogger.new(type: :udp, host: ENV['LOGSTASH_HOST'], port: ENV['LOGSTASH_PORT'])
 
   # Disable caching for Action Mailer templates even if Action Controller
