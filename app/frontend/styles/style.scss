@@ -363,8 +363,20 @@ form label {
   transition: all 0.2s ease;
 }
 
+.input-container p {
+  font-size: 0.9rem;
+  font-weight: 200;
+  color: rgba(255, 255, 255, 0.5);
+  margin-left: 18px;
+  top: -23px;
+  position: absolute;
+}
+
 .input-container input:focus + label,
-.input-container input:not(:placeholder-shown) + label {
+.input-container input:not(:placeholder-shown) + label,
+.input-container textarea:focus + label,
+.input-container textarea:not(:placeholder-shown) + label
+{
   top: -23px;
   font-size: 0.9rem;
 }
@@ -687,4 +699,48 @@ form label {
   background-color: red;
   border-radius: 50%;
   flex: 0 0 auto;
+}
+
+.product-reviews .review-body {
+  width: 100%;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 4px;
+
+  svg {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: all 0.5s;
+  }
+
+  svg:hover path {
+    fill: #4884fc;
+    opacity: 1;
+  }
+}
+
+.filled-star path {
+  fill: #4884fc;
+  opacity: 1;
+}
+
+#new_review {
+  padding-bottom: 40px;
+}
+
+ul.catalog-nav {
+  padding: 36px 0;
+
+  a {
+    border: rgba(71, 132, 252, 1) 1px solid;
+    font-size: 18px;
+    font-weight: 200;
+    line-height: 22px;
+    background: transparent;
+    border-radius: 48px;
+    padding: 13px 30px;
+  }
 }

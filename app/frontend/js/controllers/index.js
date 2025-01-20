@@ -18,3 +18,6 @@ application.register("phone_mask", PhoneMaskController)
 
 import NoticesController from "./notices_controller"
 application.register("notices", NoticesController)
+
+import RatingController from "./rating_controller"
+application.register("rating", RatingController)

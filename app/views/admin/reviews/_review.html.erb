@@ -1,0 +1,63 @@
+<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" id=<%= dom_id review %>>
+  <td class="w-4 p-4">
+    <div class="flex items-center">
+      <input id="checkbox-table-search-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+      <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+    </div>
+  </td>
+  <td class="px-6 py-4">
+    <%= review.id %>
+  </td>
+  <td class="px-6 py-4">
+    <%= review.product.name %>
+  </td>
+  <td class="px-6 py-4">
+    <%= review.user.full_name %>
+  </td>
+  <td class="px-6 py-4 flex">
+    <div class="flex gap-1">
+      <% (1..5).each do |i| %>
+        <svg class="<%= 'filled-star' if i <= (review.rating || 0) %>" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path opacity="0.4" d="M5.39041 0.372255C5.65808 -0.124085 6.34192 -0.124085 6.60959 0.372255L8.06378 3.06884C8.16363 3.254 8.33562 3.3846 8.53496 3.42664L11.438 4.03887C11.9724 4.15156 12.1837 4.83133 11.8148 5.25077L9.81044 7.52958C9.67281 7.68605 9.60712 7.89737 9.63047 8.10852L9.97048 11.1835C10.0331 11.7495 9.47982 12.1696 8.98415 11.9325L6.29121 10.6443C6.10629 10.5558 5.89371 10.5558 5.70879 10.6443L3.01585 11.9325C2.52018 12.1696 1.96693 11.7495 2.02952 11.1835L2.36953 8.10852C2.39288 7.89737 2.32719 7.68605 2.18956 7.52958L0.18521 5.25077C-0.183715 4.83133 0.0276041 4.15156 0.561954 4.03887L3.46504 3.42664C3.66438 3.3846 3.83637 3.254 3.93622 3.06884L5.39041 0.372255Z" fill="white"/>
+        </svg>
+      <% end %>
+    </div>
+  </td>
+  <td class="px-6 py-4">
+    <%= review.content %>
+  </td>
+  <td class="px-6 py-4">
+    <% if review.photos.attached? %>
+      <div class="flex gap-1 mt-1">
+        <% review.photos.each do |photo| %>
+          <div style="background-image: url('<%= storage_path(photo) %>'); background-size: cover; border-radius: 4px;
+            background-repeat: no-repeat; background-position: center; width: 24px; height: 24px"></div>
+        <% end %>
+      </div>
+    <% end %>
+  </td>
+  <td class="px-6 py-4">
+    <%= review.approved ? 1 : 0 %>
+  </td>
+  <td class="px-6 py-4">
+    <%= format_date review.created_at %>
+  </td>
+  <td class="flex items-center px-6 py-4">
+    <%= link_to edit_admin_review_path(review), data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false },
+                  class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' do %>
+      <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
+        <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path>
+      </svg>
+    <% end %>
+
+    <%= button_to admin_review_path(review), method: :delete,
+                  data: { confirm: 'Вы уверены, что хотите удалить данный отзыв?',
+                          controller: 'confirm', action: 'click->confirm#call' },
+                  class: 'text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800' do %>
+      <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+      </svg>
+    <% end %>
+  </td>
+</tr>

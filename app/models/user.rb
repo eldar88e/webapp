@@ -1,5 +1,4 @@
 class User < ApplicationRecord
-  SHIPPED = 4
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
@@ -28,10 +27,6 @@ class User < ApplicationRecord
 
   def admin_or_moderator_or_manager?
     moderator? || admin? || manager?
-  end
-
-  def purchased_product?(product)
-    orders.joins(:order_items).where(status: SHIPPED, order_items: { product_id: product.id }).exists?
   end
 
   def cart

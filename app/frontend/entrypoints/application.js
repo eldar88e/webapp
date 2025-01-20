@@ -8588,12 +8588,35 @@ var notices_controller_default = class extends Controller {
   }
 };
 
+// app/frontend/js/controllers/rating_controller.js
+var rating_controller_default = class extends Controller {
+  static targets = ["stars", "hiddenInput"];
+  connect() {
+    console.log("hi!");
+  }
+  select(event) {
+    const selectedRating = parseInt(event.currentTarget.dataset.value, 10);
+    this.hiddenInputTarget.value = selectedRating;
+    this.updateStars(selectedRating);
+  }
+  updateStars(rating) {
+    this.starsTargets.forEach((star, index) => {
+      if (index < rating) {
+        star.classList.add("filled-star");
+      } else {
+        star.classList.remove("filled-star");
+      }
+    });
+  }
+};
+
 // app/frontend/js/controllers/index.js
 application.register("agreement", agreement_controller_default);
 application.register("dadata", dadata_controller_default);
 application.register("buttons", buttons_controller_default);
 application.register("phone_mask", phone_mask_controller_default);
 application.register("notices", notices_controller_default);
+application.register("rating", rating_controller_default);
 
 // app/frontend/js/others/main.js
 window.closeModal = function() {
