@@ -88,7 +88,7 @@ Rails.application.configure do
       host: { ip: event.payload[:ip], remote_ip: event.payload[:request].remote_ip || 'unknown', host: event.payload[:host] },
       process_id: Process.pid,
       request_id: event.payload[:headers]['action_dispatch.request_id'],
-      service: ['app']
+      service: defined?(Sidekiq) ? 'sidekiq' : 'app' # ['app']
     }
   end
   config.lograge.custom_payload do |controller|
