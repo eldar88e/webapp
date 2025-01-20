@@ -68,7 +68,7 @@ Rails.application.configure do
     port: ENV['LOGSTASH_PORT'].to_i,
     formatter: :json_lines,
     customize_event: lambda do |event|
-      event['host'] = { name: Socket.gethostname, remote_ip: event&.payload&.dig(:request)&.remote_ip }
+      event['host'] = { name: Socket.gethostname }
       event['service'] = defined?(Sidekiq::CLI) ? 'sidekiq' : 'app' # ['app']
     end
   )
@@ -80,7 +80,8 @@ Rails.application.configure do
   config.lograge.enabled = true
   config.lograge.formatter = Lograge::Formatters::Logstash.new
   config.lograge.custom_options = lambda do |event|
-    { # ip: event.payload[:ip], host: event.payload[:host]
+    {
+      host: { name: event.payload[:host], remote_ip: event.payload&.dig(:request)&.remote_ip }, # ip: event.payload[:ip]
       process_id: Process.pid,
       request_id: event.payload[:headers]['action_dispatch.request_id']
     }
