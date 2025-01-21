@@ -805,18 +805,27 @@ ul.catalog-nav {
   }
 }
 
-.menu {
+.menu-wrapper {
   position: fixed;
-  margin-top: 90px;
+  padding: 0 10px;
+  z-index: 2;
+  width: 100%;
   left: calc(-100% - 10px);
   transition: all 0.5s;
-  top: 0;
+  top: 90px;
+
+  &.show {
+    left: 0;
+  }
+}
+
+.menu {
+  transition: all 0.5s;
   padding: 48px 36px;
   background-color: rgba(26, 24, 34, 1);
   width: 100%;
   border-top-right-radius: 48px;
   border-bottom-left-radius: 48px;
-  z-index: 2;
   box-shadow: 0px 0px 8px 0px rgba(71, 132, 252, 0.15);
 
   ul {
