@@ -21,3 +21,6 @@ application.register("notices", NoticesController)
 
 import RatingController from "./rating_controller"
 application.register("rating", RatingController)
+
+import MenuController from "./menu_controller"
+application.register("menu", MenuController)
