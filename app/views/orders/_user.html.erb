@@ -1,7 +1,6 @@
 <div data-controller="agreement">
   <div class="form" data-agreement-target="form">
-    <%= form_with(model: current_user, url: orders_path, method: :post, class: 'mb-3',
-                  data: { controller: "dadata" }) do |form| %>
+    <%= form_with(model: current_user, url: orders_path, method: :post, data: { controller: "dadata" }) do |form| %>
       <%= render partial: 'devise/registrations/form_items', locals: { f: form } %>
 
       <div class="mt-6 flex items-center gap-4">

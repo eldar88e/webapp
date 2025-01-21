@@ -1,5 +1,4 @@
 class CartsController < ApplicationController
-  layout 'cart', only: :index
   before_action :available_products
 
   def index

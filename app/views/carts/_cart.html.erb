@@ -7,8 +7,8 @@
     <div class="cart-header-column">Цена</div>
   </div>
 
-  <%= render 'carts/cart_items' %>
+  <%= render '/carts/cart_items' %>
 </div>
 
-<%= button_to "Оформить заказ", orders_path, params: { page: 1 }, class: 'btn mb-3',
+<%= button_to "Оформить заказ", orders_path, params: { page: 1 }, class: 'btn',
               data: { controller: 'buttons', action: 'click->buttons#leftAction' } %>

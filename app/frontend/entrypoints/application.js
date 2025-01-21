@@ -8397,7 +8397,6 @@ var agreement_controller_default = class extends Controller {
     event.preventDefault();
     this.agreementTarget.style = "display: block;";
     this.formTarget.style = "display: none;";
-    document.getElementById("modal").classList.remove("left");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
   agree(event) {
@@ -8405,7 +8404,6 @@ var agreement_controller_default = class extends Controller {
     this.check_boxTarget.checked = true;
     this.formTarget.style = "display: block;";
     this.agreementTarget.style = "display: none;";
-    document.getElementById("modal").classList.add("left");
   }
   close() {
     this.formTarget.style = "display: block;";

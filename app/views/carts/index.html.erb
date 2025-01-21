@@ -1,5 +1,21 @@
 <% content_for :title, "Корзина" %>
 
+<% content_for :modal do %>
+  <h1 class="title-h">Корзина</h1>
+
+  <div id="cart">
+    <% if @cart_items.present? %>
+      <%= render '/carts/cart' %>
+    <% else %>
+      <div><%= t('empty_cart') %></div>
+    <% end %>
+  </div>
+<% end %>
+
+<% content_for :model_class, "right" %>
+
+<% content_for :model_style, "display: block;" %>
+
 <div id="products">
   <%= render @products %>
 </div>
