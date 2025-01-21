@@ -806,7 +806,7 @@ ul.catalog-nav {
 }
 
 .menu {
-  position: absolute;
+  position: fixed;
   margin-top: 90px;
   left: calc(-100% - 10px);
   transition: all 0.5s;
