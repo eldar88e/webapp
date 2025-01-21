@@ -842,6 +842,11 @@ ul.catalog-nav {
         display: flex;
         gap: 8px;
         color: #4783fc;
+        transition: all 0.5s;
+
+        svg path {
+          transition: all 0.5s;
+        }
       }
 
       a {
@@ -849,11 +854,24 @@ ul.catalog-nav {
         font-weight: 500;
         line-height: 24px;
         color: #4783fc;
+        transition: all 0.5s;
       }
+    }
+
+    li:hover a, li:hover button {
+      color: #FFFFFF;
+    }
+
+    li:hover button svg path {
+      fill: #FFFFFF;
     }
 
     li:last-child {
       margin-bottom: 0;
     }
   }
+}
+
+.button_to .plus:hover {
+  color: rgb(71, 131, 252);
 }
