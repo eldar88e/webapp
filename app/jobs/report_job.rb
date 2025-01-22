@@ -2,8 +2,8 @@ class ReportJob < ApplicationJob
   queue_as :default
 
   def perform(**args)
-    order = Order.find(args[:order_id])
-    return if order.status == 'initialized'
+    order = Order.find_by(id: args[:order_id])
+    return if order.nil? || order.status == 'initialized'
 
     method_name = "on_#{order.status}".to_sym
     ReportService.send(method_name, order)
