@@ -6,9 +6,10 @@ class Order < ApplicationRecord
   validates :status, presence: true
   validates :total_amount, presence: true
 
-  enum status: { initialized: 0, unpaid: 1, pending: 2, processing: 3, shipped: 4, cancelled: 5, overdue: 7 } # refunded: 6,
+  enum status: { initialized: 0, unpaid: 1, paid: 2, processing: 3, shipped: 4, cancelled: 5, overdue: 7, refunded: 8 }
 
-  after_update :check_status_change
+  # after_update :check_status_change
+  after_commit :check_status_change #, if: -> { saved_change_to_status? }
 
   def order_items_with_product
     order_items.includes(:product)
@@ -22,13 +23,11 @@ class Order < ApplicationRecord
 
   def self.count_order_with_status(start_date, end_date)
     total_orders = where(updated_at: start_date..end_date).count
-    result       = statuses.keys.each_with_object({}) do |status, hash|
-      status_count = Order.where(status: Order.statuses[status])
-                          .where(updated_at: start_date..end_date)
-                          .count
+    result = statuses.keys.each_with_object({}) do |status, hash|
+      status_count = Order.where(status: Order.statuses[status]).where(updated_at: start_date..end_date).count
       next if status_count.zero?
 
-      hash[status.to_sym] = status_count # ((status_count.to_f / total_orders) * 100).round(2)
+      hash[status.to_sym] = status_count
     end
     [result, total_orders]
   end
@@ -42,7 +41,7 @@ class Order < ApplicationRecord
   end
 
   def order_items_str(courier = false)
-    order_items.includes(:product).map do |i|
+    order_items_with_product.map do |i|
       next if i.product.name == 'Доставка' && courier
 
       resust = "• #{i.product.name} — #{i.product.name != 'Доставка' ? (i.quantity.to_s + 'шт.') : 'услуга' }"
@@ -51,9 +50,32 @@ class Order < ApplicationRecord
     end.compact.join(",\n")
   end
 
+  def deduct_stock
+    order_items_with_product.each do |order_item|
+      product = order_item.product
+      if product.stock_quantity >= order_item.quantity
+        product.update!(stock_quantity: product.stock_quantity - order_item.quantity)
+      else
+        msg = "Недостаток в остатках для продукта: #{product.name} в заказе #{self.id}"
+        Rails.logger.info msg
+        TelegramService.call(msg)
+        raise StandardError, msg
+      end
+      if product.stock_quantity < 10
+        msg = "‼️Осталось #{product.stock_quantity}шт. #{product.name} на складе!"
+        Rails.logger.info msg
+        TelegramService.call(msg)
+      end
+    end
+  end
+
   private
 
   def check_status_change
+    ReportJob.perform_later(order_id: self.id)
+
+    return
+
     case status
     when 'unpaid'
       on_unpaid
@@ -186,24 +208,5 @@ class Order < ApplicationRecord
     msg    = I18n.t('tg_msg.unpaid.reminder.overdue', order: id)
     msg_id = TelegramService.call(msg, user.tg_id, markup: 'new_order')
     update_columns(msg_id: msg_id)
-  end
-
-  def deduct_stock
-    order_items.includes(:product).each do |order_item|
-      product = order_item.product
-      if product.stock_quantity >= order_item.quantity
-        product.update!(stock_quantity: product.stock_quantity - order_item.quantity)
-      else
-        msg = "Недостаток в остатках для продукта: #{product.name} в заказе #{self.id}"
-        Rails.logger.info msg
-        TelegramService.call(msg)
-        raise StandardError, msg
-      end
-      if product.stock_quantity < 10
-        msg = "‼️Осталось #{product.stock_quantity}шт. #{product.name} на складе!"
-        Rails.logger.info msg
-        TelegramService.call(msg)
-      end
-    end
   end
 end

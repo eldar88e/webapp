@@ -120,6 +120,7 @@ class TelegramService
   end
 
   def next_text_part
+    # TODO: Исправить обрезку сообщения
     part     = @message[0...MESSAGE_LIMIT]
     @message = @message[MESSAGE_LIMIT..] || ''
     part

@@ -1,6 +1,7 @@
 require 'telegram/bot'
 
 class TelegramBotWorker
+  # TODO: Перевести в job и убрать лишний gem 'sidekiq-unique-jobs'
   include Sidekiq::Worker
   sidekiq_options queue: 'telegram_bot', retry: true, lock: :until_executed
 
@@ -60,13 +61,10 @@ class TelegramBotWorker
     user_state = Rails.cache.read("user_#{message.chat.id}_state")
     if user_state&.dig(:waiting_for_tracking)
       order = Order.find_by(id: user_state[:order_id])
-      order.update(tracking_number: message.text, status: 'shipped')
-      bot.api.send_message(
-        chat_id: message.chat.id,
-        text: I18n.t('tg_msg.track_num_save', order: user_state[:order_id], fio: user_state[:full_name], num: message.text)
-      )
-      [ user_state[:msg_id], user_state[:h_msg], message.message_id ].each do |id|
-        bot.api.delete_message(chat_id: message.chat.id, message_id: id)
+      order.update(tracking_number: message.text, status: :shipped)
+
+      [user_state[:msg_id], user_state[:h_msg], message.message_id].each do |id|
+        bot.api.delete_message(chat_id: message.chat.id, message_id: id) # TODO: возможно нужно чере job
       end
       Rails.cache.delete("user_#{message.chat.id}_state")
     end
@@ -75,7 +73,7 @@ class TelegramBotWorker
   def i_paid(bot, message)
     user  = User.find_by(tg_id: message.from.id)
     order = user.orders.find_by(msg_id: message.message.message_id)
-    order.update(status: :pending)
+    order.update(status: :paid)
   end
 
   def approve_payment(bot, message)
@@ -92,8 +90,7 @@ class TelegramBotWorker
                                         text: I18n.t('tg_msg.set_track_num', order: order_number, fio: full_name))
     Rails.cache.write(
       "user_#{message.message.chat.id}_state",
-      { waiting_for_tracking: true, order_id: order_number, full_name: full_name,
-        msg_id: message.message.message_id, h_msg: msg.message_id },
+      { waiting_for_tracking: true, order_id: order_number, msg_id: message.message.message_id, h_msg: msg.message_id },
       expires_in: TRACK_CACHE_PERIOD
     )
   end
