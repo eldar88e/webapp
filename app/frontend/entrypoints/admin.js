@@ -24783,14 +24783,14 @@ var chart_orders_controller_default = class extends Controller {
               show: true,
               name: {
                 show: true,
-                fontFamily: "Inter, sans-serif",
+                fontFamily: "Montserrat, sans-serif",
                 offsetY: 20
               },
               total: {
                 showAlways: true,
                 show: true,
                 label: "\u0417\u0430\u043A\u0430\u0437\u043E\u0432",
-                fontFamily: "Inter, sans-serif",
+                fontFamily: "Montserrat, sans-serif",
                 formatter: function(w) {
                   const sum = w.globals.seriesTotals.reduce((a, b) => {
                     return a + b;
@@ -24800,7 +24800,7 @@ var chart_orders_controller_default = class extends Controller {
               },
               value: {
                 show: true,
-                fontFamily: "Inter, sans-serif",
+                fontFamily: "Montserrat, sans-serif",
                 offsetY: -20,
                 formatter: (value) => this.localization.orderTitle(value)
               }
@@ -24820,7 +24820,7 @@ var chart_orders_controller_default = class extends Controller {
       },
       legend: {
         position: "bottom",
-        fontFamily: "Inter, sans-serif"
+        fontFamily: "Montserrat, sans-serif"
       },
       yaxis: {
         labels: {
