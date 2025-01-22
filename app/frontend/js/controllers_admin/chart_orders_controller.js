@@ -35,7 +35,7 @@ export default class extends Controller {
 
     async renderChart(labels, orders, total) {
         const label_translate = { "initialized": "Инициализирован", "unpaid": "Ожидание платежа",
-            "pending": "Ожидание подтверждения платежа", "processing": "В процессе отправки", "shipped": "Отправлен",
+            "paid": "Ожидание подтверждения платежа", "processing": "В процессе отправки", "shipped": "Отправлен",
             "cancelled": "Отменен", "overdue": "Просрочен" }
         const labels_rus = labels.map(label => label_translate[label] || label);
         const options = {
