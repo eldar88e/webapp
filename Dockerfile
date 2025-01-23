@@ -11,6 +11,13 @@ RUN apk --update add --no-cache \
     curl \
     libffi-dev \
     ruby-dev \
+    vips \
+    vips-dev \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    libwebp-dev \
+    libheif-dev \
+    imagemagick \
     && rm -rf /var/cache/apk/*
 
 ENV BUNDLE_DEPLOYMENT="1" \
