@@ -4,9 +4,15 @@ class ReviewsController < ApplicationController
   def new
     @review = current_user.reviews.new
     @review.product = @product
-    render turbo_stream: [
-      turbo_stream.update(:new_review, partial: '/reviews/form', locals: { review: @review, method: :post })
-    ]
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.update(:new_review, partial: 'reviews/form',
+                              locals: { review: @review, method: :post })
+        ]
+      end
+      format.html
+    end
   end
 
   def create

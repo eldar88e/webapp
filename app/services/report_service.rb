@@ -94,7 +94,7 @@ class ReportService
 
       admin_msg = "❌ Заказ #{order.id} был отменен!\nОстатки были обновлены."
       user_msg  = I18n.t('tg_msg.cancel', order: order.id)
-      send_report(order, admin_msg: admin_msg, user_msg: user_msg, user_id: order.user.tg_id, user_markup: 'new_order')
+      send_report(order, admin_msg: admin_msg, user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order')
     end
 
     def on_refunded(order)
