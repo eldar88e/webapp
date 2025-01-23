@@ -2,12 +2,11 @@ class AuthController < ApplicationController
   skip_before_action :check_authenticate_user!
   layout 'login'
   def login
-    # redirect_to products_path if current_user
     if current_user
-      binding.pry
+      return redirect_to params['tgWebAppStartParam'].gsub('_', '/') if params['tgWebAppStartParam'].present?
 
       available_products
-      render 'products/index', layout: 'application'
+      render 'products/index', layout: 'application' # redirect_to products_path if current_user
     end
   end
 
