@@ -11,6 +11,7 @@ class AuthController < ApplicationController
   end
 
   def telegram_auth
+    binding.pry
     unless user_signed_in?
       data      = params.to_unsafe_h.except(:controller, :action)
       init_data = URI.decode_www_form(data['initData']).to_h
