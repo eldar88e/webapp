@@ -16,7 +16,11 @@
                 .then((data) => {
                     if (data.success) {
                         console.log("Authenticated:", data.user);
-                        window.location.href = `/?tgWebAppStartParam=${encodeURIComponent(data.params)}`;
+                        let path = "/";
+                        if (data.params && data.params.trim() !== "") {
+                            path += `?tgWebAppStartParam=${encodeURIComponent(data.params)}`
+                        }
+                        window.location.href = path;
                     } else {
                         console.log("Authentication failed: " + data.error);
                         window.location.href = tg_main_bot;

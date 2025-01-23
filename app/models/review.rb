@@ -44,8 +44,8 @@ class Review < ApplicationRecord
     end
 
     photos.each do |photo|
-      if photo.byte_size > 1.megabyte
-        errors.add(:photos, "файл '#{photo.filename}' должен быть меньше 1 МБ")
+      if photo.byte_size > 5.megabyte
+        errors.add(:photos, "файл '#{photo.filename}' должен быть меньше 5 МБ")
       end
 
       acceptable_types = %w[image/jpeg image/png image/webp]
