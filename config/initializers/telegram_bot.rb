@@ -1,7 +1,7 @@
 Rails.application.config.after_initialize do
   if defined?(Sidekiq::CLI) && (Rails.env.production? || Rails.env.development?)
     Rails.logger.info 'Run TelegramBotWorker after initialize...'
-    TelegramBotWorker.perform_async
+    TelegramBotWorker.perform_async if Rails.env.production?
   end
 end
 

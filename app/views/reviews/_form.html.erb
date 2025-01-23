@@ -18,12 +18,12 @@
   </div>
 
   <div class="input-container">
-    <%= form.file_field :photos, accept: 'image/jpeg,image/png,image/webp', multiple: true, class: "input-str" %>
+    <%= form.file_field :photos, accept: 'image/jpeg,image/png,image/webp,image/heic,image/heif', multiple: true, class: "input-str" %>
     <%= form.label :photos, 'Фотографии' %>
   </div>
 
   <div class="input-container">
-    <%= form.text_area :content, required: true, class: "input-str", rows: 3 %>
+    <%= form.text_area :content, required: true, class: "input-str", rows: 3, minlength: 5, maxlength: 1000 %>
     <%= form.label :content, 'Отзыв' %>
   </div>
 

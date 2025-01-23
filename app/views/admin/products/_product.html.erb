@@ -11,7 +11,7 @@
   <th scope="row" class="px-6 py-4">
     <div class="product-img">
       <% if product.image.attached? %>
-        <%= image_tag url_for(product.image), alt: product.name, style: 'width: 50px;' %>
+        <%= image_tag storage_path(product.image), alt: product.name, style: 'width: 50px;' %>
       <% else %>
         <p>No image</p>
       <% end %>
@@ -21,13 +21,13 @@
     <%= product.name %>
   </th>
   <td class="px-6 py-4">
-    <%= product.stock_quantity %>шт.
+    <%= product.stock_quantity %> шт.
   </td>
   <td class="px-6 py-4">
     <div class="price"><%= product.price.to_i %><span style="margin-left: 3px">₽</span></div>
   </td>
   <td class="px-6 py-4">
-    <%= product.parent&.name  %>
+    <%= product.parent&.name %>
   </td>
   <td class="flex gap-3 px-6 py-4">
     <%= link_to edit_admin_product_path(product), data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false },

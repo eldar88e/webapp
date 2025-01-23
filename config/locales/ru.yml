@@ -104,3 +104,10 @@ ru:
       few: "%{count} отзыва"
       many: "%{count} отзывов"
       other: "%{count} отзыва"
+  activerecord:
+    attributes:
+      review:
+        content: "Отзыв"
+        product: "Товар"
+        rating: "Рейтинг"
+        photos: "Фотография"

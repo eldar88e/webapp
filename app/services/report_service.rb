@@ -1,6 +1,6 @@
 class ReportService
   ONE_WAIT = 3.hours
-  REVIEW_WAIT = 1.minute # 10.days
+  REVIEW_WAIT = 10.days
 
   class << self
     def on_unpaid(order)

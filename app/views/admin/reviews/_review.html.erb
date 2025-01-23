@@ -30,7 +30,7 @@
     <% if review.photos.attached? %>
       <div class="flex gap-1 mt-1">
         <% review.photos.each do |photo| %>
-          <div style="background-image: url('<%= storage_path(photo) %>'); background-size: cover; border-radius: 4px;
+          <div style="background-image: url('<%= storage_path(photo.variant(:thumb), true) %>'); background-size: cover; border-radius: 4px;
             background-repeat: no-repeat; background-position: center; width: 24px; height: 24px"></div>
         <% end %>
       </div>

@@ -33,7 +33,11 @@ module Admin
     end
 
     def update
-      if @review.update(review_params)
+      if params[:review][:photos].present?
+        @review.photos.attach(params[:review][:photos])
+      end
+
+      if @review.update(review_params.except(:photos))
         render turbo_stream: [
           turbo_stream.replace(@review, partial: '/admin/reviews/review', locals: { review: @review }),
           success_notice('Отзыв успешно обновлен.')

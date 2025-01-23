@@ -7,6 +7,6 @@ class ProductsController < ApplicationController
 
   def show
     @product = Product.find(params[:id])
-    @reviews = @product.reviews.includes(:user, :photos_attachments).approved
+    @reviews = @product.reviews.includes(:user, :photos_attachments).approved.order(created_at: :desc)
   end
 end
