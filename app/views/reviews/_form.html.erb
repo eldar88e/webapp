@@ -1,5 +1,5 @@
 <%= form_with(model: review, url: (method == :patch ? product_review_path(product) : product_reviews_path),
-              data: { controller: :rating }) do |form| %>
+              data: { controller: :rating, turbo: false }) do |form| %>
   <%= form.hidden_field :rating, data: { rating_target: "hiddenInput" } %>
 
   <div class="mt-4">

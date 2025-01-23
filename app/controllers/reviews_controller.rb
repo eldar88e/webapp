@@ -20,10 +20,7 @@ class ReviewsController < ApplicationController
     @review.user = current_user
 
     if @review.save
-      render turbo_stream: [
-        turbo_stream.update(:new_review, ''),
-        success_notice('Отзыв успешно добавлен.')
-      ]
+      redirect_to @product, flash: { notice: 'Отзыв успешно добавлен.' }
     else
       error_notice @review.errors.full_messages
     end
