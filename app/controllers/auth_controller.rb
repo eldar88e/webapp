@@ -11,8 +11,7 @@ class AuthController < ApplicationController
   end
 
   def telegram_auth
-    binding.pry
-    unless user_signed_in?
+    # unless user_signed_in?
       data      = params.to_unsafe_h.except(:controller, :action)
       init_data = URI.decode_www_form(data['initData']).to_h
       return redirect_to "https://t.me/#{settings[:tg_main_bot]}", allow_other_host: true if init_data.blank?
@@ -20,9 +19,14 @@ class AuthController < ApplicationController
       tg_user = JSON.parse init_data['user']
       user    = User.find_or_create_by_tg(tg_user)
       sign_in(user)
-    end
+    # end
 
-    render json: { success: true, user: current_user } # head :ok
+    # render json: { success: true, user: current_user } # head :ok
+
+    return redirect_to "/#{init_data['start_param'].gsub('_', '/')}" if init_data['start_param'].present?
+
+    available_products
+    render 'products/index', layout: 'application'
   end
 
   private
