@@ -16,7 +16,7 @@
                 .then((data) => {
                     if (data.success) {
                         console.log("Authenticated:", data.user);
-                        window.location.href = "/products";
+                        window.location.href = "/";
                     } else {
                         console.log("Authentication failed: " + data.error);
                         window.location.href = tg_main_bot;
