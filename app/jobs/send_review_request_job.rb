@@ -10,13 +10,11 @@ class SendReviewRequestJob < ApplicationJob
       return
     end
 
-    review_url = "products_#{product.id}_reviews_new"
-
     TelegramService.call(
       I18n.t('tg_msg.review', product: product.name),
       user.tg_id,
       markup_custom: 'Оставить отзыв',
-      markup_url: "https://yourapp.com/#{review_url}"
+      markup_url: "products_#{product.id}_reviews_new"
     )
 
     Rails.logger.info "Review request sent to user #{user.id} for product #{product.id}"

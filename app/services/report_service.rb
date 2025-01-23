@@ -81,7 +81,7 @@ class ReportService
       msg_courier = I18n.t('tg_msg.track_num_save', order: order.id, fio: user.full_name, num: order.tracking_number)
       send_report(order, admin_msg: msg_courier, admin_tg_id: :courier,
                   user_msg: msg, user_tg_id: user.tg_id, user_markup: 'new_order')
-      schedule_review_requests(order)
+      schedule_review_requests(order, user)
     end
 
     def on_cancelled(order)
@@ -116,8 +116,7 @@ class ReportService
 
   private
 
-  def self.schedule_review_requests(order)
-    user = order.user
+  def self.schedule_review_requests(order, user)
     order.order_items.includes(:product).each do |order_item|
       product = order_item.product
       next if product.id == Setting.fetch_value(:delivery_id).to_i
