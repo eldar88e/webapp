@@ -18,6 +18,7 @@ RUN apk --update add --no-cache \
     libwebp-dev \
     libheif-dev \
     imagemagick \
+    imagemagick-dev \
     && rm -rf /var/cache/apk/*
 
 ENV BUNDLE_DEPLOYMENT="1" \
