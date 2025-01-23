@@ -11,15 +11,17 @@ class TelegramService
   end
 
   def self.call(msg, id = nil, **args)
-    new(msg, id).report(args[:markup])
+    new(msg, id).report(**args)
   end
 
   def self.delete_msg(msg, id, msg_id)
     new(msg, id, msg_id).send(:delete_message)
   end
 
-  def report(markup = nil)
-    @markup = markup
+  def report(**args)
+    @markup        = args[:markup]
+    @markup_custom = args[:markup_custom]
+    @markup_url    = args[:markup_url]
     tg_send if @message.present? && credential_exists?
   end
 
@@ -102,6 +104,11 @@ class TelegramService
     buttons
   end
 
+  def form_url_keyboard
+    url  = "https://t.me/#{settings[:tg_main_bot]}?startapp=#{@markup_url}"
+    [[Telegram::Bot::Types::InlineKeyboardButton.new(text: @markup_custom, url: url)]]
+  end
+
   def order_btn(btn_text)
     url  = "https://t.me/#{settings[:tg_main_bot]}?startapp"
     # TODO: Добавить переход в корзину при new == false
@@ -113,9 +120,9 @@ class TelegramService
   end
 
   def form_markup
-    return if @markup.nil?
+    return if @markup.nil? && @markup_custom.nil?
 
-    keyboard = form_keyboard
+    keyboard = @markup ? form_keyboard : form_url_keyboard
     Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
   end
 
