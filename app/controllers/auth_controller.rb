@@ -4,6 +4,8 @@ class AuthController < ApplicationController
   def login
     # redirect_to products_path if current_user
     if current_user
+      binding.pry
+
       available_products
       render 'products/index', layout: 'application'
     end
