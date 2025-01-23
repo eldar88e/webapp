@@ -31,10 +31,8 @@ gem 'ancestry'
 gem 'lograge'
 gem 'logstash-logger'
 
-gem 'pry'
-
 group :development, :test do
-
+  gem 'pry'
   gem 'rubocop-rails-omakase', require: false
 end
 
