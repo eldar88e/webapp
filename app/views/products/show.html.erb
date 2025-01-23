@@ -50,7 +50,7 @@
     </div>
   </div>
 
-  <% if false %>
+  <% if false # TODO: добавить сущность характеристики %>
     <div class="product-wrapper">
       <div class="product">
         <h2 class="title-h">О товаре</h2>
@@ -97,9 +97,11 @@
           </div>
         <% end %>
 
-        <%= turbo_frame_tag :new_review do %>
-          <%= link_to 'Оставить отзыв', new_product_review_path(@product, format: :turbo_stream), data: { turbo_prefetch: false }  %>
-        <% end %>
+        <div class="new_review">
+          <%= turbo_frame_tag :new_review do %>
+            <%= link_to 'Оставить отзыв', new_product_review_path(@product, format: :turbo_stream), data: { turbo_prefetch: false }  %>
+          <% end %>
+        </div>
 
         <% if @reviews.present? %>
           <%= render partial: '/reviews/review', collection: @reviews, as: :review %>

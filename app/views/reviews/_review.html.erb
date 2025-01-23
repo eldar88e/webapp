@@ -2,7 +2,7 @@
   <div class="avatar" style="background-color: <%= %w[red #4884fc green].sample %>;"><%= review.user.first_name[0] %></div>
   <div class="review-body">
     <div class="title">
-      <h3><%= review.user.full_name %></h3>
+      <h3><%= review.user.first_name %></h3>
       <div class="flex">
         <% (1..5).each do |rate| %>
           <svg class="<%= 'filled-star' if rate <= (review.rating || 0) %>" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">

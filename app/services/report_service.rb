@@ -1,5 +1,6 @@
 class ReportService
   ONE_WAIT = 3.hours
+  REVIEW_WAIT = 1.minute # 10.days
 
   class << self
     def on_unpaid(order)
@@ -80,6 +81,7 @@ class ReportService
       msg_courier = I18n.t('tg_msg.track_num_save', order: order.id, fio: user.full_name, num: order.tracking_number)
       send_report(order, admin_msg: msg_courier, admin_tg_id: :courier,
                   user_msg: msg, user_tg_id: user.tg_id, user_markup: 'new_order')
+      schedule_review_requests(order)
     end
 
     def on_cancelled(order)
@@ -113,6 +115,18 @@ class ReportService
   end
 
   private
+
+  def schedule_review_requests(order)
+    user = order.user
+    order.order_items.includes(:product).each do |order_item|
+      product = order_item.product
+      next if product.id == Setting.fetch_value(:delivery_id).to_i
+
+      unless user.reviews.exists?(product_id: product.id)
+        SendReviewRequestJob.set(wait: REVIEW_WAIT).perform_later(product_id: product.id, user_id: user.id)
+      end
+    end
+  end
 
   def self.send_report(order, **args)
     telegram_send_msg(args[:admin_msg], args[:admin_tg_id], args[:admin_markup]) if args[:admin_msg]
