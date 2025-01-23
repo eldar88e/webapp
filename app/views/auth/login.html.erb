@@ -18,7 +18,7 @@
                         console.log("Authenticated:", data.user);
                         let path = "/";
                         if (data.params && data.params.trim() !== "") {
-                            path += `?tgWebAppStartParam=${encodeURIComponent(data.params)}`
+                            path += data.params.split('_').join('/');
                         }
                         window.location.href = path;
                     } else {

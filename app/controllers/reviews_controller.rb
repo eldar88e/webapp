@@ -22,6 +22,7 @@ class ReviewsController < ApplicationController
     if @review.save
       render turbo_stream: [
         turbo_stream.update(:new_review, 'Ваш отзыв на модерации.'),
+        turbo_stream.update(:new_review_page, partial: '/reviews/notice'),
         success_notice('Отзыв успешно добавлен.')
       ]
     else

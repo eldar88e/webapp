@@ -18,6 +18,7 @@ services:
     image: miniapp
     build: .
     container_name: miniapp
+    hostname: miniapp
     env_file: ./.env
     depends_on:
       - pg
@@ -42,6 +43,7 @@ services:
     image: miniapp
     build: .
     container_name: miniapp-sidekiq
+    hostname: miniapp-sidekiq
     env_file: ./.env
     depends_on:
       - pg
