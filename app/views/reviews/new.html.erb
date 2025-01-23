@@ -1,7 +1,9 @@
 <div style="padding-bottom: 50px;">
   <div class="product-wrapper">
     <div class="product">
-      <%= render partial: '/reviews/form', locals: { review: @review, method: :post } %>
+      <%= turbo_frame_tag :new_review do %>
+        <%= render partial: '/reviews/form', locals: { review: @review, method: :post } %>
+      <% end %>
     </div>
   </div>
 </div>
