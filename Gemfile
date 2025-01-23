@@ -30,7 +30,7 @@ gem 'ransack'
 gem 'ancestry'
 gem 'lograge'
 gem 'logstash-logger'
-
+gem 'ruby-vips'
 gem 'pry'
 
 group :development, :test do

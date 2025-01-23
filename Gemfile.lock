@@ -162,6 +162,10 @@ GEM
       multipart-post (~> 2.0)
     faraday-net_http (3.4.0)
       net-http (>= 0.5.0)
+    ffi (1.17.1-aarch64-linux-gnu)
+    ffi (1.17.1-arm64-darwin)
+    ffi (1.17.1-x86_64-linux-gnu)
+    ffi (1.17.1-x86_64-linux-musl)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.6)
@@ -327,6 +331,9 @@ GEM
       rubocop-performance
       rubocop-rails
     ruby-progressbar (1.13.0)
+    ruby-vips (2.2.2)
+      ffi (~> 1.12)
+      logger
     securerandom (0.4.1)
     sidekiq (7.3.8)
       base64
@@ -412,6 +419,7 @@ DEPENDENCIES
   ransack
   redis (~> 5.2)
   rubocop-rails-omakase
+  ruby-vips
   sidekiq
   sidekiq-unique-jobs
   stimulus-rails
