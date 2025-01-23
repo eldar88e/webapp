@@ -116,7 +116,7 @@ class ReportService
 
   private
 
-  def schedule_review_requests(order)
+  def self.schedule_review_requests(order)
     user = order.user
     order.order_items.includes(:product).each do |order_item|
       product = order_item.product
