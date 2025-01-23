@@ -21,12 +21,7 @@ class AuthController < ApplicationController
       sign_in(user)
     # end
 
-    # render json: { success: true, user: current_user } # head :ok
-
-    return redirect_to "/#{init_data['start_param'].gsub('_', '/')}" if init_data['start_param'].present?
-
-    available_products
-    render 'products/index', layout: 'application'
+    render json: { success: true, user: current_user, params: init_data['start_param'] } # head :ok
   end
 
   private
