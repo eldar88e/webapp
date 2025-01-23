@@ -2,7 +2,6 @@ class AuthController < ApplicationController
   skip_before_action :check_authenticate_user!
   layout 'login'
   def login
-    binding.pry
     if current_user
       return redirect_to "/#{params['tgWebAppStartParam'].gsub('_', '/')}" if params['tgWebAppStartParam'].present?
 
