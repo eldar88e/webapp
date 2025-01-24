@@ -104,7 +104,7 @@ class TelegramBotWorker
   end
 
   def send_firs_msg(bot, chat_id)
-    first_btn = initialize_first_btn(chat_id)
+    first_btn = initialize_first_btn
     markup    = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: first_btn)
     caption   = settings[:preview_msg]&.gsub('\\n', "\n") # I18n.t('tg_msg.start')
     bot.api.send_video(
@@ -112,10 +112,10 @@ class TelegramBotWorker
     )
   end
 
-  def initialize_first_btn(chat_id)
+  def initialize_first_btn
     [
       [ Telegram::Bot::Types::InlineKeyboardButton.new(
-        text: 'Каталог', url: "https://t.me/#{settings[:tg_main_bot]}?startapp=#{chat_id}"
+        text: 'Каталог', url: "https://t.me/#{settings[:tg_main_bot]}?startapp"
       ) ],
       [ Telegram::Bot::Types::InlineKeyboardButton.new(
         text: 'Перейти в СДВГ-чат', url: settings[:tg_group]
