@@ -3,8 +3,8 @@ services:
     image: postgres:16.1
     container_name: s-miniapp-pg
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       TZ: Europe/Moscow
     volumes:
       - db_data:/var/lib/postgresql/data
@@ -33,7 +33,8 @@ services:
         ipv4_address: 172.29.0.11
       s3:
         ipv4_address: 172.20.0.7
-    extra_hosts: "${MINIO_DOMAIN}:${MINIO_IP}"
+    extra_hosts:
+      - "${MINIO_DOMAIN}:${MINIO_IP}"
     restart: always
 
   sidekiq:
@@ -55,7 +56,8 @@ services:
       net:
       s3:
         ipv4_address: 172.20.0.8
-    extra_hosts: "${MINIO_DOMAIN}:${MINIO_IP}"
+    extra_hosts:
+      - "${MINIO_DOMAIN}:${MINIO_IP}"
     restart: unless-stopped
 
   redis:
