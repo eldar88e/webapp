@@ -17,6 +17,8 @@ class Review < ApplicationRecord
   scope :approved, -> { where(approved: true) }
   scope :pending, -> { where(approved: false) }
 
+  after_commit :process_photos, on: :create
+
   def approve!
     update!(approved: true)
   end
@@ -26,6 +28,10 @@ class Review < ApplicationRecord
   end
 
   private
+
+  def process_photos
+    ProcessReviewPhotosJob.perform_later(self)
+  end
 
   def user_must_have_purchased_product
     unless user.orders.joins(:order_items).where(status: SHIPPED, order_items: { product_id: product_id }).exists?
