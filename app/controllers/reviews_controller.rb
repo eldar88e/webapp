@@ -16,7 +16,7 @@ class ReviewsController < ApplicationController
   end
 
   def create
-    @review = @product.reviews.new(review_params)
+    @review      = @product.reviews.new(review_params)
     @review.user = current_user
 
     if @review.save
