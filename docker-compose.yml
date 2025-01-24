@@ -32,9 +32,8 @@ services:
       proxy-net:
         ipv4_address: 172.29.0.10
       s3:
-        ipv4_address: 172.20.0.6
-    extra_hosts:
-      - "${MINIO_DOMAIN}:${MINIO_IP}"
+        ipv4_address: 172.20.0.5
+    extra_hosts: "${MINIO_DOMAIN}:${MINIO_IP}"
     restart: always
 
   sidekiq:
@@ -54,6 +53,9 @@ services:
     command: bundle exec sidekiq
     networks:
       net:
+      s3:
+        ipv4_address: 172.20.0.6
+    extra_hosts: "${MINIO_DOMAIN}:${MINIO_IP}"
     restart: always
 
   redis:
