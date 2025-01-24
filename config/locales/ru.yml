@@ -59,7 +59,12 @@ ru:
         price: "Цена"
         stock_quantity: "Остаток на складе"
         description: "Описание"
-        ancestry: "Родитель"
+        ancestry: "Категория"
+        weight: "Вес"
+        dosage_form: "Форма выпуска"
+        package_quantity: "Количество в упаковке"
+        main_ingredient: "Основной компонент"
+        brand: "Производитель"
       setting:
         variable: "Переменная"
         value: "Значение"

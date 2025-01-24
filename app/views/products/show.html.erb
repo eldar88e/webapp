@@ -50,10 +50,21 @@
     </div>
   </div>
 
-  <% if false # TODO: добавить сущность характеристики %>
+  <% if %i[brand weight dosage_form package_quantity main_ingredient].any? { |i| @product.send(i).present? } %>
     <div class="product-wrapper">
       <div class="product">
         <h2 class="title-h">О товаре</h2>
+
+        <ul class="properties-list">
+          <% %i[brand weight dosage_form package_quantity main_ingredient].each do |key| %>
+            <% next if @product.send(key).blank? %>
+
+            <li>
+              <div class="variable" style="<%= 'width: 99px;' if key == :package_quantity %>"><%= t("helpers.label.product.#{key}") %>:</div>
+              <div class="value"><%= @product.send(key) %></div>
+            </li>
+          <% end %>
+        </ul>
       </div>
     </div>
   <% end %>

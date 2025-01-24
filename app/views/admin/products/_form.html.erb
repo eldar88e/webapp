@@ -36,6 +36,43 @@
     <%= form.text_area :description, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
   </div>
 
+  <div class="flex gap-4">
+    <div class="w-1/2">
+      <div class="mb-5">
+        <%= form.label :weight, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+        <%= form.text_field :weight, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
+      </div>
+    </div>
+
+    <div class="w-1/2">
+      <div class="mb-5">
+        <%= form.label :package_quantity, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+        <%= form.number_field :package_quantity, min: 0, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex gap-4">
+    <div class="w-1/2">
+      <div class="mb-5">
+        <%= form.label :dosage_form, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+        <%= form.text_field :dosage_form, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
+      </div>
+    </div>
+
+    <div class="w-1/2">
+      <div class="mb-5">
+        <%= form.label :brand, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+        <%= form.text_field :brand, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-5">
+    <%= form.label :main_ingredient, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+    <%= form.text_field :main_ingredient, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
+  </div>
+
   <div>
     <%= form.submit "Сохранить", data: { action: "click->modal#close" }, class: blue_btn_styles %>
   </div>
