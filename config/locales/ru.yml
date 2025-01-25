@@ -56,6 +56,7 @@ ru:
         role: "Роль"
       order:
         status: "Статус"
+        tracking_number: "Трек-номер"
       product:
         name: "Название товара"
         image: "Картинка"

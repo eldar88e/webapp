@@ -21,9 +21,11 @@
         <li>
           <%= link_to 'Админка', admin_dashboard_path, title: 'Админ панель', data: { turbo: false } if current_user.admin_or_moderator_or_manager? %>
         </li>
-        <li>
-          <%= link_to 'Препараты от СДВГ', root_path, title: 'Препараты от СДВГ', data: { turbo: false } %>
-        </li>
+        <% Product.find(Setting.fetch_value(:root_product_id)).children.each do |category| %>
+          <li>
+            <%= link_to category.name, products_path(category_id: category.id), title: "Перейти к #{category.name}", data: { turbo: false } %>
+          </li>
+        <% end %>
         <li>
           <%= button_to edit_user_registration_path, id: "user", title: 'Перейти в личный кабинет', method: :get,
                         data: { controller: 'buttons', action: 'click->buttons#leftAction', turbo_prefetch: false } do %>

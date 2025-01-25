@@ -6,7 +6,8 @@
 
   <div class="mb-5">
     <%= form.label :ancestry, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
-    <%= form.number_field :ancestry, min: 0, max: Product.maximum(:id), class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
+    <%= form.select :ancestry, Product.find(Setting.fetch_value(:root_product_id)).children.map { |item| [item.name, "#{item.parent.id}/#{item.id}"] }, {},
+                    { class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' } %>
   </div>
 
   <div class="mb-5">

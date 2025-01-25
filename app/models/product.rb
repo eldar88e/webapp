@@ -3,6 +3,8 @@ class Product < ApplicationRecord
   has_one_attached :image, dependent: :purge
   has_many :reviews, dependent: :destroy
 
+  before_validation :normalize_ancestry
+
   validates :stock_quantity, numericality: { greater_than_or_equal_to: 0 }
   validates :name, presence: true
   validate :acceptable_image
@@ -45,5 +47,11 @@ class Product < ApplicationRecord
 
   def self.ransackable_associations(_auth_object = nil)
     %w[]
+  end
+
+  private
+
+  def normalize_ancestry
+    self.ancestry = ancestry.presence
   end
 end

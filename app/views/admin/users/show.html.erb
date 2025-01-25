@@ -1,12 +1,13 @@
 <% content_for :style, "background: transparent;" %>
 
 <div class="pt-6 px-4">
-  <h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-4"><%= @user.full_name %></h1>
+  <h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-4">Профиль</h1>
 </div>
 
 <div class="flex flex-wrap px-2 text-gray-900 dark:text-white">
   <div class="w-full md:w-1/2 px-2 py-2 md:py-4">
     <div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6 flex flex-col gap-4">
+      <h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-4"><%= @user.full_name %></h1>
       <% %i[username tg_id email created_at phone_number full_address postal_code role is_blocked].each do |attribute| %>
         <div>
           <span class="text-gray-700 dark:text-gray-400 text-sm"><%= t("helpers.label.user.#{attribute}") %>: </span>

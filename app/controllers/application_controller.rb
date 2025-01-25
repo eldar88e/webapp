@@ -10,7 +10,9 @@ class ApplicationController < ActionController::Base
   private
 
   def available_products
-    @products = Product.includes(:image_attachment).available.children_only
+    product_id = params[:category_id].presence || Setting.fetch_value(:default_product_id)
+    products = Product.find(product_id).children
+    @products = products.includes(:image_attachment).available # .children_only
   end
 
   def error_notice(msg, status = :unprocessable_entity)

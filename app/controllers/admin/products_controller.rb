@@ -17,7 +17,6 @@ module Admin
 
     def create
       @product = Product.new(product_params)
-
       if @product.save
         redirect_to admin_products_path, notice: 'Товар был успешно добавлен.'
       else

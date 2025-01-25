@@ -1,6 +1,11 @@
 <nav>
-  <ul class="catalog-nav">
-    <li><a href="/" class="btn">Препараты от СДВГ</a></li>
+  <ul class="catalog-nav flex gap-4 overflow-auto">
+    <% Product.find(Setting.fetch_value(:root_product_id)).children.each do |category| %>
+      <li>
+        <%= link_to category.name, products_path(category_id: category.id),
+                    title: "Перейти к #{category.name}", class: 'btn', data: { turbo: false } %>
+      </li>
+    <% end %>
   </ul>
 </nav>
 

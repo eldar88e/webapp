@@ -737,14 +737,18 @@ form label {
 ul.catalog-nav {
   padding: 36px 0;
 
-  a {
-    border: rgba(71, 132, 252, 1) 1px solid;
-    font-size: 18px;
-    font-weight: 200;
-    line-height: 22px;
-    background: transparent;
-    border-radius: 48px;
-    padding: 13px 30px;
+  li {
+    flex-shrink: 0;
+
+    a {
+      border: rgba(71, 132, 252, 1) 1px solid;
+      font-size: 18px;
+      font-weight: 200;
+      line-height: 22px;
+      background: transparent;
+      border-radius: 48px;
+      padding: 13px 30px;
+    }
   }
 }
 
