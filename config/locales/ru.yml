@@ -38,6 +38,9 @@ ru:
   helpers:
     label:
       user:
+        full_address: "Адрес"
+        created_at: "Дата регистрации"
+        is_blocked: "Заблокирован"
         password: "Пароль"
         email: "Электронная почта"
         middle_name: "Фамилия"

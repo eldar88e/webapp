@@ -1,0 +1,97 @@
+<% content_for :style, "background: transparent;" %>
+
+<div class="pt-6 px-4">
+  <h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-4"><%= @user.full_name %></h1>
+</div>
+
+<div class="flex flex-wrap px-2 text-gray-900 dark:text-white">
+  <div class="w-full md:w-1/2 px-2 py-2 md:py-4">
+    <div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6 flex flex-col gap-4">
+      <% %i[username tg_id email created_at phone_number full_address postal_code role is_blocked].each do |attribute| %>
+        <div>
+          <span class="text-gray-700 dark:text-gray-400 text-sm"><%= t("helpers.label.user.#{attribute}") %>: </span>
+          <span class="font-bold">
+            <% if attribute == :created_at %>
+              <%= format_date @user.send(attribute) %>
+            <% else %>
+              <%= @user.send(attribute) %>
+            <% end %>
+          </span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="w-full md:w-1/2 px-2 py-2 md:py-4">
+    <div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6 flex">
+      <%= link_to edit_admin_user_path(@user), data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false },
+                  class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' do %>
+        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
+          <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path>
+        </svg>
+      <% end %>
+
+      <%= button_to admin_user_path(@user), method: :delete,
+                    data: { confirm: 'Вы уверены, что хотите удалить данного пользователя?',
+                            controller: 'confirm', action: 'click->confirm#call' },
+                    class: 'text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800' do %>
+        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+        </svg>
+      <% end %>
+
+      <%= link_to new_admin_message_path(user_id: @user.id, fio: @user.full_name), class: blue_btn_styles,
+                  data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false } do %>
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M2.038 5.61A2.01 2.01 0 0 0 2 6v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6c0-.12-.01-.238-.03-.352l-.866.65-7.89 6.032a2 2 0 0 1-2.429 0L2.884 6.288l-.846-.677Z"/>
+          <path d="M20.677 4.117A1.996 1.996 0 0 0 20 4H4c-.225 0-.44.037-.642.105l.758.607L12 10.742 19.9 4.7l.777-.583Z"/>
+        </svg>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="px-4 py-2">
+  <div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 overflow-hidden">
+    <div class="relative overflow-x-auto">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr>
+          <th scope="col" class="p-4">
+            <div class="flex items-center">
+              <input id="checkbox-all-search" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+              <label for="checkbox-all-search" class="sr-only">checkbox</label>
+            </div>
+          </th>
+          <th scope="col" class="px-6 py-3">
+            <%= sort_link(@q_orders, :id, '№ заказа', data: { turbo_prefetch: false }) %>
+          </th>
+          <th scope="col" class="px-6 py-3">
+            <%= sort_link(@q_orders, :status, 'Статус', data: { turbo_prefetch: false }) %>
+          </th>
+          <th scope="col" class="px-6 py-3">
+            <%= sort_link(@q_orders, :total_amount, 'Cумма', data: { turbo_prefetch: false }) %>
+          </th>
+          <th scope="col" class="px-6 py-3">
+            <%= sort_link(@q_orders, :created_at, 'Дата оформления', data: { turbo_prefetch: false }) %>
+          </th>
+          <th scope="col" class="px-6 py-3">
+            <%= sort_link(@q_orders, :updated_at, 'Дата изменения статуса', data: { turbo_prefetch: false }) %>
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Трек-номер
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Действия
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+          <%= render partial: '/admin/users/order', collection: @orders %>
+        </tbody>
+      </table>
+    </div>
+
+    <%= render partial: '/layouts/partials/admin/pagy' %>
+  </div>
+</div>
