@@ -27,7 +27,7 @@
     <div class="price"><%= product.price.to_i %><span style="margin-left: 3px">₽</span></div>
   </td>
   <td class="px-6 py-4">
-    <%= product.parent&.name %>
+    <%= product.parent&.name || 'Без категории' %>
   </td>
   <td class="flex gap-3 px-6 py-4">
     <%= link_to edit_admin_product_path(product), data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false },
