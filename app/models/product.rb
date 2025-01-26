@@ -13,6 +13,8 @@ class Product < ApplicationRecord
   scope :deleted, -> { where.not(deleted_at: nil) }
   scope :children_only, -> { where.not(ancestry: nil) }
 
+  after_commit :clear_available_categories_cache, on: [:create, :update, :destroy]
+
   def destroy
     transaction do
       descendants.each { |i| i.update(deleted_at: Time.current) }
@@ -50,6 +52,10 @@ class Product < ApplicationRecord
   end
 
   private
+
+  def clear_available_categories_cache
+    Rails.cache.delete("available_categories_#{Setting.fetch_value(:root_product_id)}")
+  end
 
   def normalize_ancestry
     self.ancestry = ancestry.presence

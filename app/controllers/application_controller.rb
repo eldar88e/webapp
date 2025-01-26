@@ -9,6 +9,13 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def available_categories
+    root_product_id = Setting.fetch_value(:root_product_id)
+    Rails.cache.fetch("available_categories_#{root_product_id}", expires_in: 30.minutes) do
+      Product.where(id: root_product_id).exists? ? Product.find(root_product_id).children.available.order(:created_at) : []
+    end
+  end
+
   def available_products
     product_id = params[:category_id].presence || Setting.fetch_value(:default_product_id)
     products = Product.find(product_id).children
@@ -50,5 +57,5 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  helper_method :settings
+  helper_method :settings, :available_categories
 end
