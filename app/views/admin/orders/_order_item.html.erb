@@ -5,7 +5,7 @@
   <td class="px-2 py-2">
     <div class="product-img">
       <% if order_item.product.image.attached? %>
-        <%= image_tag url_for(order_item.product.image), alt: order_item.product.name, style: 'width: 50px;' %>
+        <%= image_tag storage_path(order_item.product.image), alt: order_item.product.name, style: 'width: 50px;' %>
       <% else %>
         <p>No image</p>
       <% end %>
