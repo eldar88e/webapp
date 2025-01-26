@@ -14,7 +14,7 @@ class SendReviewRequestJob < ApplicationJob
     TelegramService.call(
       I18n.t('tg_msg.review', product: product.name),
       user.tg_id,
-      markup_custom: 'Оставить отзыв',
+      markup_text: 'Оставить отзыв',
       markup_url: "products_#{product.id}_reviews_new"
     )
 

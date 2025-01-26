@@ -19,9 +19,9 @@ class TelegramService
   end
 
   def report(**args)
-    @markup        = args[:markup]
-    @markup_custom = args[:markup_custom]
-    @markup_url    = args[:markup_url]
+    @markup      = args[:markup]
+    @markup_url  = args[:markup_url]
+    @markup_text = args[:markup_text] || 'Кнопка'
     tg_send if @message.present? && credential_exists?
   end
 
@@ -106,7 +106,7 @@ class TelegramService
 
   def form_url_keyboard
     url  = "https://t.me/#{settings[:tg_main_bot]}?startapp=#{@markup_url}"
-    [[Telegram::Bot::Types::InlineKeyboardButton.new(text: @markup_custom, url: url)]]
+    [[Telegram::Bot::Types::InlineKeyboardButton.new(text: @markup_text, url: url)]]
   end
 
   def order_btn(btn_text)
@@ -120,7 +120,7 @@ class TelegramService
   end
 
   def form_markup
-    return if @markup.nil? && @markup_custom.nil?
+    return if @markup.nil? && @markup_url.nil?
 
     keyboard = @markup ? form_keyboard : form_url_keyboard
     Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
