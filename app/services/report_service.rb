@@ -122,7 +122,9 @@ class ReportService
       next if product.id == Setting.fetch_value(:delivery_id).to_i
 
       unless user.reviews.exists?(product_id: product.id)
-        SendReviewRequestJob.set(wait: REVIEW_WAIT).perform_later(product_id: product.id, user_id: user.id)
+        SendReviewRequestJob.set(wait: REVIEW_WAIT).perform_later(
+          product_id: product.id, user_id: user.id, order_id: order.id
+        )
       end
     end
   end
