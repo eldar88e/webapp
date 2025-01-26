@@ -14,30 +14,31 @@ class CartItemsController < ApplicationController
         success_notice('Товар добавлен в корзину.')
       ] + update_counters(cart_item_params[:product_id])
     else
-      render turbo_stream: error_notice('Не удалось добавить товар в корзину.')
+      error_notice(cart_item.errors.full_messages)
     end
   end
 
   def update
-    cart      = Cart.includes(:cart_items).find(current_user.cart.id)
-    cart_item = cart.cart_items.find(params[:id])
-    params[:quantity] != '0' ? handle_update_carts(cart_item) : handle_remove_item(cart, cart_item)
+    cart_item = current_user.cart.cart_items.find(params[:id])
+    params[:quantity].to_i.positive? ? update_cart_item(cart_item) : remove_cart_item(cart_item)
   end
 
   private
 
-    def handle_update_carts(cart_item)
-      # TODO: проверить есть столько в остатках
-      cart_item.update(quantity: params[:quantity])
-      render turbo_stream: [
-        turbo_stream.replace(
-          "cart_item_#{cart_item.id}",
-          partial: '/cart_items/cart_item', locals: { cart_item: cart_item }
-        )
-      ] + update_counters(cart_item.product.id)
+    def update_cart_item(cart_item)
+      if cart_item.update(quantity: params[:quantity])
+        render turbo_stream: [
+          turbo_stream.replace(
+            "cart_item_#{cart_item.id}",
+            partial: '/cart_items/cart_item', locals: { cart_item: cart_item }
+          )
+        ] + update_counters(cart_item.product.id)
+      else
+        error_notice(cart_item.errors.full_messages)
+      end
     end
 
-    def handle_remove_item(cart, cart_item)
+    def remove_cart_item(cart_item)
       id = cart_item.product.id
       cart_item.destroy
       @cart_items = current_user.cart.cart_items.order(:created_at).includes(:product)

@@ -120,3 +120,5 @@ ru:
         product: "Товар"
         rating: "Рейтинг"
         photos: "Фотография"
+      cart_item:
+        quantity: "Количество"

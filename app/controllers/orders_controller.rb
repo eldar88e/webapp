@@ -44,7 +44,7 @@ class OrdersController < ApplicationController
       cart_items.each do |cart_item|
         quantity   = calculate_quantity(cart_item)
         order_item = order.order_items.find_or_initialize_by(product: cart_item.product)
-        order_item.destroy! && next if quantity < 1
+        order_item.destroy! && cart_item.destroy! && next if quantity < 1
 
         order_item.update!(quantity: quantity, price: cart_item.product.price)
       end
