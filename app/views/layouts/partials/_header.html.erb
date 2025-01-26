@@ -21,7 +21,7 @@
         <li>
           <%= link_to 'Админка', admin_dashboard_path, title: 'Админ панель', data: { turbo: false } if current_user.admin_or_moderator_or_manager? %>
         </li>
-        <% Product.find(Setting.fetch_value(:root_product_id)).children.each do |category| %>
+        <% Product.find(Setting.fetch_value(:root_product_id)).children.available.each do |category| %>
           <li>
             <%= link_to category.name, products_path(category_id: category.id), title: "Перейти к #{category.name}", data: { turbo: false } %>
           </li>
