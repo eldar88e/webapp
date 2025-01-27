@@ -32,6 +32,7 @@ class ReviewsController < ApplicationController
   end
 
   def review_params
+    binding.pry
     permitted_params = params.require(:review).permit(:content, :rating, photos: [])
     permitted_params[:photos] = [permitted_params[:photos]] if permitted_params[:photos].is_a?(String)
     permitted_params
