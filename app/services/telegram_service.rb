@@ -111,7 +111,6 @@ class TelegramService
 
   def order_btn(btn_text)
     url  = "https://t.me/#{settings[:tg_main_bot]}?startapp"
-    # TODO: Добавить переход в корзину при new == false
     [Telegram::Bot::Types::InlineKeyboardButton.new(text: btn_text, url: url)]
   end
 

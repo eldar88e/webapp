@@ -39,11 +39,9 @@ class TelegramBotWorker
   end
 
   def handle_message(bot, message)
-    User.find_or_create_by_tg(message.chat) # TODO: временно для перехода всех пользователей
-
     case message.text
     when '/start'
-      # User.find_or_create_by_tg(message.chat)
+      User.find_or_create_by_tg(message.chat)
       send_firs_msg(bot, message.chat.id)
     else
       if message.chat.id == settings[:courier_tg_id].to_i
@@ -51,7 +49,13 @@ class TelegramBotWorker
       else
         return save_preview_video(bot, message) if message.video.present?
 
-        Message.create(tg_id: message.from.id, text: message.text, tg_msg_id: message.message_id) if message.text.present?
+        if message.text.present?
+          Message.create(tg_id: message.from.id, text: message.text, tg_msg_id: message.message_id)
+          msg = "Входящее сообщение.\n"
+          msg += "От @#{message.from.username}\n" if message.from.username.present?
+          msg += message.text
+          TelegramJob.perform_later(method: 'call', msg: msg, id: settings[:admin_ids])
+        end
         send_firs_msg(bot, message.chat.id)
       end
     end
@@ -64,7 +68,7 @@ class TelegramBotWorker
       order.update(tracking_number: message.text, status: :shipped)
 
       [user_state[:msg_id], user_state[:h_msg], message.message_id].each do |id|
-        bot.api.delete_message(chat_id: message.chat.id, message_id: id) # TODO: возможно нужно чере job
+        TelegramJob.perform_later(method: 'delete_msg', id: message.chat.id, msg_id: id)
       end
       Rails.cache.delete("user_#{message.chat.id}_state")
     end
