@@ -1,5 +1,6 @@
 class ReviewsController < ApplicationController
   before_action :set_product
+  before_action :detect_device, only: :new
 
   def new
     @review = current_user.reviews.new
@@ -38,5 +39,10 @@ class ReviewsController < ApplicationController
 
   def review_params
     params.require(:review).permit(:content, :rating, photos: [])
+  end
+
+  def detect_device
+    user_agent = request.user_agent.to_s.downcase
+    @is_android = user_agent.include?('android') && user_agent.include?('mobile')
   end
 end

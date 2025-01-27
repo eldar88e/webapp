@@ -1,5 +1,4 @@
 <%= form_with(model: @review, url: (method == :patch ? product_review_path(@review) : product_reviews_path),
-              html: { multipart: true, enctype: 'multipart/form-data' },
               data: { controller: :rating }) do |form| %>
   <%= form.hidden_field :rating, data: { rating_target: "hiddenInput" } %>
 
@@ -19,7 +18,7 @@
   </div>
 
   <div class="input-container">
-    <%= form.file_field :photos, accept: 'image/jpeg,image/png,image/webp,image/heic,image/heif', multiple: true, class: "input-str" %>
+    <%= form.file_field :photos, accept: 'image/jpeg,image/png,image/webp,image/heic,image/heif', multiple: !@is_android, class: "input-str" %>
     <%= form.label :photos, 'Фотографии' %>
   </div>
 
