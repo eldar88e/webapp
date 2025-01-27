@@ -75,20 +75,21 @@ class TelegramService
     message_count = (@message.size / MESSAGE_LIMIT) + 1
     @message      = "‼️‼️Development‼️‼️\n\n#{@message}" if Rails.env.development?
     markup        = form_markup
-    Telegram::Bot::Client.run(@bot_token) do |bot|
-      message_count.times do
-        text_part  = next_text_part
-        response   = bot.api.send_message(
-          chat_id: user_id,
-          text: escape(text_part),
-          parse_mode: 'MarkdownV2',
-          reply_markup: markup
-        )
-        message_id = response.message_id
-      rescue => e
-        message_id = e
+    message_count.times do
+      Telegram::Bot::Client.run(@bot_token) do |bot|
+          text_part  = next_text_part
+          response   = bot.api.send_message(
+            chat_id: user_id,
+            text: escape(text_part),
+            parse_mode: 'MarkdownV2',
+            reply_markup: markup
+          )
+          message_id = response.message_id
       end
+    rescue => e
+      message_id = e
     end
+    # TODO: Если нужно зафиксировать все msg_id нужно их поместить в array
     message_id
   end
 
@@ -126,7 +127,6 @@ class TelegramService
   end
 
   def next_text_part
-    # TODO: Исправить обрезку сообщения
     part     = @message[0...MESSAGE_LIMIT]
     @message = @message[MESSAGE_LIMIT..] || ''
     part
