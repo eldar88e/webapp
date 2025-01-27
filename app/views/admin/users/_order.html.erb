@@ -23,7 +23,7 @@
     <%= format_date order.updated_at %>
   </td>
   <td class="px-6 py-4">
-    <%= order.tracking_number %>
+    <%= order.tracking_number && order.tracking_number.match?(/http/) ? link_to(order.tracking_number, order.tracking_number, target: '_blank') : order.tracking_number %>
   </td>
   <td class="flex px-6 py-4">
     <%= link_to edit_admin_order_path(order), data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false },
