@@ -1,4 +1,5 @@
 <%= form_with(model: review, url: (method == :patch ? product_review_path(product) : product_reviews_path),
+              html: { multipart: true, enctype: 'multipart/form-data' },
               data: { controller: :rating }) do |form| %>
   <%= form.hidden_field :rating, data: { rating_target: "hiddenInput" } %>
 
