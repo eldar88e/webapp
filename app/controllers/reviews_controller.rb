@@ -32,7 +32,9 @@ class ReviewsController < ApplicationController
   end
 
   def review_params
-    params.require(:review).permit(:content, :rating, photos: [])
+    permitted_params = params.require(:review).permit(:content, :rating, photos: [])
+    permitted_params[:photos] = Array(permitted_params[:photos]) if permitted_params[:photos].present?
+    permitted_params
   end
 
   def detect_device
