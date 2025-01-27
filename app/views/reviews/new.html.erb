@@ -2,7 +2,7 @@
   <div class="product-wrapper">
     <div class="product">
       <%= turbo_frame_tag :new_review_page do %>
-        <%= render partial: '/reviews/form', locals: { review: @review, method: :post } %>
+        <%= render partial: '/reviews/form', locals: { method: :post } %>
       <% end %>
     </div>
   </div>
