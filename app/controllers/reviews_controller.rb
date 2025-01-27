@@ -33,7 +33,7 @@ class ReviewsController < ApplicationController
 
   def review_params
     permitted_params = params.require(:review).permit(:content, :rating, photos: [])
-    permitted_params[:photos] = Array(permitted_params[:photos]) if permitted_params[:photos].present?
+    permitted_params[:photos] = [permitted_params[:photos]] if permitted_params[:photos].is_a?(String)
     permitted_params
   end
 
