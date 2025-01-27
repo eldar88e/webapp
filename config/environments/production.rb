@@ -83,7 +83,8 @@ Rails.application.configure do
     {
       remote_ip: event.payload[:request]&.remote_ip,
       process_id: Process.pid,
-      request_id: event.payload[:headers]['action_dispatch.request_id']
+      request_id: event.payload[:headers]['action_dispatch.request_id'],
+      request_body: event.payload[:params].except('controller', 'action', 'format')
     }
   end
   config.lograge.custom_payload { |controller| { user_id: controller.current_user.try(:id) } }
