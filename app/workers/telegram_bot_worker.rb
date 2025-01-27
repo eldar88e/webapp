@@ -51,8 +51,8 @@ class TelegramBotWorker
 
         if message.text.present?
           Message.create(tg_id: message.from.id, text: message.text, tg_msg_id: message.message_id)
-          msg = "Входящее сообщение.\n"
-          msg += "От @#{message.from.username}\n" if message.from.username.present?
+          msg = "‼️Входящее сообщение‼️\n️\n"
+          msg += "От: @#{message.from.username}\n" if message.from.username.present?
           msg += message.text
           TelegramJob.perform_later(method: 'call', msg: msg, id: settings[:admin_ids])
         end

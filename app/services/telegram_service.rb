@@ -66,14 +66,13 @@ class TelegramService
     message_count = (@message.size / MESSAGE_LIMIT) + 1
     @message      = "‼️‼️Development‼️‼️\n\n#{@message}" if Rails.env.development?
     markup        = form_markup
-    [@chat_id.to_s.split(',')].flatten.each do |user_id|
-      message_count.times do
+    message_count.times do
+      text_part = next_text_part
+      [@chat_id.to_s.split(',')].flatten.each do |user_id|
         Telegram::Bot::Client.run(@bot_token) do |bot|
-            text_part = next_text_part
-            response  = bot.api.send_message(
-              chat_id: user_id, text: escape(text_part), parse_mode: 'MarkdownV2', reply_markup: markup
-            )
-            message_id = response.message_id
+          message_id = bot.api.send_message(
+            chat_id: user_id, text: escape(text_part), parse_mode: 'MarkdownV2', reply_markup: markup
+          ).message_id
         end
       rescue => e
         message_id = e
