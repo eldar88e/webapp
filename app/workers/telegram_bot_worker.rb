@@ -8,6 +8,8 @@ class TelegramBotWorker
   TRACK_CACHE_PERIOD = 5.minutes
 
   def perform
+    return Rails.logger.error('tg_token not specified!') unless settings[:tg_token]
+
     Telegram::Bot::Client.run(settings[:tg_token]) do |bot|
       Rails.application.config.telegram_bot = bot
       bot.listen do |message|
