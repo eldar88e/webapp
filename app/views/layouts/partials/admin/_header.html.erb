@@ -31,7 +31,7 @@
           <!-- Dropdown menu -->
           <div data-dropdown-target="menu" class="absolute right-8 z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
             <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
-              <div><%= current_user.middle_name + ' ' + current_user.first_name %></div>
+              <div><%= "#{current_user.middle_name.to_s} #{current_user.first_name.to_s}".strip %></div>
               <div class="font-medium truncate"><%= current_user.email %></div>
               <div><%= t("roles.#{current_user.role}") %></div>
             </div>
