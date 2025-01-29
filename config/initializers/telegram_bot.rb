@@ -6,13 +6,19 @@ Rails.application.config.after_initialize do
 end
 
 Signal.trap('TERM') do
+  bot = Rails.application.config.telegram_bot
+  return if bot.nil?
+
   puts "\nShutting down bot..."
-  Rails.application.config.telegram_bot.stop
+  bot.stop
   exit
 end
 
 Signal.trap('INT') do
+  bot = Rails.application.config.telegram_bot
+  return if bot.nil?
+
   puts "\nShutting down bot..."
-  Rails.application.config.telegram_bot.stop
+  bot.stop
   exit
 end
