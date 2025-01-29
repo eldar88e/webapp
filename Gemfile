@@ -4,7 +4,7 @@ ruby '3.3.3'
 gem 'rails', '~> 7.2.2'
 
 gem 'bootsnap', require: false
-gem 'puma', '~> 6.5'
+gem 'puma', '~> 6.6'
 gem 'jsbundling-rails'
 gem 'turbo-rails'
 gem 'stimulus-rails'
