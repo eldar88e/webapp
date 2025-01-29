@@ -17,9 +17,11 @@ class ApplicationController < ActionController::Base
   end
 
   def available_products
-    product_id = params[:category_id].presence || Setting.fetch_value(:default_product_id)
-    products = Product.find(product_id).children
-    @products = products.includes(:image_attachment).available # .children_only
+    product_id   = params[:category_id].presence || Setting.fetch_value(:default_product_id)
+    raw_products = Product.find_by(id: product_id)
+    return [] if raw_products.blank?
+
+    @products = raw_products.children.includes(:image_attachment).available # .children_only
   end
 
   def error_notice(msg, status = :unprocessable_entity)
