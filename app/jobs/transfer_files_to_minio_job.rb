@@ -8,7 +8,7 @@ class TransferFilesToMinioJob < ApplicationJob
     items = fetch_items(klass, **args)
     count = transfer(items, klass, args[:column])
     msg   = "✅ Exported to MinIO #{count} for #{klass} attachments"
-    TelegramService.call(msg)
+    TelegramService.call(msg, Setting.fetch_value(:admin_ids))
     clean if count.positive?
   end
 
