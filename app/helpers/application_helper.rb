@@ -11,6 +11,8 @@ module ApplicationHelper
     blob = variant ? attach : attach.blob
     if attach.blob.service_name == 'minio'
       "#{ENV.fetch('MINIO_HOST')}/#{ENV.fetch('MINIO_BUCKET')}/#{blob.key}"
+    elsif attach.blob.service_name == 'local' && Rails.env.production? # work with NGINX
+      "/storage/#{attach.blob.key[0..1]}/#{attach.blob.key[2..3]}/#{attach.blob.key}"
     else
       url_for attach
     end
