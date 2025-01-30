@@ -5,7 +5,7 @@ class TransferFilesToMinioJob < ApplicationJob
 
   def perform(**args)
     klass = args[:klass].camelize.constantize
-    items = fetch_items(klass, args[:column], args[:limit])
+    items = fetch_items(klass, **args)
     count = transfer(items, klass, args[:column])
     msg   = "✅ Exported to MinIO #{count} for #{klass} attachments"
     TelegramService.call(msg)
@@ -21,9 +21,12 @@ class TransferFilesToMinioJob < ApplicationJob
     TelegramService.call(msg) if unattached_blobs.size.positive?
   end
 
-  def fetch_items(klass, column, limit = nil)
+  def fetch_items(klass, **args)
+    column       = args[:column]
+    limit        = args[:limit]
+    service_name = args[:service_name] || 'local'
     klass.includes("#{column}_attachment" => :blob)
-         .where(active_storage_blobs: { service_name: 'local' })
+         .where(active_storage_blobs: { service_name: service_name })
          .limit(limit)
   end
 
