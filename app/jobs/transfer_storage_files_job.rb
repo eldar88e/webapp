@@ -9,7 +9,7 @@ class TransferStorageFilesJob < ApplicationJob
     count = transfer(items, klass, args[:column])
     msg   = "✅ Exported to #{Rails.application.config.active_storage.service} #{count} for #{klass} attachments"
     TelegramService.call(msg, Setting.fetch_value(:admin_ids))
-    clean if count.positive?
+    clean if count.positive? && args[:clean]
   end
 
   private

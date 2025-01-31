@@ -71,5 +71,3 @@ networks:
   net:
   proxy-net:
     external: true
-  s3:
-    external: true
