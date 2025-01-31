@@ -1,13 +1,13 @@
-# Run Example TransferFilesToMinioJob.perform_now(klass: 'Product', column: :image, limit: 2000)
+# Run Example TransferStorageFilesJob.perform_now(klass: 'Product', column: :image, limit: 2000)
 
-class TransferFilesToMinioJob < ApplicationJob
+class TransferStorageFilesJob < ApplicationJob
   queue_as :default
 
   def perform(**args)
     klass = args[:klass].camelize.constantize
     items = fetch_items(klass, **args)
     count = transfer(items, klass, args[:column])
-    msg   = "✅ Exported to MinIO #{count} for #{klass} attachments"
+    msg   = "✅ Exported to #{Rails.application.config.active_storage.service} #{count} for #{klass} attachments"
     TelegramService.call(msg, Setting.fetch_value(:admin_ids))
     clean if count.positive?
   end
