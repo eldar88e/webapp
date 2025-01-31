@@ -95,7 +95,7 @@ class TelegramService
   end
 
   def form_url_keyboard
-    url  = "https://t.me/#{settings[:tg_main_bot]}?startapp=#{@markup_url}"
+    url  = "https://t.me/#{settings[:tg_main_bot]}?startapp&#{@markup_url}"
     [[Telegram::Bot::Types::InlineKeyboardButton.new(text: @markup_text, url: url)]]
   end
 

@@ -3,6 +3,7 @@ class AuthController < ApplicationController
   layout 'login'
   def login
     if current_user
+      binding.pry
       return redirect_to "/#{params['tgWebAppStartParam'].gsub('_', '/')}" if params['tgWebAppStartParam'].present?
 
       available_products
