@@ -52,7 +52,11 @@ class TelegramBotWorker
         return save_preview_video(bot, message) if message.video.present?
 
         if message.text.present?
-          Message.create(tg_id: message.from.id, text: message.text, tg_msg_id: message.message_id)
+          begin
+            Message.create!(tg_id: message.from.id, text: message.text, tg_msg_id: message.message_id)
+          rescue => e
+            Rails.logger.error "Not save tg msg #{message.from.id}, #{message.text}, #{message.message_id} | #{e.message}"
+          end
           msg = "‼️Входящее сообщение‼️\n️\n"
           msg += "От: @#{message.from.username}\n" if message.from.username.present?
           msg += message.text
