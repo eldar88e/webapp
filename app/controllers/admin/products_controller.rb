@@ -3,7 +3,8 @@ module Admin
     before_action :set_product, only: %i[edit update destroy]
 
     def index
-      @pagy, @products = pagy(Product.includes(:image_attachment).order(:created_at), items: 20)
+      @q_products = Product.includes(:image_attachment).order(:created_at).ransack(params[:q])
+      @pagy, @products = pagy(@q_products.result, items: 20)
     end
 
     def new
@@ -16,7 +17,6 @@ module Admin
 
     def create
       @product = Product.new(product_params)
-
       if @product.save
         redirect_to admin_products_path, notice: 'Товар был успешно добавлен.'
       else
@@ -57,7 +57,8 @@ module Admin
     end
 
     def product_params
-      params.require(:product).permit(:name, :description, :price, :stock_quantity, :image)
+      params.require(:product).permit(:name, :description, :price, :stock_quantity, :image, :ancestry, :brand,
+                                      :weight, :dosage_form, :package_quantity, :main_ingredient)
     end
   end
 end

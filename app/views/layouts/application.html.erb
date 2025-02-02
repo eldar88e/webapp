@@ -26,7 +26,9 @@
     <%= render partial: '/layouts/partials/header' %>
     <main>
       <div class="container mx-auto">
-        <div id="modal" class="modal"></div>
+        <div id="modal" class="modal <%= yield :model_class %>" style="<%= yield :model_style %>">
+          <%= yield :modal %>
+        </div>
 
         <%= yield %>
       </div>

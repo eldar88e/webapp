@@ -17,7 +17,8 @@
     <%= order.total_amount.to_i %>₽
   </td>
   <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-    <%= order.user.full_name %>
+    <% user = order.user %>
+    <%= link_to user.full_name, admin_user_path(user) %>
   </th>
   <td class="px-6 py-4">
     <%= format_date order.created_at %>

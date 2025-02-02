@@ -10,6 +10,14 @@ class Setting < ApplicationRecord
     result[key]
   end
 
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[variable]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    %w[]
+  end
+
   private
 
   def clear_settings_cache

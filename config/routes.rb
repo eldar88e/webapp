@@ -12,10 +12,12 @@ Rails.application.routes.draw do
 
   root 'auth#login'
 
-  resources :products, only: [ :index ]
-  resources :carts, only: [ :index ]
-  resources :cart_items, only: [ :create, :update ]
-  resources :orders, only: [ :index, :create, :update ]
+  resources :products, only: [:index, :show] do
+    resources :reviews, only: [:new, :create, :edit, :update]
+  end
+  resources :carts, only: [:index]
+  resources :cart_items, only: [:create, :update]
+  resources :orders, only: [:index, :create, :update]
 
   post '/auth/telegram', to: 'auth#telegram_auth'
   get '/login', to: 'auth#login'
@@ -31,6 +33,7 @@ Rails.application.routes.draw do
     resources :mailings
     resources :analytics, only: :index
     resources :messages, only: [:index, :new, :create, :destroy]
+    resources :reviews
   end
 
   match '*unmatched', to: 'application#redirect_to_telegram', via: :all,

@@ -24757,7 +24757,7 @@ var chart_orders_controller_default = class extends Controller {
     const label_translate = {
       "initialized": "\u0418\u043D\u0438\u0446\u0438\u0430\u043B\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u043D",
       "unpaid": "\u041E\u0436\u0438\u0434\u0430\u043D\u0438\u0435 \u043F\u043B\u0430\u0442\u0435\u0436\u0430",
-      "pending": "\u041E\u0436\u0438\u0434\u0430\u043D\u0438\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044F \u043F\u043B\u0430\u0442\u0435\u0436\u0430",
+      "paid": "\u041E\u0436\u0438\u0434\u0430\u043D\u0438\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044F \u043F\u043B\u0430\u0442\u0435\u0436\u0430",
       "processing": "\u0412 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438",
       "shipped": "\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D",
       "cancelled": "\u041E\u0442\u043C\u0435\u043D\u0435\u043D",
@@ -24783,14 +24783,14 @@ var chart_orders_controller_default = class extends Controller {
               show: true,
               name: {
                 show: true,
-                fontFamily: "Inter, sans-serif",
+                fontFamily: "Montserrat, sans-serif",
                 offsetY: 20
               },
               total: {
                 showAlways: true,
                 show: true,
                 label: "\u0417\u0430\u043A\u0430\u0437\u043E\u0432",
-                fontFamily: "Inter, sans-serif",
+                fontFamily: "Montserrat, sans-serif",
                 formatter: function(w) {
                   const sum = w.globals.seriesTotals.reduce((a, b) => {
                     return a + b;
@@ -24800,7 +24800,7 @@ var chart_orders_controller_default = class extends Controller {
               },
               value: {
                 show: true,
-                fontFamily: "Inter, sans-serif",
+                fontFamily: "Montserrat, sans-serif",
                 offsetY: -20,
                 formatter: (value) => this.localization.orderTitle(value)
               }
@@ -24820,7 +24820,7 @@ var chart_orders_controller_default = class extends Controller {
       },
       legend: {
         position: "bottom",
-        fontFamily: "Inter, sans-serif"
+        fontFamily: "Montserrat, sans-serif"
       },
       yaxis: {
         labels: {

@@ -3,19 +3,39 @@
 <div class="header">
   <div class="container mx-auto">
     <div class="flex items-center justify-between">
-      <%= button_to edit_user_registration_path, id: "user", title: current_user.first_name, method: :get,
-                    data: { controller: 'buttons', action: 'click->buttons#leftAction', turbo_prefetch: false } do %>
-        <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M24.6665 26.5963C30.7385 26.5963 35.6665 28.7792 35.6665 31.4625V36.0833H13.6665V31.4625C13.6665 28.7792 18.5945 26.5963 24.6665 26.5963ZM34.1998 31.4625C34.1998 29.5438 29.9318 27.9867 24.6665 27.9867C19.4012 27.9867 15.1332 29.5438 15.1332 31.4625L15.0469 34.6112H34.1998V31.4625ZM24.6665 14.0833C26.0279 14.0833 27.3336 14.596 28.2963 15.5086C29.259 16.4212 29.7998 17.6589 29.7998 18.9495C29.7998 20.2401 29.259 21.4778 28.2963 22.3904C27.3336 23.303 26.0279 23.8157 24.6665 23.8157C23.3051 23.8157 21.9994 23.303 21.0367 22.3904C20.074 21.4778 19.5332 20.2401 19.5332 18.9495C19.5332 17.6589 20.074 16.4212 21.0367 15.5086C21.9994 14.596 23.3051 14.0833 24.6665 14.0833ZM24.6665 15.4737C23.694 15.4737 22.7614 15.8399 22.0738 16.4917C21.3861 17.1436 20.9998 18.0276 20.9998 18.9495C20.9998 19.8713 21.3861 20.7554 22.0738 21.4073C22.7614 22.0591 23.694 22.4253 24.6665 22.4253C25.639 22.4253 26.5716 22.0591 27.2592 21.4073C27.9469 20.7554 28.3332 19.8713 28.3332 18.9495C28.3332 18.0276 27.9469 17.1436 27.2592 16.4917C26.5716 15.8399 25.639 15.4737 24.6665 15.4737Z" fill="#4784FC"/>
-          <circle cx="25" cy="25" r="24.5" stroke="#4784FC"/>
-        </svg>
-      <% end %>
-
-      <button class="logo" data-controller="buttons" data-action="click->buttons#mainPage">
-        <%= settings[:app_name] %>
+      <button class="burger-menu" title="Меню" data-controller="menu" data-action="click->menu#show">
+        <span class="line"></span>
       </button>
+
+      <%= button_to settings[:app_name], root_path, class: 'logo', title: 'На главную', method: :get %>
 
       <%= render '/layouts/partials/cart' %>
     </div>
+  </div>
+</div>
+
+<div class="menu-wrapper" id="menu">
+  <div class="menu left">
+    <nav>
+      <ul>
+        <li>
+          <%= link_to 'Админка', admin_dashboard_path, title: 'Админ панель', data: { turbo: false } if current_user.admin_or_moderator_or_manager? %>
+        </li>
+        <% available_categories.each do |category| %>
+          <li>
+            <%= link_to category.name, products_path(category_id: category.id), title: "Перейти к #{category.name}", data: { turbo_prefetch: false } %>
+          </li>
+        <% end %>
+        <li>
+          <%= button_to edit_user_registration_path, id: "user", title: 'Перейти в личный кабинет', method: :get,
+                        data: { controller: 'buttons', action: 'click->buttons#leftAction', turbo_prefetch: false } do %>
+            <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.60321 11.8209C14.9042 11.8209 19.2064 13.7265 19.2064 16.0691V20.1032H0V16.0691C0 13.7265 4.30224 11.8209 9.60321 11.8209ZM17.926 16.0691C17.926 14.3941 14.1999 13.0347 9.60321 13.0347C5.00647 13.0347 1.28043 14.3941 1.28043 16.0691L1.20509 18.818H17.926V16.0691ZM9.60321 0.89679C10.7918 0.89679 11.9317 1.34437 12.7721 2.14108C13.6126 2.93778 14.0847 4.01834 14.0847 5.14505C14.0847 6.27176 13.6126 7.35232 12.7721 8.14902C11.9317 8.94572 10.7918 9.39331 9.60321 9.39331C8.41464 9.39331 7.27476 8.94572 6.43431 8.14902C5.59387 7.35232 5.12171 6.27176 5.12171 5.14505C5.12171 4.01834 5.59387 2.93778 6.43431 2.14108C7.27476 1.34437 8.41464 0.89679 9.60321 0.89679ZM9.60321 2.11058C8.75423 2.11058 7.94003 2.43028 7.33971 2.99935C6.7394 3.56843 6.40214 4.34026 6.40214 5.14505C6.40214 5.94984 6.7394 6.72167 7.33971 7.29074C7.94003 7.85982 8.75423 8.17952 9.60321 8.17952C10.4522 8.17952 11.2664 7.85982 11.8667 7.29074C12.467 6.72167 12.8043 5.94984 12.8043 5.14505C12.8043 4.34026 12.467 3.56843 11.8667 2.99935C11.2664 2.43028 10.4522 2.11058 9.60321 2.11058Z" fill="#4784FC"/>
+            </svg>
+            <span>Личный кабинет</span>
+          <% end %>
+        </li>
+      </ul>
+    </nav>
   </div>
 </div>

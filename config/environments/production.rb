@@ -38,7 +38,7 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :minio
+  config.active_storage.service = :local
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
@@ -62,39 +62,55 @@ Rails.application.configure do
     expires_in: 2.hours
   }
 
-  logstash_logger = LogStashLogger.new(
-    type: :udp,
-    host: ENV['LOGSTASH_HOST'],
-    port: ENV['LOGSTASH_PORT'].to_i,
-    formatter: :json_lines,
-    customize_event: lambda do |event|
-      event['host'] = { name: Socket.gethostname }
-      event['service'] = ['app']
+  if Rails.env.production? && ENV['LOGSTASH_HOST'].present? && ENV['LOGSTASH_PORT'].present?
+    logstash_logger = LogStashLogger.new(
+      type: :udp,
+      host: ENV['LOGSTASH_HOST'],
+      port: ENV['LOGSTASH_PORT'].to_i,
+      formatter: :json_lines,
+      customize_event: lambda do |event|
+        event['host'] = { name: Socket.gethostname }
+        event['service'] = defined?(Sidekiq::CLI) ? 'sidekiq' : 'app' # ['app']
+      end
+    )
+
+    logger = ActiveSupport::TaggedLogging.new(logstash_logger)
+
+    config.lograge.enabled = true
+    config.lograge.formatter = Lograge::Formatters::Logstash.new
+    config.lograge.custom_options = lambda do |event|
+      {
+        remote_ip: event.payload[:request]&.remote_ip,
+        process_id: Process.pid,
+        request_id: event.payload[:headers]['action_dispatch.request_id'],
+        request_body: event.payload[:params].except('controller', 'action', 'format')
+      }
     end
-  )
+    config.lograge.custom_payload { |controller| { user_id: controller.current_user.try(:id) } }
+    config.lograge.logger = logstash_logger
+  else
+    file_logger = ActiveSupport::Logger.new(
+      "log/#{Rails.env}.json.log",
+      10, # Количество файлов для ротации (например, 10)
+      20 * 1024 * 1024 # Максимальный размер файла (20 МБ)
+    )
 
-  # Log to STDOUT by default
-  # .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
-  # .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
+    file_logger.formatter = proc do |severity, timestamp, progname, msg|
+      log_entry = {
+        timestamp: timestamp,
+        level: severity,
+        message: msg,
+        request_id: Thread.current[:request_id]
+      }.to_json + "\n"
+      log_entry
+    end
 
-  config.logger    = ActiveSupport::TaggedLogging.new(logstash_logger)
+    logger = ActiveSupport::TaggedLogging.new(file_logger)
+  end
+
+  config.logger    = logger
   config.log_tags  = [:request_id]
   config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
-
-  config.lograge.enabled = true
-  config.lograge.formatter = Lograge::Formatters::Logstash.new
-  config.lograge.custom_options = lambda do |event|
-    {
-      host: { ip: event.payload[:ip], remote_ip: event.payload[:request].remote_ip || 'unknown', host: event.payload[:host] },
-      process_id: Process.pid,
-      request_id: event.payload[:headers]['action_dispatch.request_id'],
-      service: ['app']
-    }
-  end
-  config.lograge.custom_payload do |controller|
-    { user_id: controller.current_user.try(:id) }
-  end
-  config.lograge.logger = LogStashLogger.new(type: :udp, host: ENV['LOGSTASH_HOST'], port: ENV['LOGSTASH_PORT'])
 
   # Disable caching for Action Mailer templates even if Action Controller
   # caching is enabled.
@@ -118,7 +134,7 @@ Rails.application.configure do
   config.active_record.attributes_for_inspect = [ :id ]
 
   # Enable DNS rebinding protection and other `Host` header attacks.
-  config.hosts = %w[webapp.open-ps.ru strattera.tgapp.online miniapp localhost]
+  config.hosts = %w[webapp.open-ps.ru strattera.tgapp.online staging.tgapp.online miniapp localhost]
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com
   #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`

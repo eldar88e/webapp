@@ -35,20 +35,20 @@ class OrdersController < ApplicationController
 
   def create_order(cart, cart_items)
     cart_product_ids = cart_items.pluck(:product_id)
+    order            = current_user.orders.find_by(status: :unpaid)
     ActiveRecord::Base.transaction do
-      order = current_user.orders.find_by(status: :unpaid)
       order.order_items.where.not(product_id: cart_product_ids).destroy_all if order
-      order = current_user.orders.create!(status: :initialized, total_amount: 0) if order.nil?
+      order = current_user.orders.create!(total_amount: 0) if order.nil?
       order.update!(total_amount: cart.calculate_total_price, status: :initialized)
 
       cart_items.each do |cart_item|
         quantity   = calculate_quantity(cart_item)
-        order_item = order.order_items_with_product.find_or_initialize_by(product: cart_item.product)
-        order_item.destroy! && next if quantity.zero? || quantity.negative?
+        order_item = order.order_items.find_or_initialize_by(product: cart_item.product)
+        order_item.destroy! && cart_item.destroy! && next if quantity < 1
 
         order_item.update!(quantity: quantity, price: cart_item.product.price)
       end
-      # TODO: Проверить есть ли в заказе товары если нет или есть только доставка удалить order and cart
+      # TODO: Проверить на уровне модели есть ли в заказе товары, если нет или есть только доставка удалить order and cart
       order.update!(status: :unpaid)
     end
   end

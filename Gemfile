@@ -27,8 +27,11 @@ gem 'sidekiq-unique-jobs'
 gem 'pagy'
 gem 'pundit'
 gem 'ransack'
+gem 'ancestry'
 gem 'lograge'
 gem 'logstash-logger'
+gem 'ruby-vips'
+gem 'image_processing'
 
 group :development, :test do
   gem 'pry'

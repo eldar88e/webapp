@@ -1,10 +1,15 @@
 module Admin
   class UsersController < Admin::ApplicationController
-    before_action :set_user, only: %i[edit update destroy]
+    before_action :set_user, only: %i[show edit update destroy]
 
     def index
       @q_users = User.all.order(created_at: :desc).ransack(params[:q])
       @pagy, @users = pagy(@q_users.result, items: 20)
+    end
+
+    def show
+      @q_orders = @user.orders.order(created_at: :desc).ransack(params[:q])
+      @pagy, @orders = pagy(@q_orders.result, items: 20)
     end
 
     def edit

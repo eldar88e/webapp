@@ -35,7 +35,7 @@ export default class extends Controller {
 
     async renderChart(labels, orders, total) {
         const label_translate = { "initialized": "Инициализирован", "unpaid": "Ожидание платежа",
-            "pending": "Ожидание подтверждения платежа", "processing": "В процессе отправки", "shipped": "Отправлен",
+            "paid": "Ожидание подтверждения платежа", "processing": "В процессе отправки", "shipped": "Отправлен",
             "cancelled": "Отменен", "overdue": "Просрочен" }
         const labels_rus = labels.map(label => label_translate[label] || label);
         const options = {
@@ -57,14 +57,14 @@ export default class extends Controller {
                             show: true,
                                 name: {
                                 show: true,
-                                    fontFamily: "Inter, sans-serif",
+                                    fontFamily: "Montserrat, sans-serif",
                                     offsetY: 20,
                             },
                             total: {
                                 showAlways: true,
                                     show: true,
                                     label: "Заказов",
-                                    fontFamily: "Inter, sans-serif",
+                                    fontFamily: "Montserrat, sans-serif",
                                     formatter: function (w) {
                                     const sum = w.globals.seriesTotals.reduce((a, b) => {
                                         return a + b
@@ -74,7 +74,7 @@ export default class extends Controller {
                             },
                             value: {
                                 show: true,
-                                fontFamily: "Inter, sans-serif",
+                                fontFamily: "Montserrat, sans-serif",
                                 offsetY: -20,
                                 formatter: (value) => this.localization.orderTitle(value),
                             },
@@ -94,7 +94,7 @@ export default class extends Controller {
             },
             legend: {
                 position: "bottom",
-                    fontFamily: "Inter, sans-serif",
+                    fontFamily: "Montserrat, sans-serif",
             },
             yaxis: {
                 labels: {

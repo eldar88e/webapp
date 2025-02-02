@@ -1,0 +1,37 @@
+<%= form_with(model: @review, url: (method == :patch ? admin_review_path(@review) : admin_reviews_path)) do |form| %>
+  <div class="mb-5">
+    <%= form.label :rating, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+    <%= form.number_field :rating, max: 5, min: 0, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
+  </div>
+
+  <div class="mb-5">
+    <%= form.label :content, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+    <%= form.text_area :content, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
+  </div>
+
+  <div class="mb-5">
+    <%= form.label :photos, 'Фотографии', class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+    <%= form.file_field :photos, accept: 'image/jpeg,image/png,image/webp', multiple: true, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %>
+  </div>
+
+  <% if @review.photos.attached? %>
+    <div class="flex gap-1 mb-5">
+      <% @review.photos.each do |photo| %>
+        <div style="background-image: url('<%= storage_path(photo.variant(:big), true) %>'); background-size: cover; border-radius: 4px;
+          background-repeat: no-repeat; background-position: center; width: 100px; height: 100px"></div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="mb-5 flex items-center gap-1">
+    <%= form.check_box :approved, { class: 'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded
+                                              focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800
+                                              dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
+                                              dark:border-gray-600' } %>
+    <%= form.label :approved, "Одобрено", class: 'ml-2 text-sm font-medium text-gray-900 dark:text-white' %>
+  </div>
+
+  <div>
+    <%= form.submit "Сохранить", data: { action: "click->modal#close" }, class: blue_btn_styles %>
+  </div>
+<% end %>

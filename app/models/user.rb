@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :orders, dependent: :destroy
   has_many :messages, primary_key: :tg_id, foreign_key: :tg_id
   has_one :cart, dependent: :destroy
+  has_many :reviews, dependent: :destroy
 
   validates :tg_id, presence: true, uniqueness: true
   validates :postal_code, numericality: { only_integer: true, allow_nil: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999 }
@@ -81,7 +82,7 @@ class User < ApplicationRecord
   end
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[first_name middle_name last_name username address created_at role is_blocked]
+    %w[id first_name middle_name last_name username address created_at role is_blocked]
   end
 
   def self.ransackable_associations(_auth_object = nil)

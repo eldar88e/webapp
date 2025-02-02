@@ -15,8 +15,12 @@
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.success) {
-                        console.log("Authenticated:", data.user);
-                        window.location.href = "/products";
+                        //console.log("Authenticated:", data.user);
+                        let path = "/";
+                        if (data.params && data.params.includes('url=')) {
+                            path += data.params.replace('url=', '').split('_').join('/');
+                        }
+                        window.location.href = path;
                     } else {
                         console.log("Authentication failed: " + data.error);
                         window.location.href = tg_main_bot;

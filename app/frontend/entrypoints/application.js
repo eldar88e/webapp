@@ -8397,7 +8397,6 @@ var agreement_controller_default = class extends Controller {
     event.preventDefault();
     this.agreementTarget.style = "display: block;";
     this.formTarget.style = "display: none;";
-    document.getElementById("modal").classList.remove("left");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
   agree(event) {
@@ -8405,7 +8404,6 @@ var agreement_controller_default = class extends Controller {
     this.check_boxTarget.checked = true;
     this.formTarget.style = "display: block;";
     this.agreementTarget.style = "display: none;";
-    document.getElementById("modal").classList.add("left");
   }
   close() {
     this.formTarget.style = "display: block;";
@@ -8588,12 +8586,61 @@ var notices_controller_default = class extends Controller {
   }
 };
 
+// app/frontend/js/controllers/rating_controller.js
+var rating_controller_default = class extends Controller {
+  static targets = ["stars", "hiddenInput"];
+  connect() {
+    console.log("hi!");
+  }
+  select(event) {
+    const selectedRating = parseInt(event.currentTarget.dataset.value, 10);
+    this.hiddenInputTarget.value = selectedRating;
+    this.updateStars(selectedRating);
+  }
+  updateStars(rating) {
+    this.starsTargets.forEach((star, index) => {
+      if (index < rating) {
+        star.classList.add("filled-star");
+      } else {
+        star.classList.remove("filled-star");
+      }
+    });
+  }
+};
+
+// app/frontend/js/controllers/menu_controller.js
+var menu_controller_default = class extends Controller {
+  show() {
+    this.element.classList.toggle("show");
+    let menu = document.getElementById("menu");
+    if (menu) {
+      menu.classList.toggle("show");
+      let modal = document.getElementById("modal");
+      let button = menu.querySelector("button");
+      if (menu.classList.contains("show")) {
+        this.menuClose(menu, button);
+        if (modal && modal.style.display === "block") {
+          modal.style.display = "none";
+        }
+      }
+    }
+  }
+  menuClose(menu, button) {
+    button.addEventListener("click", () => {
+      menu.classList.remove("show");
+      this.element.classList.remove("show");
+    });
+  }
+};
+
 // app/frontend/js/controllers/index.js
 application.register("agreement", agreement_controller_default);
 application.register("dadata", dadata_controller_default);
 application.register("buttons", buttons_controller_default);
 application.register("phone_mask", phone_mask_controller_default);
 application.register("notices", notices_controller_default);
+application.register("rating", rating_controller_default);
+application.register("menu", menu_controller_default);
 
 // app/frontend/js/others/main.js
 window.closeModal = function() {

@@ -11,15 +11,17 @@ class TelegramService
   end
 
   def self.call(msg, id = nil, **args)
-    new(msg, id).report(args[:markup])
+    new(msg, id).report(**args)
   end
 
   def self.delete_msg(msg, id, msg_id)
     new(msg, id, msg_id).send(:delete_message)
   end
 
-  def report(markup = nil)
-    @markup = markup
+  def report(**args)
+    @markup      = args[:markup]
+    @markup_url  = args[:markup_url]
+    @markup_text = args[:markup_text] || 'Кнопка'
     tg_send if @message.present? && credential_exists?
   end
 
@@ -55,38 +57,28 @@ class TelegramService
     false
   end
 
-  def tg_send
-    return send_messages_to_user(@chat_id) if @chat_id.instance_of?(Integer)
-
-    [@chat_id.to_s.split(',')].flatten.each { |id| send_messages_to_user(id) }
-    nil
-  rescue StandardError => e
-    Rails.logger.error e.message
-  end
-
   def escape(text)
     text.gsub(/\[.*?m/, '').gsub(/([-_*\[\]()~>#+=|{}.!])/, '\\\\\1') # delete `
   end
 
-  def send_messages_to_user(user_id)
+  def tg_send
     message_id    = nil
     message_count = (@message.size / MESSAGE_LIMIT) + 1
     @message      = "‼️‼️Development‼️‼️\n\n#{@message}" if Rails.env.development?
     markup        = form_markup
-    Telegram::Bot::Client.run(@bot_token) do |bot|
-      message_count.times do
-        text_part  = next_text_part
-        response   = bot.api.send_message(
-          chat_id: user_id,
-          text: escape(text_part),
-          parse_mode: 'MarkdownV2',
-          reply_markup: markup
-        )
-        message_id = response.message_id
+    message_count.times do
+      text_part = next_text_part
+      [@chat_id.to_s.split(',')].flatten.each do |user_id|
+        Telegram::Bot::Client.run(@bot_token) do |bot|
+          message_id = bot.api.send_message(
+            chat_id: user_id, text: escape(text_part), parse_mode: 'MarkdownV2', reply_markup: markup
+          ).message_id
+        end
       rescue => e
         message_id = e
       end
     end
+    # TODO: Если нужно зафиксировать все msg_id нужно их поместить в array
     message_id
   end
 
@@ -102,9 +94,13 @@ class TelegramService
     buttons
   end
 
+  def form_url_keyboard
+    url = "https://t.me/#{settings[:tg_main_bot]}?startapp=url=#{@markup_url}"
+    [[Telegram::Bot::Types::InlineKeyboardButton.new(text: @markup_text, url: url)]]
+  end
+
   def order_btn(btn_text)
     url  = "https://t.me/#{settings[:tg_main_bot]}?startapp"
-    # TODO: Добавить переход в корзину при new == false
     [Telegram::Bot::Types::InlineKeyboardButton.new(text: btn_text, url: url)]
   end
 
@@ -113,9 +109,9 @@ class TelegramService
   end
 
   def form_markup
-    return if @markup.nil?
+    return if @markup.nil? && @markup_url.nil?
 
-    keyboard = form_keyboard
+    keyboard = @markup ? form_keyboard : form_url_keyboard
     Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
   end
 

@@ -11,6 +11,14 @@ RUN apk --update add --no-cache \
     curl \
     libffi-dev \
     ruby-dev \
+    vips \
+    vips-dev \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    libwebp-dev \
+    libheif-dev \
+    imagemagick \
+    imagemagick-dev \
     && rm -rf /var/cache/apk/*
 
 ENV BUNDLE_DEPLOYMENT="1" \
@@ -20,7 +28,7 @@ ENV BUNDLE_DEPLOYMENT="1" \
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
-RUN gem update --system 3.5.23
+RUN gem update --system 3.6.3
 RUN gem install bundler -v $(tail -n 1 Gemfile.lock)
 RUN bundle check || bundle install
 RUN bundle clean --force
