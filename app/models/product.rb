@@ -13,6 +13,7 @@ class Product < ApplicationRecord
   scope :deleted, -> { where.not(deleted_at: nil) }
   scope :children_only, -> { where.not(ancestry: nil) }
 
+  before_update :notify_if_low_stock, if: :stock_quantity_changed?
   after_commit :clear_available_categories_cache, on: [:create, :update, :destroy]
 
   def destroy
@@ -52,6 +53,13 @@ class Product < ApplicationRecord
   end
 
   private
+
+  def notify_if_low_stock
+    if stock_quantity < 15 && stock_quantity_was >= 15
+      msg = "⚠️ Внимание! Осталось всего #{stock_quantity} единиц товара '#{name}'!"
+      TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
+    end
+  end
 
   def clear_available_categories_cache
     Rails.cache.delete("available_categories_#{Setting.fetch_value(:root_product_id)}")
