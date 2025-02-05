@@ -3,28 +3,21 @@
   "private": true,
   "devDependencies": {
     "autoprefixer": "^10.4.20",
-    "nodemon": "^3.1.7",
     "postcss": "^8.4.49",
     "postcss-cli": "^11.0.0",
-    "sass": "^1.81.0",
-    "vite": "^5.0.0",
-    "vite-plugin-ruby": "^5.1.0"
+    "sass": "^1.83.4",
+    "tailwindcss": "^3.4.17",
+    "vite": "^6.0.11",
+    "vite-plugin-ruby": "^5.1.1"
   },
   "scripts": {
-    "build": "esbuild app/frontend/js/*.* --bundle --sourcemap --format=esm --outdir=app/frontend/entrypoints --public-path=/",
-    "build:css:tailwind": "tailwindcss -i ./app/frontend/styles/application.tailwind.css -o ./app/frontend/entrypoints/application.css --minify",
-    "build:css:compile": "sass ./app/frontend/styles/style.scss:./app/frontend/entrypoints/style.css --no-source-map --load-path=node_modules",
-    "build:css:prefix": "postcss ./app/frontend/entrypoints/style.css --use=autoprefixer --output=./app/frontend/entrypoints/style.css",
-    "build:css:admin:compile": "sass ./app/frontend/styles/admin.scss:./app/frontend/entrypoints/admin.css --no-source-map --load-path=node_modules",
-    "build:css:admin:prefix": "postcss ./app/frontend/entrypoints/admin.css --use=autoprefixer --output=./app/frontend/entrypoints/admin.css",
-    "build:css": "yarn build:css:tailwind && yarn build:css:compile && yarn build:css:prefix && yarn build:css:admin:compile && yarn build:css:admin:prefix",
-    "watch:css": "nodemon --watch ./app/frontend/styles/ --ext scss --exec \"yarn build:css\""
+    "build": "vite build",
+    "dev": "vite"
   },
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.12",
     "apexcharts": "^4.2.0",
-    "tailwindcss": "^3.4.15",
     "i18n-js": "4.5.1"
   }
 }
