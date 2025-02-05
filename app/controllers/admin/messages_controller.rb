@@ -26,7 +26,7 @@ module Admin
       @message = Message.find(params[:id])
       @message.destroy!
       msg = 'Сообщение было успешно удалено.'
-      TelegramService.delete_msg('', @message.tg_id, @message.tg_msg_id) if params[:tg_msg]
+      TelegramMsgDelService.remove(@message.tg_id, @message.tg_msg_id) if params[:tg_msg]
       msg += ' В телеграм и БД.' if params[:tg_msg]
       render turbo_stream: [
         turbo_stream.remove(@message),
