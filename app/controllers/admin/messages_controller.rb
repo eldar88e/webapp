@@ -42,7 +42,7 @@ module Admin
     private
 
     def authorize_message
-      authorize [:admin, :moderator, Message]
+      authorize [:admin, Message]
     end
 
     def message_params
