@@ -7,7 +7,7 @@ module Admin
 
       root_product_id = Setting.fetch_value(:root_product_id)
       if root_product_id
-        session[:filter] = params[:filter] || session[:filter]
+        session[:filter] = params[:filter].presence || session[:filter].presence || 'descendants'
         case session[:filter]
         when 'descendants'
           root_product = Product.find(root_product_id)
@@ -15,6 +15,9 @@ module Admin
         when 'children'
           root_product = Product.find(root_product_id)
           @result      = @q_products.result.where(id: root_product.children.ids)
+        when 'services'
+          delivery_id = Setting.fetch_value(:delivery_id)
+          @result     = delivery_id ? @q_products.result.where(id: delivery_id) : @q_products.result
         else
           @result = @q_products.result
         end
