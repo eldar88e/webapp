@@ -4,7 +4,25 @@ module Admin
 
     def index
       @q_products = Product.includes(:image_attachment).order(:created_at).ransack(params[:q])
-      @pagy, @products = pagy(@q_products.result, items: 20)
+
+      root_product_id = Setting.fetch_value(:root_product_id)
+      if root_product_id
+        session[:filter] = params[:filter] || session[:filter]
+        case session[:filter]
+        when 'descendants'
+          root_product = Product.find(root_product_id)
+          @result      = @q_products.result.where(id: root_product.descendants.ids)
+        when 'children'
+          root_product = Product.find(root_product_id)
+          @result      = @q_products.result.where(id: root_product.children.ids)
+        else
+          @result = @q_products.result
+        end
+      else
+        @result = @q_products.result
+      end
+
+      @pagy, @products = pagy(@result, items: 20)
     end
 
     def new
