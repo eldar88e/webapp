@@ -12,6 +12,7 @@ module Admin
         when 'descendants'
           root_product = Product.find(root_product_id)
           @result      = @q_products.result.where(id: root_product.descendants.ids)
+                                           .where.not(id: root_product.children.ids)
         when 'children'
           root_product = Product.find(root_product_id)
           @result      = @q_products.result.where(id: root_product.children.ids)
