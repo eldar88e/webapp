@@ -75,6 +75,7 @@ class TelegramService
           ).message_id
         end
       rescue => e
+        Rails.logger.error "Failed to send message to bot: #{e}"
         message_id = e
       end
     end
