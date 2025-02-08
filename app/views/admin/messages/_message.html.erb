@@ -11,7 +11,7 @@
   <th scope="row" class="px-6 py-4 whitespace-nowrap ">
     <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
       <% user = message.user %>
-      <%= link_to user.full_name, admin_user_path(user) %>
+      <%= link_to user.full_name.presence || user.tg_id, admin_user_path(user) %>
     </p>
     <p class="text-sm text-gray-500 truncate dark:text-gray-400">
       <%= link_to "@#{message.user.username}", "https://t.me/#{message.user.username}", target: "_blank" if message.user.username.present? %>
