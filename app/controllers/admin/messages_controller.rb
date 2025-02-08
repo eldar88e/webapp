@@ -19,14 +19,19 @@ module Admin
 
     def create
       MailingJob.perform_later(filter: 'user', message: message_params[:text], user_id: message_params[:user_id])
-      render turbo_stream: success_notice('Сообщение успешно отправленно в очередь!')
+      user     = User.find(message_params[:user_id])
+      @message = Message.new(text: message_params[:text], tg_id: user.tg_id, is_incoming: false, created_at: Time.current)
+      render turbo_stream: [
+        turbo_stream.prepend(:messages, partial: '/admin/messages/message', locals: { message: @message }),
+        success_notice('Сообщение успешно отправленно в очередь!')
+      ]
     end
 
     def destroy
       @message = Message.find(params[:id])
       @message.destroy!
       msg = 'Сообщение было успешно удалено.'
-      TelegramService.delete_msg('', @message.tg_id, @message.tg_msg_id) if params[:tg_msg]
+      TelegramMsgDelService.remove(@message.tg_id, @message.tg_msg_id) if params[:tg_msg]
       msg += ' В телеграм и БД.' if params[:tg_msg]
       render turbo_stream: [
         turbo_stream.remove(@message),

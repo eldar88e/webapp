@@ -3,6 +3,42 @@
 
   <%= link_to 'Создать', new_admin_product_path, class: blue_btn_styles,
               data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false } %>
+
+  <div class="border-b mt-4 dark:bg-gray-800 dark:border-gray-700"></div>
+
+  <div class="mt-4">
+    <%= form_with url: admin_products_path, method: :get, id: 'filter-form', class: 'flex' do |form| %>
+      <div class="me-4 text-sm font-medium text-gray-900 dark:text-gray-300 hidden md:block">Показывать только:</div>
+
+      <div class="flex items-center me-4">
+        <%= form.radio_button :filter, 'all', checked: session[:filter] == 'all' || session[:filter].blank?, class: 'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600' %>
+        <%= form.label :filter_all, 'Все', class: 'ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer' %>
+      </div>
+
+      <div class="flex items-center me-4">
+        <%= form.radio_button :filter, 'descendants', checked: session[:filter] == 'descendants', class: 'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600' %>
+        <%= form.label :filter_descendants, 'Товары', class: 'ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer' %>
+      </div>
+
+      <div class="flex items-center me-4">
+        <%= form.radio_button :filter, 'services', checked: session[:filter] == 'services', class: 'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600' %>
+        <%= form.label :filter_services, 'Услуги', class: 'ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer' %>
+      </div>
+
+      <div class="flex items-center me-4">
+        <%= form.radio_button :filter, 'children', checked: session[:filter] == 'children', class: 'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600' %>
+        <%= form.label :filter_children, 'Категории', class: 'ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer' %>
+      </div>
+
+      <%= form.submit 'Фильтровать', style: 'display: none;' %>
+    <% end %>
+  </div>
+
+  <script>
+      document.querySelectorAll('input[type="radio"][name="filter"]').forEach((radio) => {
+          radio.addEventListener('change', () => { document.getElementById('filter-form').submit(); });
+      });
+  </script>
 </div>
 
 <div id="products" class="pt-6">

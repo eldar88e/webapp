@@ -15,11 +15,10 @@ gem 'tzinfo-data', platforms: %i[ windows jruby ]
 gem 'pg', '~> 1.5'
 gem 'vite_rails'
 
-gem 'aws-sdk-s3'
+# gem 'aws-sdk-s3'
 gem 'active_link_to'
 gem 'dotenv'
 gem 'devise'
-# gem 'exception-track'
 gem 'telegram-bot-ruby', require: false
 gem 'i18n'
 gem 'sidekiq'

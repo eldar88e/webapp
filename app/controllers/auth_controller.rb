@@ -13,7 +13,8 @@ class AuthController < ApplicationController
   end
 
   def telegram_auth
-    data      = params.to_unsafe_h.except(:controller, :action)
+    data = params.to_unsafe_h.except(:controller, :action)
+    Rails.logger.error "Params ['initData'] is empty or nil." if data['initData'].blank?
     init_data = URI.decode_www_form(data['initData']).to_h
     return redirect_to_telegram if init_data.blank?
 
