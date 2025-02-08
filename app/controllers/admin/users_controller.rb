@@ -44,7 +44,7 @@ module Admin
     def user_params
       base_params = [
         :first_name, :middle_name, :last_name, :phone_number, :address,
-        :postal_code, :street, :home, :apartment, :build, :email, :user_name
+        :postal_code, :street, :home, :apartment, :build, :email, :username
       ]
 
       base_params += [:role, :tg_id] if current_user.admin?
