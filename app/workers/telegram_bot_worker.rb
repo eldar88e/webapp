@@ -137,8 +137,6 @@ class TelegramBotWorker
   end
 
   def settings
-    Rails.cache.fetch(:settings, expires_in: 6.hours) do
-      Setting.pluck(:variable, :value).to_h.transform_keys(&:to_sym)
-    end
+    Setting.all_cached
   end
 end

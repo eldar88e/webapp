@@ -9,6 +9,9 @@ class Order < ApplicationRecord
 
   enum status: { initialized: 0, unpaid: 1, paid: 2, processing: 3, shipped: 4, cancelled: 5, overdue: 7, refunded: 8 }
 
+  before_update :remove_cart, if: -> { status_changed?(from: 'unpaid', to: 'paid') }
+  before_update :deduct_stock, if: -> { status_changed?(from: 'paid', to: 'processing') }
+  before_update :restock_stock, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
   after_commit :check_status_change # , if: -> { saved_change_to_status? }
 
   def order_items_with_product
@@ -50,6 +53,16 @@ class Order < ApplicationRecord
     end.compact.join(",\n")
   end
 
+  private
+
+  def check_status_change
+    ReportJob.perform_later(order_id: self.id)
+  end
+
+  def remove_cart
+    user.cart.destroy
+  end
+
   def deduct_stock
     order_items_with_product.each do |order_item|
       product = order_item.product
@@ -57,21 +70,25 @@ class Order < ApplicationRecord
         product.update!(stock_quantity: product.stock_quantity - order_item.quantity)
       else
         msg = "Недостаток в остатках для продукта: #{product.name} в заказе #{self.id}"
-        Rails.logger.info msg
-        TelegramService.call(msg)
+        Rails.logger.error msg
+        TelegramJob.perform_later(msg: msg)
         raise StandardError, msg
       end
       if product.stock_quantity < 10
         msg = "‼️Осталось #{product.stock_quantity}шт. #{product.name} на складе!"
         Rails.logger.info msg
-        TelegramService.call(msg)
+        TelegramJob.perform_later(msg: msg)
       end
     end
   end
 
-  private
+  def restock_stock
+    order_items_with_product.each do |order_item|
+      product = order_item.product
+      next if product.nil? || product.id == Setting.fetch_value(:delivery_id).to_i
 
-  def check_status_change
-    ReportJob.perform_later(order_id: self.id)
+      product.increment!(:stock_quantity, order_item.quantity)
+      Rails.logger.info "Returned #{order_item.quantity} pcs of #{product.name} to stock after order #{self.id} cancellation."
+    end
   end
 end

@@ -38,7 +38,6 @@ class ReportService
         phone: user.phone_number
       )
 
-      user.cart.destroy
       user_msg = I18n.t('tg_msg.paid_client')
       send_report(order, admin_msg: msg, admin_markup: 'approve_payment', user_msg: user_msg, user_tg_id: user.tg_id)
     end
@@ -57,7 +56,6 @@ class ReportService
         phone: user.phone_number
       )
 
-      order.deduct_stock
       user_msg = I18n.t('tg_msg.on_processing_client', order: order.id)
       send_report(order, admin_msg: msg, admin_tg_id: :courier, admin_markup: 'submit_tracking',
                   user_msg: user_msg, user_tg_id: user.tg_id, user_markup: 'new_order')
@@ -87,14 +85,7 @@ class ReportService
     def on_cancelled(order)
       Rails.logger.info "Order #{order.id} has been cancelled"
 
-      order.order_items_with_product.each do |item|
-        product = item.product
-        next unless product
-
-        product.increment!(:stock_quantity, item.quantity)
-      end
-
-      admin_msg = "❌ Заказ #{order.id} был отменен!\nОстатки были обновлены."
+      admin_msg = "❌ Заказ #{order.id} был отменен!"
       user_msg  = I18n.t('tg_msg.cancel', order: order.id)
       send_report(order, admin_msg: admin_msg, user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order')
     end
@@ -103,7 +94,7 @@ class ReportService
       msg = "Order #{order.id} has been refunded"
       Rails.logger.info msg
 
-      telegram_send_msg msg # TODO: шлет уведомление только админу
+      TelegramService.call msg
     end
 
     def on_overdue(order)
@@ -130,25 +121,9 @@ class ReportService
   end
 
   def self.send_report(order, **args)
-    telegram_send_msg(args[:admin_msg], args[:admin_tg_id], args[:admin_markup]) if args[:admin_msg]
-    telegram_delete_msg(order)
-    msg_id = telegram_send_msg(args[:user_msg], args[:user_tg_id], args[:user_markup])
+    TelegramService.call(args[:admin_msg], args[:admin_tg_id], markup: args[:admin_markup]) if args[:admin_msg]
+    TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if order.msg_id.present?
+    msg_id = TelegramService.call(args[:user_msg], args[:user_tg_id], markup: args[:user_markup])
     order.update_columns(msg_id: msg_id)
-  end
-
-  def self.telegram_delete_msg(order)
-    return if order.msg_id.blank?
-
-    TelegramService.delete_msg('', order.user.tg_id, order.msg_id)
-  rescue => e
-    Rails.logger.error "Error deleting telegram msg. #{e.message}"
-  end
-
-  def self.telegram_send_msg(msg, id = nil, markup = nil)
-    return TelegramService.call(msg, id, markup: markup) if markup
-
-    TelegramService.call(msg, id)
-  rescue => e
-    Rails.logger.error "Error sending telegram msg. #{e.message}"
   end
 end

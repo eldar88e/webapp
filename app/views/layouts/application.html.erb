@@ -34,6 +34,6 @@
     </main>
 
     <%= render partial: '/layouts/partials/footer' %>
-    <%= render partial: '/layouts/partials/yandex_metrika' %>
+    <%= render partial: '/layouts/partials/yandex_metrika' if Setting.fetch_value(:ym).present? %>
   </body>
 </html>
