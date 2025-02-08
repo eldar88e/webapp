@@ -47,13 +47,14 @@ class TelegramBotWorker
       send_firs_msg(bot, message.chat.id)
     else
       if message.chat.id == settings[:courier_tg_id].to_i
-        input_tracking_number(bot, message)
+        input_tracking_number(message)
       else
         return save_preview_video(bot, message) if message.video.present?
 
         if message.text.present?
           begin
-            Message.create!(tg_id: message.from.id, text: message.text, tg_msg_id: message.message_id)
+            user = User.find_or_create_by_tg(message.chat)
+            Message.create!(tg_id: user.tg_id, text: message.text, tg_msg_id: message.message_id)
           rescue => e
             Rails.logger.error "Not save tg msg #{message.from.id}, #{message.text}, #{message.message_id} | #{e.message}"
           end
@@ -67,7 +68,7 @@ class TelegramBotWorker
     end
   end
 
-  def input_tracking_number(bot, message)
+  def input_tracking_number(message)
     user_state = Rails.cache.read("user_#{message.chat.id}_state")
     if user_state&.dig(:waiting_for_tracking)
       order = Order.find_by(id: user_state[:order_id])
