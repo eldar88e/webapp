@@ -59,7 +59,8 @@ class TelegramBotWorker
             Rails.logger.error "Not save tg msg #{message.from.id}, #{message.text}, #{message.message_id} | #{e.message}"
           end
           msg = "‼️Входящее сообщение‼️\n️\n"
-          msg += "От: @#{message.from.username}\n" if message.from.username.present?
+          name = message.from.username.present? ? "@#{message.from.username}" : user.full_name
+          msg += "От: #{name}\n" if message.from.username.present?
           msg += message.text
           TelegramJob.perform_later(method: 'call', msg: msg, id: settings[:admin_ids])
         end
