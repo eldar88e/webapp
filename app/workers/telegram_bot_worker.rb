@@ -70,15 +70,15 @@ class TelegramBotWorker
 
   def input_tracking_number(message)
     user_state = Rails.cache.read("user_#{message.chat.id}_state")
-    if user_state&.dig(:waiting_for_tracking)
-      order = Order.find_by(id: user_state[:order_id])
-      order.update(tracking_number: message.text, status: :shipped)
+    return if user_state&.dig(:waiting_for_tracking).blank?
 
-      [user_state[:msg_id], user_state[:h_msg], message.message_id].each do |id|
-        TelegramJob.perform_later(method: 'delete_msg', id: message.chat.id, msg_id: id)
-      end
-      Rails.cache.delete("user_#{message.chat.id}_state")
+    order = Order.find_by(id: user_state[:order_id])
+    order.update(tracking_number: message.text, status: :shipped)
+
+    [user_state[:msg_id], user_state[:h_msg], message.message_id].each do |id|
+      TelegramJob.perform_later(method: 'delete_msg', id: message.chat.id, msg_id: id)
     end
+    Rails.cache.delete("user_#{message.chat.id}_state")
   end
 
   def i_paid(bot, message)
