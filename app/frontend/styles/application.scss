@@ -360,6 +360,7 @@ main {
   border: rgb(71, 132, 252) 1px solid;
   background: transparent;
   display: flex;
+  align-items: center;
   gap: 5px;
 
   &:hover {
@@ -368,8 +369,8 @@ main {
 }
 
 .reverse.subscribe {
-  padding: 14px 20px;
-  font-size: 16px;
+  padding: 14px 18px;
+  font-size: 11px;
 }
 
 .input-str {
