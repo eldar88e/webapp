@@ -343,6 +343,17 @@ main {
   }
 }
 
+.reverse {
+  border: rgb(71, 132, 252) 1px solid;
+  background: transparent;
+  display: flex;
+  gap: 5px;
+
+  &:hover {
+    background-color: rgba(71, 131, 252, 1);
+  }
+}
+
 .input-str {
   border: 1px solid rgba(71, 132, 252, 0.3);
   background: none;
