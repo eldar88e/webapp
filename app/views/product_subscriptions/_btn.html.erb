@@ -1,0 +1,11 @@
+<div id="subscribe_<%= product.id %>">
+  <% if product.subscribed? current_user %>
+    <%= button_to product_product_subscription_path(product_id: product.id), method: :delete, class: 'btn-order subscribe' do %>
+      <div class="title-btn">Отписатся</div>
+    <% end %>
+  <% else %>
+    <%= button_to product_product_subscription_path(product_id: product.id), class: 'btn-order subscribe' do %>
+      <div class="title-btn">Уведомить о наличии</div>
+    <% end %>
+  <% end %>
+</div>

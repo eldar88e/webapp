@@ -5,7 +5,7 @@ class TelegramJob < ApplicationJob
     if args[:method] == 'delete_msg'
       TelegramMsgDelService.remove(args[:id], args[:msg_id])
     else
-      TelegramService.call(args[:msg], args[:id], **(args[:args] || {}))
+      TelegramService.call(args[:msg], args[:id], **args)
     end
   end
 end

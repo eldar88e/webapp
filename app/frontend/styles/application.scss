@@ -108,6 +108,16 @@ main {
     gap: 6px;
     font-size: 14px;
     line-height: 17px;
+
+    .have-product {
+      width: 12px;
+      height: 12px;
+      background-color: #47fd68;
+      background-image: url('../images/checked.svg');
+      background-size: 9px 9px;
+      background-position: center;
+      border-radius: 50%;
+    }
   }
 
   .product-img {
@@ -181,7 +191,7 @@ main {
           height: 15px;
           background: #2A2738;
           border-radius: 50%;
-          font-size: 14px;
+          font-size: 12px;
           color: white;
           display: flex;
           justify-content: center;
@@ -195,6 +205,14 @@ main {
             height: 13px;
           }
         }
+      }
+    }
+
+    .subscribe {
+      padding: 14px 22px;
+
+      .title-btn {
+        padding: 0;
       }
     }
 
@@ -907,4 +925,17 @@ ul.catalog-nav {
     margin-bottom: 0;
     border-bottom: none;
   }
+}
+
+.plus-ico, .plus-ico::after {
+  width: 2px;
+  height: 16px;
+  background-color: #2A2738;
+  border-radius: 2px;
+}
+
+.plus-ico::after {
+  content: '';
+  display: block;
+  transform: rotate(90deg);
 }

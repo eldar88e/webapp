@@ -74,11 +74,6 @@ class Order < ApplicationRecord
         TelegramJob.perform_later(msg: msg)
         raise StandardError, msg
       end
-      if product.stock_quantity < 10
-        msg = "‼️Осталось #{product.stock_quantity}шт. #{product.name} на складе!"
-        Rails.logger.info msg
-        TelegramJob.perform_later(msg: msg)
-      end
     end
   end
 
