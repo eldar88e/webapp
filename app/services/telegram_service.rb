@@ -3,19 +3,14 @@ require 'telegram/bot'
 class TelegramService
   MESSAGE_LIMIT = 4_090
 
-  def initialize(message, id = nil, msg_id = nil)
+  def initialize(message, id = nil)
     @message   = message
     @chat_id   = id == :courier ? settings[:courier_tg_id] : (id || settings[:admin_chat_id])
     @bot_token = settings[:tg_token]
-    @msg_id    = msg_id
   end
 
   def self.call(msg, id = nil, **args)
     new(msg, id).report(**args)
-  end
-
-  def self.delete_msg(msg, id, msg_id)
-    new(msg, id, msg_id).send(:delete_message)
   end
 
   def report(**args)
@@ -28,26 +23,7 @@ class TelegramService
   private
 
   def settings
-    Rails.cache.fetch(:settings, expires_in: 6.hours) do
-      Setting.pluck(:variable, :value).to_h.transform_keys(&:to_sym)
-    end
-  end
-
-  def delete_message
-    Telegram::Bot::Client.run(@bot_token) do |bot|
-      response = bot.api.delete_message(chat_id: @chat_id, message_id: @msg_id)
-
-      if response
-        Rails.logger.info("Message #{@msg_id} successfully deleted from chat #{@chat_id}.")
-        true
-      else
-        Rails.logger.error("Failed to delete message #{@msg_id} from chat #{@chat_id}: #{response}.")
-        false
-      end
-    rescue Telegram::Bot::Exceptions::ResponseError => e
-      Rails.logger.error("Failed to delete message #{@msg_id} from chat #{@chat_id}: #{response}.\nError: #{e}")
-      false
-    end
+    @settings ||= Setting.all_cached
   end
 
   def credential_exists?

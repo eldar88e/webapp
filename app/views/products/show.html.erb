@@ -17,9 +17,10 @@
       </div>
       <div class="product-exist">
         <% if @product.stock_quantity.positive? %>
-          <%= image_tag vite_asset_path('images/have.svg') %>
+          <div class="have-product"></div>
           <%= 'В наличии' %>
         <% else %>
+          <div class="have-product no-have-product"></div>
           <%= 'Нет в наличии' %>
         <% end %>
       </div>
@@ -45,10 +46,12 @@
           <%= button_to cart_items_path, params: { cart_item: { product_id: @product.id } }, class: 'btn-order' do %>
             <div class="title-btn">Заказать</div>
             <div class="plus">
-              <%= image_tag vite_asset_path('images/plus.svg') %>
+              <div class="plus-ico"></div>
               <%= render partial: '/layouts/partials/cart_item_counter', locals: { id: @product.id } %>
             </div>
           <% end %>
+        <% else %>
+          <%= render partial: '/product_subscriptions/btn', locals: { product: @product } %>
         <% end %>
         <div class="price"><%= @product.price.to_i %><span style="margin-left: 3px">₽</span></div>
       </div>

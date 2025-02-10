@@ -108,6 +108,37 @@ main {
     gap: 6px;
     font-size: 14px;
     line-height: 17px;
+
+    .have-product {
+      width: 12px;
+      height: 12px;
+      background-color: #47fd68;
+      background-image: url('../images/checked.svg');
+      background-size: 9px 9px;
+      background-position: center;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .no-have-product {
+      background-image: none;
+      background-color: rgba(238, 64, 76, 1);
+
+      &:before, &:after {
+        content: '';
+        display: block;
+        width: 9px;
+        height: 1px;
+        background-color: white;
+        transform: translateX(3px) rotate(45deg);
+      }
+
+      &:after {
+        transform: translateX(-3px) rotate(-45deg);
+      }
+    }
   }
 
   .product-img {
@@ -181,7 +212,7 @@ main {
           height: 15px;
           background: #2A2738;
           border-radius: 50%;
-          font-size: 14px;
+          font-size: 12px;
           color: white;
           display: flex;
           justify-content: center;
@@ -323,6 +354,23 @@ main {
   &:hover {
     background-color: #3565c5;
   }
+}
+
+.reverse {
+  border: rgb(71, 132, 252) 1px solid;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  &:hover {
+    background-color: rgba(71, 131, 252, 1);
+  }
+}
+
+.reverse.subscribe {
+  padding: 14px 18px;
+  font-size: 11px;
 }
 
 .input-str {
@@ -907,4 +955,17 @@ ul.catalog-nav {
     margin-bottom: 0;
     border-bottom: none;
   }
+}
+
+.plus-ico, .plus-ico::after {
+  width: 2px;
+  height: 16px;
+  background-color: #2A2738;
+  border-radius: 2px;
+}
+
+.plus-ico::after {
+  content: '';
+  display: block;
+  transform: rotate(90deg);
 }

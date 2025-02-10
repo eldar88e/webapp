@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   resources :products, only: [:index, :show] do
     resources :reviews, only: [:new, :create, :edit, :update]
+    resource :product_subscription, only: [:create, :destroy]
   end
   resources :carts, only: [:index]
   resources :cart_items, only: [:create, :update]
@@ -34,6 +35,7 @@ Rails.application.routes.draw do
     resources :analytics, only: :index
     resources :messages, only: [:index, :new, :create, :destroy]
     resources :reviews
+    resources :product_subscriptions, only: [:index]
   end
 
   match '*unmatched', to: 'application#redirect_to_telegram', via: :all,

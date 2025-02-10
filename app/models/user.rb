@@ -9,6 +9,8 @@ class User < ApplicationRecord
   has_many :messages, primary_key: :tg_id, foreign_key: :tg_id
   has_one :cart, dependent: :destroy
   has_many :reviews, dependent: :destroy
+  has_many :product_subscriptions, dependent: :destroy
+  has_many :subscribed_products, through: :product_subscriptions, source: :product
 
   validates :tg_id, presence: true, uniqueness: true
   validates :postal_code, numericality: { only_integer: true, allow_nil: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999 }

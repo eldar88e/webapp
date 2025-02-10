@@ -47,18 +47,20 @@ class TelegramBotWorker
       send_firs_msg(bot, message.chat.id)
     else
       if message.chat.id == settings[:courier_tg_id].to_i
-        input_tracking_number(bot, message)
+        input_tracking_number(message)
       else
         return save_preview_video(bot, message) if message.video.present?
 
         if message.text.present?
           begin
-            Message.create!(tg_id: message.from.id, text: message.text, tg_msg_id: message.message_id)
+            user = User.find_or_create_by_tg(message.chat)
+            Message.create!(tg_id: user.tg_id, text: message.text, tg_msg_id: message.message_id)
           rescue => e
             Rails.logger.error "Not save tg msg #{message.from.id}, #{message.text}, #{message.message_id} | #{e.message}"
           end
           msg = "‼️Входящее сообщение‼️\n️\n"
-          msg += "От: @#{message.from.username}\n" if message.from.username.present?
+          name = message.from.username.present? ? "@#{message.from.username}" : user.full_name
+          msg += "От: #{name}\n" if message.from.username.present?
           msg += message.text
           TelegramJob.perform_later(method: 'call', msg: msg, id: settings[:admin_ids])
         end
@@ -67,17 +69,17 @@ class TelegramBotWorker
     end
   end
 
-  def input_tracking_number(bot, message)
+  def input_tracking_number(message)
     user_state = Rails.cache.read("user_#{message.chat.id}_state")
-    if user_state&.dig(:waiting_for_tracking)
-      order = Order.find_by(id: user_state[:order_id])
-      order.update(tracking_number: message.text, status: :shipped)
+    return if user_state&.dig(:waiting_for_tracking).blank?
 
-      [user_state[:msg_id], user_state[:h_msg], message.message_id].each do |id|
-        TelegramJob.perform_later(method: 'delete_msg', id: message.chat.id, msg_id: id)
-      end
-      Rails.cache.delete("user_#{message.chat.id}_state")
+    order = Order.find_by(id: user_state[:order_id])
+    order.update(tracking_number: message.text, status: :shipped)
+
+    [user_state[:msg_id], user_state[:h_msg], message.message_id].each do |id|
+      TelegramJob.perform_later(method: 'delete_msg', id: message.chat.id, msg_id: id)
     end
+    Rails.cache.delete("user_#{message.chat.id}_state")
   end
 
   def i_paid(bot, message)
@@ -137,8 +139,6 @@ class TelegramBotWorker
   end
 
   def settings
-    Rails.cache.fetch(:settings, expires_in: 6.hours) do
-      Setting.pluck(:variable, :value).to_h.transform_keys(&:to_sym)
-    end
+    Setting.all_cached
   end
 end

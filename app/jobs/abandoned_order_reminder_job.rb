@@ -15,7 +15,7 @@ class AbandonedOrderReminderJob < ApplicationJob
     if args[:msg_type] == :overdue
       current_order.update(status: args[:msg_type])
     else
-      TelegramService.delete_msg('', current_tg_id, current_order.msg_id)
+      TelegramMsgDelService.remove(current_tg_id, current_order.msg_id)
       msg_id = TelegramService.call(msg, current_tg_id, markup: 'i_paid')
       current_order.update_columns(msg_id: msg_id)
       set_reminders(args)
