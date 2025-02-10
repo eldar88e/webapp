@@ -98,8 +98,6 @@ class TelegramBotWorker
   def submit_tracking(bot, message)
     order_number = parse_order_number(message.message.text)
     full_name    = parse_full_name(message.message.text)
-    binding.pry
-    return
     msg          = bot.api.send_message(chat_id: message.message.chat.id,
                                         text: I18n.t('tg_msg.set_track_num', order: order_number, fio: full_name))
     Rails.cache.write(

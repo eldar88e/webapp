@@ -31,9 +31,9 @@ gem 'lograge'
 gem 'logstash-logger'
 gem 'ruby-vips'
 gem 'image_processing'
-gem 'pry'
 
 group :development, :test do
+  gem 'pry'
   gem 'rubocop-rails-omakase', require: false
 end
 
