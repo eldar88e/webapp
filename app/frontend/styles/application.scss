@@ -117,6 +117,27 @@ main {
       background-size: 9px 9px;
       background-position: center;
       border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .no-have-product {
+      background-image: none;
+      background-color: rgba(238, 64, 76, 1);
+
+      &:before, &:after {
+        content: '';
+        display: block;
+        width: 9px;
+        height: 1px;
+        background-color: white;
+        transform: translateX(3px) rotate(45deg);
+      }
+
+      &:after {
+        transform: translateX(-3px) rotate(-45deg);
+      }
     }
   }
 
@@ -205,14 +226,6 @@ main {
             height: 13px;
           }
         }
-      }
-    }
-
-    .subscribe {
-      padding: 14px 22px;
-
-      .title-btn {
-        padding: 0;
       }
     }
 
@@ -352,6 +365,11 @@ main {
   &:hover {
     background-color: rgba(71, 131, 252, 1);
   }
+}
+
+.reverse.subscribe {
+  padding: 14px 20px;
+  font-size: 16px;
 }
 
 .input-str {
