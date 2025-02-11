@@ -17,12 +17,27 @@ class AbandonedOrderReminderJob < ApplicationJob
     else
       TelegramMsgDelService.remove(current_tg_id, current_order.msg_id)
       msg_id = TelegramService.call(msg, current_tg_id, markup: 'i_paid')
-      current_order.update_columns(msg_id: msg_id)
-      set_reminders(args)
+      save_msg_id(msg_id, current_order, args)
     end
   end
 
   private
+
+  def save_msg_id(msg_id, order, args)
+    user = order.user
+    if msg_id.instance_of?(Integer)
+      user.update(is_blocked: false)
+      order.update_columns(msg_id: msg_id)
+      set_reminders(args)
+    else
+      if msg_id.instance_of?(Telegram::Bot::Exceptions::ResponseError)
+        Rails.logger.error "User #{user.id} is blocked"
+        user.update(is_blocked: true)
+      else
+        Rails.logger.error "Error save msg_id for user #{user.id}, msg send result: #{msg_id}"
+      end
+    end
+  end
 
   def set_reminders(args)
     next_step = STEPS[args[:msg_type]]

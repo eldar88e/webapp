@@ -361,7 +361,7 @@ main {
   background: transparent;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 3px;
 
   &:hover {
     background-color: rgba(71, 131, 252, 1);
@@ -370,7 +370,7 @@ main {
 
 .reverse.subscribe {
   padding: 14px 18px;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .input-str {
