@@ -6,17 +6,17 @@ class CartItem < ApplicationRecord
   validates :quantity,
             presence: true,
             numericality: { only_integer: true, greater_than_or_equal_to: 1 }
-  after_commit :add_or_remove_delivery_item, on: [:create, :update, :destroy]
+  after_commit :add_or_remove_delivery_item, on: %i[create update destroy]
 
   private
 
   def check_product_stock
     return if quantity.nil?
 
-    if quantity > product.stock_quantity
-      errors.add(:quantity, 'товара недостаточно на складе')
-      throw(:abort)
-    end
+    return unless quantity > product.stock_quantity
+
+    errors.add(:quantity, 'товара недостаточно на складе')
+    throw(:abort)
   end
 
   def add_or_remove_delivery_item

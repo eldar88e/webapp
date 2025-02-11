@@ -16,7 +16,7 @@ module ApplicationHelper
     else
       url_for attach
     end
-  rescue => e
+  rescue StandardError => e
     Rails.logger.error "Error getting file path: #{e.message}"
     nil
   end

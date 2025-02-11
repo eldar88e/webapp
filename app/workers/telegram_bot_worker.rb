@@ -18,8 +18,7 @@ class TelegramBotWorker
           handle_callback(bot, message)
         when Telegram::Bot::Types::Message
           handle_message(bot, message)
-        else
-          # bot.api.send_message(chat_id: message.from.id, text: I18n.t('tg_msg.error_data'))
+          # else bot.api.send_message(chat_id: message.from.id, text: I18n.t('tg_msg.error_data'))
         end
       rescue StandardError => e
         Rails.logger.error "#{self.class} | #{e.message}"
@@ -125,17 +124,11 @@ class TelegramBotWorker
   end
 
   def initialize_first_btn
-    [
-      [ Telegram::Bot::Types::InlineKeyboardButton.new(
-        text: 'Каталог', url: "https://t.me/#{settings[:tg_main_bot]}?startapp"
-      ) ],
-      [ Telegram::Bot::Types::InlineKeyboardButton.new(
-        text: 'Перейти в СДВГ-чат', url: settings[:tg_group]
-      ) ],
-      [ Telegram::Bot::Types::InlineKeyboardButton.new(
-        text: 'Задать вопрос', url: settings[:tg_support]
-      ) ]
-    ]
+    [[Telegram::Bot::Types::InlineKeyboardButton.new(
+      text: 'Каталог', url: "https://t.me/#{settings[:tg_main_bot]}?startapp"
+    )],
+     [Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Перейти в СДВГ-чат', url: settings[:tg_group])],
+     [Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Задать вопрос', url: settings[:tg_support])]]
   end
 
   def settings

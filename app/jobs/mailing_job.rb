@@ -5,7 +5,7 @@ class MailingJob < ApplicationJob
   def perform(**args)
     filter  = args[:filter]
     message = args[:message]
-    return if message.blank? || !Mailing::FILTERS.include?(filter)
+    return if message.blank? || Mailing::FILTERS.exclude?(filter)
 
     user_id = args[:user_id]
     return send_message(message, user_id) if user_id && filter == 'user'
@@ -36,7 +36,7 @@ class MailingJob < ApplicationJob
     when :ordered
       User.joins(:orders).where.not(orders: { id: nil }).distinct
     when :no_ordered
-      User.left_joins(:orders).where(orders: { id: nil }).distinct
+      User.where.missing(:orders).distinct
     when :all
       User.all
     when :is_blocked

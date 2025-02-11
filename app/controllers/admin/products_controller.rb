@@ -12,7 +12,7 @@ module Admin
         when 'descendants'
           root_product = Product.find(root_product_id)
           @result      = @q_products.result.where(id: root_product.descendants.ids)
-                                           .where.not(id: root_product.children.ids)
+                                    .where.not(id: root_product.children.ids)
         when 'children'
           root_product = Product.find(root_product_id)
           @result      = @q_products.result.where(id: root_product.children.ids)
@@ -37,6 +37,13 @@ module Admin
       ]
     end
 
+    def edit
+      render turbo_stream: [
+        turbo_stream.update(:modal_title, 'Редактировать товар'),
+        turbo_stream.update(:modal_body, partial: '/admin/products/edit')
+      ]
+    end
+
     def create
       @product = Product.new(product_params)
       if @product.save
@@ -44,13 +51,6 @@ module Admin
       else
         error_notice(@product.errors.full_messages, :unprocessable_entity)
       end
-    end
-
-    def edit
-      render turbo_stream: [
-        turbo_stream.update(:modal_title, 'Редактировать товар'),
-        turbo_stream.update(:modal_body, partial: '/admin/products/edit')
-      ]
     end
 
     def update

@@ -15,6 +15,13 @@ module Admin
       ]
     end
 
+    def edit
+      render turbo_stream: [
+        turbo_stream.update(:modal_title, 'Редактирование отзыва'),
+        turbo_stream.update(:modal_body, partial: '/admin/reviews/edit')
+      ]
+    end
+
     def create
       @review = Review.new(review_params)
 
@@ -25,17 +32,8 @@ module Admin
       end
     end
 
-    def edit
-      render turbo_stream: [
-        turbo_stream.update(:modal_title, 'Редактирование отзыва'),
-        turbo_stream.update(:modal_body, partial: '/admin/reviews/edit')
-      ]
-    end
-
     def update
-      if params[:review][:photos].present?
-        @review.photos.attach(params[:review][:photos])
-      end
+      @review.photos.attach(params[:review][:photos]) if params[:review][:photos].present?
 
       if @review.update(review_params.except(:photos))
         render turbo_stream: [

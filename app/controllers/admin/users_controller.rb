@@ -42,12 +42,12 @@ module Admin
     end
 
     def user_params
-      base_params = [
-        :first_name, :middle_name, :last_name, :phone_number, :address,
-        :postal_code, :street, :home, :apartment, :build, :email, :username
+      base_params = %i[
+        first_name middle_name last_name phone_number address
+        postal_code street home apartment build email username
       ]
 
-      base_params += [:role, :tg_id] if current_user.admin?
+      base_params += %i[role tg_id] if current_user.admin?
 
       params.require(:user).permit(*base_params)
     end

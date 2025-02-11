@@ -83,7 +83,7 @@ class TelegramService
   end
 
   def ask_btn
-    [Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Задать вопрос', url: "#{settings[:tg_support]}")]
+    [Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Задать вопрос', url: settings[:tg_support]).to_s]
   end
 
   def form_markup

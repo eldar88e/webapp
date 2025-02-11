@@ -4,13 +4,12 @@ class ProductSubscriptionsController < ApplicationController
   def create
     subscription = @product.product_subscriptions.find_or_initialize_by(user: current_user)
 
-    if subscription.persisted?
-      return error_notice 'Не удалось подписаться на товар. Возможно, вы уже подписаны.'
-    end
+    return error_notice 'Не удалось подписаться на товар. Возможно, вы уже подписаны.' if subscription.persisted?
 
     if subscription.save
       render turbo_stream: [
-        turbo_stream.replace("subscribe_#{@product.id}", partial: '/product_subscriptions/btn', locals: { product: @product }),
+        turbo_stream.replace("subscribe_#{@product.id}", partial: '/product_subscriptions/btn',
+                                                         locals: { product: @product }),
         success_notice('Вы подписались на уведомления о поступлении товара.')
       ]
     else
@@ -22,7 +21,8 @@ class ProductSubscriptionsController < ApplicationController
     subscription = current_user.product_subscriptions.find_by(product_id: params[:product_id])
     subscription&.destroy
     render turbo_stream: [
-      turbo_stream.replace("subscribe_#{@product.id}", partial: '/product_subscriptions/btn', locals: { product: @product }),
+      turbo_stream.replace("subscribe_#{@product.id}", partial: '/product_subscriptions/btn',
+                                                       locals: { product: @product }),
       success_notice('Вы отписались от уведомлений.')
     ]
   end

@@ -2,14 +2,13 @@ class AuthController < ApplicationController
   skip_before_action :check_authenticate_user!
   layout 'login'
   def login
-    if current_user
-      if params['tgWebAppStartParam'].present? && params['tgWebAppStartParam'].include?('url=')
-        return redirect_to "/#{params['tgWebAppStartParam'].sub('url=', '').gsub('_', '/')}"
-      end
-
-      available_products
-      render 'products/index', layout: 'application' # redirect_to products_path if current_user
+    return unless current_user
+    if params['tgWebAppStartParam'].present? && params['tgWebAppStartParam'].include?('url=')
+      return redirect_to "/#{params['tgWebAppStartParam'].sub('url=', '').tr('_', '/')}"
     end
+
+    available_products
+    render 'products/index', layout: 'application' # redirect_to products_path if current_user
   end
 
   def telegram_auth
@@ -29,7 +28,7 @@ class AuthController < ApplicationController
 
   def valid_telegram_data?(data, secret_key)
     check_string = data.sort.map { |k, v| "#{k}=#{v}" }.join("\n")
-    hmac         = OpenSSL::HMAC.hexdigest(OpenSSL::Digest::SHA256.new, secret_key, check_string)
+    hmac         = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('SHA256'), secret_key, check_string)
     hmac == data['hash']
   end
 end

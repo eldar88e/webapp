@@ -5,7 +5,7 @@ class ReportJob < ApplicationJob
     order = Order.find_by(id: args[:order_id])
     return if order.nil? || order.status == 'initialized'
 
-    method_name = "on_#{order.status}".to_sym
+    method_name = :"on_#{order.status}"
     ReportService.send(method_name, order)
   end
 end

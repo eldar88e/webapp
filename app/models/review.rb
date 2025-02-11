@@ -27,6 +27,14 @@ class Review < ApplicationRecord
     update!(approved: false)
   end
 
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[id rating created_at approved user_id product_id]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    %w[]
+  end
+
   private
 
   def process_photos
@@ -34,41 +42,29 @@ class Review < ApplicationRecord
   end
 
   def user_must_have_purchased_product
-    unless user.orders.joins(:order_items).where(status: SHIPPED, order_items: { product_id: product_id }).exists?
-      errors.add(:product, 'Вы не можете оставить отзыв на товар, который не покупали.')
-    end
+    return if user.orders.joins(:order_items).where(status: SHIPPED, order_items: { product_id: product_id }).exists?
+
+    errors.add(:product, 'Вы не можете оставить отзыв на товар, который не покупали.')
   end
 
   def user_cannot_review_twice
-    if Review.exists?(user_id: user_id, product_id: product_id)
-      errors.add(:product, 'Вы уже оставили отзыв на этот товар.')
-    end
+    return unless Review.exists?(user_id: user_id, product_id: product_id)
+
+    errors.add(:product, 'Вы уже оставили отзыв на этот товар.')
   end
 
   def acceptable_photos
     return unless photos.attached?
 
-    if photos.count > 4
-      errors.add(:photos, 'можно загрузить не более 4 изображений')
-    end
+    errors.add(:photos, 'можно загрузить не более 4 изображений') if photos.count > 4
 
     photos.each do |photo|
-      if photo.byte_size > 5.megabyte
-        errors.add(:photos, "'#{photo.filename}' должна быть меньше 5 МБ")
-      end
+      errors.add(:photos, "'#{photo.filename}' должна быть меньше 5 МБ") if photo.byte_size > 5.megabytes
 
       acceptable_types = %w[image/jpeg image/png image/webp image/heic image/heif]
       unless acceptable_types.include?(photo.content_type)
         errors.add(:photos, "'#{photo.filename}' должна быть в формате JPEG, PNG, WEBP или HEIC")
       end
     end
-  end
-
-  def self.ransackable_attributes(_auth_object = nil)
-    %w[id rating created_at approved user_id product_id]
-  end
-
-  def self.ransackable_associations(_auth_object = nil)
-    %w[]
   end
 end

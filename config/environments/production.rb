@@ -95,7 +95,7 @@ Rails.application.configure do
       20 * 1024 * 1024 # Максимальный размер файла (20 МБ)
     )
 
-    file_logger.formatter = proc do |severity, timestamp, progname, msg|
+    file_logger.formatter = proc do |severity, timestamp, _progname, msg|
       log_entry = {
         timestamp: timestamp,
         level: severity,
