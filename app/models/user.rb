@@ -53,15 +53,13 @@ class User < ApplicationRecord
   def self.repeat_order_rate(start_date, end_date)
     total_customers = joins(:orders)
                       .where(orders: { created_at: start_date..end_date })
-                      .distinct
-                      .count
+                      .distinct.size
     return 0 if total_customers.zero?
 
     repeat_customers = joins(:orders)
                        .where(orders: { created_at: start_date..end_date })
                        .group('users.id')
                        .having('COUNT(orders.id) > 1')
-                       .count
                        .size
     [repeat_customers.to_f, total_customers.to_f] # .round(2)
   end

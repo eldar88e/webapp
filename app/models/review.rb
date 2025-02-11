@@ -42,7 +42,7 @@ class Review < ApplicationRecord
   end
 
   def user_must_have_purchased_product
-    return if user.orders.joins(:order_items).where(status: SHIPPED, order_items: { product_id: product_id }).exists?
+    return if user.orders.joins(:order_items).exists?(status: SHIPPED, order_items: { product_id: product_id })
 
     errors.add(:product, 'Вы не можете оставить отзыв на товар, который не покупали.')
   end

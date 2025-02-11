@@ -3,7 +3,7 @@ module Admin
     before_action :set_setting, only: %i[edit update destroy]
 
     def index
-      @q_settings = Setting.all.order(:created_at).ransack(params[:q])
+      @q_settings = Setting.order(:created_at).ransack(params[:q])
       @pagy, @settings = pagy(@q_settings.result, items: 20)
     end
 

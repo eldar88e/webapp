@@ -94,13 +94,11 @@ class ReportService
     def on_refunded(order)
       msg = "Order #{order.id} has been refunded"
       Rails.logger.info msg
-
       TelegramService.call msg
     end
 
     def on_overdue(order)
       Rails.logger.info "Order #{order.id} has been overdue"
-
       user_msg = I18n.t('tg_msg.unpaid.reminder.overdue', order: order.id)
       send_report(order, user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order')
     end
