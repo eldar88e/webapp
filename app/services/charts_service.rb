@@ -6,7 +6,7 @@ class ChartsService
   def orders
     orders = Order.count_order_with_status(@start_date, @end_date)
 
-    { dates: orders[0].keys, orders: orders[0].values, total:  orders[1] }
+    { dates: orders[0].keys, orders: orders[0].values, total: orders[1] }
   end
 
   def revenue
@@ -37,20 +37,20 @@ class ChartsService
     column = users ? 'created_at' : 'orders.updated_at'
     case period
     when 'month'
-      start_date = Date.today.beginning_of_month
-      end_date   = Date.today.end_of_month
+      start_date = Time.zone.today.beginning_of_month
+      end_date   = Time.zone.today.end_of_month
       group_by   = "DATE(#{column})"
     when 'year'
-      start_date = Date.today.beginning_of_year
-      end_date   = Date.today.end_of_day
+      start_date = Time.zone.today.beginning_of_year
+      end_date   = Time.zone.today.end_of_day
       group_by   = "DATE_TRUNC('month', #{column})"
     when 'all'
       start_date = column.include?('order') ? Order.minimum(column) : User.minimum(column)
-      end_date   = Date.today.end_of_day
+      end_date   = Time.zone.today.end_of_day
       group_by   = "DATE_TRUNC('year', #{column})"
     else
       start_date = 7.days.ago.beginning_of_day
-      end_date   = Date.today.end_of_day
+      end_date   = Time.zone.today.end_of_day
       group_by   = "DATE(#{column})"
     end
     [start_date, end_date, group_by]

@@ -21,7 +21,7 @@ class TelegramBotWorker
         else
           # bot.api.send_message(chat_id: message.from.id, text: I18n.t('tg_msg.error_data'))
         end
-      rescue => e
+      rescue StandardError => e
         Rails.logger.error "#{self.class} | #{e.message}"
       end
     end
@@ -37,7 +37,7 @@ class TelegramBotWorker
   end
 
   def handle_callback(bot, message)
-    self.send(message.data.to_sym, bot, message) if self.respond_to?(message.data.to_sym, true)
+    send(message.data.to_sym, bot, message) if respond_to?(message.data.to_sym, true)
   end
 
   def handle_message(bot, message)
@@ -55,8 +55,8 @@ class TelegramBotWorker
           begin
             user = User.find_or_create_by_tg(message.chat)
             Message.create!(tg_id: user.tg_id, text: message.text, tg_msg_id: message.message_id)
-          rescue => e
-            Rails.logger.error "Not save tg msg #{message.from.id}, #{message.text}, #{message.message_id} | #{e.message}"
+          rescue StandardError => e
+            Rails.logger.error "No save tg msg #{message.from.id}, #{message.text}, #{message.message_id}, #{e.message}"
           end
           msg = "‼️Входящее сообщение‼️\n️\n"
           name = message.from.username.present? ? "@#{message.from.username}" : user.full_name
@@ -82,7 +82,7 @@ class TelegramBotWorker
     Rails.cache.delete("user_#{message.chat.id}_state")
   end
 
-  def i_paid(bot, message)
+  def i_paid(_bot, message)
     user  = User.find_by(tg_id: message.from.id)
     order = user.orders.find_by(msg_id: message.message.message_id)
     order.update(status: :paid)

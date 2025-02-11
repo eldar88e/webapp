@@ -62,11 +62,11 @@ Rails.application.configure do
     expires_in: 2.hours
   }
 
-  if Rails.env.production? && ENV['LOGSTASH_HOST'].present? && ENV['LOGSTASH_PORT'].present?
+  if Rails.env.production? && ENV.fetch('LOGSTASH_HOST').present? && ENV.fetch('LOGSTASH_PORT').present?
     logstash_logger = LogStashLogger.new(
       type: :udp,
-      host: ENV['LOGSTASH_HOST'],
-      port: ENV['LOGSTASH_PORT'].to_i,
+      host: ENV.fetch('LOGSTASH_HOST'),
+      port: ENV.fetch('LOGSTASH_PORT').to_i,
       formatter: :json_lines,
       customize_event: lambda do |event|
         event['host'] = { name: Socket.gethostname }

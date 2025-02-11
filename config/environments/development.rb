@@ -30,7 +30,7 @@ Rails.application.configure do
   config.cache_store = :redis_cache_store, {
     url: ENV.fetch('REDIS_URL') { 'redis://localhost:6379/1' },
     namespace: 'cache',
-    expires_in: 1.hours
+    expires_in: 1.hour
   }
 
   # Store uploaded files on the local file system (see config/storage.yml for options).

@@ -36,6 +36,7 @@ class AbandonedOrderReminderJob < ApplicationJob
       else
         Rails.logger.error "Error save msg_id for user #{user.id}, msg send result: #{msg_id}"
       end
+      order.update(status: :overdue)
     end
   end
 
@@ -44,7 +45,7 @@ class AbandonedOrderReminderJob < ApplicationJob
     return unless next_step
 
     AbandonedOrderReminderJob.set(wait: next_step[:wait])
-                            .perform_later(order_id: args[:order_id], msg_type: next_step[:msg_type])
+                             .perform_later(order_id: args[:order_id], msg_type: next_step[:msg_type])
   end
 
   def form_msg(msg_type, order, user)

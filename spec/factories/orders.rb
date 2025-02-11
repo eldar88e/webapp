@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :order do
-    user { build(:user) }
+    user { create(:user) }
     total_amount { 100 }
     status { :unpaid }
 

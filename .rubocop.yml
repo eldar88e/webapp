@@ -1,11 +1,13 @@
-# Omakase Ruby styling for Rails
-inherit_gem: { rubocop-rails-omakase: rubocop.yml }
+require:
+  - rubocop-performance
+  - rubocop-rails
 
 AllCops:
   NewCops: enable
   TargetRubuVersion: 3.3.3
   Exclude:
     - 'db/**/*'
+    - 'spec/**/*'
 
 Style/Documentation:
   Enabled: false
@@ -14,5 +16,5 @@ Style/Documentation:
 Layout/SpaceInsideArrayLiteralBrackets:
    Enabled: false
 
-Style/StringLiterals:
-  EnforcedStyle: single_quotes
+Style/FrozenStringLiteralComment:
+  Enabled: false
