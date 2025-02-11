@@ -15,10 +15,8 @@ module Admin
       cached_data = Rails.cache.fetch(cache_key, expires_in: cache_expiry) do
         ChartsService.new(params[:period], users).send(type.to_sym)
       end
-
       Rails.cache.delete(cache_key) if cached_data.nil?
       # cached_data = ChartsService.new(params[:period], users).send(type.to_sym)
-
       render json: cached_data
     end
   end

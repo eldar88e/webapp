@@ -107,7 +107,7 @@ class ReportService
   end
 
   def self.schedule_review_requests(order, user)
-    order.order_items.includes(:product).each do |order_item|
+    order.order_items_with_product.each do |order_item|
       product = order_item.product
       next if product.id == Setting.fetch_value(:delivery_id).to_i || user.reviews.exists?(product_id: product.id)
 

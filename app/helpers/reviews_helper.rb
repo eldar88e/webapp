@@ -1,6 +1,6 @@
 module ReviewsHelper
-  def percentages
-    reviews = @product.reviews.approved
+  def percentages(product)
+    reviews = product.reviews.approved
     return [] if reviews.blank?
 
     total_reviews = reviews.count

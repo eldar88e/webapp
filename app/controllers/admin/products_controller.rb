@@ -47,7 +47,7 @@ module Admin
     def create
       @product = Product.new(product_params)
       if @product.save
-        redirect_to admin_products_path, notice: 'Товар был успешно добавлен.'
+        redirect_to admin_products_path, notice: t('controller.products.create')
       else
         error_notice(@product.errors.full_messages, :unprocessable_entity)
       end
@@ -56,10 +56,10 @@ module Admin
     def update
       if params[:restore]
         @product.restore
-        redirect_to admin_products_path, notice: 'Товар был успешно восстановлен.'
+        redirect_to admin_products_path, notice: t('controller.products.update_restore')
       elsif @product.update(product_params)
         render turbo_stream: [
-          success_notice('Данные пользователя успешно обновлены.'),
+          success_notice(t('controller.products.update')),
           turbo_stream.replace(@product, partial: '/admin/products/product', locals: { product: @product })
         ]
       else
@@ -69,7 +69,7 @@ module Admin
 
     def destroy
       @product.destroy
-      redirect_to admin_products_path, status: :see_other, notice: 'Товар был успешно удален.'
+      redirect_to admin_products_path, status: :see_other, notice: t('controller.products.destroy')
     end
 
     private

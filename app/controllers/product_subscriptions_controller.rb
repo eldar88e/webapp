@@ -3,7 +3,6 @@ class ProductSubscriptionsController < ApplicationController
 
   def create
     subscription = @product.product_subscriptions.find_or_initialize_by(user: current_user)
-
     return error_notice 'Не удалось подписаться на товар. Возможно, вы уже подписаны.' if subscription.persisted?
 
     if subscription.save

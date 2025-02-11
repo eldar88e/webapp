@@ -121,5 +121,6 @@ ru:
         product: "Товар"
         rating: "Рейтинг"
         photos: "Фотография"
+        user_id: "ИД пользователя"
       cart_item:
         quantity: "Количество"

@@ -26,7 +26,7 @@ module Admin
       @review = Review.new(review_params)
 
       if @review.save
-        redirect_to admin_reviews_path, notice: 'Отзыв успешно создан.'
+        redirect_to admin_reviews_path, notice: t('controller.reviews.create')
       else
         error_notice(@review.errors.full_messages, :unprocessable_entity)
       end
@@ -38,7 +38,7 @@ module Admin
       if @review.update(review_params.except(:photos))
         render turbo_stream: [
           turbo_stream.replace(@review, partial: '/admin/reviews/review', locals: { review: @review }),
-          success_notice('Отзыв успешно обновлен.')
+          success_notice(t('controller.reviews.update'))
         ]
       else
         error_notice(@review.errors.full_messages, :unprocessable_entity)
@@ -47,7 +47,7 @@ module Admin
 
     def destroy
       @review.destroy!
-      redirect_to admin_reviews_path, status: :see_other, notice: 'Отзыв успешно удален.'
+      redirect_to admin_reviews_path, status: :see_other, notice: t('controller.reviews.destroy')
     end
 
     private
@@ -57,7 +57,7 @@ module Admin
     end
 
     def review_params
-      params.require(:review).permit(:content, :rating, :approved, photos: [])
+      params.require(:review).permit(:content, :rating, :approved, :user_id, photos: [])
     end
   end
 end

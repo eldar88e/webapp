@@ -18,6 +18,10 @@ class Order < ApplicationRecord
     order_items.includes(:product)
   end
 
+  def calculate_total_price
+    order_items_with_product.sum { |item| item.product.price * item.quantity }
+  end
+
   def self.revenue_by_date(start_date, end_date, group_by)
     where(updated_at: start_date..end_date, status: :shipped)
       .group(group_by)

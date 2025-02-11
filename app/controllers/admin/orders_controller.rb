@@ -27,7 +27,7 @@ module Admin
 
     def destroy
       @order.destroy!
-      redirect_to admin_orders_path, status: :see_other, notice: 'Заказ был успешно удален.'
+      redirect_to admin_orders_path, status: :see_other, notice: t('controller.orders.destroy')
     end
 
     private

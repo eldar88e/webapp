@@ -106,7 +106,7 @@
             </div>
 
             <div class="percentages">
-              <% percentages.each do |percentage| %>
+              <% percentages(@product).each do |percentage| %>
                 <div class="percentage-wrap">
                   <div class="rating"><%= percentage[:rating] %></div>
                   <div class="percentage"><div style="width: <%= percentage[:percentage] %>%;"></div></div>

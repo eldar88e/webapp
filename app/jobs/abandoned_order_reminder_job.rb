@@ -28,19 +28,24 @@ class AbandonedOrderReminderJob < ApplicationJob
     if msg_id.instance_of?(Integer)
       user.update(is_blocked: false)
       order.update_columns(msg_id: msg_id)
-      set_reminders(args)
+      schedule_reminders(args)
     else
-      if msg_id.instance_of?(Telegram::Bot::Exceptions::ResponseError)
-        Rails.logger.error "User #{user.id} is blocked"
-        user.update(is_blocked: true)
-      else
-        Rails.logger.error "Error save msg_id for user #{user.id}, msg send result: #{msg_id}"
-      end
+      update_user(user, msg_id)
       order.update(status: :overdue)
     end
   end
 
-  def set_reminders(args)
+  def update_user(user, msg_id)
+    if msg_id.instance_of?(Telegram::Bot::Exceptions::ResponseError)
+      Rails.logger.error "User #{user.id} is blocked"
+      user.update(is_blocked: true)
+    else
+      # TODO: Возможно в дальнейшем убрать!
+      Rails.logger.error "Error save msg_id for user #{user.id}, msg send result: #{msg_id}"
+    end
+  end
+
+  def schedule_reminders(args)
     next_step = STEPS[args[:msg_type]]
     return unless next_step
 

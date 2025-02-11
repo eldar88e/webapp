@@ -30,9 +30,9 @@ gem 'ruby-vips'
 gem 'sidekiq'
 gem 'sidekiq-unique-jobs'
 gem 'telegram-bot-ruby', require: false
-gem 'pry'
 
 group :development, :test do
+  gem 'pry'
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
 end

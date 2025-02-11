@@ -7,20 +7,20 @@ class MailingJob < ApplicationJob
     message = args[:message]
     return if message.blank? || Mailing::FILTERS.exclude?(filter)
 
-    user_id = args[:user_id]
-    return send_message(message, user_id) if user_id && filter == 'user'
+    return send_message(message, args[:user_id]) if args[:user_id] && filter == 'user'
 
     clients = fetch_users(filter)
-
-    clients.each do |client|
-      result = TelegramService.call(message, client.tg_id, markup: MARKUP)
-      save_message_or_status(result, client, message)
-      sleep 0.3
-    end
+    clients.each { |client| process_message(message, client) }
     TelegramService.call('Рассылка успешно завершена.', Setting.fetch_value(:admin_ids))
   end
 
   private
+
+  def process_message(message, client)
+    result = TelegramService.call(message, client.tg_id, markup: MARKUP)
+    save_message_or_status(result, client, message)
+    sleep 0.3
+  end
 
   def send_message(message, id)
     user  = User.find(id)

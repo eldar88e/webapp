@@ -13,13 +13,7 @@ class TelegramBotWorker
     Telegram::Bot::Client.run(settings[:tg_token]) do |bot|
       Rails.application.config.telegram_bot = bot
       bot.listen do |message|
-        case message
-        when Telegram::Bot::Types::CallbackQuery
-          handle_callback(bot, message)
-        when Telegram::Bot::Types::Message
-          handle_message(bot, message)
-          # else bot.api.send_message(chat_id: message.from.id, text: I18n.t('tg_msg.error_data'))
-        end
+        process_message(bot, message)
       rescue StandardError => e
         Rails.logger.error "#{self.class} | #{e.message}"
       end
@@ -27,6 +21,16 @@ class TelegramBotWorker
   end
 
   private
+
+  def process_message(bot, message)
+    case message
+    when Telegram::Bot::Types::CallbackQuery
+      handle_callback(bot, message)
+    when Telegram::Bot::Types::Message
+      handle_message(bot, message)
+      # else bot.api.send_message(chat_id: message.from.id, text: I18n.t('tg_msg.error_data'))
+    end
+  end
 
   def save_preview_video(bot, message)
     return unless settings[:admin_ids].split(',').include?(message.chat.id.to_s)
@@ -70,9 +74,9 @@ class TelegramBotWorker
 
   def input_tracking_number(message)
     user_state = Rails.cache.read("user_#{message.chat.id}_state")
-    return if user_state&.dig(:waiting_for_tracking).blank?
+    return if user_state&.dig(:order_id).blank?
 
-    order = Order.find_by(id: user_state[:order_id])
+    order = Order.find(user_state[:order_id])
     order.update(tracking_number: message.text, status: :shipped)
 
     [user_state[:msg_id], user_state[:h_msg], message.message_id].each do |id|
@@ -97,14 +101,11 @@ class TelegramBotWorker
   def submit_tracking(bot, message)
     order_number = parse_order_number(message.message.text)
     full_name    = parse_full_name(message.message.text)
-    binding.pry
-    return
-
     msg          = bot.api.send_message(chat_id: message.message.chat.id,
                                         text: I18n.t('tg_msg.set_track_num', order: order_number, fio: full_name))
     Rails.cache.write(
       "user_#{message.message.chat.id}_state",
-      { waiting_for_tracking: true, order_id: order_number, msg_id: message.message.message_id, h_msg: msg.message_id },
+      { order_id: order_number, msg_id: message.message.message_id, h_msg: msg.message_id },
       expires_in: TRACK_CACHE_PERIOD
     )
   end
@@ -121,9 +122,7 @@ class TelegramBotWorker
     first_btn = initialize_first_btn
     markup    = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: first_btn)
     caption   = settings[:preview_msg]&.gsub('\\n', "\n") # I18n.t('tg_msg.start')
-    bot.api.send_video(
-      chat_id: chat_id, video: settings[:first_video_id], caption: caption, reply_markup: markup
-    )
+    bot.api.send_video(chat_id: chat_id, video: settings[:first_video_id], caption: caption, reply_markup: markup)
   end
 
   def initialize_first_btn
