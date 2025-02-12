@@ -42,8 +42,7 @@ class CartItemsController < ApplicationController
     id = cart_item.product.id
     cart_item.destroy
     @cart_items = current_user.cart.cart_items.order(:created_at).includes(:product)
-    delivery_id = Setting.fetch_value(:delivery_id)
-    if @cart_items.where.not(product_id: delivery_id).size.positive?
+    if @cart_items.where.not(product_id: Setting.fetch_value(:delivery_id)).size.positive?
       return render turbo_stream: [ turbo_stream.remove("cart_item_#{cart_item.id}") ] + update_counters(id)
     end
 
