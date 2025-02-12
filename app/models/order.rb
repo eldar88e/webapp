@@ -12,7 +12,7 @@ class Order < ApplicationRecord
   before_update :remove_cart, if: -> { status_changed?(from: 'unpaid', to: 'paid') }
   before_update :deduct_stock, if: -> { status_changed?(from: 'paid', to: 'processing') }
   before_update :restock_stock, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
-  after_commit :check_status_change # , if: -> { saved_change_to_status? }
+  after_commit :check_status_change, unless: -> { status == 'initialized' }
 
   def order_items_with_product
     order_items.includes(:product)
