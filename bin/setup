@@ -2,7 +2,7 @@
 require 'fileutils'
 
 APP_ROOT = File.expand_path('..', __dir__)
-APP_NAME = 'webapp'
+APP_NAME = 'webapp'.freeze
 
 def system!(*)
   system(*, exception: true)
