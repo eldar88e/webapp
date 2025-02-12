@@ -121,7 +121,7 @@ class TelegramBotWorker
   def send_firs_msg(bot, chat_id)
     first_btn = initialize_first_btn
     markup    = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: first_btn)
-    caption   = settings[:preview_msg]&.gsub('\\n', "\n") # I18n.t('tg_msg.start')
+    caption   = settings[:preview_msg]&.gsub('\\n', "\n")
     bot.api.send_video(chat_id: chat_id, video: settings[:first_video_id], caption: caption, reply_markup: markup)
   end
 
