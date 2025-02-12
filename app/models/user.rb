@@ -55,7 +55,7 @@ class User < ApplicationRecord
                       .where(orders: { created_at: start_date..end_date })
                       .distinct.count
 
-    return 0 if total_customers.zero?
+    return [0, 0] if total_customers.zero?
 
     repeat_customers = joins(:orders)
                        .where(orders: { created_at: start_date..end_date })
@@ -66,9 +66,7 @@ class User < ApplicationRecord
   end
 
   def self.registered_count_grouped_by_period(start_date, end_date, period)
-    where(created_at: start_date..end_date)
-      .group(period)
-      .count
+    where(created_at: start_date..end_date).group(period).count
   end
 
   def self.find_or_create_by_tg(tg_user)
