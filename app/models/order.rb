@@ -51,7 +51,7 @@ class Order < ApplicationRecord
     %w[user]
   end
 
-  def order_items_str(courier = false)
+  def order_items_str(courier = nil)
     order_items_with_product.filter_map do |i|
       next if i.product.name == 'Доставка' && courier
 
