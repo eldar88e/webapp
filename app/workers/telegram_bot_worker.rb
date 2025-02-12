@@ -13,7 +13,7 @@ class TelegramBotWorker
     Telegram::Bot::Client.run(settings[:tg_token]) do |bot|
       Rails.application.config.telegram_bot = bot
       bot.listen do |message|
-        process_message(bot, message)
+        process_bot(bot, message)
       rescue StandardError => e
         Rails.logger.error "#{self.class} | #{e.message}"
       end
@@ -30,7 +30,7 @@ class TelegramBotWorker
     false
   end
 
-  def process_message(bot, message)
+  def process_bot(bot, message)
     case message
     when Telegram::Bot::Types::CallbackQuery
       handle_callback(bot, message)
@@ -44,7 +44,6 @@ class TelegramBotWorker
     return unless settings[:admin_ids].split(',').include?(message.chat.id.to_s)
 
     bot.api.send_message(chat_id: message.chat.id, text: "ID Вашего видео:\n#{message.video.file_id}")
-    true
   end
 
   def handle_callback(bot, message)
@@ -52,32 +51,40 @@ class TelegramBotWorker
   end
 
   def handle_message(bot, message)
-    case message.text
-    when '/start'
+    if message.text == '/start'
       User.find_or_create_by_tg(message.chat)
       send_firs_msg(bot, message.chat.id)
     else
-      if message.chat.id == settings[:courier_tg_id].to_i
-        input_tracking_number(message)
-      else
-        return save_preview_video(bot, message) if message.video.present?
+      return input_tracking_number(message) if message.chat.id == settings[:courier_tg_id].to_i
 
-        if message.text.present?
-          begin
-            user = User.find_or_create_by_tg(message.chat)
-            Message.create!(tg_id: user.tg_id, text: message.text, tg_msg_id: message.message_id)
-          rescue StandardError => e
-            Rails.logger.error "No save tg msg #{message.from.id}, #{message.text}, #{message.message_id}, #{e.message}"
-          end
-          msg = "‼️Входящее сообщение‼️\n️\n"
-          name = message.from.username.present? ? "@#{message.from.username}" : user.full_name
-          msg += "От: #{name}\n" if message.from.username.present?
-          msg += message.text
-          TelegramJob.perform_later(method: 'call', msg: msg, id: settings[:admin_ids])
-        end
-        send_firs_msg(bot, message.chat.id)
-      end
+      process_message(bot, message)
     end
+  end
+
+  def process_message(bot, message)
+    return save_preview_video(bot, message) if message.video.present?
+
+    if message.text.present?
+      save_message(message)
+      notify_admins(message, user)
+    end
+    send_firs_msg(bot, message.chat.id)
+  end
+
+  def save_message(message)
+    user = User.find_or_create_by_tg(message.chat)
+    Message.create!(tg_id: user.tg_id, text: message.text, tg_msg_id: message.message_id)
+  rescue StandardError => e
+    # TODO: Возможно в дальнейшем убрать!
+    Rails.logger.error "No save tg msg #{message.from.id}, #{message.text}, #{message.message_id}, #{e.message}"
+  end
+
+  def notify_admins(message, user)
+    msg = "‼️Входящее сообщение‼️\n️\n"
+    name = message.from.username.present? ? "@#{message.from.username}" : user.full_name
+    msg += "От: #{name}\n" if message.from.username.present?
+    msg += message.text
+    TelegramJob.perform_later(msg: msg, id: settings[:admin_ids])
   end
 
   def input_tracking_number(message)
