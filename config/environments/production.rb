@@ -89,20 +89,10 @@ Rails.application.configure do
     config.lograge.custom_payload { |controller| { user_id: controller.current_user.try(:id) } }
     config.lograge.logger = logstash_logger
   else
-    file_logger = ActiveSupport::Logger.new(
-      "log/#{Rails.env}.json.log",
-      10, # Количество файлов для ротации (например, 10)
-      20 * 1024 * 1024 # Максимальный размер файла (20 МБ)
-    )
+    file_logger = ActiveSupport::Logger.new("log/#{Rails.env}.json.log", 10, 20 * 1024 * 1024)
 
     file_logger.formatter = proc do |severity, timestamp, _progname, msg|
-      log_entry = {
-        timestamp: timestamp,
-        level: severity,
-        message: msg,
-        request_id: Thread.current[:request_id]
-      }.to_json + "\n"
-      log_entry
+      "#{{ timestamp: timestamp, level: severity, message: msg, request_id: Thread.current[:request_id] }.to_json}\n"
     end
 
     logger = ActiveSupport::TaggedLogging.new(file_logger)

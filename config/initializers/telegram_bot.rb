@@ -11,7 +11,7 @@ Signal.trap('TERM') do
   bot = Rails.application.config.telegram_bot
   return if bot.nil?
 
-  puts "\nShutting down bot..."
+  Rails.logger.info "\nShutting down bot..."
   bot.stop
   exit
 end
@@ -20,7 +20,7 @@ Signal.trap('INT') do
   bot = Rails.application.config.telegram_bot
   return if bot.nil?
 
-  puts "\nShutting down bot..."
+  Rails.logger.info "\nShutting down bot..."
   bot.stop
   exit
 end

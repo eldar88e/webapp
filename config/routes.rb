@@ -3,12 +3,9 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   authenticate :user do
     mount Sidekiq::Web => '/sidekiq'
-    # mount ExceptionTrack::Engine => '/exception-track'
   end
 
-  devise_for :users, controllers: {
-    registrations: 'users/registrations'
-  }
+  devise_for :users, controllers: { registrations: 'users/registrations' }
 
   root 'auth#login'
 
@@ -23,20 +20,7 @@ Rails.application.routes.draw do
   post '/auth/telegram', to: 'auth#telegram_auth'
   get '/login', to: 'auth#login'
 
-  namespace :admin do
-    get '/login', to: 'dashboard#login'
-    get '/dashboard', to: 'dashboard#index'
-    get '/', to: 'dashboard#index'
-    resources :products
-    resources :settings
-    resources :orders
-    resources :users
-    resources :mailings
-    resources :analytics, only: :index
-    resources :messages, only: %i[index new create destroy]
-    resources :reviews
-    resources :product_subscriptions, only: [:index]
-  end
+  draw :admin
 
   match '*unmatched', to: 'application#redirect_to_telegram', via: :all,
                       constraints: ->(req) { !req.path.start_with?('/rails/active_storage') }
