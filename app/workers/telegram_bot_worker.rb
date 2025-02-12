@@ -133,7 +133,7 @@ class TelegramBotWorker
     if settings[:first_video_id].present?
       bot.api.send_video(chat_id: chat_id, video: settings[:first_video_id], caption: caption, reply_markup: markup)
     else
-      bot.api.send_message(chat_id: chat_id, text: caption, parse_mode: 'MarkdownV2', reply_markup: markup)
+      bot.api.send_message(chat_id: chat_id, text: caption, reply_markup: markup)
     end
   end
 
