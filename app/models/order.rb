@@ -9,6 +9,10 @@ class Order < ApplicationRecord
 
   enum :status, { initialized: 0, unpaid: 1, paid: 2, processing: 3, shipped: 4, cancelled: 5, overdue: 7, refunded: 8 }
 
+  before_save -> { self.created_at = Time.current }, if: -> { status == 'unpaid' }
+  before_save -> { self.paid_at = Time.current }, if: -> { status == 'processing' }
+  before_save -> { self.shipped_at = Time.current }, if: -> { status == 'shipped' }
+
   before_update :remove_cart, if: -> { status_changed?(from: 'unpaid', to: 'paid') }
   before_update :deduct_stock, if: -> { status_changed?(from: 'paid', to: 'processing') }
   before_update :restock_stock, if: -> { status_changed?(from: 'processing', to: 'cancelled') }

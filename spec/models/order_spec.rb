@@ -30,13 +30,35 @@ RSpec.describe Order, type: :model do
   end
 
   describe 'callbacks' do
+    context 'when status is unpaid' do
+      it 'sets created_at to current time' do
+        order.status = 'unpaid'
+        order.save
+        expect(order.created_at).to be_within(1.second).of(Time.current)
+      end
+    end
+
+    context 'when status is processing' do
+      it 'sets paid_at to current time' do
+        order.status = 'processing'
+        order.save
+        expect(order.paid_at).to be_within(1.second).of(Time.current)
+      end
+    end
+
+    context 'when status is shipped' do
+      it 'sets shipped_at to current time' do
+        order.status = 'shipped'
+        order.save
+        expect(order.shipped_at).to be_within(1.second).of(Time.current)
+      end
+    end
+
     describe '#remove_cart' do
       let!(:cart) { create(:cart, user: user) }
 
       it 'destroys user cart when status changes from unpaid to paid' do
-        expect {
-          order.update!(status: :paid)
-        }.to change(Cart, :count).by(-1)
+        expect { order.update!(status: :paid) }.to change(Cart, :count).by(-1)
       end
     end
 
