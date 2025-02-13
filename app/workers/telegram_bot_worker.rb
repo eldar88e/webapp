@@ -65,14 +65,14 @@ class TelegramBotWorker
     return save_preview_video(bot, message) if message.video.present?
 
     if message.text.present?
-      save_message(message)
+      user = User.find_or_create_by_tg(message.chat)
+      save_message(message, user)
       notify_admins(message, user)
     end
     send_firs_msg(bot, message.chat.id)
   end
 
-  def save_message(message)
-    user = User.find_or_create_by_tg(message.chat)
+  def save_message(message, user)
     Message.create!(tg_id: user.tg_id, text: message.text, tg_msg_id: message.message_id)
   rescue StandardError => e
     # TODO: Возможно в дальнейшем убрать!
