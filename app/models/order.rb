@@ -7,15 +7,23 @@ class Order < ApplicationRecord
   validates :status, presence: true
   validates :total_amount, presence: true
 
-  enum status: { initialized: 0, unpaid: 1, paid: 2, processing: 3, shipped: 4, cancelled: 5, overdue: 7, refunded: 8 }
+  enum :status, { initialized: 0, unpaid: 1, paid: 2, processing: 3, shipped: 4, cancelled: 5, overdue: 7, refunded: 8 }
+
+  before_save -> { self.created_at = Time.current }, if: -> { status == 'unpaid' }
+  before_save -> { self.paid_at = Time.current }, if: -> { status == 'processing' }
+  before_save -> { self.shipped_at = Time.current }, if: -> { status == 'shipped' }
 
   before_update :remove_cart, if: -> { status_changed?(from: 'unpaid', to: 'paid') }
   before_update :deduct_stock, if: -> { status_changed?(from: 'paid', to: 'processing') }
   before_update :restock_stock, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
-  after_commit :check_status_change # , if: -> { saved_change_to_status? }
+  after_commit :check_status_change, unless: -> { status == 'initialized' }
 
   def order_items_with_product
     order_items.includes(:product)
+  end
+
+  def calculate_total_price
+    order_items_with_product.sum { |item| item.product.price * item.quantity }
   end
 
   def self.revenue_by_date(start_date, end_date, group_by)
@@ -43,20 +51,20 @@ class Order < ApplicationRecord
     %w[user]
   end
 
-  def order_items_str(courier = false)
-    order_items_with_product.map do |i|
+  def order_items_str(courier = nil)
+    order_items_with_product.filter_map do |i|
       next if i.product.name == 'Доставка' && courier
 
-      resust = "• #{i.product.name} — #{i.product.name != 'Доставка' ? (i.quantity.to_s + 'шт.') : 'услуга' }"
+      resust = "• #{i.product.name} — #{i.product.name == 'Доставка' ? 'услуга' : "#{i.quantity}шт."}"
       resust += " — #{i.price.to_i}₽" unless courier
       resust
-    end.compact.join(",\n")
+    end.join(",\n")
   end
 
   private
 
   def check_status_change
-    ReportJob.perform_later(order_id: self.id)
+    ReportJob.perform_later(order_id: id)
   end
 
   def remove_cart
@@ -69,7 +77,7 @@ class Order < ApplicationRecord
       if product.stock_quantity >= order_item.quantity
         product.update!(stock_quantity: product.stock_quantity - order_item.quantity)
       else
-        msg = "Недостаток в остатках для продукта: #{product.name} в заказе #{self.id}"
+        msg = "Недостаток в остатках для продукта: #{product.name} в заказе #{id}"
         Rails.logger.error msg
         TelegramJob.perform_later(msg: msg)
         raise StandardError, msg
@@ -83,7 +91,7 @@ class Order < ApplicationRecord
       next if product.nil? || product.id == Setting.fetch_value(:delivery_id).to_i
 
       product.increment!(:stock_quantity, order_item.quantity)
-      Rails.logger.info "Returned #{order_item.quantity} pcs of #{product.name} to stock after order #{self.id} cancellation."
+      Rails.logger.info "Returned #{order_item.quantity} pcs #{product.name} to stock after order #{id} cancellation."
     end
   end
 end

@@ -6,14 +6,18 @@ class SubscribersNoticeJob < ApplicationJob
     subscribers = product&.subscribers
     return if subscribers.blank?
 
-    subscribers.each do |user|
-      TelegramJob.perform_later(
-        msg: "📢 Товар '#{product.name}' снова в наличии! Спешите заказать!",
-        id: user.tg_id,
-        markup_url: "products_#{product.id}",
-        markup_text: "Заказать #{product.name}"
-      )
-    end
+    subscribers.each { |user| run_telegram_job(user, product) }
     product.product_subscriptions.destroy_all
+  end
+
+  private
+
+  def run_telegram_job(user, product)
+    TelegramJob.perform_later(
+      msg: "📢 Товар '#{product.name}' снова в наличии! Спешите заказать!",
+      id: user.tg_id,
+      markup_url: "products_#{product.id}",
+      markup_text: "Заказать #{product.name}"
+    )
   end
 end

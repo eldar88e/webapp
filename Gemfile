@@ -4,37 +4,37 @@ ruby '3.3.3'
 gem 'rails', '~> 7.2.2'
 
 gem 'bootsnap', require: false
-gem 'puma', '~> 6.5'
-gem 'jsbundling-rails'
-gem 'turbo-rails'
-gem 'stimulus-rails'
-gem 'cssbundling-rails'
 gem 'jbuilder'
-gem 'redis', '~> 5.2'
-gem 'tzinfo-data', platforms: %i[ windows jruby ]
+gem 'puma', '~> 6.6'
+gem 'stimulus-rails'
+gem 'turbo-rails'
+gem 'tzinfo-data', platforms: %i[windows jruby]
+
 gem 'pg', '~> 1.5'
+gem 'redis', '~> 5.2'
 gem 'vite_rails'
 
 # gem 'aws-sdk-s3'
 gem 'active_link_to'
-gem 'dotenv'
+gem 'ancestry'
 gem 'devise'
-gem 'telegram-bot-ruby', require: false
+gem 'dotenv'
 gem 'i18n'
-gem 'sidekiq'
-gem 'sidekiq-unique-jobs'
+gem 'image_processing'
+gem 'lograge'
+gem 'logstash-logger'
 gem 'pagy'
 gem 'pundit'
 gem 'ransack'
-gem 'ancestry'
-gem 'lograge'
-gem 'logstash-logger'
 gem 'ruby-vips'
-gem 'image_processing'
+gem 'sidekiq'
+gem 'sidekiq-unique-jobs'
+gem 'telegram-bot-ruby', require: false
 
 group :development, :test do
   gem 'pry'
-  gem 'rubocop-rails-omakase', require: false
+  gem 'rubocop-performance', require: false
+  gem 'rubocop-rails', require: false
 end
 
 group :development do
@@ -46,7 +46,7 @@ group :development do
 end
 
 group :test do
-  # gem "factory_bot_rails"
-  # gem "rspec-rails"
-  # gem "shoulda-matchers"
+  gem 'factory_bot_rails'
+  gem 'rspec-rails'
+  gem 'shoulda-matchers'
 end

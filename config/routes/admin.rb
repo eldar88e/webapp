@@ -1,0 +1,14 @@
+namespace :admin do
+  get '/login', to: 'dashboard#login'
+  get '/dashboard', to: 'dashboard#index'
+  get '/', to: 'dashboard#index'
+  resources :products
+  resources :settings
+  resources :orders
+  resources :users
+  resources :mailings
+  resources :analytics, only: :index
+  resources :messages, only: %i[index new create destroy]
+  resources :reviews
+  resources :product_subscriptions, only: [:index]
+end

@@ -1,0 +1,13 @@
+FactoryBot.define do
+  factory :user do
+    email { 'user@user.com' }
+    password { 12345678 }
+    tg_id { 12345678 }
+  end
+
+  factory :user_two, class: 'User' do
+    email { 'user@user_two.com' }
+    password { 12345678 }
+    tg_id { 123456789 }
+  end
+end

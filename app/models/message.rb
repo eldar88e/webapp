@@ -1,5 +1,5 @@
 class Message < ApplicationRecord
-  belongs_to :user, primary_key: :tg_id, foreign_key: :tg_id
+  belongs_to :user, primary_key: :tg_id, foreign_key: :tg_id, inverse_of: :messages
 
   validates :text, presence: true
 

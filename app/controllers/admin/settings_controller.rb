@@ -3,7 +3,7 @@ module Admin
     before_action :set_setting, only: %i[edit update destroy]
 
     def index
-      @q_settings = Setting.all.order(:created_at).ransack(params[:q])
+      @q_settings = Setting.order(:created_at).ransack(params[:q])
       @pagy, @settings = pagy(@q_settings.result, items: 20)
     end
 
@@ -15,16 +15,6 @@ module Admin
       ]
     end
 
-    def create
-      @setting = Setting.new(setting_params)
-
-      if @setting.save
-        redirect_to admin_settings_path, notice: 'Настройка была успешно создана.'
-      else
-        error_notice(@setting.errors.full_messages, :unprocessable_entity)
-      end
-    end
-
     def edit
       render turbo_stream: [
         turbo_stream.update(:modal_title, 'Редактировать настройку'),
@@ -32,9 +22,19 @@ module Admin
       ]
     end
 
+    def create
+      @setting = Setting.new(setting_params)
+
+      if @setting.save
+        redirect_to admin_settings_path, notice: t('controller.settings.create')
+      else
+        error_notice(@setting.errors.full_messages, :unprocessable_entity)
+      end
+    end
+
     def update
       if @setting.update(setting_params)
-        redirect_to admin_settings_path, notice: 'Настройка была успешно обновлена.'
+        redirect_to admin_settings_path, notice: t('controller.settings.update')
       else
         error_notice(@setting.errors.full_messages, :unprocessable_entity)
       end
@@ -42,7 +42,7 @@ module Admin
 
     def destroy
       @setting.destroy!
-      redirect_to admin_settings_path, status: :see_other, notice: 'Настройка была успешно удалена.'
+      redirect_to admin_settings_path, status: :see_other, notice: t('controller.settings.destroy')
     end
 
     private

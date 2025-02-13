@@ -5,9 +5,11 @@ class ReviewsController < ApplicationController
   def new
     @review = current_user.reviews.new
     @review.product = @product
+    return unless turbo_frame_request?
+
     render turbo_stream: [
       turbo_stream.update(:new_review, partial: '/reviews/form', locals: { method: :post })
-    ] if turbo_frame_request?
+    ]
   end
 
   def create

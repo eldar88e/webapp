@@ -17,16 +17,16 @@ export default defineConfig({
     assetsDir: '',
     rollupOptions: {
       input: {
-        application: 'app/frontend/entrypoints/application.js',
-        admin: 'app/frontend/entrypoints/admin.js',
+        application: './app/frontend/entrypoints/application.js',
+        admin: './app/frontend/entrypoints/admin.js',
       },
     },
     sourcemap: false,
   },
   appType: 'custom',
   server: {
-    host: '127.0.0.1',
-    port: 5173,
+    host: 'localhost',
+    port: 3036,
     strictPort: true,
     open: true,
   },

@@ -50,7 +50,7 @@ class TelegramService
             chat_id: user_id, text: escape(text_part), parse_mode: 'MarkdownV2', reply_markup: markup
           ).message_id
         end
-      rescue => e
+      rescue StandardError => e
         Rails.logger.error "Failed to send message to bot: #{e}"
         message_id = e
       end
@@ -62,10 +62,11 @@ class TelegramService
   def form_keyboard
     buttons = []
     if @markup != 'new_order' && @markup != 'mailing'
-      buttons << [Telegram::Bot::Types::InlineKeyboardButton.new(text: I18n.t("tg_btn.#{@markup}"), callback_data: @markup)]
+      buttons << [Telegram::Bot::Types::InlineKeyboardButton.new(text: I18n.t("tg_btn.#{@markup}"),
+                                                                 callback_data: @markup)]
       buttons += [order_btn('Изменить заказ'), ask_btn] if @markup == 'i_paid'
     else
-      text_btn = @markup != 'mailing' ? 'Новый заказ' : 'Перейти в каталог'
+      text_btn = @markup == 'mailing' ? 'Перейти в каталог' : 'Новый заказ'
       buttons += [order_btn(text_btn), ask_btn]
     end
     buttons
@@ -77,12 +78,12 @@ class TelegramService
   end
 
   def order_btn(btn_text)
-    url  = "https://t.me/#{settings[:tg_main_bot]}?startapp"
+    url = "https://t.me/#{settings[:tg_main_bot]}?startapp"
     [Telegram::Bot::Types::InlineKeyboardButton.new(text: btn_text, url: url)]
   end
 
   def ask_btn
-    [Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Задать вопрос', url: "#{settings[:tg_support]}")]
+    [Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Задать вопрос', url: settings[:tg_support].to_s)]
   end
 
   def form_markup

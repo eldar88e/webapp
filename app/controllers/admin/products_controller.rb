@@ -7,21 +7,7 @@ module Admin
 
       root_product_id = Setting.fetch_value(:root_product_id)
       if root_product_id
-        session[:filter] = params[:filter].presence || session[:filter].presence || 'descendants'
-        case session[:filter]
-        when 'descendants'
-          root_product = Product.find(root_product_id)
-          @result      = @q_products.result.where(id: root_product.descendants.ids)
-                                           .where.not(id: root_product.children.ids)
-        when 'children'
-          root_product = Product.find(root_product_id)
-          @result      = @q_products.result.where(id: root_product.children.ids)
-        when 'services'
-          delivery_id = Setting.fetch_value(:delivery_id)
-          @result     = delivery_id ? @q_products.result.where(id: delivery_id) : @q_products.result
-        else
-          @result = @q_products.result
-        end
+        form_products(root_product_id)
       else
         @result = @q_products.result
       end
@@ -37,15 +23,6 @@ module Admin
       ]
     end
 
-    def create
-      @product = Product.new(product_params)
-      if @product.save
-        redirect_to admin_products_path, notice: 'Товар был успешно добавлен.'
-      else
-        error_notice(@product.errors.full_messages, :unprocessable_entity)
-      end
-    end
-
     def edit
       render turbo_stream: [
         turbo_stream.update(:modal_title, 'Редактировать товар'),
@@ -53,15 +30,21 @@ module Admin
       ]
     end
 
+    def create
+      @product = Product.new(product_params)
+      if @product.save
+        redirect_to admin_products_path, notice: t('controller.products.create')
+      else
+        error_notice(@product.errors.full_messages, :unprocessable_entity)
+      end
+    end
+
     def update
       if params[:restore]
         @product.restore
-        redirect_to admin_products_path, notice: 'Товар был успешно восстановлен.'
+        render turbo_stream: render_turbo_stream('update_restore')
       elsif @product.update(product_params)
-        render turbo_stream: [
-          success_notice('Данные пользователя успешно обновлены.'),
-          turbo_stream.replace(@product, partial: '/admin/products/product', locals: { product: @product })
-        ]
+        render turbo_stream: render_turbo_stream('update')
       else
         error_notice(@product.errors.full_messages, :unprocessable_entity)
       end
@@ -69,10 +52,34 @@ module Admin
 
     def destroy
       @product.destroy
-      redirect_to admin_products_path, status: :see_other, notice: 'Товар был успешно удален.'
+      render turbo_stream: render_turbo_stream('destroy')
     end
 
     private
+
+    def form_products(root_product_id)
+      session[:filter] = params[:filter].presence || session[:filter].presence || 'descendants'
+      case session[:filter]
+      when 'descendants'
+        root_product = Product.find(root_product_id)
+        @result = @q_products.result.where(id: root_product.descendants.ids).where.not(id: root_product.children.ids)
+      when 'children'
+        root_product = Product.find(root_product_id)
+        @result      = @q_products.result.where(id: root_product.children.ids)
+      when 'services'
+        delivery_id = Setting.fetch_value(:delivery_id)
+        @result     = delivery_id ? @q_products.result.where(id: delivery_id) : @q_products.result
+      else
+        @result = @q_products.result
+      end
+    end
+
+    def render_turbo_stream(notice)
+      [
+        success_notice(t("controller.products.#{notice}")),
+        turbo_stream.replace(@product, partial: '/admin/products/product', locals: { product: @product })
+      ]
+    end
 
     def set_product
       @product = Product.find(params[:id])

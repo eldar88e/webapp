@@ -1,7 +1,7 @@
 class Setting < ApplicationRecord
   validates :variable, presence: true, uniqueness: true
 
-  after_commit :clear_settings_cache, on: [ :create, :update, :destroy ]
+  after_commit :clear_settings_cache, on: %i[create update destroy]
 
   def self.all_cached
     Rails.cache.fetch(:settings, expires_in: 6.hours) do

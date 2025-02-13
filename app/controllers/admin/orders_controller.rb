@@ -9,8 +9,9 @@ module Admin
 
     def edit
       render turbo_stream: [
-        turbo_stream.update(:modal_title, 'Редактировать заказ'),
-        turbo_stream.update(:modal_body, partial: '/admin/orders/edit')
+        turbo_stream.update(:modal_title, "Редактировать заказ №#{@order.id}"),
+        turbo_stream.update(:modal_body, partial: '/admin/orders/edit'),
+        turbo_stream.update(:modal_price, "Итого: #{@order.total_amount.round} ₽")
       ]
     end
 
@@ -27,7 +28,7 @@ module Admin
 
     def destroy
       @order.destroy!
-      redirect_to admin_orders_path, status: :see_other, notice: 'Заказ был успешно удален.'
+      redirect_to admin_orders_path, status: :see_other, notice: t('controller.orders.destroy')
     end
 
     private

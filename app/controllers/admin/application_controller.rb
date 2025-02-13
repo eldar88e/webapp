@@ -18,7 +18,7 @@ module Admin
     end
 
     def authorize_admin_access!
-      authorize [:admin, :base], :admin_access?
+      authorize %i[admin base], :admin_access?
     end
 
     def error_notice(msg, status = :unprocessable_entity)

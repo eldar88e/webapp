@@ -58,7 +58,7 @@ class ReportService
 
       user_msg = I18n.t('tg_msg.on_processing_client', order: order.id)
       send_report(order, admin_msg: msg, admin_tg_id: :courier, admin_markup: 'submit_tracking',
-                  user_msg: user_msg, user_tg_id: user.tg_id, user_markup: 'new_order')
+                         user_msg: user_msg, user_tg_id: user.tg_id, user_markup: 'new_order')
     end
 
     def on_shipped(order)
@@ -78,52 +78,49 @@ class ReportService
 
       msg_courier = I18n.t('tg_msg.track_num_save', order: order.id, fio: user.full_name, num: order.tracking_number)
       send_report(order, admin_msg: msg_courier, admin_tg_id: :courier,
-                  user_msg: msg, user_tg_id: user.tg_id, user_markup: 'new_order')
+                         user_msg: msg, user_tg_id: user.tg_id, user_markup: 'new_order')
       schedule_review_requests(order, user)
     end
 
     def on_cancelled(order)
       Rails.logger.info "Order #{order.id} has been cancelled"
 
-      admin_msg = "❌ Заказ #{order.id} был отменен!"
+      admin_msg = "❌ Заказ №#{order.id} был отменен!"
       user_msg  = I18n.t('tg_msg.cancel', order: order.id)
-      send_report(order, admin_msg: admin_msg, user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order')
+      send_report(order, admin_msg: admin_msg, user_msg: user_msg, user_tg_id: order.user.tg_id,
+                         user_markup: 'new_order')
     end
 
     def on_refunded(order)
-      msg = "Order #{order.id} has been refunded"
+      msg = "Order №#{order.id} has been refunded"
       Rails.logger.info msg
-
       TelegramService.call msg
     end
 
     def on_overdue(order)
       Rails.logger.info "Order #{order.id} has been overdue"
-
       user_msg = I18n.t('tg_msg.unpaid.reminder.overdue', order: order.id)
       send_report(order, user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order')
     end
-  end
 
-  private
+    private
 
-  def self.schedule_review_requests(order, user)
-    order.order_items.includes(:product).each do |order_item|
-      product = order_item.product
-      next if product.id == Setting.fetch_value(:delivery_id).to_i
+    def schedule_review_requests(order, user)
+      order.order_items_with_product.each do |order_item|
+        product = order_item.product
+        next if product.id == Setting.fetch_value(:delivery_id).to_i || user.reviews.exists?(product_id: product.id)
 
-      unless user.reviews.exists?(product_id: product.id)
         SendReviewRequestJob.set(wait: REVIEW_WAIT).perform_later(
           product_id: product.id, user_id: user.id, order_id: order.id
         )
       end
     end
-  end
 
-  def self.send_report(order, **args)
-    TelegramService.call(args[:admin_msg], args[:admin_tg_id], markup: args[:admin_markup]) if args[:admin_msg]
-    TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if order.msg_id.present?
-    msg_id = TelegramService.call(args[:user_msg], args[:user_tg_id], markup: args[:user_markup])
-    order.update_columns(msg_id: msg_id)
+    def send_report(order, **args)
+      TelegramService.call(args[:admin_msg], args[:admin_tg_id], markup: args[:admin_markup]) if args[:admin_msg]
+      TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if order.msg_id.present?
+      msg_id = TelegramService.call(args[:user_msg], args[:user_tg_id], markup: args[:user_markup])
+      order.update_columns(msg_id: msg_id)
+    end
   end
 end

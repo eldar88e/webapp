@@ -18,7 +18,7 @@ module Admin
           filter: @mailing.filter,
           message: @mailing.message
         )
-        redirect_to admin_mailings_path, notice: 'Рассылка успешно запланирована!'
+        redirect_to admin_mailings_path, notice: t('mailing_success')
       else
         error_notice(@mailing.errors.full_messages, :unprocessable_entity)
       end

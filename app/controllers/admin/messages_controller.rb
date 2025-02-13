@@ -20,7 +20,8 @@ module Admin
     def create
       MailingJob.perform_later(filter: 'user', message: message_params[:text], user_id: message_params[:user_id])
       user     = User.find(message_params[:user_id])
-      @message = Message.new(text: message_params[:text], tg_id: user.tg_id, is_incoming: false, created_at: Time.current)
+      @message = Message.new(text: message_params[:text], tg_id: user.tg_id, is_incoming: false,
+                             created_at: Time.current)
       render turbo_stream: [
         turbo_stream.prepend(:messages, partial: '/admin/messages/message', locals: { message: @message }),
         success_notice('Сообщение успешно отправленно в очередь!')

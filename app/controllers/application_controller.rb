@@ -12,14 +12,14 @@ class ApplicationController < ActionController::Base
   def available_categories
     root_product_id = Setting.fetch_value(:root_product_id)
     Rails.cache.fetch("available_categories_#{root_product_id}", expires_in: 30.minutes) do
-      Product.where(id: root_product_id).exists? ? Product.find(root_product_id).children.available.order(:created_at) : []
+      Product.exists?(root_product_id) ? Product.find(root_product_id).children.available.order(:created_at) : []
     end
   end
 
   def available_products
     product_id   = params[:category_id].presence || Setting.fetch_value(:default_product_id)
     raw_products = Product.find_by(id: product_id)
-    @products    = raw_products.present? ? raw_products.children.includes(:image_attachment).available : [] # .children_only
+    @products    = raw_products.present? ? raw_products.children.includes(:image_attachment).available : []
   end
 
   def error_notice(msg, status = :unprocessable_entity)
@@ -44,11 +44,11 @@ class ApplicationController < ActionController::Base
   end
 
   def filtered_params
-    user_params.to_h.reject { |_key, value| value.blank? }
+    user_params.to_h.compact_blank
   end
 
   def required_fields_filled?
-    filtered_params.except(:apartment, :build).values.compact_blank.size >= 8
+    filtered_params.except(:apartment, :build).values.size >= 8
   end
 
   def settings

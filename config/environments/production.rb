@@ -62,11 +62,11 @@ Rails.application.configure do
     expires_in: 2.hours
   }
 
-  if Rails.env.production? && ENV['LOGSTASH_HOST'].present? && ENV['LOGSTASH_PORT'].present?
+  if Rails.env.production? && ENV.fetch('LOGSTASH_HOST').present? && ENV.fetch('LOGSTASH_PORT').present?
     logstash_logger = LogStashLogger.new(
       type: :udp,
-      host: ENV['LOGSTASH_HOST'],
-      port: ENV['LOGSTASH_PORT'].to_i,
+      host: ENV.fetch('LOGSTASH_HOST'),
+      port: ENV.fetch('LOGSTASH_PORT').to_i,
       formatter: :json_lines,
       customize_event: lambda do |event|
         event['host'] = { name: Socket.gethostname }
@@ -89,20 +89,10 @@ Rails.application.configure do
     config.lograge.custom_payload { |controller| { user_id: controller.current_user.try(:id) } }
     config.lograge.logger = logstash_logger
   else
-    file_logger = ActiveSupport::Logger.new(
-      "log/#{Rails.env}.json.log",
-      10, # Количество файлов для ротации (например, 10)
-      20 * 1024 * 1024 # Максимальный размер файла (20 МБ)
-    )
+    file_logger = ActiveSupport::Logger.new("log/#{Rails.env}.json.log", 10, 20 * 1024 * 1024)
 
-    file_logger.formatter = proc do |severity, timestamp, progname, msg|
-      log_entry = {
-        timestamp: timestamp,
-        level: severity,
-        message: msg,
-        request_id: Thread.current[:request_id]
-      }.to_json + "\n"
-      log_entry
+    file_logger.formatter = proc do |severity, timestamp, _progname, msg|
+      "#{{ timestamp: timestamp, level: severity, message: msg, request_id: Thread.current[:request_id] }.to_json}\n"
     end
 
     logger = ActiveSupport::TaggedLogging.new(file_logger)
@@ -134,7 +124,7 @@ Rails.application.configure do
   config.active_record.attributes_for_inspect = [ :id ]
 
   # Enable DNS rebinding protection and other `Host` header attacks.
-  config.hosts = %w[webapp.open-ps.ru strattera.tgapp.online staging.tgapp.online miniapp localhost]
+  config.hosts = [ENV.fetch('HOST'), 'miniapp', 'localhost']
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com
   #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
