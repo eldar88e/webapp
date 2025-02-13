@@ -4,6 +4,8 @@ class Product < ApplicationRecord
   has_many :reviews, dependent: :destroy
   has_many :product_subscriptions, dependent: :destroy
   has_many :subscribers, through: :product_subscriptions, source: :user
+  has_many :order_items, dependent: :restrict_with_error
+  has_many :cart_items, dependent: :restrict_with_error
 
   before_validation :normalize_ancestry
 
