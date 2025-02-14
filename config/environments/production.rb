@@ -62,7 +62,7 @@ Rails.application.configure do
     expires_in: 2.hours
   }
 
-  if Rails.env.production? && ENV.fetch('LOGSTASH_HOST').present? && ENV.fetch('LOGSTASH_PORT').present?
+  if Rails.env.production? && ENV.fetch('LOGSTASH_HOST', nil).present? && ENV.fetch('LOGSTASH_PORT', nil).present?
     logstash_logger = LogStashLogger.new(
       type: :udp,
       host: ENV.fetch('LOGSTASH_HOST'),
@@ -124,7 +124,7 @@ Rails.application.configure do
   config.active_record.attributes_for_inspect = [ :id ]
 
   # Enable DNS rebinding protection and other `Host` header attacks.
-  config.hosts = [ENV.fetch('HOST'), 'miniapp', 'localhost']
+  config.hosts = [ENV.fetch('HOST', 'localhost'), 'miniapp']
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com
   #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`

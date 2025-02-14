@@ -23,6 +23,7 @@ gem 'i18n'
 gem 'image_processing'
 gem 'lograge'
 gem 'logstash-logger'
+# gem 'mongoid'
 gem 'pagy'
 gem 'pundit'
 gem 'ransack'
@@ -41,7 +42,7 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'brakeman', require: false
-  gem 'bullet'
+  gem 'bullet' # , require: false unless defined?(Mongoid) for MongoDB
   gem 'web-console'
 end
 

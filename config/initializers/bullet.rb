@@ -1,4 +1,4 @@
-if Rails.env.development?
+if Rails.env.development? # && defined?(Bullet) for mongoDB
   Rails.application.configure do
     config.after_initialize do
       Bullet.enable        = true
