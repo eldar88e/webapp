@@ -41,7 +41,7 @@ class TelegramBotWorker
   end
 
   def save_preview_video(bot, message)
-    return unless settings[:admin_ids].split(',').include?(message.chat.id.to_s)
+    return send_firs_msg(bot, message.chat.id) unless settings[:admin_ids].split(',').include?(message.chat.id.to_s)
 
     bot.api.send_message(chat_id: message.chat.id, text: "ID Вашего видео:\n#{message.video.file_id}")
   end
@@ -51,25 +51,22 @@ class TelegramBotWorker
   end
 
   def handle_message(bot, message)
-    if message.text == '/start'
-      User.find_or_create_by_tg(message.chat.as_json, true)
-      send_firs_msg(bot, message.chat.id)
-    else
-      return input_tracking_number(message) if message.chat.id == settings[:courier_tg_id].to_i
-
-      process_message(bot, message)
-    end
-  end
-
-  def process_message(bot, message)
-    return save_preview_video(bot, message) if message.video.present?
+    return input_tracking_number(message) if message.chat.id == settings[:courier_tg_id].to_i
 
     if message.text.present?
-      user = User.find_or_create_by_tg(message.chat.as_json)
-      save_message(message, user)
-      notify_admins(message, user)
+      process_message(message)
+    elsif message.video.present?
+      return save_preview_video(bot, message)
     end
     send_firs_msg(bot, message.chat.id)
+  end
+
+  def process_message(message)
+    user = User.find_or_create_by_tg(message.chat.as_json, true)
+    return if message.text == '/start'
+
+    save_message(message, user)
+    notify_admins(message, user)
   end
 
   def save_message(message, user)
@@ -81,8 +78,8 @@ class TelegramBotWorker
 
   def notify_admins(message, user)
     msg = "‼️Входящее сообщение‼️\n️\n"
-    name = message.from.username.present? ? "@#{message.from.username}" : user.full_name
-    msg += "От: #{name}\n" if message.from.username.present?
+    name = message.from.username.present? ? "@#{message.from.username}" : (user.full_name.presence || "User #{user.id}")
+    msg += "От: #{name}\n\n"
     msg += message.text
     TelegramJob.perform_later(msg: msg, id: settings[:admin_ids])
   end
