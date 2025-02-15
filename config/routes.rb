@@ -19,6 +19,8 @@ Rails.application.routes.draw do
 
   post '/auth/telegram', to: 'auth#telegram_auth'
   get '/login', to: 'auth#login'
+  get '/error-register', to: 'auth#error_register'
+  get '/user-checker', to: 'auth#user_checker'
 
   draw :admin
 

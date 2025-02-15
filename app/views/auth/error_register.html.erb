@@ -1,0 +1,72 @@
+<div class="modal right" style="display: block">
+  <div id="authorisation">
+    <h1 class="title-h">Ожидайте идет авторизация</h1>
+    <div class="load8">
+      <div class="loader">Loading...</div>
+    </div>
+  </div>
+  <div id="redirect-bot" style="display: none;">
+    <h1 class="title-h">Произошла ошибка</h1>
+    <p class="mb-3">Для открытия каталога необходимо сначала активировать бота.</p>
+    <ul class="mb-3">
+      <li class="mb-2">1. Откройте <%= link_to "@#{Setting.fetch_value(:tg_main_bot)}", "https://t.me/#{Setting.fetch_value(:tg_main_bot)}", style: "color: rgb(71, 132, 252);" %></li>
+      <li class="mb-2">2. Нажмите на кнопку Start или отправьте команду /start </li>
+      <li class="mb-2">3. Перейдите по ссылке, которую пришлёт бот, чтобы открыть каталог</li>
+    </ul>
+    <p class="mb-3">📌 Если не нажать /start, оформление заказа невозможно.</p>
+    <p>🔹 Авто-перенаправление:<br>Через 15 секунд вы будете автоматически перенаправлены в бота.</p>
+  </div>
+</div>
+
+<script>
+    const preloader = document.getElementById('authorisation');
+    const bot = document.getElementById('redirect-bot');
+    const tg_main_bot = "https://t.me/<%= settings[:tg_main_bot] %>";
+    const fetchUserChecker = (retryDelay=null) => {
+        fetch("/user-checker?user_id=2")
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.started) {
+                    console.log(data);
+                    window.location.href = '/';
+                } else {
+                    console.log(data);
+                    //console.log("Authentication failed: " + data.error);
+                    //window.location.href = tg_main_bot;
+                    if (retryDelay) {
+                        setTimeout(() => {
+                            fetchUserChecker();
+                        }, retryDelay);
+                    } else {
+                        redirectToBot();
+                    }
+                }
+            })
+            .catch((error) => {
+                console.log("Error during authentication:", error);
+                //window.location.href = tg_main_bot;
+                if (retryDelay) {
+                    setTimeout(() => {
+                        fetchUserChecker();
+                    }, retryDelay);
+                } else {
+                    redirectToBot();
+                }
+            });
+    }
+
+    const redirectToBot = () => {
+        preloader.style.display = 'none';
+        bot.style.display = 'block';
+        setTimeout(() => {
+            window.location.href = tg_main_bot;
+        }, 15000);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        setTimeout(() => {
+            console.log("Initial fetch after 2 seconds...");
+            fetchUserChecker(3000);
+        }, 2000);
+    });
+</script>

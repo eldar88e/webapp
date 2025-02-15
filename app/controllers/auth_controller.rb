@@ -1,5 +1,6 @@
 class AuthController < ApplicationController
   skip_before_action :check_authenticate_user!
+  skip_before_action :check_started_user!, only: %i[error_register user_checker]
   layout 'login'
   def login
     return unless current_user
@@ -17,14 +18,39 @@ class AuthController < ApplicationController
     init_data = URI.decode_www_form(data['initData']).to_h
     return redirect_to_telegram if init_data.blank?
 
-    tg_user = JSON.parse init_data['user']
-    user    = User.find_or_create_by_tg(tg_user)
-    sign_in(user)
-
+    sign_in_with_tg_id(init_data['user'])
     render json: { success: true, user: current_user, params: init_data['start_param'] } # head :ok
   end
 
+  def error_register
+    # UserCheckerJob.perform_later(current_user.id)
+    render :error_register, layout: 'application'
+  end
+
+  def user_checker
+    user = User.find(params[:user_id])
+    render json: { started: user.started }
+  end
+
   private
+
+  def sign_in_with_tg_id(tg_user_object)
+    tg_user = JSON.parse tg_user_object
+    user    = User.find_or_create_by_tg(tg_user)
+    update_tg_username(user, tg_user)
+    sign_in(user)
+  end
+
+  def update_tg_username(user, tg_user)
+    return if user.username == tg_user['username']
+
+    user.update(username: tg_user['username'])
+    msg = "User #{user.id} updated username #{user.username}"
+    Rails.logger.info msg
+    TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
+  rescue StandardError => e
+    Rails.logger.error e.message
+  end
 
   def valid_telegram_data?(data, secret_key)
     check_string = data.sort.map { |k, v| "#{k}=#{v}" }.join("\n")
