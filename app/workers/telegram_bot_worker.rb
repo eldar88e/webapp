@@ -62,7 +62,9 @@ class TelegramBotWorker
   end
 
   def process_message(message)
-    user = User.find_or_create_by_tg(message.chat.as_json, true)
+    tg_user = message.chat.as_json
+    user    = User.find_or_create_by_tg(tg_user, true) # не обновляет username если user существует
+    user.update(started: true, username: tg_user['username']) # тех кто зарегался через webapp нужно обновить started
     return if message.text == '/start'
 
     save_message(message, user)
