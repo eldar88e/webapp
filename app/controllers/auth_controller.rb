@@ -23,7 +23,7 @@ class AuthController < ApplicationController
   end
 
   def error_register
-    # UserCheckerJob.perform_later(current_user.id)
+    UserCheckerJob.perform_later(current_user.id)
     render :error_register, layout: 'application'
   end
 
