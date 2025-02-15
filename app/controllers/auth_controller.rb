@@ -29,7 +29,11 @@ class AuthController < ApplicationController
   end
 
   def user_checker
-    user = User.find(params[:user_id])
+    user = User.find_by(id: params[:user_id].to_i)
+    msg  = 'User not found or no started!'
+    Rails.logger.error msg if user.blank? || user.started.blank?
+    return render json: { error: msg } if user.blank? || user.started.blank?
+
     render json: { started: user.started }
   end
 

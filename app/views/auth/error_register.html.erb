@@ -31,8 +31,7 @@
                     window.location.href = '/';
                 } else {
                     console.log(data);
-                    //console.log("Authentication failed: " + data.error);
-                    //window.location.href = tg_main_bot;
+                    console.log("Authentication failed: " + data.error);
                     if (retryDelay) {
                         setTimeout(() => {
                             fetchUserChecker();
@@ -44,7 +43,6 @@
             })
             .catch((error) => {
                 console.log("Error during authentication:", error);
-                //window.location.href = tg_main_bot;
                 if (retryDelay) {
                     setTimeout(() => {
                         fetchUserChecker();
