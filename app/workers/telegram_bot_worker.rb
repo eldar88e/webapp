@@ -52,7 +52,7 @@ class TelegramBotWorker
 
   def handle_message(bot, message)
     if message.text == '/start'
-      User.find_or_create_by_tg(message.chat)
+      User.find_or_create_by_tg(message.chat.as_json, true)
       send_firs_msg(bot, message.chat.id)
     else
       return input_tracking_number(message) if message.chat.id == settings[:courier_tg_id].to_i
@@ -65,7 +65,7 @@ class TelegramBotWorker
     return save_preview_video(bot, message) if message.video.present?
 
     if message.text.present?
-      user = User.find_or_create_by_tg(message.chat)
+      user = User.find_or_create_by_tg(message.chat.as_json)
       save_message(message, user)
       notify_admins(message, user)
     end

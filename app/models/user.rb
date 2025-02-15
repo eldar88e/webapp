@@ -69,15 +69,25 @@ class User < ApplicationRecord
     where(created_at: start_date..end_date).group(period).count
   end
 
-  def self.find_or_create_by_tg(tg_user)
-    tg_user = tg_user.as_json if tg_user.instance_of?(Telegram::Bot::Types::Chat)
-    find_or_create_by(tg_id: tg_user['id']) do |user|
+  def self.find_or_create_by_tg(tg_user, started = false)
+    current_user = find_or_create_by(tg_id: tg_user['id']) do |user|
       user.username    = tg_user['username']
       user.first_name  = tg_user['first_name']
       user.middle_name = tg_user['last_name']
       user.email       = "telegram_user_#{tg_user['id']}@example.com"
       user.password    = Devise.friendly_token[0, 20]
+      user.started     = started
     end
+    log_user(current_user, started)
+    current_user
+  end
+
+  def self.log_user(user, started)
+    return unless user.previous_changes.any? && !started
+
+    msg = "User #{user.id} has been not correct registered"
+    Rails.logger.error msg
+    TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids)) # TODO: Убрать со временем Job
   end
 
   def self.ransackable_attributes(_auth_object = nil)
