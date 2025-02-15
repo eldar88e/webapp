@@ -1,6 +1,6 @@
 class AuthController < ApplicationController
   skip_before_action :check_authenticate_user!
-  skip_before_action :check_started_user!, only: %i[error_register user_checker]
+  skip_before_action :check_started_user!, only: %i[telegram_auth error_register user_checker]
   layout 'login'
   def login
     return unless current_user
@@ -14,12 +14,13 @@ class AuthController < ApplicationController
 
   def telegram_auth
     data = params.to_unsafe_h.except(:controller, :action)
-    Rails.logger.error "Params ['initData'] is empty or nil." if data['initData'].blank?
-    init_data = URI.decode_www_form(data['initData']).to_h
-    return redirect_to_telegram if init_data.blank?
+    init_data = URI.decode_www_form(data['initData'].to_s).to_h
+    # redirect_to_telegram
+    Rails.logger.error "Params ['initData'] is empty or nil." if init_data.blank? || init_data['user'].blank?
+    return render json: { error: 'Not valid user data!' } if init_data.blank? || init_data['user'].blank?
 
     sign_in_with_tg_id(init_data['user'])
-    render json: { success: true, user: current_user, params: init_data['start_param'] } # head :ok
+    render json: { success: true } # user: current_user, params: init_data['start_param'] head :ok
   end
 
   def error_register
@@ -47,7 +48,7 @@ class AuthController < ApplicationController
     user.update(username: tg_user['username'])
     msg = "User #{user.id} updated username #{user.username}"
     Rails.logger.info msg
-    TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
+    TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id))
   rescue StandardError => e
     Rails.logger.error e.message
   end
