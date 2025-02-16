@@ -9,6 +9,12 @@ class Setting < ApplicationRecord
     end
   end
 
+  def self.footer_link
+    Rails.cache.fetch(:footer_link, expires_in: 6.hours) do
+      where(variable: %w[tg_support tg_group]).pluck(:variable, :description).to_h.symbolize_keys
+    end
+  end
+
   def self.fetch_value(key)
     all_cached[key]
   end

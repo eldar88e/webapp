@@ -3,10 +3,10 @@
     <div class="container mx-auto">
       <div class="line-footer"></div>
       <div style="text-align: center;">
-        <p>Заказать другой препарат из Турции</p>
+        <p><%= Setting.footer_link[:tg_support] %></p>
         <%= link_to settings[:tg_support], settings[:tg_support], class: 'mb-6 block' %>
 
-        <p>Чат-сообщество людей с СДВГ</p>
+        <p><%= Setting.footer_link[:tg_group] %></p>
         <%= link_to settings[:tg_group], settings[:tg_group], class: 'mb-6' %>
       </div>
     </div>
