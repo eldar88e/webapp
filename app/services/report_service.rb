@@ -120,7 +120,19 @@ class ReportService
       TelegramService.call(args[:admin_msg], args[:admin_tg_id], markup: args[:admin_markup]) if args[:admin_msg]
       TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if order.msg_id.present?
       msg_id = TelegramService.call(args[:user_msg], args[:user_tg_id], markup: args[:user_markup])
-      order.update_columns(msg_id: msg_id)
+      return order.update_columns(msg_id: msg_id) if msg_id.instance_of?(Integer)
+
+      notify_admin(msg_id, args[:user_tg_id])
+    end
+
+    def notify_admin(error, tg_id)
+      if error.message.include?('chat not found')
+        TelegramService.call("Клиенту с tg_id: #{tg_id} не пришло сообщение по причине не нажатия на старт!",
+                             id: Setting.fetch_value(:admin_ids))
+      elsif error.message.include?('bot was blocked')
+        TelegramService.call("Клиенту с tg_id: #{tg_id} не пришло сообщение по причине добавления им бота в бан!",
+                             id: Setting.fetch_value(:admin_ids))
+      end
     end
   end
 end
