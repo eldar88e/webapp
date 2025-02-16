@@ -40,7 +40,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_started_user!
-    redirect_to '/error-register' if current_user && current_user.started.blank?
+    redirect_to '/error-register' if current_user.started.blank? || current_user.is_blocked.present?
   end
 
   def user_params

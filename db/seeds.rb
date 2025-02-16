@@ -35,7 +35,6 @@ if Rails.env.development?
                            {
                              user_id: user.id,
                              status: :shipped,
-                             total_amount: 0, # TODO: убрать!
                              updated_at: 1.month.ago,
                              paid_at: 1.month.ago + 1.hour,
                              shipped_at: 1.month.ago + 2.hour,
@@ -43,7 +42,6 @@ if Rails.env.development?
                            {
                              user_id: user.id,
                              status: :shipped,
-                             total_amount: 0, # TODO: убрать!
                              updated_at: 2.weeks.ago,
                              paid_at: 2.weeks.ago + 1.hour,
                              shipped_at: 2.weeks.ago + 2.hour,
@@ -51,7 +49,6 @@ if Rails.env.development?
                            {
                              user_id: user.id,
                              status: :shipped,
-                             total_amount: 0, # TODO: убрать!
                              updated_at: 5.days.ago,
                              paid_at: 5.days.ago + 2.hour,
                              shipped_at: 5.days.ago + 4.hour,
