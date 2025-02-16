@@ -30,6 +30,6 @@ class Setting < ApplicationRecord
   private
 
   def clear_settings_cache
-    Rails.cache.delete(:settings)
+    Rails.cache.delete_multi(%i[settings from_json])
   end
 end
