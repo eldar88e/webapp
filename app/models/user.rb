@@ -91,9 +91,9 @@ class User < ApplicationRecord
   def self.log_user(user, started)
     return unless user.previous_changes.any? && !started
 
-    msg = "User #{user.id} has been not correct registered"
+    msg = "#{user.user_name} has been not correct registered"
     Rails.logger.error msg
-    TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids)) # TODO: Убрать со временем Job
+    TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id)) # TODO: Убрать со временем Job
   end
 
   def self.ransackable_attributes(_auth_object = nil)
