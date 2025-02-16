@@ -6,11 +6,11 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
-minio:
-  service: S3
-  access_key_id: <%= ENV.fetch('MINIO_KEY') %>
-  secret_access_key: <%= ENV.fetch('MINIO_SECRET') %>
-  region: us-east-1
-  endpoint: <%= ENV.fetch('MINIO_HOST') %>
-  bucket: <%= ENV.fetch('MINIO_BUCKET') %>
-  force_path_style: true
+#minio:
+#  service: S3
+#  access_key_id: <%#= ENV.fetch('MINIO_KEY') %>
+#  secret_access_key: <%#= ENV.fetch('MINIO_SECRET') %>
+#  region: us-east-1
+#  endpoint: <%#= ENV.fetch('MINIO_HOST') %>
+#  bucket: <%#= ENV.fetch('MINIO_BUCKET') %>
+#  force_path_style: true
