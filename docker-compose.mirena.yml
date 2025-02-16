@@ -1,7 +1,8 @@
 services:
-  pg:
+  psql:
     image: postgres:16.1
-    container_name: miniapp-pg
+    container_name: webapp-pg
+    hostname: psql
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${DB_USER}
@@ -10,17 +11,13 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
-      net:
-      proxy-net:
-        ipv4_address: 172.29.0.4
+      - net
 
-  miniapp:
-    tty: true
-    stdin_open: true
-    image: miniapp
+  webapp:
+    image: webapp
     build: .
-    container_name: miniapp
-    hostname: miniapp
+    container_name: webapp
+    hostname: webapp
     env_file: ./.env
     depends_on:
       - pg
@@ -32,16 +29,14 @@ services:
     networks:
       net:
       proxy-net:
-        ipv4_address: 172.29.0.10
+        ipv4_address: 172.29.0.3
     restart: always
 
   sidekiq:
-    tty: true
-    stdin_open: true
-    image: miniapp
+    image: webapp
     build: .
-    container_name: miniapp-sidekiq
-    hostname: miniapp-sidekiq
+    container_name: webapp-sidekiq
+    hostname: webapp-sidekiq
     env_file: ./.env
     depends_on:
       - pg
@@ -56,7 +51,7 @@ services:
 
   redis:
     image: redis:latest
-    container_name: miniapp-redis
+    container_name: webapp-redis
     command: redis-server
     restart: unless-stopped
     networks:
