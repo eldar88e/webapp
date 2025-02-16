@@ -127,11 +127,13 @@ class ReportService
 
     def notify_admin(error, tg_id)
       if error.message.include?('chat not found')
-        TelegramService.call("Клиенту с tg_id: #{tg_id} не пришло сообщение по причине не нажатия на старт!",
-                             id: Setting.fetch_value(:admin_ids))
+        TelegramService.call("Клиенту с tg_id: #{tg_id} не пришло бизнес сообщение по причине не нажатия на старт!",
+                             Setting.fetch_value(:test_id))
       elsif error.message.include?('bot was blocked')
-        TelegramService.call("Клиенту с tg_id: #{tg_id} не пришло сообщение по причине добавления им бота в бан!",
-                             id: Setting.fetch_value(:admin_ids))
+        TelegramService.call(
+          "Клиенту с tg_id: #{tg_id} не пришло бизнес сообщение по причине добавления им бота в бан!",
+          Setting.fetch_value(:test_id)
+        )
       end
     end
   end
