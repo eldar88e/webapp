@@ -18,6 +18,7 @@ class Review < ApplicationRecord
   scope :pending, -> { where(approved: false) }
 
   after_commit :process_photos, on: :create
+  after_create_commit :send_telegram_notification
 
   def approve!
     update!(approved: true)
@@ -38,7 +39,18 @@ class Review < ApplicationRecord
   private
 
   def process_photos
-    ProcessReviewPhotosJob.perform_later(self)
+    ProcessReviewPhotosJob.perform_later(self) # TODO: Cкорее всего такую структуру sidekiq не поддерживает
+  end
+
+  def send_telegram_notification
+    TelegramJob.perform_later(
+      msg: "Новый отзыв\nот: #{user.user_name}\nтовар: #{product.name}\nрейтинг: #{star_rating(rating)}\n\n#{content}",
+      id: Setting.fetch_value(:admin_ids)
+    )
+  end
+
+  def star_rating(rating)
+    ('★' * rating) + ('☆' * (5 - rating))
   end
 
   def user_must_have_purchased_product

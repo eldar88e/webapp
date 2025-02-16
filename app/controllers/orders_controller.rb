@@ -44,7 +44,7 @@ class OrdersController < ApplicationController
 
   def form_order(cart_product_ids)
     order = current_user.orders.find_by(status: :unpaid)
-    return current_user.orders.create!(total_amount: 0) unless order
+    return current_user.orders.create unless order
 
     order.order_items.where.not(product_id: cart_product_ids).destroy_all
     order.update!(total_amount: 0, status: :initialized)

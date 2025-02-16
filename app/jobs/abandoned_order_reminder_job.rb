@@ -26,7 +26,7 @@ class AbandonedOrderReminderJob < ApplicationJob
   def save_msg_id(msg_id, order, args)
     user = order.user
     if msg_id.instance_of?(Integer)
-      user.update(is_blocked: false)
+      user.update(is_blocked: false, started: true)
       order.update_columns(msg_id: msg_id)
       schedule_reminders(args)
     else

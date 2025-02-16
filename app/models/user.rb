@@ -41,6 +41,12 @@ class User < ApplicationRecord
     "#{middle_name} #{first_name} #{last_name}"
   end
 
+  def user_name
+    return "@#{username}" if username.present?
+
+    full_name.presence || "User #{id}"
+  end
+
   def full_address
     return if address.blank?
 
