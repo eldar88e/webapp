@@ -30,7 +30,6 @@ class Setting < ApplicationRecord
   private
 
   def clear_settings_cache
-    Rails.cache.delete(:settings)
-    Rails.cache.delete(:from_json)
+    Rails.cache.delete_multi(%i[settings footer_link])
   end
 end
