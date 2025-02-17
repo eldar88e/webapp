@@ -1,4 +1,5 @@
 class Order < ApplicationRecord
+  establish_connection :primary if ENV['ORDERS_DB_HOST'].present?
   ONE_WAIT = 3.hours
 
   belongs_to :user
