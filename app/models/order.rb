@@ -1,5 +1,4 @@
 class Order < ApplicationRecord
-  establish_connection :secondary
   ONE_WAIT = 3.hours
 
   belongs_to :user

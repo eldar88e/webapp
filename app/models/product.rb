@@ -1,4 +1,5 @@
 class Product < ApplicationRecord
+  establish_connection :secondary
   has_ancestry
   has_one_attached :image, dependent: :purge
   has_many :reviews, dependent: :destroy
