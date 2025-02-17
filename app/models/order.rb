@@ -13,17 +13,22 @@ class Order < ApplicationRecord
   before_save -> { self.paid_at = Time.current }, if: -> { status == 'processing' }
   before_save -> { self.shipped_at = Time.current }, if: -> { status == 'shipped' }
 
+  before_update :apply_delivery, if: -> { status == 'unpaid' }
   before_update :remove_cart, if: -> { status_changed?(from: 'unpaid', to: 'paid') }
   before_update :deduct_stock, if: -> { status_changed?(from: 'paid', to: 'processing') }
   before_update :restock_stock, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
-  after_commit :check_status_change, on: %i[create update], unless: -> { status == 'initialized' }
+  after_commit :notify_status_change, on: %i[create update], unless: -> { status == 'initialized' }
 
   def order_items_with_product
     order_items.includes(:product)
   end
 
-  def calculate_total_price
-    order_items_with_product.sum { |item| item.product.price * item.quantity }
+  def delivery_price
+    has_delivery? ? Setting.fetch_value(:delivery_price).to_i : 0
+  end
+
+  def total_price
+    order_items_with_product.sum { |item| item.product.price * item.quantity } + delivery_price
   end
 
   def self.revenue_by_date(start_date, end_date, group_by)
@@ -43,6 +48,18 @@ class Order < ApplicationRecord
     [result, total_orders]
   end
 
+  def create_order_items(cart_items)
+    transaction do
+      cart_items.each do |cart_item|
+        quantity   = [cart_item.quantity, cart_item.product.stock_quantity].min
+        order_item = order_items.find_or_initialize_by(product: cart_item.product)
+        order_item.destroy! && cart_item.destroy! && next if quantity < 1
+
+        order_item.update!(quantity: quantity, price: cart_item.product.price)
+      end
+    end
+  end
+
   def self.ransackable_attributes(_auth_object = nil)
     %w[id status total_amount updated_at created_at]
   end
@@ -52,18 +69,23 @@ class Order < ApplicationRecord
   end
 
   def order_items_str(courier = nil)
-    order_items_with_product.filter_map do |i|
-      next if i.product.name == 'Доставка' && courier
+    items = order_items_with_product.map do |i|
+      "• #{i.product.name} — #{i.quantity}шт.#{" — #{i.price.to_i}₽" if courier.nil?}"
+    end
 
-      resust = "• #{i.product.name} — #{i.product.name == 'Доставка' ? 'услуга' : "#{i.quantity}шт."}"
-      resust += " — #{i.price.to_i}₽" unless courier
-      resust
-    end.join(",\n")
+    items << "• Доставка — услуга — #{delivery_price}₽" if has_delivery? && courier.nil?
+
+    items.join(",\n")
   end
 
   private
 
-  def check_status_change
+  def apply_delivery
+    self.has_delivery = order_items.count == 1 && order_items.first.quantity == 1
+    self.total_amount = total_price
+  end
+
+  def notify_status_change
     ReportJob.perform_later(order_id: id)
   end
 

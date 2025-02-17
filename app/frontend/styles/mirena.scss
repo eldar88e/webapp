@@ -386,48 +386,10 @@ form label {
   }
 
   .cart-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-    line-height: 17px;
-    padding: 15px 0;
     border-bottom: #FFFFFF 1px solid;
-    @media screen and (max-width: 300px) {
-      font-size: 12px;
-      line-height: 15px;
-    }
 
     .quantity {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       border: #FFFFFF 1px solid;
-      border-radius: 17px;
-
-      .plus {
-        font-size: 18px;
-        line-height: 22px;
-        padding: 5px 16px;
-        @media screen and (max-width: 300px) {
-          padding: 5px 8px;
-        }
-      }
-
-      span {
-        padding: 7.5px 30.2px;
-        @media screen and (max-width: 300px) {
-          padding: 8.5px 17.6px;
-        }
-      }
-
-      .num {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 27px;
-        height: 32px;
-      }
     }
   }
 }
@@ -845,7 +807,7 @@ ul.catalog-nav {
 }
 
 .button_to .plus:hover {
-  color: rgb(71, 131, 252);
+  color: rgb(66, 169, 185);
 }
 
 .product-reviews .input-str {

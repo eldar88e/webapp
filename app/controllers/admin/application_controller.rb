@@ -1,20 +1,19 @@
 module Admin
   class ApplicationController < ActionController::Base
     include Pundit::Authorization
-
     before_action :authenticate_user!
     before_action :authorize_admin_access!
+    helper_method :settings
 
     include Pagy::Backend
     layout 'admin'
 
-    rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+    rescue_from Pundit::NotAuthorizedError, with: :redirect_to_telegram
 
     private
 
-    def user_not_authorized
-      # flash[:alert] = "У вас нет доступа к этой странице."
-      redirect_to "https://t.me/#{Setting.fetch_value(:tg_main_bot)}", allow_other_host: true
+    def redirect_to_telegram
+      redirect_to "https://t.me/#{settings[:tg_main_bot]}", allow_other_host: true
     end
 
     def authorize_admin_access!
@@ -31,6 +30,10 @@ module Admin
 
     def send_notice(msg, key)
       turbo_stream.append(:notices, partial: '/notices/notice', locals: { notices: msg, key: })
+    end
+
+    def settings
+      Setting.all_cached
     end
   end
 end

@@ -20,7 +20,11 @@ class CartItemsController < ApplicationController
 
   def update
     cart_item = current_user.cart.cart_items.find(params[:id])
-    params[:quantity].to_i.positive? ? update_cart_item(cart_item) : remove_cart_item(cart_item)
+    if params[:quantity].to_i.positive? && cart_item.product.stock_quantity.positive?
+      update_cart_item(cart_item)
+    else
+      remove_cart_item(cart_item)
+    end
   end
 
   private
@@ -32,14 +36,14 @@ class CartItemsController < ApplicationController
           "cart_item_#{cart_item.id}",
           partial: '/cart_items/cart_item', locals: { cart_item: cart_item }
         )
-      ] + update_counters(cart_item.product.id)
+      ] + update_counters(cart_item.product_id)
     else
       error_notice(cart_item.errors.full_messages)
     end
   end
 
   def remove_cart_item(cart_item)
-    id = cart_item.product.id
+    id = cart_item.product_id
     cart_item.destroy
     @cart_items = current_user.cart.cart_items.order(:created_at).includes(:product)
     if @cart_items.where.not(product_id: Setting.fetch_value(:delivery_id)).size.positive?
@@ -52,12 +56,10 @@ class CartItemsController < ApplicationController
     ] + update_counters(id)
   end
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_cart_item
     @cart_item = current_user.cart.cart_items.find(params[:id])
   end
 
-  # Only allow a list of trusted parameters through.
   def cart_item_params
     params.require(:cart_item).permit(:product_id, :quantity)
   end

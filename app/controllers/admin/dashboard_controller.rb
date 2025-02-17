@@ -12,7 +12,7 @@ module Admin
     def index
       return redirect_to admin_login_path unless user_signed_in?
 
-      user_not_authorized unless current_user.admin_or_moderator_or_manager?
+      redirect_to_telegram unless current_user.admin_or_moderator_or_manager?
     end
   end
 end
