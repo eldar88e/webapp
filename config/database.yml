@@ -19,9 +19,9 @@ production:
   username: <%= ENV['DB_USER'] %>
   password: <%= ENV['DB_PASSWORD'] %>
 
-primary:
+secondary:
   <<: *default
   database: webapp_production
-  host: <%= ENV.fetch('ORDERS_DB_HOST', 'DB_HOST') %>
+  host: <%= ENV.fetch('ORDERS_DB_HOST', ENV['DB_HOST']) %>
   username: <%= ENV['DB_USER'] %>
   password: <%= ENV['DB_PASSWORD'] %>
