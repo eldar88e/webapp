@@ -22,6 +22,6 @@ production:
 primary:
   <<: *default
   database: webapp_production
-  host: <%= ENV['PRIMARY_DB_HOST'] %>
+  host: <%= ENV['ORDERS_DB_HOST'] %>
   username: <%= ENV['DB_USER'] %>
   password: <%= ENV['DB_PASSWORD'] %>
