@@ -8,13 +8,12 @@ export default class extends Controller {
     }
 
     toggleDeliveryVisibility() {
-        const itemsCount = this.itemQuantityTargets.length;
-        const shouldHideDelivery = itemsCount > 1 || this.getQuantityForSingleItem() > 1;
+        const shouldHideDelivery = this.itemQuantityTargets.length > 1 || this.getQuantityForSingleItem() > 1;
 
         if (shouldHideDelivery) {
-            this.deliveryTarget.classList.remove('hidden');
+            this.deliveryTarget.classList.add("hidden");
         } else {
-            this.deliveryTarget.classList.add('hidden');
+            this.deliveryTarget.classList.remove("hidden");
         }
     }
 

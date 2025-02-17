@@ -55,6 +55,7 @@ class Order < ApplicationRecord
         order_item = order_items.find_or_initialize_by(product: cart_item.product)
         order_item.destroy! && cart_item.destroy! && next if quantity < 1
 
+        cart_item.update(quantity: quantity)
         order_item.update!(quantity: quantity, price: cart_item.product.price)
       end
     end
