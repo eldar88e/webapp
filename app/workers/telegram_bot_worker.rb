@@ -145,9 +145,9 @@ class TelegramBotWorker
 
   def initialize_first_btn
     [[Telegram::Bot::Types::InlineKeyboardButton.new(
-      text: 'Каталог', url: "https://t.me/#{settings[:tg_main_bot]}?startapp"
+      text: settings[:bot_btn_title], url: "https://t.me/#{settings[:tg_main_bot]}?startapp"
     )],
-     [Telegram::Bot::Types::InlineKeyboardButton.new(text: settings[:tg_group_title], url: settings[:tg_group])],
+     [Telegram::Bot::Types::InlineKeyboardButton.new(text: settings[:group_btn_title], url: settings[:tg_group])],
      [Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Задать вопрос', url: settings[:tg_support])]]
   end
 
