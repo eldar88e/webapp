@@ -1,50 +1,11 @@
-@use "notice";
-@use "preloader";
 
-@font-face {
-  font-family: 'Montserrat';
-  src: url('../fonts/Montserrat-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  src: url('../fonts/Montserrat-ExtraLight.ttf') format('truetype');
-  font-weight: 200;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  src: url('../fonts/montserrat_medium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  src: url('../fonts/montserrat_bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-}
 
 body {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 400;
   background: #3396a5;
-  color: rgba(255, 255, 255, 1);
-  margin: 0 10px;
-  position: relative;
 }
 
 .header {
-  padding: 20px 10px;
-  z-index: 9;
-  position: fixed;
-  width: 100%;
   background: #3396a5;
-  margin: 0 -10px;
 
   form {
     max-height: 50px;
@@ -52,56 +13,16 @@ body {
 
   .logo {
     background: linear-gradient(276.05deg, #3195A5 5.83%, #68D7E9 94.27%);
-    font-size: 20px;
-    padding: 13px 26px;
-    text-transform: uppercase;
-    line-height: 24px;
-    letter-spacing: 0.02em;
-    border-radius: 25px;
-    font-family: Montserrat, sans-serif;
-    display: inline-block;
-    font-weight: 300;
     color: #FFFFFF;
-
-    @media screen and (max-width: 300px) {
-      font-size: 15px;
-      padding: 13px;
-    }
   }
-}
-
-main {
-  padding-top: 90px;
 }
 
 .product-wrapper {
-  padding: 1px;
   background: linear-gradient(180.54deg, #42A9B9 0.47%, rgba(66, 169, 185, 0) 99.54%);
-  border-radius: 56px;
-  margin-bottom: -50px;
-
-  @media screen and (max-width: 300px) {
-    border-radius: 46px;
-  }
 }
 
 .product {
-  border-radius: 56px;
   background: linear-gradient(175deg, #1A707D -7.7%, rgb(50, 151, 165) 73.15%);
-  padding: 36px;
-  padding-bottom: 110px;
-
-  @media screen and (max-width: 300px) {
-    border-radius: 46px;
-    padding: 26px;
-    padding-bottom: 110px;
-  }
-
-  .product-title {
-    font-size: 20px;
-    line-height: 24px;
-    color: rgba(255, 255, 255, 1);
-  }
 
   .product-exist {
     margin-top: 5px;
@@ -212,10 +133,10 @@ main {
           top: -1px;
           width: 15px;
           height: 15px;
-          background: #2A2738;
+          background: #19707d;
+          color: #FFFFFF;
           border-radius: 50%;
           font-size: 12px;
-          color: white;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -253,48 +174,38 @@ main {
 .left {
   border-top-left-radius: 0;
 
-  &:after {
+  &:after, &:before {
     content: '';
     position: absolute;
     width: 1.5px;
     height: 11.5px;
     top: 20px;
     left: 20px;
-    background-color: rgba(71, 132, 252, 1);
+    background-color: #FFFFFF;
   }
 
   &:before {
-    content: '';
-    position: absolute;
     width: 11.5px;
     height: 1.5px;
-    top: 20px;
-    left: 20px;
-    background-color: rgba(71, 132, 252, 1);
   }
 }
 
 .right {
   border-top-right-radius: 0;
 
-  &:after {
+  &:after, &:before {
     content: '';
     position: absolute;
     width: 1.5px;
     height: 11.5px;
     top: 20px;
     right: 20px;
-    background-color: rgba(71, 132, 252, 1);
+    background-color: #FFFFFF;
   }
 
   &:before {
-    content: '';
-    position: absolute;
     width: 11.5px;
     height: 1.5px;
-    top: 20px;
-    right: 20px;
-    background-color: rgba(71, 132, 252, 1);
   }
 }
 
@@ -309,19 +220,19 @@ main {
   }
 
   &::-webkit-scrollbar-track {
-    background: black;
+    background: rgba(31, 128, 142, 1);
     border: none;
     border-radius: 8px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: rgba(71, 132, 252, 1); /* цвет ползунка */
+    background-color: rgba(66, 169, 185, 1); /* цвет ползунка */
     border-radius: 8px; /* округлые края */
-    border: 4px solid black;
+    border: 4px solid rgba(31, 128, 142, 1);
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background-color: #555; /* цвет ползунка при наведении */
+    background-color: #19707d; /* цвет ползунка при наведении */
   }
 }
 
@@ -355,7 +266,7 @@ main {
   transition: all 0.3s;
 
   &:hover {
-    background-color: rgb(58 156 172);
+    background-color: rgb(61 133 144);
   }
 }
 
@@ -377,7 +288,7 @@ main {
 }
 
 .input-str {
-  border: 1px solid rgba(71, 132, 252, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   background: none;
   border-radius: 25px;
   font-size: 18px;
@@ -386,7 +297,7 @@ main {
   width: 100%;
 
   &:focus {
-    border: 1px solid rgba(71, 132, 252, 1);
+    border: 1px solid rgba(255, 255, 255, 1);
     outline: none;
   }
 }
@@ -454,6 +365,7 @@ form label {
     line-height: 22px;
 
     .cart-header-column {
+      font-size: 17px;
       padding-bottom: 16px;
       position: relative;
       display: inline-block;
@@ -463,7 +375,7 @@ form label {
 
       &:after {
         content: '';
-        background: rgba(71, 132, 252, 1);
+        background: #FFFFFF;
         height: 1px;
         width: 100%;
         position: absolute;
@@ -480,7 +392,7 @@ form label {
     font-size: 14px;
     line-height: 17px;
     padding: 15px 0;
-    border-bottom: rgba(71, 132, 252, 1) 1px solid;
+    border-bottom: #FFFFFF 1px solid;
     @media screen and (max-width: 300px) {
       font-size: 12px;
       line-height: 15px;
@@ -490,7 +402,7 @@ form label {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border: rgba(71, 132, 252, 1) 1px solid;
+      border: #FFFFFF 1px solid;
       border-radius: 17px;
 
       .plus {
@@ -521,8 +433,8 @@ form label {
 }
 
 .agreement {
-  font-size: 14px;
-  line-height: 17px;
+  font-size: 13px;
+  line-height: 15px;
   text-decoration: none;
   position: relative;
   max-width: 235px;
@@ -535,7 +447,7 @@ form label {
     left: 0;
     height: 1px;
     width: 100%;
-    background-color: rgb(71, 132, 252);
+    background-color: #FFFFFF;
   }
 }
 
@@ -616,7 +528,7 @@ form label {
   position: absolute;
   top: 14px;
   left: 14px;
-  background: #1a1822;
+  background: #197075;
   z-index: 1;
 
   &::before, &::after {
@@ -626,7 +538,7 @@ form label {
     top: 12px;
     width: 15px;
     height: 1.5px;
-    background-color: rgba(71, 132, 252, 1);
+    background-color: #FFFFFF;
     transform: translate(-50%, -50%) rotate(45deg);
   }
 
@@ -640,7 +552,7 @@ form label {
   line-height: 17px;
   margin-bottom: 1.5rem;
   text-transform: uppercase;
-  color: rgba(71, 132, 252, 1);
+  color: #FFFFFF;
 }
 
 .address-wrapper {
@@ -801,7 +713,7 @@ ul.catalog-nav {
     flex-shrink: 0;
 
     a {
-      border: rgba(71, 132, 252, 1) 1px solid;
+      border: #FFFFFF 1px solid;
       font-size: 18px;
       font-weight: 200;
       line-height: 22px;
@@ -900,11 +812,12 @@ ul.catalog-nav {
         line-height: 24px;
         display: flex;
         gap: 8px;
-        color: #4783fc;
+        color: #FFFFFF;
         transition: all 0.5s;
 
         svg path {
           transition: all 0.5s;
+          fill: #FFFFFF;
         }
       }
 
@@ -912,17 +825,17 @@ ul.catalog-nav {
         font-size: 18px;
         font-weight: 500;
         line-height: 24px;
-        color: #4783fc;
+        color: #FFFFFF;
         transition: all 0.5s;
       }
     }
 
     li:hover a, li:hover button {
-      color: #FFFFFF;
+      color: #3396a5;
     }
 
     li:hover button svg path {
-      fill: #FFFFFF;
+      fill: #3396a5;
     }
 
     li:last-child {
