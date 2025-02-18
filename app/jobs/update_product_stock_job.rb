@@ -27,7 +27,7 @@ class UpdateProductStockJob < ApplicationJob
   end
 
   def form_payload(product, quantity_decrement)
-    payload = { product_id: product.id, product_name: product.name, updated_at: product.updated_at }
+    payload = { product_name: product.name, updated_at: product.updated_at }
     if quantity_decrement
       payload[:quantity_decrement] = quantity_decrement
     else

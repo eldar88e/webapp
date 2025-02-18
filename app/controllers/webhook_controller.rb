@@ -6,13 +6,10 @@ class WebhookController < ApplicationController
   layout false
 
   def update_product_stock
-    product = Product.find_by(id: params[:product_id])
-    result  = UpdaterProductStockService.process_product(product, webhook_params)
-    if result[:success]
-      render json: { success: true }, status: :ok
-    else
-      render json: { error: result[:error] }, status: :internal_server_error
-    end
+    result = UpdaterProductStockService.process_product(webhook_params)
+    return render(json: { success: true }, status: :ok) if result[:success]
+
+    render json: { error: result[:error] }, status: :internal_server_error
   end
 
   private

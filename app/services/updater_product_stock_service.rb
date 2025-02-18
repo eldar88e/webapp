@@ -1,7 +1,8 @@
 class UpdaterProductStockService
   class << self
-    def process_product(product, params)
-      return { error: "Product #{product.id} not found" } unless valid_product?(product, params)
+    def process_product(params)
+      product = Product.find_by(name: params[:product_name])
+      return { error: "Product #{product.id} not found" } if product.nil?
 
       if params[:stock_quantity] # for mirena
         product.update!(stock_quantity: params[:stock_quantity].to_i)
@@ -14,12 +15,6 @@ class UpdaterProductStockService
     end
 
     private
-
-    def valid_product?(product, params)
-      return false if product.nil?
-
-      product.name.downcase == params[:product_name].downcase
-    end
 
     def process_quantity_decrement(product, params)
       return main_stock_not_available?(product) if insufficient_stock?(product, params[:quantity_decrement].to_i)
