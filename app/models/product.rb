@@ -1,5 +1,5 @@
 class Product < ApplicationRecord
-  establish_connection :secondary
+  establish_connection :secondary if Rails.env.production?
   has_ancestry
   has_one_attached :image, dependent: :purge
   has_many :reviews, dependent: :destroy
