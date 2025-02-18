@@ -22,6 +22,8 @@ Rails.application.routes.draw do
   get '/error-register', to: 'auth#error_register'
   get '/user-checker', to: 'auth#user_checker'
 
+  post 'webhook/update-product-stock', to: 'webhook#update_product_stock'
+
   draw :admin
 
   match '*unmatched', to: 'application#redirect_to_telegram', via: :all,
