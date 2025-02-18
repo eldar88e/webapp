@@ -11,7 +11,7 @@
       <%= button_to '+', cart_item_path(id: cart_item.id), params: { quantity: cart_item.quantity + 1 }, method: :patch, class: 'plus' %>
     <% end %>
   </div>
-   <div class="">
+   <div class="cart-item-price">
      <%= cart_item.product.price.to_i %>₽
    </div>
 </div>
