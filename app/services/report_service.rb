@@ -107,12 +107,11 @@ class ReportService
     private
 
     def update_main_stock(order)
-      mirena_id        = Setting.fetch_value(:mirena_id)
-      mirena_items     = order.order_items.find_by(mirena_id: mirena_id)
-      main_webhook_url = Setting.fetch_value(:main_webhook_url)
-      return if mirena_items.blank? || main_webhook_url.blank?
+      mirena_id    = Setting.fetch_value(:mirena_id)
+      mirena_items = order.order_items.find_by(mirena_id: mirena_id)
+      return if mirena_items.blank?
 
-      UpdateProductStockJob.perform_later(order.id, main_webhook_url, mirena_items.quantity)
+      UpdateProductStockJob.perform_later(order.id, Setting.fetch_value(:main_webhook_url), mirena_items.quantity)
     end
 
     def schedule_review_requests(order, user)

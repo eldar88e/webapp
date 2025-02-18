@@ -4,6 +4,8 @@ class UpdateProductStockJob < ApplicationJob
   queue_as :default
 
   def perform(product_id, webhook_url, quantity_decrement = nil)
+    return Rails.logger.error "Empty webhook url for Product ##{product_id}" if webhook_url.blank?
+
     product = Product.find_by(id: product_id)
     return Rails.logger.error("#{self.class} | Product #{product_id} not found!") unless product
 

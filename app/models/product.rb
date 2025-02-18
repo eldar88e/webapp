@@ -1,7 +1,4 @@
 class Product < ApplicationRecord
-  IS_NOT_MIRENA = ENV.fetch('HOST').exclude?('mirena')
-  # establish_connection :secondary if Rails.env.production?
-
   has_ancestry
   has_one_attached :image, dependent: :purge
   has_many :reviews, dependent: :destroy
