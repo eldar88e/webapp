@@ -21,7 +21,7 @@ class UpdateProductStockJob < ApplicationJob
 
   def post_request(product_id, payload, webhook_url)
     response = Faraday.post(webhook_url, payload.to_json, 'Content-Type' => 'application/json')
-    return Rails.logger.info "Success send webhook for Product ##{product_id}" if response.success?
+    return Rails.logger.info JSON.parse(response.body)['success'] if response.success?
 
     Rails.logger.error "Sending webhook for Product ##{product_id}: #{response.status} - #{response.body}"
   end
