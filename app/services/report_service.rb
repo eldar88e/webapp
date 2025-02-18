@@ -80,7 +80,6 @@ class ReportService
       send_report(order, admin_msg: msg_courier, admin_tg_id: :courier,
                          user_msg: msg, user_tg_id: user.tg_id, user_markup: 'new_order')
       schedule_review_requests(order, user)
-      update_main_stock(order) if ENV.fetch('HOST', '').include?('mirena')
     end
 
     def on_cancelled(order)
@@ -105,14 +104,6 @@ class ReportService
     end
 
     private
-
-    def update_main_stock(order)
-      mirena_id    = Setting.fetch_value(:mirena_id).to_i
-      mirena_items = order.order_items.find_by(id: mirena_id)
-      return if mirena_items.blank?
-
-      UpdateProductStockJob.perform_later(order.id, Setting.fetch_value(:main_webhook_url), mirena_items.quantity)
-    end
 
     def schedule_review_requests(order, user)
       order.order_items_with_product.each do |order_item|

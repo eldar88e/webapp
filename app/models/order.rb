@@ -13,11 +13,13 @@ class Order < ApplicationRecord
   before_save -> { self.paid_at = Time.current }, if: -> { status == 'processing' }
   before_save -> { self.shipped_at = Time.current }, if: -> { status == 'shipped' }
 
+  before_update :cache_status, if: -> { status_changed? }
   before_update :apply_delivery, if: -> { status == 'unpaid' }
   before_update :remove_cart, if: -> { status_changed?(from: 'unpaid', to: 'paid') }
   before_update :deduct_stock, if: -> { status_changed?(from: 'paid', to: 'processing') }
   before_update :restock_stock, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
-  after_commit :notify_status_change, on: %i[create update], unless: -> { status == 'initialized' }
+  after_commit :notify_status_change, on: :update, unless: -> { status == 'initialized' }
+  after_commit :update_main_stock, on: :update, if: -> { ENV.fetch('HOST', '').include?('mirena') }
 
   def order_items_with_product
     order_items.includes(:product)
@@ -80,6 +82,19 @@ class Order < ApplicationRecord
   end
 
   private
+
+  def cache_status
+    @status ||= status_was
+  end
+
+  def update_main_stock
+    return unless cache_status == 'processing' && status == 'shipped'
+
+    mirena = order_items.find_by(product_id: Setting.fetch_value(:mirena_id).to_i)
+    return if mirena.blank?
+
+    UpdateProductStockJob.perform_later(mirena.id, Setting.fetch_value(:main_webhook_url), mirena.quantity)
+  end
 
   def apply_delivery
     self.has_delivery = order_items.count == 1 && order_items.first.quantity == 1
