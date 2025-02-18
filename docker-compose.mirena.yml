@@ -26,6 +26,7 @@ services:
     volumes:
       - gems:/usr/local/bundle
       - .:/app
+      - ../miniapp/storage:/app/storage
     networks:
       net:
       proxy-net:
@@ -44,6 +45,7 @@ services:
     volumes:
       - gems:/usr/local/bundle
       - .:/app
+      - ../miniapp/storage:/app/storage
     command: bundle exec sidekiq
     networks:
       net:
