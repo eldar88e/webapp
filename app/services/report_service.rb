@@ -108,7 +108,7 @@ class ReportService
 
     def update_main_stock(order)
       mirena_id    = Setting.fetch_value(:mirena_id).to_i
-      mirena_items = order.order_items.find_by(mirena_id: mirena_id)
+      mirena_items = order.order_items.find_by(id: mirena_id)
       return if mirena_items.blank?
 
       UpdateProductStockJob.perform_later(order.id, Setting.fetch_value(:main_webhook_url), mirena_items.quantity)
