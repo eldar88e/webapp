@@ -17,7 +17,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <%= vite_client_tag %>
-    <%= vite_stylesheet_tag(ENV.fetch('HOST').include?('mirena') ? 'mirena' : 'application') %>
+    <%= vite_stylesheet_tag(ENV.fetch('HOST', '').include?('mirena') ? 'mirena' : 'application') %>
     <%= vite_javascript_tag 'application' %>
   </head>
 

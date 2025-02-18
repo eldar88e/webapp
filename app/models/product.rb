@@ -1,4 +1,6 @@
 class Product < ApplicationRecord
+  IS_NOT_MIRENA = ENV.fetch('HOST', '').exclude?('mirena')
+
   has_ancestry
   has_one_attached :image, dependent: :purge
   has_many :reviews, dependent: :destroy
@@ -21,7 +23,7 @@ class Product < ApplicationRecord
   after_commit :clear_available_categories_cache, on: %i[create update destroy]
   after_commit :notify_subscribers_if_restocked, if: :saved_change_to_stock_quantity?
   after_commit :webhook_to_mirena, on: :update, if: lambda {
-    ENV.fetch('HOST').exclude?('mirena') && saved_change_to_stock_quantity? && id == Setting.fetch_value(:mirena_id)
+    IS_NOT_MIRENA && saved_change_to_stock_quantity? && id == Setting.fetch_value(:mirena_id).to_i
   }
 
   def destroy
