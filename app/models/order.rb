@@ -93,7 +93,7 @@ class Order < ApplicationRecord
     mirena = order_items.find_by(product_id: Setting.fetch_value(:mirena_id).to_i)
     return if mirena.blank?
 
-    UpdateProductStockJob.perform_later(mirena.id, Setting.fetch_value(:main_webhook_url), mirena.quantity)
+    UpdateProductStockJob.perform_later(mirena.product_id, Setting.fetch_value(:main_webhook_url), mirena.quantity)
   end
 
   def apply_delivery
