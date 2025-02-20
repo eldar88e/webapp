@@ -3,7 +3,7 @@ class Mailing
 
   attr_accessor :filter, :message, :scheduled_at
 
-  FILTERS = %w[ordered no_ordered all is_blocked user].freeze
+  FILTERS = %w[ordered no_ordered all is_blocked add_cart users].freeze
 
   validates :filter,
             inclusion: { in: FILTERS,

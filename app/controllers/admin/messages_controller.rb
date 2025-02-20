@@ -18,7 +18,7 @@ module Admin
     end
 
     def create
-      MailingJob.perform_later(filter: 'user', message: message_params[:text], user_id: message_params[:user_id])
+      MailingJob.perform_later(filter: 'users', message: message_params[:text], user_ids: message_params[:user_id].to_i)
       user     = User.find(message_params[:user_id])
       @message = Message.new(text: message_params[:text], tg_id: user.tg_id, is_incoming: false,
                              created_at: Time.current)

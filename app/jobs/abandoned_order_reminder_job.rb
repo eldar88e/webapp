@@ -9,19 +9,21 @@ class AbandonedOrderReminderJob < ApplicationJob
     current_order = Order.find_by(id: order_id)
     return if current_order.nil? || current_order.status != 'unpaid'
 
-    current_user  = current_order.user
-    current_tg_id = current_user.tg_id
-    msg           = form_msg(args[:msg_type], current_order, current_user)
-    if args[:msg_type] == :overdue
-      current_order.update(status: args[:msg_type])
-    else
-      TelegramMsgDelService.remove(current_tg_id, current_order.msg_id)
-      msg_id = TelegramService.call(msg, current_tg_id, markup: 'i_paid')
-      save_msg_id(msg_id, current_order, args)
-    end
+    msg = form_msg(args[:msg_type], current_order)
+    process_remainder(args, current_order, msg)
   end
 
   private
+
+  def process_remainder(args, current_order, msg)
+    current_tg_id = current_order.user.tg_id
+    return current_order.update(status: :overdue) if args[:msg_type] == :overdue
+
+    # tg не дает боту удалить сообщения старше 48 часов
+    TelegramMsgDelService.remove(current_tg_id, current_order.msg_id) if args[:msg_type] != :two
+    msg_id = TelegramService.call(msg, current_tg_id, markup: 'i_paid')
+    save_msg_id(msg_id, current_order, args)
+  end
 
   def save_msg_id(msg_id, order, args)
     user = order.user
@@ -30,18 +32,8 @@ class AbandonedOrderReminderJob < ApplicationJob
       order.update_columns(msg_id: msg_id)
       schedule_reminders(args)
     else
-      update_user(user, msg_id)
+      limit_user_privileges(msg_id, user)
       order.update(status: :overdue)
-    end
-  end
-
-  def update_user(user, msg_id)
-    if msg_id.instance_of?(Telegram::Bot::Exceptions::ResponseError)
-      Rails.logger.error "User #{user.id} is blocked"
-      user.update(is_blocked: true)
-    else
-      # TODO: Возможно в дальнейшем убрать!
-      Rails.logger.error "Error save msg_id for user #{user.id}, msg send result: #{msg_id}"
     end
   end
 
@@ -53,17 +45,13 @@ class AbandonedOrderReminderJob < ApplicationJob
                              .perform_later(order_id: args[:order_id], msg_type: next_step[:msg_type])
   end
 
-  def form_msg(msg_type, order, user)
+  def form_msg(msg_type, order)
+    user = current_user.user
     card = Setting.fetch_value(:card)
     "#{I18n.t("tg_msg.unpaid.reminder.#{msg_type}", order: order.id)}\n\n" + I18n.t(
       'tg_msg.unpaid.main',
-      card: card,
-      price: order.total_amount,
-      items: order.order_items_str,
-      address: user.full_address,
-      postal_code: user.postal_code,
-      fio: user.full_name,
-      phone: user.phone_number
+      card: card, price: order.total_amount, items: order.order_items_str,
+      address: user.full_address, postal_code: user.postal_code, fio: user.full_name, phone: user.phone_number
     )
   end
 end

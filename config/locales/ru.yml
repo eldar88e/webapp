@@ -79,6 +79,7 @@ ru:
     all: "Все"
     is_blocked: "Заблокированные"
     user: "Пользователь"
+    add_cart: "Добавили в корзину(без сделки)"
   pagy:
     aria_label:
       nav:

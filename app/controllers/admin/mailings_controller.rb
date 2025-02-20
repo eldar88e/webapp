@@ -1,5 +1,7 @@
 module Admin
   class MailingsController < Admin::ApplicationController
+    MARKUP = 'mailing'.freeze
+
     def index; end
 
     def new
@@ -16,7 +18,8 @@ module Admin
         # TODO: set scheduled_at: @mailing.scheduled_at
         MailingJob.perform_later(
           filter: @mailing.filter,
-          message: @mailing.message
+          message: @mailing.message,
+          markup: { markup: MARKUP }
         )
         redirect_to admin_mailings_path, notice: t('mailing_success')
       else

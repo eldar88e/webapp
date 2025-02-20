@@ -18,12 +18,4 @@ class UserCheckerJob < ApplicationJob
     Rails.logger.info msg
     TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id))
   end
-
-  def limit_user_privileges(error, user)
-    if error.message.include?('chat not found')
-      user.update(started: false)
-    elsif error.message.include?('bot was blocked')
-      user.update(is_blocked: true)
-    end
-  end
 end
