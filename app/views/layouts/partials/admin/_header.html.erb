@@ -14,7 +14,7 @@
         </button>
         <%= link_to '/admin' do %>
           <% if ENV.fetch('HOST', '').include?('mirena') %>
-            <div class="mirena-logo"></div>
+            <%= image_tag vite_asset_path('images/admin/logo_m.jpg'), class: 'w-8 h-8 rounded-full' %>
           <% else %>
             <%= image_tag vite_asset_path('images/admin/logo_s.jpg'), class: 'w-8 h-8 rounded-full' %>
           <% end %>
