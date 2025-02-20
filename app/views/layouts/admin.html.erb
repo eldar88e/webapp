@@ -9,7 +9,7 @@
     <%= csp_meta_tag %>
 
     <%= vite_client_tag %>
-    <%= vite_stylesheet_tag 'admin' %>
+    <%= vite_stylesheet_tag(ENV.fetch('HOST', '').include?('mirena') ? 'admin-mirena' : 'admin') %>
     <%= vite_javascript_tag 'admin' %>
   </head>
 

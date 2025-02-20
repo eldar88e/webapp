@@ -1,0 +1,59 @@
+@layer utilities {
+  @media (prefers-color-scheme: dark) {
+    .bg-gray-800 {
+      background-color: rgb(17 80 90);
+    }
+
+    .bg-gray-900 {
+      background-color: #3396a5;
+    }
+
+    .bg-gray-700 {
+      background-color: rgb(18 71 78);
+    }
+  }
+}
+
+body {
+  header {
+    .mirena-logo {
+      width: 32px;
+      height: 32px;
+      background-color: #3396a5;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &:after {
+        content: 'M';
+        display: block;
+        color: #FFFFFF;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .body {
+    .sidebar {
+      .wraper-menu {
+        .main-sidebar {
+          .slidebar-menu {
+            li {
+              a {
+                &.active {
+                  background-color: rgb(11 60 66);
+
+                  @media (prefers-color-scheme: dark) {
+                    background-color: rgb(13 68 75);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

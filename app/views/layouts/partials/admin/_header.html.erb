@@ -13,7 +13,11 @@
           </svg>
         </button>
         <%= link_to '/admin' do %>
-          <%= image_tag vite_asset_path('images/admin/logo_s.jpg'), class: 'w-8 h-8 rounded-full' %>
+          <% if ENV.fetch('HOST', '').include?('mirena') %>
+            <div class="mirena-logo"></div>
+          <% else %>
+            <%= image_tag vite_asset_path('images/admin/logo_s.jpg'), class: 'w-8 h-8 rounded-full' %>
+          <% end %>
         <% end %>
         <div style="height: 46px;"></div>
       </div>
