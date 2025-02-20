@@ -1,15 +1,19 @@
 @layer utilities {
   @media (prefers-color-scheme: dark) {
+    .bg-gray-600 {
+      background-color: rgb(13 68 75);
+    }
+
+    .bg-gray-700 {
+      background-color: rgb(18 71 78);
+    }
+
     .bg-gray-800 {
       background-color: rgb(17 80 90);
     }
 
     .bg-gray-900 {
       background-color: #3396a5;
-    }
-
-    .bg-gray-700 {
-      background-color: rgb(18 71 78);
     }
   }
 }
@@ -25,10 +29,14 @@ body {
             li {
               a {
                 &.active {
-                  background-color: rgb(11 60 66);
-
                   @media (prefers-color-scheme: dark) {
                     background-color: rgb(13 68 75);
+                  }
+                }
+
+                &:hover {
+                  @media (prefers-color-scheme: dark) {
+                    background-color: rgb(11 60 66);
                   }
                 }
               }
