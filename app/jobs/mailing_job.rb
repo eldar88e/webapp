@@ -7,16 +7,16 @@ class MailingJob < ApplicationJob
     markup  = args[:markup] || {}
     return if message.blank? || Mailing::FILTERS.exclude?(filter)
 
-    clients = fetch_users(filter, args[:user_ids])
-    clients.each { |client| process_message(message, client, markup) }
+    users = fetch_users(filter, args[:user_ids])
+    users.each { |user| process_message(message, user, markup) }
     TelegramService.call('Рассылка успешно завершена.', Setting.fetch_value(:admin_ids)) if filter != 'users'
     # TODO: Реализовать отправку Картинок, видео, репост.
   end
 
   private
 
-  def process_message(message, client, markup)
-    result = TelegramService.call(message, client.tg_id, **markup)
+  def process_message(message, user, markup)
+    result = TelegramService.call(message, user.tg_id, **markup)
     return limit_user_privileges(result, user) unless result.instance_of?(Integer)
 
     Message.create(tg_id: user.tg_id, text: message, is_incoming: false, tg_msg_id: result)
