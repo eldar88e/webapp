@@ -46,7 +46,7 @@ class AbandonedOrderReminderJob < ApplicationJob
   end
 
   def form_msg(msg_type, order)
-    user = current_user.user
+    user = order.user
     card = Setting.fetch_value(:card)
     "#{I18n.t("tg_msg.unpaid.reminder.#{msg_type}", order: order.id)}\n\n" + I18n.t(
       'tg_msg.unpaid.main',
