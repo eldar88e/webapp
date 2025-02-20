@@ -11,7 +11,7 @@ gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[windows jruby]
 
 gem 'pg', '~> 1.5'
-gem 'redis', '~> 5.2'
+gem 'redis', '~> 5.4'
 gem 'vite_rails'
 
 # gem 'aws-sdk-s3'
