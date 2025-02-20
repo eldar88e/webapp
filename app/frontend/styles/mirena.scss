@@ -1,5 +1,7 @@
 $primary-color: #19707d;
+$primary-light: rgba(31, 128, 142, 1);
 $secondary-color: #3396a5;
+$turquoise-light: rgb(66, 169, 185);
 
 body {
   background: $secondary-color;
@@ -82,8 +84,8 @@ body {
     justify-content: space-between;
 
     .btn-order {
-      background: rgba(66, 169, 185, 1);
-      border: 1px solid rgba(66, 169, 185, 1);
+      background: $turquoise-light;
+      border: 1px solid $turquoise-light;
       border-radius: 48px;
       padding: 5px;
       display: flex;
@@ -96,7 +98,7 @@ body {
       }
 
       &:hover, &:focus {
-        background: transparent;
+        background: $primary-color;
       }
 
       .title-btn {
@@ -134,7 +136,7 @@ body {
           top: -1px;
           width: 15px;
           height: 15px;
-          background: $primary-color;
+          background: $secondary-color;
           color: #FFFFFF;
           border-radius: 50%;
           font-size: 12px;
@@ -221,15 +223,15 @@ body {
   }
 
   &::-webkit-scrollbar-track {
-    background: rgba(31, 128, 142, 1);
+    background: $primary-light;
     border: none;
     border-radius: 8px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: rgba(66, 169, 185, 1); /* цвет ползунка */
+    background-color: $turquoise-light; /* цвет ползунка */
     border-radius: 8px; /* округлые края */
-    border: 4px solid rgba(31, 128, 142, 1);
+    border: 4px solid $primary-light;
   }
 
   &::-webkit-scrollbar-thumb:hover {
@@ -257,8 +259,8 @@ body {
 }
 
 .btn {
-  background: rgb(66, 169, 185);
-  border: 1px solid rgb(66, 169, 185);
+  background: $turquoise-light;
+  border: 1px solid $turquoise-light;
   font-size: 18px;
   line-height: 22px;
   padding: 14px 26px;
@@ -267,7 +269,7 @@ body {
   transition: all 0.3s;
 
   &:hover {
-    background-color: rgb(61 133 144);
+    background-color: $primary-light;
   }
 }
 
@@ -351,6 +353,14 @@ form label {
   max-width: 235px;
   padding-bottom: 6px;
 
+  &:hover {
+    color: $turquoise-light;
+
+    &:after {
+      background-color: $turquoise-light;
+    }
+  }
+
   &:after {
     content: '';
     position: absolute;
@@ -370,7 +380,7 @@ form label {
   height: 20px;
   border: none;
   border-radius: 50%;
-  background: #d9d9d9;
+  background: $turquoise-light;
   cursor: pointer;
   display: inline-flex;
   justify-content: center;
@@ -379,12 +389,12 @@ form label {
   transition: background-color 0.3s ease;
 }
 
-.form-check-input[type="checkbox"]:hover {
-  background-color: #cbd5e1;
+.form-check-input[type="checkbox"]:hover, .form-check-input[type="checkbox"]:checked:hover {
+  background-color: $secondary-color;
 }
 
 .form-check-input[type="checkbox"]:checked {
-  background: #d9d9d9;
+  background: $turquoise-light;
 }
 
 .form-check-input[type="checkbox"]:checked::after {
@@ -696,7 +706,7 @@ ul.catalog-nav {
 }
 
 .button_to .plus:hover {
-  color: rgb(66, 169, 185);
+  color: $turquoise-light;
 }
 
 .product-reviews .input-str {
