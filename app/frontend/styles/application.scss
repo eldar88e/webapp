@@ -442,7 +442,9 @@ form label {
 }
 
 .cart {
-  margin-bottom:  25px;
+  .cart_items {
+    margin-bottom:  25px;
+  }
 
   .cart-header {
     display: flex;
