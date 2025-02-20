@@ -35,7 +35,8 @@
 
         <div class="product-footer">
           <% if product.stock_quantity.positive?  %>
-            <%= button_to cart_items_path, params: { cart_item: { product_id: product.id } }, class: 'btn-order' do %>
+            <% data = ENV.fetch('HOST', '').include?('mirena') ? { controller: 'open-cart', action: 'click->open-cart#openCart' } : {} %>
+            <%= button_to cart_items_path, params: { cart_item: { product_id: product.id } }, class: 'btn-order', data: data do %>
               <div class="title-btn">Заказать</div>
               <div class="plus">
                 <div class="plus-ico"></div>

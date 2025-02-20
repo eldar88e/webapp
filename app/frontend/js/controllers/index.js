@@ -27,3 +27,6 @@ application.register("menu", MenuController)
 
 import CartController from "./cart_controller"
 application.register("cart", CartController)
+
+import OpenCartController from "./open_cart_controller"
+application.register("open-cart", OpenCartController)

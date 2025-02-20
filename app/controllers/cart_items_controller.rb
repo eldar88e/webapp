@@ -10,15 +10,8 @@ class CartItemsController < ApplicationController
     if cart_item.save
       @cart_items = current_user.cart.cart_items.order(:created_at).includes(:product)
       render turbo_stream: [
-        turbo_stream.update(:cart, partial: '/carts/cart'),
-        success_notice('Товар добавлен в корзину.')
-      ] + update_counters(cart_item_params[:product_id]) +
-                           (if ENV.fetch('HOST', '').include?('mirena')
-                              [turbo_stream.update(:modal, partial: '/carts/cart'),
-                               turbo_stream.append(:modal, '<script>openModal();</script>'.html_safe)]
-                            else
-                              []
-                            end)
+        success_notice('Товар добавлен в корзину.'), turbo_stream.update(:cart, partial: '/carts/cart')
+      ] + update_counters(cart_item_params[:product_id])
     else
       error_notice(cart_item.errors.full_messages)
     end
