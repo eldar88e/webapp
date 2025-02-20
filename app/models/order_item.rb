@@ -2,8 +2,11 @@ class OrderItem < ApplicationRecord
   belongs_to :order
   belongs_to :product
 
-  validates :quantity, presence: true, numericality: { greater_than: 0 }
+  validates :quantity,
+            presence: true,
+            numericality: { only_integer: true, greater_than_or_equal_to: 1 }
   validates :price, presence: true
+  validates :product_id, uniqueness: { scope: :order_id, message: 'уже добавлен в этот заказ' }
 
   def self.total_quantity_sold(start_date, end_date, group_by)
     joins(:order)

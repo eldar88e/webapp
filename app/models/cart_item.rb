@@ -6,6 +6,7 @@ class CartItem < ApplicationRecord
   validates :quantity,
             presence: true,
             numericality: { only_integer: true, greater_than_or_equal_to: 1 }
+  validates :product_id, uniqueness: { scope: :cart_id, message: 'уже добавлен в корзину' }
   # after_commit :add_or_remove_delivery_item, on: %i[create update destroy]
 
   private

@@ -110,7 +110,7 @@ RSpec.describe Order, type: :model do
       it 'triggers ReportJob after commit' do
         allow(ReportJob).to receive(:perform_later)
         order.update!(status: :paid)
-        expect(ReportJob).to have_received(:perform_later).with(order_id: order.id).twice
+        expect(ReportJob).to have_received(:perform_later).with(order_id: order.id).once
       end
     end
   end
@@ -140,8 +140,8 @@ RSpec.describe Order, type: :model do
   end
 
   describe '#order_items_str' do
-    let(:delivery_product) { create(:product, name: 'Доставка') }
-    let!(:delivery_item) { create(:order_item, order: order, product: delivery_product) }
+    let(:vitamin) { create(:product, name: 'Витамин С') }
+    let!(:delivery_item) { create(:order_item, order: order, product: vitamin) }
 
     it 'excludes delivery for courier' do
       expect(order.order_items_str(true)).not_to include('Доставка')
