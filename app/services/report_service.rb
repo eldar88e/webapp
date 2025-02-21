@@ -6,12 +6,11 @@ class ReportService
     def on_unpaid(order)
       Rails.logger.info "Order #{order.id} is now unpaid"
 
-      card = Setting.fetch_value(:card)
       user = order.user
       msg  = "#{I18n.t('tg_msg.unpaid.msg', order: order.id)}\n\n"
       msg += I18n.t(
         'tg_msg.unpaid.main',
-        card: card,
+        card: order.bank_card.bank_details,
         price: order.total_amount,
         items: order.order_items_str,
         address: user.full_address,
@@ -31,6 +30,7 @@ class ReportService
       msg  = I18n.t(
         'tg_msg.paid_admin',
         order: order.id,
+        card: order.bank_card.bank_details,
         price: order.total_amount,
         items: order.order_items_str,
         address: user.full_address,

@@ -9,20 +9,27 @@ class AbandonedOrderReminderJob < ApplicationJob
     current_order = Order.find_by(id: order_id)
     return if current_order.nil? || current_order.status != 'unpaid'
 
-    msg = form_msg(args[:msg_type], current_order)
-    process_remainder(args, current_order, msg)
+    process_remainder(args, current_order)
   end
 
   private
 
-  def process_remainder(args, current_order, msg)
+  def process_remainder(args, current_order)
     current_tg_id = current_order.user.tg_id
     return current_order.update(status: :overdue) if args[:msg_type] == :overdue
 
     # tg не дает боту удалить сообщения старше 48 часов
     TelegramMsgDelService.remove(current_tg_id, current_order.msg_id) if args[:msg_type] != :two
+    update_bank_card(current_order)
+    msg    = form_msg(args[:msg_type], current_order)
     msg_id = TelegramService.call(msg, current_tg_id, markup: 'i_paid')
     save_msg_id(msg_id, current_order, args)
+  end
+
+  def update_bank_card(order)
+    return if BankCard.cached_available.any?(order.bank_card_id)
+
+    order.update_columns(bank_card_id: BankCard.sample_bank_card)
   end
 
   def save_msg_id(msg_id, order, args)
@@ -47,7 +54,7 @@ class AbandonedOrderReminderJob < ApplicationJob
 
   def form_msg(msg_type, order)
     user = order.user
-    card = Setting.fetch_value(:card)
+    card = order.bank_card.bank_details
     "#{I18n.t("tg_msg.unpaid.reminder.#{msg_type}", order: order.id)}\n\n" + I18n.t(
       'tg_msg.unpaid.main',
       card: card, price: order.total_amount, items: order.order_items_str,

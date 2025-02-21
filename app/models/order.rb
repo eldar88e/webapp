@@ -1,7 +1,6 @@
 class Order < ApplicationRecord
-  ONE_WAIT = 3.hours
-
   belongs_to :user
+  belongs_to :bank_card, optional: true
   has_many :order_items, dependent: :destroy
 
   validates :status, presence: true
@@ -15,6 +14,7 @@ class Order < ApplicationRecord
 
   before_update :cache_status, if: -> { status_changed? }
   before_update :apply_delivery, if: -> { status == 'unpaid' }
+  before_update :add_bank_card, if: -> { status == 'unpaid' }
   before_update :remove_cart, if: -> { status_changed?(from: 'unpaid', to: 'paid') }
   before_update :deduct_stock, if: -> { status_changed?(from: 'paid', to: 'processing') }
   before_update :restock_stock, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
@@ -99,6 +99,12 @@ class Order < ApplicationRecord
   def apply_delivery
     self.has_delivery = order_items.count == 1 && order_items.first.quantity == 1
     self.total_amount = total_price
+  end
+
+  def add_bank_card
+    return if BankCard.cached_available.any?(bank_card_id)
+
+    self.bank_card_id = BankCard.sample_bank_card
   end
 
   def notify_status_change
