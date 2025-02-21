@@ -14,7 +14,7 @@ class Order < ApplicationRecord
 
   before_update :cache_status, if: -> { status_changed? }
   before_update :apply_delivery, if: -> { status == 'unpaid' }
-  before_update :add_bank_card, if: -> { status == 'unpaid' }
+  before_update :assign_valid_or_random_card, if: -> { status == 'unpaid' }
   before_update :remove_cart, if: -> { status_changed?(from: 'unpaid', to: 'paid') }
   before_update :deduct_stock, if: -> { status_changed?(from: 'paid', to: 'processing') }
   before_update :restock_stock, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
@@ -101,10 +101,10 @@ class Order < ApplicationRecord
     self.total_amount = total_price
   end
 
-  def add_bank_card
-    return if BankCard.cached_available.any?(bank_card_id)
+  def assign_valid_or_random_card
+    return if BankCard.cached_available_ids.any?(bank_card_id)
 
-    self.bank_card_id = BankCard.sample_bank_card
+    self.bank_card_id = BankCard.sample_bank_card_id
   end
 
   def notify_status_change
@@ -123,8 +123,12 @@ class Order < ApplicationRecord
       else
         msg = "Недостаток в остатках для продукта: #{product.name} в заказе #{id}"
         Rails.logger.error msg
-        TelegramJob.perform_later(msg: msg)
-        raise StandardError, msg
+
+        # TelegramJob.perform_later(msg: msg) # TODO: не отработает т.к. транзакция + в группе "Оплата пришла" нажав
+        # TODO: сообщение удалится но по факту статус останется прежним. Только в админке корректно выйдет флеш
+
+        errors.add(:base, msg)
+        throw :abort
       end
     end
   end

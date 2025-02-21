@@ -12,12 +12,12 @@ class BankCard < ApplicationRecord
     "#{name} — #{fio} — `#{number}`"
   end
 
-  def self.cached_available
+  def self.cached_available_ids
     Rails.cache.fetch(:available_bank_cards) { active.ids }
   end
 
-  def self.sample_bank_card
-    cached_available.sample
+  def self.sample_bank_card_id
+    cached_available_ids.sample
   end
 
   private

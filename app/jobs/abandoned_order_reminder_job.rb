@@ -27,9 +27,9 @@ class AbandonedOrderReminderJob < ApplicationJob
   end
 
   def update_bank_card(order)
-    return if BankCard.cached_available.any?(order.bank_card_id)
+    return if BankCard.cached_available_ids.any?(order.bank_card_id)
 
-    order.update_columns(bank_card_id: BankCard.sample_bank_card)
+    order.update_columns(bank_card_id: BankCard.sample_bank_card_id)
   end
 
   def save_msg_id(msg_id, order, args)
