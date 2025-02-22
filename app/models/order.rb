@@ -64,7 +64,7 @@ class Order < ApplicationRecord
   end
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[id status total_amount updated_at created_at]
+    %w[id status total_amount created_at paid_at shipped_at]
   end
 
   def self.ransackable_associations(_auth_object = nil)

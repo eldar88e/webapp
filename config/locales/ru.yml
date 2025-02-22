@@ -57,6 +57,8 @@ ru:
       order:
         status: "Статус"
         tracking_number: "Трек-номер"
+        bank_card: "Банковская карта"
+        updated_at: "Дата изменения"
       product:
         name: "Название товара"
         image: "Картинка"

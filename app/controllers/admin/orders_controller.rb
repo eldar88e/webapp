@@ -1,6 +1,7 @@
 module Admin
   class OrdersController < Admin::ApplicationController
     before_action :set_order, only: %i[edit update destroy]
+    before_action :assign_bank_card, only: :update
 
     def index
       @q_orders = Order.includes(:user).order(created_at: :desc).ransack(params[:q])
@@ -32,6 +33,10 @@ module Admin
     end
 
     private
+
+    def assign_bank_card
+      @order.bank_card = BankCard.find(params[:order][:bank_card]) if params[:order][:bank_card].present?
+    end
 
     def set_order
       @order = Order.find(params[:id])

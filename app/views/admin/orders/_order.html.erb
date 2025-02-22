@@ -24,9 +24,11 @@
     <%= format_date order.created_at %>
   </td>
   <td class="px-6 py-4">
-    <%= format_date order.updated_at %>
+    <%= format_date order.paid_at %>
   </td>
-
+  <td class="px-6 py-4">
+    <%= format_date order.shipped_at %>
+  </td>
   <td class="flex px-6 py-4">
     <%= link_to edit_admin_order_path(order), data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false },
                 class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' do %>

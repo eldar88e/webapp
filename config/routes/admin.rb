@@ -11,4 +11,5 @@ namespace :admin do
   resources :messages, only: %i[index new create destroy]
   resources :reviews
   resources :product_subscriptions, only: [:index]
+  resources :bank_cards, only: %i[index new create edit update]
 end

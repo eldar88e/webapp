@@ -2,7 +2,7 @@
 <html lang="ru">
 <html data-controller="dark">
   <head>
-    <title><%= "#{content_for(:title).present? ? " | #{content_for(:title)}" : ''}#{settings[:app_name]&.capitalize} – Admin panel" %></title>
+    <title><%= "#{content_for(:title).present? ? "#{content_for(:title)} | " : ''}#{settings[:app_name]&.capitalize} – Admin panel" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
