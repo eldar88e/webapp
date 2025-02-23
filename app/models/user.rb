@@ -58,7 +58,7 @@ class User < ApplicationRecord
 
   def self.repeat_order_rate(start_date, end_date)
     total_customers = joins(:orders)
-                      .where(orders: { created_at: start_date..end_date })
+                      .where(orders: { created_at: start_date..end_date, status: :shipped })
                       .distinct.count
 
     return [0, 0] if total_customers.zero?
