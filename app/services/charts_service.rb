@@ -1,5 +1,11 @@
 class ChartsService
   DATE_STARTED_PROJECT = Time.zone.local(2024, 1, 1).beginning_of_year
+  KEY_TRANSFORMATIONS  = {
+    nil => ->(key) { "#{I18n.t('date.abbr_day_names')[key.strftime('%w').to_i]}. #{key.day}" },
+    'month' => ->(key) { "#{I18n.t('date.abbr_month_names')[key.month]} #{key.strftime('%-d')}" },
+    'year' => ->(key) { I18n.t('date.abbr_month_names')[key.month] + " #{key.year} года" },
+    'all' => ->(key) { "#{key.year} год" }
+  }.freeze
 
   def initialize(period, per = nil)
     @period     = period
@@ -76,16 +82,9 @@ class ChartsService
   end
 
   def prepare_date_key(range)
-    range = populate_missing_dates(range) if [nil, 'day'].include?(@per)
-    if @period.nil?
-      range.transform_keys { |key| "#{I18n.t('date.abbr_day_names')[key.strftime('%w').to_i]}. #{key.day}" }
-    elsif @period == 'month'
-      range.transform_keys { |key| "#{I18n.t('date.abbr_month_names')[key.month]} #{key.strftime('%-d')}" }
-    elsif @period == 'year'
-      range.transform_keys { |key| I18n.t('date.abbr_month_names')[key.month] + " #{key.year} года" }
-    elsif @period == 'all'
-      range.transform_keys { |key| "#{key.year} год" }
-    end
+    range          = populate_missing_dates(range) if [nil, 'day'].include?(@per)
+    transformation = KEY_TRANSFORMATIONS[@period] || KEY_TRANSFORMATIONS[nil]
+    range.transform_keys(&transformation)
   end
 
   def calculate_date_range
@@ -96,11 +95,9 @@ class ChartsService
       Time.zone.now.beginning_of_year
     when 'all'
       DATE_STARTED_PROJECT
-    when 'week'
-      6.days.ago.beginning_of_day
     else
       # TODO: переписать для диапазона с точным указанием даты через DatePicker
-      6.days.ago.beginning_of_day
+      6.days.ago.beginning_of_day # this lint move to when 'week'
     end
   end
 end
