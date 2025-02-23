@@ -64,7 +64,7 @@ class User < ApplicationRecord
     return [0, 0] if total_customers.zero?
 
     repeat_customers = joins(:orders)
-                       .where(orders: { created_at: start_date..end_date })
+                       .where(orders: { created_at: start_date..end_date, status: :shipped })
                        .group('users.id')
                        .having('COUNT(orders.id) > 1')
                        .count.size
