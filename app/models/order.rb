@@ -50,6 +50,10 @@ class Order < ApplicationRecord
     [result, total_orders]
   end
 
+  def self.total_quantity_sold(start_date, end_date, group_by)
+    where(updated_at: start_date..end_date, status: :shipped).group(group_by).sum(:total_amount)
+  end
+
   def create_order_items(cart_items)
     transaction do
       cart_items.each do |cart_item|

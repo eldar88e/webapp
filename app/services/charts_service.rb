@@ -16,7 +16,7 @@ class ChartsService
   end
 
   def sold
-    sold_data = OrderItem.total_quantity_sold(@start_date, @end_date, @group_by).sort.to_h
+    sold_data = Order.total_quantity_sold(@start_date, @end_date, @group_by).sort.to_h
 
     { dates: sold_data.keys, solds: sold_data.values }
   end
