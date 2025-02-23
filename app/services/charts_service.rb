@@ -91,9 +91,9 @@ class ChartsService
   def calculate_date_range
     case @period
     when 'month'
-      Time.zone.today.beginning_of_month
+      Time.zone.now.beginning_of_month
     when 'year'
-      Time.zone.today.beginning_of_year
+      Time.zone.now.beginning_of_year
     when 'all'
       DATE_STARTED_PROJECT
     when 'week'
