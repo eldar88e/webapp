@@ -8,63 +8,65 @@ class CartItemsController < ApplicationController
     cart_item.quantity += 1 if cart_item.persisted?
 
     if cart_item.save
-      @cart_items = current_user.cart.cart_items.order(:created_at).includes(:product)
       render turbo_stream: [
         success_notice('Товар добавлен в корзину.'), turbo_stream.update(:cart, partial: '/carts/cart')
-      ] + update_counters(cart_item_params[:product_id])
+      ] + update_item_counters(cart_item_params[:product_id])
     else
       error_notice(cart_item.errors.full_messages)
     end
   end
 
   def update
-    cart_item = current_user.cart.cart_items.find(params[:id])
-    if params[:quantity].to_i.positive? && cart_item.product.stock_quantity.positive?
-      update_cart_item(cart_item)
+    if params[:quantity].to_i.positive? && @cart_item.product.stock_quantity.positive?
+      update_cart_item
     else
-      remove_cart_item(cart_item)
+      remove_cart_item
     end
   end
 
   private
 
-  def update_cart_item(cart_item)
-    if cart_item.update(quantity: params[:quantity])
+  def update_cart_item
+    if @cart_item.update(quantity: params[:quantity])
       render turbo_stream: [
         turbo_stream.replace(
-          "cart_item_#{cart_item.id}",
-          partial: '/cart_items/cart_item', locals: { cart_item: cart_item }
+          "cart_item_#{@cart_item.id}",
+          partial: '/cart_items/cart_item', locals: { cart_item: @cart_item }
         )
-      ] + update_counters(cart_item.product_id)
+      ] + update_item_counters(@cart_item.product_id)
     else
-      error_notice(cart_item.errors.full_messages)
+      error_notice(@cart_item.errors.full_messages)
     end
   end
 
-  def remove_cart_item(cart_item)
-    id = cart_item.product_id
-    cart_item.destroy
-    @cart_items = current_user.cart.cart_items.order(:created_at).includes(:product)
+  def remove_cart_item
+    id = @cart_item.product_id
+    @cart_item.destroy
+    set_cart_items
     if @cart_items.where.not(product_id: Setting.fetch_value(:delivery_id)).size.positive?
-      return render turbo_stream: [ turbo_stream.remove("cart_item_#{cart_item.id}") ] + update_counters(id)
+      return render turbo_stream: [ turbo_stream.remove("cart_item_#{@cart_item.id}") ] + update_item_counters(id)
     end
 
     render turbo_stream: [
       turbo_stream.append(:modal, '<script>closeModal();</script>'.html_safe),
       success_notice('Ваша корзина пуста!')
-    ] + update_counters(id)
+    ] + update_item_counters(id)
   end
 
   def set_cart_item
     @cart_item = current_user.cart.cart_items.find(params[:id])
   end
 
+  def set_cart_items
+    @cart_items = current_user.cart.cart_items.order(:created_at).includes(:product)
+  end
+
   def cart_item_params
     params.require(:cart_item).permit(:product_id, :quantity)
   end
 
-  def update_counters(id)
-    @cart_items ||= current_user.cart.cart_items.order(:created_at).includes(:product)
+  def update_item_counters(id)
+    @cart_items ||= set_cart_items
     [
       turbo_stream.replace(:cart_logo, partial: '/layouts/partials/cart'),
       turbo_stream.replace(

@@ -20,6 +20,7 @@ module Admin
         turbo_stream.update(:modal_body, partial: '/admin/bank_cards/form', locals: { method: :patch })
       ]
     end
+
     def create
       @bank_card = BankCard.new(bank_card_params)
 
@@ -40,7 +41,6 @@ module Admin
         error_notice(@bank_card.errors.full_messages, :unprocessable_entity)
       end
     end
-
 
     private
 

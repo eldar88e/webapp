@@ -16,11 +16,7 @@ module Admin
       @mailing = Mailing.new(mailing_params)
       if @mailing.valid?
         # TODO: set scheduled_at: @mailing.scheduled_at
-        MailingJob.perform_later(
-          filter: @mailing.filter,
-          message: @mailing.message,
-          markup: { markup: MARKUP }
-        )
+        MailingJob.perform_later(filter: @mailing.filter, message: @mailing.message, markup: { markup: MARKUP })
         redirect_to admin_mailings_path, notice: t('mailing_success')
       else
         error_notice(@mailing.errors.full_messages, :unprocessable_entity)

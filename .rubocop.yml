@@ -1,8 +1,9 @@
-require:
+plugins:
   - rubocop-performance
   - rubocop-rails
 
 AllCops:
+  SuggestExtensions: false
   NewCops: enable
   Exclude:
     - 'db/**/*'

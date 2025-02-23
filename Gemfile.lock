@@ -192,7 +192,7 @@ GEM
       net-smtp
     marcel (1.0.4)
     method_source (1.1.0)
-    mini_magick (5.1.2)
+    mini_magick (5.2.0)
       benchmark
       logger
     mini_mime (1.1.5)

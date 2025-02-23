@@ -78,7 +78,7 @@ class ChartsService
   def prepare_date_key(range)
     range = populate_missing_dates(range) if [nil, 'day'].include?(@per)
     if @period.nil?
-      range.transform_keys { |key| "#{I18n.t('date.abbr_day_names')[key.strftime('%w').to_i]}. #{key.day.to_s}" }
+      range.transform_keys { |key| "#{I18n.t('date.abbr_day_names')[key.strftime('%w').to_i]}. #{key.day}" }
     elsif @period == 'month'
       range.transform_keys { |key| "#{I18n.t('date.abbr_month_names')[key.month]} #{key.strftime('%-d')}" }
     elsif @period == 'year'
