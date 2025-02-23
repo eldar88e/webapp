@@ -17,7 +17,7 @@ class ChartsService
   def revenue
     group_by = form_group_by('paid_at')
     payments = Order.revenue_by_date(@start_date, @end_date, group_by).sort.to_h
-    payments = populate_missing_dates(payments) if [nil, 'day'].include?(@per)
+    payments = prepare_date_key(payments)
 
     { dates: payments.keys, revenues: payments.values }
   end
@@ -25,7 +25,7 @@ class ChartsService
   def sold
     group_by = form_group_by('orders.paid_at')
     sold_data = OrderItem.total_quantity_sold(@start_date, @end_date, group_by).sort.to_h
-    sold_data = populate_missing_dates(sold_data) if [nil, 'day'].include?(@per)
+    sold_data = prepare_date_key(sold_data)
 
     { dates: sold_data.keys, solds: sold_data.values }
   end
@@ -37,7 +37,7 @@ class ChartsService
   def users
     group_by = form_group_by('created_at')
     users    = User.registered_count_grouped_by_period(@start_date, @end_date, group_by).sort.to_h
-    users    = populate_missing_dates(users) if [nil, 'day'].include?(@per)
+    users    = prepare_date_key(users)
 
     { dates: users.keys, users: users.values }
   end
@@ -74,6 +74,18 @@ class ChartsService
     (@start_date.to_date..@end_date.to_date).index_with { 0 }.merge(range)
   end
 
+  def prepare_date_key(range)
+    range = populate_missing_dates(range) if [nil, 'day'].include?(@per)
+    if @period.nil?
+      range.transform_keys { |key| I18n.t('date.abbr_day_names')[key.strftime('%w').to_i] + '. ' + key.day.to_s }
+    elsif @period == 'month'
+      range.transform_keys { |key| I18n.t('date.abbr_month_names')[key.month] + ' ' + key.strftime('%-d') }
+    elsif @period == 'year'
+      range.transform_keys { |key| I18n.t('date.abbr_month_names')[key.month] + " #{key.year} года" }
+    elsif @period == 'all'
+      range.transform_keys { |key| "#{key.year} год" }
+    end
+  end
 
   def calculate_date_range
     case @period
