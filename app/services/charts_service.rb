@@ -96,10 +96,10 @@ class ChartsService
     when 'all'
       DATE_STARTED_PROJECT
     when 'week'
-      7.days.ago.beginning_of_day
+      6.days.ago.beginning_of_day
     else
       # TODO: переписать для диапазона с точным указанием даты через DatePicker
-      7.days.ago.beginning_of_day
+      6.days.ago.beginning_of_day
     end
   end
 end
