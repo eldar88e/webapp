@@ -45,15 +45,16 @@ class ChartsService
   private
 
   def form_group_by(time_column)
+    time_zone = "AT TIME ZONE 'UTC' AT TIME ZONE '#{Time.zone.name}'"
     case @per
     when 'year'
-      "DATE_TRUNC('year', #{time_column})"
+      "DATE_TRUNC('year', #{time_column} #{time_zone})"
     when 'month'
-      "DATE_TRUNC('month', #{time_column})"
+      "DATE_TRUNC('month', #{time_column} #{time_zone})"
     when 'week'
-      "DATE_TRUNC('week', #{time_column})"
+      "DATE_TRUNC('week', #{time_column} #{time_zone})"
     else
-      "DATE(#{time_column})"
+      "DATE(#{time_column} #{time_zone})"
     end
   end
 
