@@ -1,7 +1,8 @@
 class Mailing
   include ActiveModel::Model
 
-  attr_accessor :filter, :message, :scheduled_at
+  attr_accessor :filter, :message
+  attr_reader :scheduled_at
 
   FILTERS = %w[ordered no_ordered all is_blocked add_cart users].freeze
 
@@ -14,7 +15,7 @@ class Mailing
     @scheduled_at = begin
       Time.zone.parse(value)
     rescue StandardError
-      nil
+      nil # TODO: нужна ошибка что бы выдать notice в controller
     end
   end
 end

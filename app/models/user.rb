@@ -75,7 +75,7 @@ class User < ApplicationRecord
     where(created_at: start_date..end_date).group(period).count
   end
 
-  def self.find_or_create_by_tg(tg_user, started = false)
+  def self.find_or_create_by_tg(tg_user, started)
     current_user = find_or_create_by(tg_id: tg_user['id']) do |user|
       user.username    = tg_user['username']
       user.first_name  = tg_user['first_name']

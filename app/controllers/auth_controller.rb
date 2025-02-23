@@ -43,7 +43,7 @@ class AuthController < ApplicationController
 
   def sign_in_with_tg_id(tg_user_object)
     tg_user = JSON.parse tg_user_object
-    user    = User.find_or_create_by_tg(tg_user)
+    user    = User.find_or_create_by_tg(tg_user, false)
     update_tg_username(user, tg_user)
     sign_in(user)
   end

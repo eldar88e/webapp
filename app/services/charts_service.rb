@@ -11,7 +11,7 @@ class ChartsService
     @period     = period
     @per        = form_per(per)
     @start_date = calculate_date_range
-    @end_date   = Time.zone.today.end_of_day
+    @end_date   = Time.zone.today.end_of_day # TODO: переписать для диапазона с точным указанием даты через DatePicker
   end
 
   def orders
@@ -52,16 +52,12 @@ class ChartsService
 
   def form_group_by(time_column)
     time_zone = "AT TIME ZONE 'UTC' AT TIME ZONE '#{Time.zone.name}'"
-    case @per
-    when 'year'
-      "DATE_TRUNC('year', #{time_column} #{time_zone})"
-    when 'month'
-      "DATE_TRUNC('month', #{time_column} #{time_zone})"
-    when 'week'
-      "DATE_TRUNC('week', #{time_column} #{time_zone})"
-    else
-      "DATE(#{time_column} #{time_zone})"
-    end
+    {
+      'year' => "DATE_TRUNC('year', #{time_column} #{time_zone})",
+      'month' => "DATE_TRUNC('month', #{time_column} #{time_zone})",
+      'week' => "DATE_TRUNC('week', #{time_column} #{time_zone})",
+      'day' => "DATE_TRUNC('day', #{time_column} #{time_zone})"
+    }[@per]
   end
 
   def form_per(per)

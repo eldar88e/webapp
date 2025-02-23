@@ -85,7 +85,7 @@ class Order < ApplicationRecord
   private
 
   def cache_status
-    @status ||= status_was
+    @cache_status ||= status_was
   end
 
   def update_main_stock
@@ -122,16 +122,20 @@ class Order < ApplicationRecord
       if product.stock_quantity >= order_item.quantity
         product.update!(stock_quantity: product.stock_quantity - order_item.quantity)
       else
-        msg = "Недостаток в остатках для продукта: #{product.name} в заказе #{id}"
-        Rails.logger.error msg
-
-        # TelegramJob.perform_later(msg: msg) # TODO: не отработает т.к. транзакция + в группе "Оплата пришла" нажав
-        # TODO: сообщение удалится но по факту статус останется прежним. Только в админке корректно выйдет флеш
-
-        errors.add(:base, msg)
-        throw :abort
+        throw_abort(product)
       end
     end
+  end
+
+  def throw_abort(product)
+    msg = "Недостаток в остатках для продукта: #{product.name} в заказе #{id}"
+    Rails.logger.error msg
+
+    # TelegramJob.perform_later(msg: msg) # TODO: не отработает т.к. транзакция + в группе "Оплата пришла" нажав
+    # TODO: сообщение удалится но по факту статус останется прежним. Только в админке корректно выйдет флеш
+
+    errors.add(:base, msg)
+    throw :abort
   end
 
   def restock_stock
@@ -139,7 +143,7 @@ class Order < ApplicationRecord
       product = order_item.product
       next if product.nil? || product.id == Setting.fetch_value(:delivery_id).to_i
 
-      product.increment!(:stock_quantity, order_item.quantity)
+      product.update(stock_quantity: product.stock_quantity + order_item.quantity)
       Rails.logger.info "Returned #{order_item.quantity} pcs #{product.name} to stock after order #{id} cancellation."
     end
   end
