@@ -131,3 +131,8 @@ ru:
         user_id: "ИД пользователя"
       cart_item:
         quantity: "Количество"
+  errors:
+    messages:
+      already_in_cart: "уже добавлен в корзину"
+      already_in_order: "уже добавлен в заказ"
+      rating_range: "должен быть от 1 до 5"

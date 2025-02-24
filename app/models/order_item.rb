@@ -6,7 +6,7 @@ class OrderItem < ApplicationRecord
             presence: true,
             numericality: { only_integer: true, greater_than_or_equal_to: 1 }
   validates :price, presence: true
-  validates :product_id, uniqueness: { scope: :order_id, message: 'уже добавлен в этот заказ' }
+  validates :product_id, uniqueness: { scope: :order_id, message: I18n.t('errors.messages.already_in_order') }
 
   def self.total_quantity_sold(start_date, end_date, group_by)
     # .where.not(product_id: Setting.fetch_value(:delivery_id), orders: { status: :canceled })
