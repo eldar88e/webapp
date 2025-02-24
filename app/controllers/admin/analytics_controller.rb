@@ -4,17 +4,22 @@ module Admin
 
     def index
       type = params[:type]
-      unless ALLOWED_TYPES.include?(type)
-        return render json: { error: 'Invalid type parameter' }, status: :unprocessable_entity
+      if ALLOWED_TYPES.include?(type)
+        render json: process_cache(type)
+      else
+        render json: { error: 'Invalid type parameter' }, status: :unprocessable_entity
       end
+    end
 
+    private
+
+    def process_cache(type)
       cache_key   = "#{type}_#{params[:period]}"
       cached_data = Rails.cache.fetch(cache_key, expires_in: 10.minutes) do
         ChartsService.new(params[:period]).send(type.to_sym)
       end
       Rails.cache.delete(cache_key) if cached_data.nil?
-
-      render json: cached_data
+      cached_data
     end
   end
 end

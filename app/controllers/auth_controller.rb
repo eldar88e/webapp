@@ -13,11 +13,9 @@ class AuthController < ApplicationController
   end
 
   def telegram_auth
-    data = params.to_unsafe_h.except(:controller, :action)
+    data      = params.to_unsafe_h.except(:controller, :action)
     init_data = URI.decode_www_form(data['initData'].to_s).to_h
-    # redirect_to_telegram
-    Rails.logger.error "Params ['initData'] is empty or nil." if init_data.blank? || init_data['user'].blank?
-    return render json: { error: 'Not valid user data!' } if init_data.blank? || init_data['user'].blank?
+    return render_error_auth if init_data.blank? || init_data['user'].blank?
 
     sign_in_with_tg_id(init_data['user'])
     render json: { success: true } # user: current_user, params: init_data['start_param'] head :ok
@@ -40,6 +38,12 @@ class AuthController < ApplicationController
   end
 
   private
+
+  def render_error_auth
+    msg = "Params 'initData' is empty or empty user!"
+    Rails.logger.error msg
+    render json: { error: msg }
+  end
 
   def sign_in_with_tg_id(tg_user_object)
     tg_user = JSON.parse tg_user_object
