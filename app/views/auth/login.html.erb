@@ -16,8 +16,8 @@
                 .then((data) => {
                     if (data.success) {
                         let path = "/";
-                        <% if params[:url].present? %>
-                          path += "<%= params[:url].tr('_', '/') %>";
+                        <% if @btn_link.present? %>
+                          path += "<%= @btn_link %>";
                         <% end %>
                         window.location.href = path;
                     } else {

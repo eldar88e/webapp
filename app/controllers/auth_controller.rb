@@ -1,13 +1,12 @@
 class AuthController < ApplicationController
   skip_before_action :check_authenticate_user!
   skip_before_action :check_started_user!, only: %i[telegram_auth error_register user_checker]
+  before_action :set_btn_link, only: :login
   layout 'login'
 
   def login
     return unless current_user
-    if params['tgWebAppStartParam'].present? && params['tgWebAppStartParam'].include?('url=')
-      return redirect_to "/#{params['tgWebAppStartParam'].sub('url=', '').tr('_', '/')}"
-    end
+    return redirect_to "/#{@btn_link}" if @btn_link.present?
 
     available_products                             # redirect_to products_path if current_user
     render 'products/index', layout: 'application' # redirect_to products_path if current_user
@@ -68,5 +67,11 @@ class AuthController < ApplicationController
     check_string = data.sort.map { |k, v| "#{k}=#{v}" }.join("\n")
     hmac         = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('SHA256'), secret_key, check_string)
     hmac == data['hash']
+  end
+
+  def set_btn_link
+    return unless params['tgWebAppStartParam'].present? && params['tgWebAppStartParam'].include?('url=')
+
+    @btn_link = params['tgWebAppStartParam'].sub('url=', '').tr('_', '/') # TODO: возможно "_" убрать из url
   end
 end
