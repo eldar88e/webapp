@@ -89,7 +89,7 @@ class User < ApplicationRecord
   end
 
   def self.log_user(user, started)
-    return unless user.previous_changes.any? && !started
+    return unless user.previous_changes.any? && !started # TODO: проверить работу
 
     msg = "#{user.user_name} has been not correct registered"
     Rails.logger.error msg
