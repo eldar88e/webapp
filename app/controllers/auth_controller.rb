@@ -2,13 +2,14 @@ class AuthController < ApplicationController
   skip_before_action :check_authenticate_user!
   skip_before_action :check_started_user!, only: %i[telegram_auth error_register user_checker]
   layout 'login'
+
   def login
     return unless current_user
     if params['tgWebAppStartParam'].present? && params['tgWebAppStartParam'].include?('url=')
       return redirect_to "/#{params['tgWebAppStartParam'].sub('url=', '').tr('_', '/')}"
     end
 
-    available_products
+    available_products                             # redirect_to products_path if current_user
     render 'products/index', layout: 'application' # redirect_to products_path if current_user
   end
 

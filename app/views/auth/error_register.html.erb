@@ -23,15 +23,12 @@
     const bot = document.getElementById('redirect-bot');
     const tg_main_bot = "https://t.me/<%= settings[:tg_main_bot] %>";
     const fetchUserChecker = (retryDelay=null) => {
-        fetch("/user-checker?user_id=2")
+        fetch("/user-checker?user_id=<%= current_user.id %>")
             .then((response) => response.json())
             .then((data) => {
                 if (data.started) {
-                    console.log(data);
                     window.location.href = '/';
                 } else {
-                    console.log(data);
-                    console.log("Authentication failed: " + data.error);
                     if (retryDelay) {
                         setTimeout(() => {
                             fetchUserChecker();
@@ -63,7 +60,6 @@
 
     document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
-            console.log("Initial fetch after 2 seconds...");
             fetchUserChecker(3000);
         }, 2000);
     });
