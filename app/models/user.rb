@@ -89,9 +89,9 @@ class User < ApplicationRecord
   end
 
   def self.log_user(user, started)
-    return unless user.previous_changes.any? && !started # TODO: проверить работу
+    return if user.previous_changes.none? || started
 
-    msg = "#{user.id} has been not correct registered"
+    msg = "User #{user.id} has been not correct registered"
     Rails.logger.error msg
     TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id)) # TODO: Убрать со временем Job
   end
