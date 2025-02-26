@@ -33,24 +33,6 @@ class Order < ApplicationRecord
     order_items_with_product.sum { |item| item.product.price * item.quantity } + delivery_price
   end
 
-  def self.revenue_by_date(start_date, end_date, group_by)
-    where(paid_at: start_date..end_date)
-      .where.not(status: :canceled)
-      .group(group_by)
-      .sum(:total_amount)
-  end
-
-  def self.count_order_with_status(start_date, end_date)
-    total_orders = where(updated_at: start_date..end_date).count
-    result = statuses.keys.each_with_object({}) do |status, hash|
-      status_count = where(status: statuses[status]).where(updated_at: start_date..end_date).count
-      next if status_count.zero?
-
-      hash[status.to_sym] = status_count
-    end
-    [result, total_orders]
-  end
-
   def create_order_items(cart_items)
     transaction do
       cart_items.each do |cart_item|

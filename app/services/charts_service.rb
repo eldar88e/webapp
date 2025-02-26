@@ -1,7 +1,7 @@
 class ChartsService
   DATE_STARTED_PROJECT = Time.zone.local(2024, 1, 1).beginning_of_year
   KEY_TRANSFORMATIONS  = {
-    nil => ->(key) { "#{I18n.t('date.abbr_day_names')[key.strftime('%w').to_i]}. #{key.day}" },
+    nil => ->(key) { "#{I18n.t('date.abbr_day_names')[key.wday]}. #{key.day}" },
     'month' => ->(key) { "#{I18n.t('date.abbr_month_names')[key.month]} #{key.strftime('%-d')}" },
     'year' => ->(key) { I18n.t('date.abbr_month_names')[key.month] + " #{key.year} года" },
     'all' => ->(key) { "#{key.year} год" }
@@ -15,14 +15,14 @@ class ChartsService
   end
 
   def orders
-    orders = Order.count_order_with_status(@start_date, @end_date)
+    orders = OrderStatisticsQuery.count_orders_with_status(@start_date, @end_date)
 
     { dates: orders[0].keys, orders: orders[0].values, total: orders[1] }
   end
 
   def revenue
     group_by = form_group_by('paid_at')
-    payments = Order.revenue_by_date(@start_date, @end_date, group_by).sort.to_h
+    payments = OrderStatisticsQuery.revenue_by_date(@start_date, @end_date, group_by).sort.to_h
     payments = prepare_date_key(payments)
 
     { dates: payments.keys, revenues: payments.values }

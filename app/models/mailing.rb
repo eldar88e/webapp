@@ -6,9 +6,7 @@ class Mailing
 
   FILTERS = %w[ordered no_ordered all is_blocked add_cart users].freeze
 
-  validates :filter,
-            inclusion: { in: FILTERS,
-                         message: "должен быть #{I18n.t('filters.ordered')}, #{I18n.t('filters.no_ordered')}, или #{I18n.t('filters.all')}" }
+  validates :filter, inclusion: { in: FILTERS, message: I18n.t('errors.messages.filter_range') }
   validates :message, presence: true
 
   def scheduled_at=(value)
