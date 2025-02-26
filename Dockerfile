@@ -30,6 +30,7 @@ WORKDIR /app
 COPY Gemfile Gemfile.lock ./
 RUN gem update --system 3.6.3
 RUN gem install bundler -v $(tail -n 1 Gemfile.lock)
+RUN bundle config set without 'development'
 RUN bundle check || bundle install
 RUN bundle clean --force
 
