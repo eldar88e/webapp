@@ -23,14 +23,13 @@ RUN apk --update add --no-cache \
 
 ENV BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
+    BUNDLE_WITHOUT="development test"
 
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
 RUN gem update --system 3.6.3
 RUN gem install bundler -v $(tail -n 1 Gemfile.lock)
-RUN bundle config set without 'development test'
 RUN bundle check || bundle install
 RUN bundle clean --force
 
