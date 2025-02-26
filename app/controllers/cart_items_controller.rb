@@ -13,7 +13,9 @@ class CartItemsController < ApplicationController
 
   def update
     if params[:quantity].to_i.positive? && @cart_item.product.stock_quantity.positive?
-      update_cart_item
+      return render_updated_item if @cart_item.update(quantity: params[:quantity])
+
+      error_notice(@cart_item.errors.full_messages)
     else
       @cart_item.destroy
       render_remove_cart_item
@@ -26,12 +28,6 @@ class CartItemsController < ApplicationController
     render turbo_stream: [
       success_notice('Товар добавлен в корзину.'), turbo_stream.update(:cart, partial: '/carts/cart')
     ] + update_item_counters(cart_item_params[:product_id])
-  end
-
-  def update_cart_item
-    return render_updated_item if @cart_item.update(quantity: params[:quantity])
-
-    error_notice(@cart_item.errors.full_messages)
   end
 
   def render_remove_cart_item
