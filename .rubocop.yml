@@ -1,12 +1,14 @@
-require:
+plugins:
   - rubocop-performance
   - rubocop-rails
 
 AllCops:
+  SuggestExtensions: false
   NewCops: enable
   Exclude:
     - 'db/**/*'
     - 'spec/**/*'
+    - 'bin/*'
 
 Style/Documentation:
   Enabled: false

@@ -59,19 +59,14 @@ module Admin
 
     def form_products(root_product_id)
       session[:filter] = params[:filter].presence || session[:filter].presence || 'descendants'
-      case session[:filter]
-      when 'descendants'
-        root_product = Product.find(root_product_id)
-        @result = @q_products.result.where(id: root_product.descendants.ids).where.not(id: root_product.children.ids)
-      when 'children'
-        root_product = Product.find(root_product_id)
-        @result      = @q_products.result.where(id: root_product.children.ids)
-      when 'services'
-        delivery_id = Setting.fetch_value(:delivery_id)
-        @result     = delivery_id ? @q_products.result.where(id: delivery_id) : @q_products.result
-      else
-        @result = @q_products.result
-      end
+      root_product = Product.find(root_product_id)
+      @result = if root_product && session[:filter] == 'descendants'
+                  @q_products.result.where(id: root_product.descendants.ids).where.not(id: root_product.children.ids)
+                elsif root_product && session[:filter] == 'children'
+                  @q_products.result.where(id: root_product.children.ids)
+                else
+                  @q_products.result
+                end
     end
 
     def render_turbo_stream(notice)

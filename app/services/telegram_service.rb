@@ -3,21 +3,22 @@ require 'telegram/bot'
 class TelegramService
   MESSAGE_LIMIT = 4_090
 
-  def initialize(message, id = nil)
-    @message   = message
-    @chat_id   = id == :courier ? settings[:courier_tg_id] : (id || settings[:admin_chat_id])
-    @bot_token = settings[:tg_token]
-  end
-
-  def self.call(msg, id = nil, **args)
-    new(msg, id).report(**args)
-  end
-
-  def report(**args)
+  def initialize(message, id = nil, **args)
+    @bot_token   = settings[:tg_token]
+    @chat_id     = id == :courier ? settings[:courier_tg_id] : (id || settings[:admin_chat_id])
+    @message     = message
+    @message_id  = nil
     @markup      = args[:markup]
     @markup_url  = args[:markup_url]
     @markup_text = args[:markup_text] || 'Кнопка'
-    tg_send if @message.present? && credential_exists?
+  end
+
+  def self.call(msg, id = nil, **args)
+    new(msg, id, **args).report
+  end
+
+  def report
+    tg_send if bot_ready?
   end
 
   private
@@ -26,11 +27,14 @@ class TelegramService
     @settings ||= Setting.all_cached
   end
 
-  def credential_exists?
-    return true if @chat_id.present? || @bot_token.present?
-
-    Rails.logger.error 'Telegram chat ID or bot token not set!'
-    false
+  def bot_ready?
+    if @bot_token.present? && @chat_id.present? && @message.present?
+      @message = "‼️‼️Development‼️‼️\n\n#{@message}" if Rails.env.development?
+      true
+    else
+      Rails.logger.error 'Telegram chat ID or bot token not set!'
+      false
+    end
   end
 
   def escape(text)
@@ -38,25 +42,27 @@ class TelegramService
   end
 
   def tg_send
-    message_id    = nil
     message_count = (@message.size / MESSAGE_LIMIT) + 1
-    @message      = "‼️‼️Development‼️‼️\n\n#{@message}" if Rails.env.development?
     markup        = form_markup
     message_count.times do
       text_part = next_text_part
-      [@chat_id.to_s.split(',')].flatten.each do |user_id|
-        Telegram::Bot::Client.run(@bot_token) do |bot|
-          message_id = bot.api.send_message(
-            chat_id: user_id, text: escape(text_part), parse_mode: 'MarkdownV2', reply_markup: markup
-          ).message_id
-        end
-      rescue StandardError => e
-        Rails.logger.error "Failed to send message to bot: #{e.message}"
-        message_id = e
-      end
+      send_telegram_message(text_part, markup)
     end
     # TODO: Если нужно зафиксировать все msg_id нужно их поместить в array
-    message_id
+    @message_id
+  end
+
+  def send_telegram_message(text_part, markup)
+    [@chat_id.to_s.split(',')].flatten.each do |user_id|
+      Telegram::Bot::Client.run(@bot_token) do |bot|
+        @message_id = bot.api.send_message(
+          chat_id: user_id, text: escape(text_part), parse_mode: 'MarkdownV2', reply_markup: markup
+        ).message_id
+      end
+    rescue StandardError => e
+      Rails.logger.error "Failed to send message to bot: #{e.message}"
+      @message_id = e
+    end
   end
 
   def form_keyboard
@@ -66,7 +72,7 @@ class TelegramService
                                                                  callback_data: @markup)]
       buttons += [order_btn('Изменить заказ'), ask_btn] if @markup == 'i_paid'
     else
-      text_btn = @markup == 'mailing' ? settings[:bot_btn_title] : 'Новый заказ'
+      text_btn = @markup == 'mailing' ? (settings[:bot_btn_title].presence || 'Новый заказ') : 'Новый заказ'
       buttons += [order_btn(text_btn), ask_btn]
     end
     buttons

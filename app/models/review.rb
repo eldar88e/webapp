@@ -9,7 +9,7 @@ class Review < ApplicationRecord
   end
 
   validates :content, presence: true, length: { maximum: 1000 }
-  validates :rating, presence: true, inclusion: { in: 1..5, message: 'должен быть от 1 до 5' }
+  validates :rating, presence: true, inclusion: { in: 1..5, message: I18n.t('errors.messages.rating_range') }
   validate :user_must_have_purchased_product
   validate :user_cannot_review_twice, on: :create
   validate :acceptable_photos

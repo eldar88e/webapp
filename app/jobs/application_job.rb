@@ -4,4 +4,18 @@ class ApplicationJob < ActiveJob::Base
 
   # Most jobs are safe to ignore if the underlying records are no longer available
   # discard_on ActiveJob::DeserializationError
+
+  private
+
+  def limit_user_privileges(error, user)
+    unless error.instance_of?(Telegram::Bot::Exceptions::ResponseError)
+      return Rails.logger.error("Telegram new sending error: #{error.message}")
+    end
+
+    if error.message.include?('chat not found')
+      user.update(started: false)
+    elsif error.message.include?('bot was blocked')
+      user.update(is_blocked: true)
+    end
+  end
 end

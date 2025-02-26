@@ -1,5 +1,7 @@
+<% content_for :title, 'Сообщения' %>
+
 <div class="pt-6 px-4">
-  <h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-4">Сообщения</h1>
+  <h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-4"><%= content_for :title %></h1>
 
   <%= search_form_for @q_messages, url: admin_messages_path, method: :get, class: "max-w-md mx-auto" do |f| %>
     <div class="relative">

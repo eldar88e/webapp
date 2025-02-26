@@ -58,13 +58,13 @@ class User < ApplicationRecord
 
   def self.repeat_order_rate(start_date, end_date)
     total_customers = joins(:orders)
-                      .where(orders: { created_at: start_date..end_date })
+                      .where(orders: { created_at: start_date..end_date, status: :shipped })
                       .distinct.count
 
     return [0, 0] if total_customers.zero?
 
     repeat_customers = joins(:orders)
-                       .where(orders: { created_at: start_date..end_date })
+                       .where(orders: { created_at: start_date..end_date, status: :shipped })
                        .group('users.id')
                        .having('COUNT(orders.id) > 1')
                        .count.size
@@ -75,7 +75,7 @@ class User < ApplicationRecord
     where(created_at: start_date..end_date).group(period).count
   end
 
-  def self.find_or_create_by_tg(tg_user, started = false)
+  def self.find_or_create_by_tg(tg_user, started)
     current_user = find_or_create_by(tg_id: tg_user['id']) do |user|
       user.username    = tg_user['username']
       user.first_name  = tg_user['first_name']
@@ -89,15 +89,15 @@ class User < ApplicationRecord
   end
 
   def self.log_user(user, started)
-    return unless user.previous_changes.any? && !started
+    return if user.previous_changes.none? || started
 
-    msg = "#{user.user_name} has been not correct registered"
+    msg = "User #{user.id} has been not correct registered"
     Rails.logger.error msg
     TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id)) # TODO: Убрать со временем Job
   end
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[id first_name middle_name last_name username address created_at role is_blocked]
+    %w[id first_name middle_name last_name username address created_at role is_blocked started]
   end
 
   def self.ransackable_associations(_auth_object = nil)

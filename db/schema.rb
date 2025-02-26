@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_16_114750) do
+ActiveRecord::Schema[7.2].define(version: 2025_02_23_221403) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_16_114750) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "bank_cards", force: :cascade do |t|
+    t.string "fio"
+    t.string "number"
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name", null: false
   end
 
   create_table "cart_items", force: :cascade do |t|
@@ -80,10 +89,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_16_114750) do
   create_table "order_items", force: :cascade do |t|
     t.bigint "order_id", null: false
     t.bigint "product_id", null: false
-    t.integer "quantity"
+    t.integer "quantity", default: 1, null: false
     t.decimal "price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["order_id", "product_id"], name: "index_order_items_on_order_id_and_product_id", unique: true
     t.index ["order_id"], name: "index_order_items_on_order_id"
     t.index ["product_id"], name: "index_order_items_on_product_id"
   end
@@ -98,6 +108,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_16_114750) do
     t.string "tracking_number"
     t.datetime "paid_at"
     t.datetime "shipped_at"
+    t.boolean "has_delivery", default: false, null: false
+    t.bigint "bank_card_id"
+    t.index ["bank_card_id"], name: "index_orders_on_bank_card_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
@@ -107,6 +120,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_16_114750) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_product_subscriptions_on_product_id"
+    t.index ["user_id", "product_id"], name: "index_product_subscriptions_on_user_id_and_product_id", unique: true
     t.index ["user_id"], name: "index_product_subscriptions_on_user_id"
   end
 
@@ -185,6 +199,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_16_114750) do
   add_foreign_key "carts", "users"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
+  add_foreign_key "orders", "bank_cards"
   add_foreign_key "orders", "users"
   add_foreign_key "product_subscriptions", "products"
   add_foreign_key "product_subscriptions", "users"

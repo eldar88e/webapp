@@ -1,5 +1,7 @@
 module Admin
   class MailingsController < Admin::ApplicationController
+    MARKUP = 'mailing'.freeze
+
     def index; end
 
     def new
@@ -14,10 +16,7 @@ module Admin
       @mailing = Mailing.new(mailing_params)
       if @mailing.valid?
         # TODO: set scheduled_at: @mailing.scheduled_at
-        MailingJob.perform_later(
-          filter: @mailing.filter,
-          message: @mailing.message
-        )
+        MailingJob.perform_later(filter: @mailing.filter, message: @mailing.message, markup: { markup: MARKUP })
         redirect_to admin_mailings_path, notice: t('mailing_success')
       else
         error_notice(@mailing.errors.full_messages, :unprocessable_entity)

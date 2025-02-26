@@ -1,4 +1,4 @@
-<div id="<%= dom_id cart_item %>" class="cart-item">
+<div id="<%= dom_id cart_item %>" class="cart-item" data-cart-target="itemQuantity">
   <div class="basis-1/3">
     <%= link_to format_name(cart_item.product.name), product_path(cart_item.product), data: { turbo_prefetch: false } %>
   </div>
@@ -11,7 +11,7 @@
       <%= button_to '+', cart_item_path(id: cart_item.id), params: { quantity: cart_item.quantity + 1 }, method: :patch, class: 'plus' %>
     <% end %>
   </div>
-   <div class="">
+   <div class="cart-item-price">
      <%= cart_item.product.price.to_i %>₽
    </div>
 </div>

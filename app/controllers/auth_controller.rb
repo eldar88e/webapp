@@ -1,23 +1,21 @@
 class AuthController < ApplicationController
   skip_before_action :check_authenticate_user!
   skip_before_action :check_started_user!, only: %i[telegram_auth error_register user_checker]
+  before_action :set_btn_link, only: :login
   layout 'login'
+
   def login
     return unless current_user
-    if params['tgWebAppStartParam'].present? && params['tgWebAppStartParam'].include?('url=')
-      return redirect_to "/#{params['tgWebAppStartParam'].sub('url=', '').tr('_', '/')}"
-    end
+    return redirect_to "/#{@btn_link}" if @btn_link.present?
 
-    available_products
+    available_products                             # redirect_to products_path if current_user
     render 'products/index', layout: 'application' # redirect_to products_path if current_user
   end
 
   def telegram_auth
-    data = params.to_unsafe_h.except(:controller, :action)
+    data      = params.to_unsafe_h.except(:controller, :action)
     init_data = URI.decode_www_form(data['initData'].to_s).to_h
-    # redirect_to_telegram
-    Rails.logger.error "Params ['initData'] is empty or nil." if init_data.blank? || init_data['user'].blank?
-    return render json: { error: 'Not valid user data!' } if init_data.blank? || init_data['user'].blank?
+    return render_error_auth if init_data.blank? || init_data['user'].blank?
 
     sign_in_with_tg_id(init_data['user'])
     render json: { success: true } # user: current_user, params: init_data['start_param'] head :ok
@@ -41,9 +39,15 @@ class AuthController < ApplicationController
 
   private
 
+  def render_error_auth
+    msg = "Params 'initData' is empty or empty user!"
+    Rails.logger.error msg
+    render json: { error: msg }
+  end
+
   def sign_in_with_tg_id(tg_user_object)
     tg_user = JSON.parse tg_user_object
-    user    = User.find_or_create_by_tg(tg_user)
+    user    = User.find_or_create_by_tg(tg_user, false)
     update_tg_username(user, tg_user)
     sign_in(user)
   end
@@ -63,5 +67,11 @@ class AuthController < ApplicationController
     check_string = data.sort.map { |k, v| "#{k}=#{v}" }.join("\n")
     hmac         = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('SHA256'), secret_key, check_string)
     hmac == data['hash']
+  end
+
+  def set_btn_link
+    return unless params['tgWebAppStartParam'].present? && params['tgWebAppStartParam'].include?('url=')
+
+    @btn_link = params['tgWebAppStartParam'].sub('url=', '').tr('_', '/') # TODO: возможно "_" убрать из url
   end
 end

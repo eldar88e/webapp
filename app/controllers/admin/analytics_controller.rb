@@ -3,19 +3,23 @@ module Admin
     ALLOWED_TYPES = %w[users orders revenue sold repeat].freeze
 
     def index
-      type      = params[:type]
-      cache_key = "#{type}_#{params[:period]}"
-
-      unless ALLOWED_TYPES.include?(type)
-        return render json: { error: 'Invalid type parameter' }, status: :unprocessable_entity
+      type = params[:type]
+      if ALLOWED_TYPES.include?(type)
+        render json: process_cache(type)
+      else
+        render json: { error: 'Invalid type parameter' }, status: :unprocessable_entity
       end
+    end
 
-      cached_data = Rails.cache.fetch(cache_key, expires_in: 30.minutes) do
-        ChartsService.new(params[:period], type == 'users').send(type.to_sym)
+    private
+
+    def process_cache(type)
+      cache_key   = "#{type}_#{params[:period]}"
+      cached_data = Rails.cache.fetch(cache_key, expires_in: 10.minutes) do
+        ChartsService.new(params[:period]).send(type.to_sym)
       end
       Rails.cache.delete(cache_key) if cached_data.nil?
-      # cached_data = ChartsService.new(params[:period], users).send(type.to_sym)
-      render json: cached_data
+      cached_data
     end
   end
 end

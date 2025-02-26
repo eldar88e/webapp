@@ -442,7 +442,9 @@ form label {
 }
 
 .cart {
-  margin-bottom:  25px;
+  .cart_items {
+    margin-bottom:  25px;
+  }
 
   .cart-header {
     display: flex;
@@ -514,6 +516,15 @@ form label {
         height: 32px;
       }
     }
+
+    .cart-item-price {
+      width: 55px;
+      text-align: right;
+    }
+  }
+
+  .cart-item.hidden {
+    display: none;
   }
 }
 
@@ -597,29 +608,31 @@ form label {
   line-height: 13px;
 }
 
-.close {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  background: #1a1822;
-  z-index: 1;
-
-  &::before, &::after {
-    content: '';
+.modal {
+  .close {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
     position: absolute;
-    left: 12px;
-    top: 12px;
-    width: 15px;
-    height: 1.5px;
-    background-color: rgba(71, 132, 252, 1);
-    transform: translate(-50%, -50%) rotate(45deg);
-  }
+    top: 14px;
+    left: 14px;
+    background: #1a1822;
+    z-index: 1;
 
-  &::after {
-    transform: translate(-50%, -50%) rotate(-45deg);
+    &::before, &::after {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      width: 15px;
+      height: 1.5px;
+      background-color: rgba(71, 132, 252, 1);
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &::after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
   }
 }
 
@@ -754,6 +767,13 @@ form label {
 
 .product-reviews .review-body {
   width: 100%;
+
+  .title {
+    .stars {
+      display: flex;
+      gap: 2px;
+    }
+  }
 }
 
 .rating-stars {

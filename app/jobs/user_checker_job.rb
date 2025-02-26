@@ -5,24 +5,17 @@ class UserCheckerJob < ApplicationJob
     user   = User.find(id)
     msg    = "🎉 Добро пожаловать на #{Setting.fetch_value(:app_name)}!"
     result = TelegramService.call(msg, user.tg_id)
+    return unlock_user_privileges(user) if result.instance_of?(Integer)
 
-    if result.instance_of?(Integer)
-      user.update(started: true, is_blocked: false)
-      msg = "User #{user.id} started bot"
-      Rails.logger.info msg
-      TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id))
-    else
-      update_user_status(result, user)
-    end
+    limit_user_privileges(result, user)
   end
 
   private
 
-  def update_user_status(error, user)
-    if error.message.include?('chat not found')
-      user.update(started: false)
-    elsif error.message.include?('bot was blocked')
-      user.update(is_blocked: true)
-    end
+  def unlock_user_privileges(user)
+    user.update(started: true, is_blocked: false)
+    msg = "User #{user.id} started bot"
+    Rails.logger.info msg
+    TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id))
   end
 end

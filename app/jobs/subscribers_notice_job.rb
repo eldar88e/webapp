@@ -14,7 +14,7 @@ class SubscribersNoticeJob < ApplicationJob
 
   def run_telegram_job(user, product)
     TelegramJob.perform_later(
-      msg: "📢 Товар '#{product.name}' снова в наличии! Спешите заказать!",
+      msg: "📢 Товар '#{product.name}' снова в наличии! Успейте заказать.",
       id: user.tg_id,
       markup_url: "products_#{product.id}",
       markup_text: "Заказать #{product.name}"

@@ -23,7 +23,7 @@ RUN apk --update add --no-cache \
 
 ENV BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
+    BUNDLE_WITHOUT="development test"
 
 WORKDIR /app
 
@@ -45,7 +45,7 @@ COPY . .
 
 RUN addgroup -g 1000 deploy && \
     adduser -u 1000 -G deploy -D -s /bin/sh deploy && \
-    chown -R deploy:deploy db log storage tmp
+    chown -R deploy:deploy /app # db log storage tmp
 
 USER deploy:deploy
 

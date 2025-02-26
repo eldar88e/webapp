@@ -11,8 +11,6 @@ services:
       - db_data:/var/lib/postgresql/data
     networks:
       net:
-      proxy-net:
-        ipv4_address: 172.29.0.4
 
   miniapp:
     tty: true

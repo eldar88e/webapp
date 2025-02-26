@@ -7,7 +7,7 @@ RSpec.describe ReportService do
   let(:delivery_product) { create(:product, id: Setting.fetch_value(:delivery_id).to_i) }
 
   before do
-    allow(TelegramService).to receive(:call)
+    allow(TelegramService).to receive(:call).and_return(42)
     allow(TelegramMsgDelService).to receive(:remove)
     allow(AbandonedOrderReminderJob).to receive(:perform_later)
     allow(SendReviewRequestJob).to receive(:perform_later)

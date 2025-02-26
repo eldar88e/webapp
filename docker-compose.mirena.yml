@@ -25,7 +25,11 @@ services:
       - sidekiq
     volumes:
       - gems:/usr/local/bundle
-      - .:/app
+      - ./node_modules:/app/node_modules
+      - ./app/frontend:/app/app/frontend
+      - ./log:/app/log
+      - ./public:/app/public
+      - ./storage:/app/storage
     networks:
       net:
       proxy-net:
@@ -43,7 +47,10 @@ services:
       - redis
     volumes:
       - gems:/usr/local/bundle
-      - .:/app
+      - ./node_modules:/app/node_modules
+      - ./log:/app/log
+      - ./public:/app/public
+      - ./storage:/app/storage
     command: bundle exec sidekiq
     networks:
       net:

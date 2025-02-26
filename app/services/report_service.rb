@@ -1,19 +1,18 @@
 class ReportService
-  ONE_WAIT = 3.hours
+  ONE_WAIT    = 3.hours
   REVIEW_WAIT = 10.days
 
   class << self
     def on_unpaid(order)
       Rails.logger.info "Order #{order.id} is now unpaid"
 
-      card = Setting.fetch_value(:card)
       user = order.user
       msg  = "#{I18n.t('tg_msg.unpaid.msg', order: order.id)}\n\n"
       msg += I18n.t(
         'tg_msg.unpaid.main',
-        card: card,
+        card: order.bank_card.bank_details,
         price: order.total_amount,
-        items: order.order_items_str(order),
+        items: order.order_items_str,
         address: user.full_address,
         postal_code: user.postal_code,
         fio: user.full_name,
@@ -31,6 +30,7 @@ class ReportService
       msg  = I18n.t(
         'tg_msg.paid_admin',
         order: order.id,
+        card: order.bank_card.bank_details,
         price: order.total_amount,
         items: order.order_items_str,
         address: user.full_address,
@@ -122,18 +122,15 @@ class ReportService
       msg_id = TelegramService.call(args[:user_msg], args[:user_tg_id], markup: args[:user_markup])
       return order.update_columns(msg_id: msg_id) if msg_id.instance_of?(Integer)
 
-      notify_admin(msg_id, args[:user_tg_id])
+      notify_admin(msg_id, order.id)
     end
 
-    def notify_admin(error, tg_id)
+    def notify_admin(error, order_id)
+      msg = "Клиенту не пришло бизнес сообщение по заказу #{order_id} по причине"
       if error.message.include?('chat not found')
-        TelegramService.call("Клиенту с tg_id: #{tg_id} не пришло бизнес сообщение по причине не нажатия на старт!",
-                             Setting.fetch_value(:test_id))
+        TelegramService.call("#{msg} не нажатия на старт!", Setting.fetch_value(:test_id))
       elsif error.message.include?('bot was blocked')
-        TelegramService.call(
-          "Клиенту с tg_id: #{tg_id} не пришло бизнес сообщение по причине добавления им бота в бан!",
-          Setting.fetch_value(:test_id)
-        )
+        TelegramService.call("#{msg} добавления им бота в бан!", Setting.fetch_value(:test_id))
       end
     end
   end

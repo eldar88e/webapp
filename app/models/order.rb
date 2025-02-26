@@ -1,7 +1,6 @@
 class Order < ApplicationRecord
-  ONE_WAIT = 3.hours
-
   belongs_to :user
+  belongs_to :bank_card, optional: true
   has_many :order_items, dependent: :destroy
 
   validates :status, presence: true
@@ -13,38 +12,42 @@ class Order < ApplicationRecord
   before_save -> { self.paid_at = Time.current }, if: -> { status == 'processing' }
   before_save -> { self.shipped_at = Time.current }, if: -> { status == 'shipped' }
 
+  before_update :cache_status, if: -> { status_changed? }
+  before_update :apply_delivery, if: -> { status == 'unpaid' }
+  before_update :assign_valid_or_random_card, if: -> { status == 'unpaid' }
   before_update :remove_cart, if: -> { status_changed?(from: 'unpaid', to: 'paid') }
   before_update :deduct_stock, if: -> { status_changed?(from: 'paid', to: 'processing') }
   before_update :restock_stock, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
-  after_commit :check_status_change, on: %i[create update], unless: -> { status == 'initialized' }
+  after_commit :notify_status_change, on: :update, unless: -> { status == 'initialized' }
+  after_commit :update_main_stock, on: :update, if: -> { ENV.fetch('HOST', '').include?('mirena') }
 
   def order_items_with_product
     order_items.includes(:product)
   end
 
-  def calculate_total_price
-    order_items_with_product.sum { |item| item.product.price * item.quantity }
+  def delivery_price
+    has_delivery? ? Setting.fetch_value(:delivery_price).to_i : 0
   end
 
-  def self.revenue_by_date(start_date, end_date, group_by)
-    where(updated_at: start_date..end_date, status: :shipped)
-      .group(group_by)
-      .sum(:total_amount)
+  def total_price
+    order_items_with_product.sum { |item| item.product.price * item.quantity } + delivery_price
   end
 
-  def self.count_order_with_status(start_date, end_date)
-    total_orders = where(updated_at: start_date..end_date).count
-    result = statuses.keys.each_with_object({}) do |status, hash|
-      status_count = Order.where(status: Order.statuses[status]).where(updated_at: start_date..end_date).count
-      next if status_count.zero?
+  def create_order_items(cart_items)
+    transaction do
+      cart_items.each do |cart_item|
+        quantity   = [cart_item.quantity, cart_item.product.stock_quantity].min
+        order_item = order_items.find_or_initialize_by(product: cart_item.product)
+        order_item.destroy! && cart_item.destroy! && next if quantity < 1
 
-      hash[status.to_sym] = status_count
+        cart_item.update(quantity: quantity)
+        order_item.update!(quantity: quantity, price: cart_item.product.price)
+      end
     end
-    [result, total_orders]
   end
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[id status total_amount updated_at created_at]
+    %w[id status total_amount created_at paid_at shipped_at]
   end
 
   def self.ransackable_associations(_auth_object = nil)
@@ -52,18 +55,42 @@ class Order < ApplicationRecord
   end
 
   def order_items_str(courier = nil)
-    order_items_with_product.filter_map do |i|
-      next if i.product.name == 'Доставка' && courier
+    items = order_items_with_product.map do |i|
+      "• #{i.product.name} — #{i.quantity}шт.#{" — #{i.price.to_i}₽" if courier.nil?}"
+    end
 
-      resust = "• #{i.product.name} — #{i.product.name == 'Доставка' ? 'услуга' : "#{i.quantity}шт."}"
-      resust += " — #{i.price.to_i}₽" unless courier
-      resust
-    end.join(",\n")
+    items << "• Доставка — услуга — #{delivery_price}₽" if has_delivery? && courier.nil?
+
+    items.join(",\n")
   end
 
   private
 
-  def check_status_change
+  def cache_status
+    @cache_status ||= status_was
+  end
+
+  def update_main_stock
+    return unless cache_status == 'processing' && status == 'shipped'
+
+    mirena = order_items.find_by(product_id: Setting.fetch_value(:mirena_id).to_i)
+    return if mirena.blank?
+
+    UpdateProductStockJob.perform_later(mirena.product_id, Setting.fetch_value(:main_webhook_url), mirena.quantity)
+  end
+
+  def apply_delivery
+    self.has_delivery = order_items.count == 1 && order_items.first.quantity == 1
+    self.total_amount = total_price
+  end
+
+  def assign_valid_or_random_card
+    return if BankCard.cached_available_ids.any?(bank_card_id)
+
+    self.bank_card_id = BankCard.sample_bank_card_id
+  end
+
+  def notify_status_change
     ReportJob.perform_later(order_id: id)
   end
 
@@ -77,12 +104,20 @@ class Order < ApplicationRecord
       if product.stock_quantity >= order_item.quantity
         product.update!(stock_quantity: product.stock_quantity - order_item.quantity)
       else
-        msg = "Недостаток в остатках для продукта: #{product.name} в заказе #{id}"
-        Rails.logger.error msg
-        TelegramJob.perform_later(msg: msg)
-        raise StandardError, msg
+        throw_abort(product)
       end
     end
+  end
+
+  def throw_abort(product)
+    msg = "Недостаток в остатках для продукта: #{product.name} в заказе #{id}"
+    Rails.logger.error msg
+
+    # TelegramJob.perform_later(msg: msg) # TODO: не отработает т.к. транзакция + в группе "Оплата пришла" нажав
+    # TODO: сообщение удалится но по факту статус останется прежним. Только в админке корректно выйдет флеш
+
+    errors.add(:base, msg)
+    throw :abort
   end
 
   def restock_stock
@@ -90,7 +125,7 @@ class Order < ApplicationRecord
       product = order_item.product
       next if product.nil? || product.id == Setting.fetch_value(:delivery_id).to_i
 
-      product.increment!(:stock_quantity, order_item.quantity)
+      product.update(stock_quantity: product.stock_quantity + order_item.quantity)
       Rails.logger.info "Returned #{order_item.quantity} pcs #{product.name} to stock after order #{id} cancellation."
     end
   end

@@ -1,3 +1,9 @@
-<div id="cart_items">
+<div class="cart_items" id="cart_items" data-controller="cart">
   <%= render partial: '/cart_items/cart_item', collection: @cart_items %>
+
+  <div class="cart-item hidden" data-cart-target="delivery">
+    <div class="basis-1/3">Доставка</div>
+    <div class="quantity"><span>Услуга</span></div>
+    <div class="cart-item-price"><%= settings[:delivery_price] %>₽</div>
+  </div>
 </div>

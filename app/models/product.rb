@@ -1,4 +1,6 @@
 class Product < ApplicationRecord
+  IS_NOT_MIRENA = ENV.fetch('HOST', '').exclude?('mirena')
+
   has_ancestry
   has_one_attached :image, dependent: :purge
   has_many :reviews, dependent: :destroy
@@ -20,6 +22,9 @@ class Product < ApplicationRecord
   before_update :notify_if_low_stock, if: :stock_quantity_changed?
   after_commit :clear_available_categories_cache, on: %i[create update destroy]
   after_commit :notify_subscribers_if_restocked, if: :saved_change_to_stock_quantity?
+  after_commit :webhook_to_mirena, on: :update, if: lambda {
+    IS_NOT_MIRENA && saved_change_to_stock_quantity? && id == Setting.fetch_value(:mirena_id).to_i
+  }
 
   def destroy
     transaction do
@@ -60,6 +65,10 @@ class Product < ApplicationRecord
   end
 
   private
+
+  def webhook_to_mirena
+    UpdateProductStockJob.perform_later(id, Setting.fetch_value(:mirena_webhook_url))
+  end
 
   def notify_subscribers_if_restocked
     previous_stock = saved_changes[:stock_quantity]&.first || stock_quantity_before_last_save

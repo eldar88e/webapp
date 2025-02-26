@@ -15,11 +15,10 @@
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.success) {
-                        //console.log("Authenticated:", data.user);
                         let path = "/";
-                        if (data.params && data.params.includes('url=')) {
-                            path += data.params.replace('url=', '').split('_').join('/');
-                        }
+                        <% if @btn_link.present? %>
+                          path += "<%= @btn_link %>";
+                        <% end %>
                         window.location.href = path;
                     } else {
                         console.log("Authentication failed: " + data.error);

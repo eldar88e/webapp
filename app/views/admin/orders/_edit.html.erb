@@ -27,6 +27,18 @@
       <% @order.order_items.includes(product: :image_attachment).each_with_index do |order_item, idx| %>
         <%= render partial: '/admin/orders/order_item', locals: { order_item: order_item, idx: idx } %>
       <% end %>
+
+      <% if @order.has_delivery? %>
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+          <td class="px-6 py-4"></td>
+          <td class="px-2 py-2"></td>
+          <th scope="row" class="p-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            Доставка
+          </th>
+          <td class="px-6 py-4"></td>
+          <td class="px-6 py-4"><%= settings[:delivery_price] %><span style="margin-left: 3px">₽</span></td>
+        </tr>
+      <% end %>
     </tbody>
   </table>
 </div>

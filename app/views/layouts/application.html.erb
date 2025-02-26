@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
-    <title><%= "#{settings[:appname]&.capitalize}#{content_for(:title).present? ? " | #{content_for(:title)}" : ''}" %></title>
+    <title><%= "#{settings[:app_name]&.capitalize}#{content_for(:title).present? ? " | #{content_for(:title)}" : ''}" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
@@ -17,7 +17,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <%= vite_client_tag %>
-    <%= vite_stylesheet_tag(ENV.fetch('HOST').include?('mirena') ? 'mirena' : 'application') %>
+    <%= vite_stylesheet_tag(ENV.fetch('HOST', '').include?('mirena') ? 'mirena' : 'application') %>
     <%= vite_javascript_tag 'application' %>
   </head>
 

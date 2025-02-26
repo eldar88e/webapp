@@ -1,7 +1,18 @@
 <div id="default-modal" tabindex="-1" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full flex" aria-modal="true" role="dialog">
   <div class="relative p-4 w-full max-w-2xl max-h-full">
     <!-- Modal content -->
-    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 sm:p-0 sm:pt-20 sm:pb-20 p-4 pb-10 pt-10">
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 sm:p-0 sm:py-14 p-4 py-10">
+
+      <div class="max-w-sm mx-auto flex items-center text-white gap-3 mb-10">
+        <% if ENV.fetch('HOST', '').include?('mirena') %>
+          <%= image_tag vite_asset_path('images/admin/logo_m.jpg'), class: 'w-8 h-8 rounded-full' %>
+        <% else %>
+          <%= image_tag vite_asset_path('images/admin/logo_s.jpg'), class: 'w-8 h-8 rounded-full' %>
+        <% end %>
+
+        <span class="uppercase font-bold text-lg"><%= settings[:app_name] %></span>
+      </div>
+
       <%= form_with(model: User, url: session_path(:user), id: "login-form", class: "max-w-sm mx-auto") do |f| %>
         <div class="mb-5">
           <%= f.label :email, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
