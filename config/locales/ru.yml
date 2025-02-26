@@ -23,7 +23,7 @@ ru:
     approve_payment: "Оплата пришла"
     submit_tracking: "Привязать трек"
   mailing_success: "Рассылка успешно запланирована!"
-  empty_cart: "Ваша корзина пустая!"
+  empty_cart: "Ваша корзина пуста!"
   required_fields: "Заполните пожалуйста все обязательные поля!"
   order:
     statuses:
