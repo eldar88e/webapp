@@ -29,7 +29,7 @@ class AuthController < ApplicationController
   def user_checker
     user = User.find_by(id: params[:user_id].to_i)
     if user.blank? || user.started.blank? || user.is_blocked.present?
-      msg = 'User not found or no started or banned bot!'
+      msg = "User #{params[:user_id]} not found or no started or banned bot!"
       Rails.logger.error msg
       render json: { error: msg }
     else

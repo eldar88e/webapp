@@ -46,3 +46,4 @@
 
 /public/vite*
 *.local
+/key.json

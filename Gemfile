@@ -24,6 +24,8 @@ gem 'image_processing'
 gem 'lograge'
 gem 'logstash-logger'
 # gem 'mongoid'
+gem 'google-api-client', require: false
+gem 'googleauth', require: false
 gem 'pagy'
 gem 'pundit'
 gem 'ransack'
