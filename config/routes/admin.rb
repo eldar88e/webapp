@@ -1,6 +1,7 @@
 namespace :admin do
   get '/login', to: 'dashboard#login'
   get '/dashboard', to: 'dashboard#index'
+  get '/dashboard/show', to: 'dashboard#show'
   get '/', to: 'dashboard#index'
   resources :products
   resources :settings
