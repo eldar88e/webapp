@@ -6,7 +6,7 @@ class GoogleSheetsService
   SCOPES               = ['https://www.googleapis.com/auth/spreadsheets'].freeze
   SERVICE_ACCOUNT_FILE = './key.json'.freeze
   SPREADSHEET_ID       = Setting.fetch_value(:spreadsheet_id).freeze
-  LIST_NAME            = 'Лист1'.freeze
+  LIST_NAME            = Setting.fetch_value(:google_list_orders).freeze
 
   def initialize(order)
     @order   = order
