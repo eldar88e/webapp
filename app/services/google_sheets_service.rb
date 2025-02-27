@@ -20,7 +20,7 @@ class GoogleSheetsService
     empty_row   = find_empty_row
     values      = form_order_items
     value_range = form_values(values)
-    range       = "#{LIST_NAME}!A#{empty_row}:H#{empty_row + values.size - 1}"
+    range       = "#{LIST_NAME}!A#{empty_row}:I#{empty_row + values.size - 1}"
     @service.append_spreadsheet_value(SPREADSHEET_ID, range, value_range, value_input_option: 'RAW')
     nil
   end
