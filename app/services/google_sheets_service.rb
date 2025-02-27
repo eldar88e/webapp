@@ -5,7 +5,7 @@ require 'googleauth/stores/file_token_store'
 class GoogleSheetsService
   SCOPES               = ['https://www.googleapis.com/auth/spreadsheets'].freeze
   SERVICE_ACCOUNT_FILE = './key.json'.freeze
-  SPREADSHEET_ID       = '1PCEBQvuk_BpKnOttQmQtg7H5Imcfb5_7-MRTbGNUoSs'.freeze
+  SPREADSHEET_ID       = Setting.fetch_value(:spreadsheet_id).freeze
   LIST_NAME            = 'Лист1'.freeze
 
   def initialize(order)
@@ -63,8 +63,10 @@ class GoogleSheetsService
   end
 
   def save_first_row
-    range    = "#{LIST_NAME}!A1:H1"
-    value    = [['ID заказа', 'Дата оплаты', 'ID клиента', 'ФИО', 'Адрес', 'Название товара', 'Кол-во', 'Цена']]
+    range = "#{LIST_NAME}!A1:I1"
+    value = [
+      ['ID заказа', 'Дата оплаты', 'ID клиента', 'ФИО', 'Адрес', 'ID Товара', 'Название товара', 'Кол-во', 'Цена']
+    ]
     response = @service.get_spreadsheet_values(SPREADSHEET_ID, range)
     return if response.values == value
 
@@ -84,7 +86,7 @@ class GoogleSheetsService
   end
 
   def form_order_items
-    @order.order_items.map { |i| order_info + [i.product.name, i.quantity, i.price.to_i] }
+    @order.order_items.map { |i| order_info + [i.product.id, i.product.name, i.quantity, i.price.to_i] }
   end
 
   def order_info
