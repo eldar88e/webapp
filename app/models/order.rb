@@ -133,10 +133,10 @@ class Order < ApplicationRecord
   end
 
   def export_items_google
-    ExportOrderItemsJob.perform_later(id)
+    GoogleSheetsExporterJob.perform_later(ids: id, model: :order)
   end
 
   def remove_items_google
-    ExportOrderItemsJob.perform_later(id, true)
+    GoogleSheetsExporterJob.perform_later(ids: id, del: true, model: :order)
   end
 end
