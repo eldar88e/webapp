@@ -16,7 +16,7 @@ class GoogleSheetsService
   end
 
   def export_order_items_to_sheets
-    save_first_row
+    # save_first_row
     empty_row   = find_empty_row
     values      = form_order_items
     value_range = form_values(values)
