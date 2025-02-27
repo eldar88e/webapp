@@ -1,7 +1,7 @@
 module Admin
   class DashboardController < Admin::ApplicationController
-    skip_before_action :authenticate_user!
-    skip_before_action :authorize_admin_access!
+    skip_before_action :authenticate_user!, only: %i[index login]
+    skip_before_action :authorize_admin_access!, only: %i[index login]
 
     def index
       # return redirect_to admin_login_path unless user_signed_in?
@@ -23,6 +23,5 @@ module Admin
 
       render layout: 'admin_authorize'
     end
-
   end
 end
