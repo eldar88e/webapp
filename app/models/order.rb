@@ -125,8 +125,6 @@ class Order < ApplicationRecord
   def restock_stock
     order_items_with_product.each do |order_item|
       product = order_item.product
-      next if product.nil? || product.id == Setting.fetch_value(:delivery_id).to_i
-
       product.update(stock_quantity: product.stock_quantity + order_item.quantity)
       Rails.logger.info "Returned #{order_item.quantity} pcs #{product.name} to stock after order #{id} cancellation."
     end

@@ -17,5 +17,9 @@ module Admin
     def random_color
       %w[blue-600 red-600 green-600 yellow-400 indigo-600 purple-600].sample
     end
+
+    def average_income(sum)
+      (sum / Time.current.day).round(2)
+    end
   end
 end

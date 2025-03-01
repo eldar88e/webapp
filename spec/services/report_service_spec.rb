@@ -4,7 +4,6 @@ RSpec.describe ReportService do
   let(:user) { create(:user, tg_id: 123) }
   let(:product) { create(:product) }
   let(:order) { create(:order, user: user, total_amount: 100) }
-  let(:delivery_product) { create(:product, id: Setting.fetch_value(:delivery_id).to_i) }
 
   before do
     allow(TelegramService).to receive(:call).and_return(42)

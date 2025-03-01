@@ -7,9 +7,9 @@ class OrderItem < ApplicationRecord
   validates :product_id, uniqueness: { scope: :order_id, message: I18n.t('errors.messages.already_in_order') }
 
   def self.total_quantity_sold(start_date, end_date, group_by)
-    # .where.not(product_id: Setting.fetch_value(:delivery_id), orders: { status: :canceled })
+    # .where(orders.status != ?', 5) # 5 == :canceled
     joins(:order)
-      .where('product_id != ? AND orders.status != ?', Setting.fetch_value(:delivery_id).to_i, 5) # 5 == :canceled
+      .where.not(orders: { status: :canceled })
       .where(orders: { paid_at: start_date..end_date })
       .group(group_by)
       .sum(:quantity)

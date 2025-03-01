@@ -108,7 +108,7 @@ class ReportService
     def schedule_review_requests(order, user)
       order.order_items_with_product.each do |order_item|
         product = order_item.product
-        next if product.id == Setting.fetch_value(:delivery_id).to_i || user.reviews.exists?(product_id: product.id)
+        next if user.reviews.exists?(product_id: product.id)
 
         SendReviewRequestJob.set(wait: REVIEW_WAIT).perform_later(
           product_id: product.id, user_id: user.id, order_id: order.id

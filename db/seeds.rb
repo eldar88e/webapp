@@ -19,7 +19,6 @@ if Rails.env.development?
   ]
 
   root_product = Product.find_or_create_by!({ name: 'Товары'})
-  delivery     = Product.create!({ name: 'Доставка', stock_quantity: 999999 })
   vitamins     = Product.create!({ name: 'Витамины', ancestry: root_product.id })
   bads         = Product.create!({ name: 'БАДы', ancestry: root_product.id })
 
@@ -75,7 +74,7 @@ if Rails.env.development?
     { variable: 'app_name',	value: 'Test' },
     { variable: 'root_product_id',	value: root_product.id },
     { variable: 'default_product_id',	value: vitamins.id },
-    { variable: 'delivery_id',	value: delivery.id },
+    { variable: 'delivery_price',	value: 500 },
   ]
 
   settings.each { |i| Setting.create!(i) }
