@@ -57,6 +57,12 @@ class Product < ApplicationRecord
     product_subscriptions.exists?(user: user)
   end
 
+  def self.available_categories(root_id)
+    Rails.cache.fetch("available_categories_#{root_id}", expires_in: 30.minutes) do
+      exists?(root_id) ? find(root_id).children.available.order(:created_at) : []
+    end
+  end
+
   def self.ransackable_attributes(_auth_object = nil)
     %w[id name stock_quantity price ancestry]
   end

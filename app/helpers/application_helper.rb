@@ -20,4 +20,8 @@ module ApplicationHelper
     Rails.logger.error "Error getting file path: #{e.message}"
     nil
   end
+
+  def available_categories
+    Product.available_categories(Setting.fetch_value(:root_product_id))
+  end
 end

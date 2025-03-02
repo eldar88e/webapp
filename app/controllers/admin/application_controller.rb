@@ -2,10 +2,10 @@ module Admin
   class ApplicationController < ActionController::Base
     include Pundit::Authorization
     include MainConcerns
-    before_action :authenticate_user!, :authorize_admin_access!
-    helper_method :settings
-
     include Pagy::Backend
+
+    before_action :authenticate_user!, :authorize_admin_access!
+
     layout 'admin'
 
     rescue_from Pundit::NotAuthorizedError, with: :redirect_to_telegram

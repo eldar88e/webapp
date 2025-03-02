@@ -1,6 +1,10 @@
 module MainConcerns
   extend ActiveSupport::Concern
 
+  included do
+    helper_method :settings
+  end
+
   def redirect_to_telegram
     redirect_to "https://t.me/#{settings[:tg_main_bot]}", allow_other_host: true
   end
