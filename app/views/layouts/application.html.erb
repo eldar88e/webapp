@@ -16,17 +16,15 @@
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            if (typeof Telegram !== "undefined") {
-                <% if ENV.fetch('HOST', '').include?('mirena') %>
-                  Telegram.WebApp.setHeaderColor('#3396a5');
-                  Telegram.WebApp.setBackgroundColor('#3396a5');
-                <% else %>
-                  Telegram.WebApp.setHeaderColor('#000001');
-                  Telegram.WebApp.setBackgroundColor('#000001');
-                <% end %>
-            }
-        });
+          if (typeof Telegram !== "undefined") {
+              <% if ENV.fetch('HOST', '').include?('mirena') %>
+                Telegram.WebApp.setHeaderColor('#3396a5');
+                Telegram.WebApp.setBackgroundColor('#3396a5');
+              <% else %>
+                Telegram.WebApp.setHeaderColor('#000001');
+                Telegram.WebApp.setBackgroundColor('#000001');
+              <% end %>
+          }
     </script>
 
     <%= vite_client_tag %>
