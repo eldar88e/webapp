@@ -18,7 +18,11 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             if (typeof Telegram !== "undefined") {
-                Telegram.WebApp.setHeaderColor('#000001');
+                <% if ENV.fetch('HOST', '').include?('mirena') %>
+                  Telegram.WebApp.setHeaderColor('#3396a5');
+                <% else %>
+                  Telegram.WebApp.setHeaderColor('#000001');
+                <% end %>
             }
         });
     </script>
