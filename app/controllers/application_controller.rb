@@ -1,13 +1,9 @@
 class ApplicationController < ActionController::Base
-  before_action :check_authenticate_user!
-  before_action :check_started_user!
+  include MainConcerns
+  before_action :check_authenticate_user!, :check_started_user!
   helper_method :settings, :available_categories
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   # allow_browser versions: :modern
-
-  def redirect_to_telegram
-    redirect_to "https://t.me/#{settings[:tg_main_bot]}", allow_other_host: true
-  end
 
   private
 
@@ -22,18 +18,6 @@ class ApplicationController < ActionController::Base
     product_id   = params[:category_id].presence || Setting.fetch_value(:default_product_id)
     raw_products = Product.find_by(id: product_id)
     @products    = raw_products.present? ? raw_products.children.includes(:image_attachment).available : []
-  end
-
-  def error_notice(msg, status = :unprocessable_entity)
-    render turbo_stream: send_notice(msg, 'danger'), status:
-  end
-
-  def success_notice(msg)
-    send_notice(msg, 'success')
-  end
-
-  def send_notice(msg, key)
-    turbo_stream.append(:notices, partial: '/notices/notice', locals: { notices: msg, key: })
   end
 
   def check_authenticate_user!
@@ -55,9 +39,5 @@ class ApplicationController < ActionController::Base
 
   def required_fields_filled?
     filtered_params.except(:apartment, :build).values.size >= 8
-  end
-
-  def settings
-    Setting.all_cached
   end
 end

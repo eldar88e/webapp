@@ -1,8 +1,6 @@
 namespace :admin do
-  get '/login', to: 'dashboard#login'
-  get '/dashboard', to: 'dashboard#index'
-  get '/dashboard/show', to: 'dashboard#show'
   get '/', to: 'dashboard#index'
+  get '/dashboard/show', to: 'dashboard#show' # TODO: temp route
   resources :products
   resources :settings
   resources :orders
