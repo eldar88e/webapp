@@ -26,6 +26,17 @@
                 Telegram.WebApp.setBackgroundColor('#000001');
                 Telegram.WebApp.setBottomBarColor('#000001');
               <% end %>
+
+              Telegram.WebApp.ready(); // Убедимся, что Mini App загрузилась
+
+              Telegram.WebApp.BottomButton.setText("Оформить заказ");
+              Telegram.WebApp.BottomButton.show();
+
+              Telegram.WebApp.BottomButton.onClick(() => {
+                  console.log("✅ Заказ оформлен!");
+                  Telegram.WebApp.showAlert("Спасибо за заказ!");
+                  Telegram.WebApp.BottomButton.hide();
+              });
           }
     </script>
 
