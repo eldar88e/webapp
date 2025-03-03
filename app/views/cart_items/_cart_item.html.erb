@@ -6,9 +6,11 @@
     <% if cart_item.product.name == 'Доставка' %>
       <span>Услуга</span>
     <% else %>
-      <%= button_to '-', cart_item_path(id: cart_item.id), params: { quantity: cart_item.quantity - 1 }, method: :patch, class: 'plus' %>
+      <%= button_to '-', cart_item_path(id: cart_item.id), data: { controller: 'vibration', action: 'click->vibration#makeVibration' },
+                    params: { quantity: cart_item.quantity - 1 }, method: :patch, class: 'plus' %>
       <div class="num"><%= cart_item.quantity %></div>
-      <%= button_to '+', cart_item_path(id: cart_item.id), params: { quantity: cart_item.quantity + 1 }, method: :patch, class: 'plus' %>
+      <%= button_to '+', cart_item_path(id: cart_item.id), data: { controller: 'vibration', action: 'click->vibration#makeVibration' },
+                    params: { quantity: cart_item.quantity + 1 }, method: :patch, class: 'plus' %>
     <% end %>
   </div>
    <div class="cart-item-price">

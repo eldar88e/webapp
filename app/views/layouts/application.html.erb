@@ -20,19 +20,10 @@
               <% if ENV.fetch('HOST', '').include?('mirena') %>
                 Telegram.WebApp.setHeaderColor('#3396a5');
                 Telegram.WebApp.setBackgroundColor('#3396a5');
-                //Telegram.WebApp.setBottomBarColor('#3396a5');
               <% else %>
                 Telegram.WebApp.setHeaderColor('#000001');
                 Telegram.WebApp.setBackgroundColor('#000001');
-                //Telegram.WebApp.setBottomBarColor('#000001');
               <% end %>
-
-              Telegram.WebApp.MainButton.setText("Оформить заказ");
-              document.addEventListener("DOMContentLoaded", () => {
-                  setTimeout(() => {
-                      Telegram.WebApp.MainButton.show();
-                  }, 1000);
-              });
           }
     </script>
 
