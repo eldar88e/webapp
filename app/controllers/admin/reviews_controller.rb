@@ -1,6 +1,7 @@
 module Admin
   class ReviewsController < Admin::ApplicationController
     before_action :set_review, only: %i[edit update destroy]
+    before_action :update_photo, only: :update
 
     def index
       @q_reviews = Review.includes(:user, :product, :photos_attachments).order(created_at: :desc).ransack(params[:q])
@@ -33,8 +34,6 @@ module Admin
     end
 
     def update
-      @review.photos.attach(params[:review][:photos]) if params[:review][:photos].present?
-
       if @review.update(review_params.except(:photos))
         render turbo_stream: [
           turbo_stream.replace(@review, partial: '/admin/reviews/review', locals: { review: @review }),
@@ -51,6 +50,10 @@ module Admin
     end
 
     private
+
+    def update_photo
+      @review.photos.attach(params[:review][:photos]) if params[:review][:photos].present?
+    end
 
     def set_review
       @review = Review.find(params[:id])

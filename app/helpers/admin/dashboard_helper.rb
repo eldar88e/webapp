@@ -10,8 +10,8 @@ module Admin
       ]
     end
 
-    def card_percent(key)
-      [(100 * @totals_by_card[key].to_i / LIMIT), LIMIT].min
+    def card_percent(balance)
+      [(100 * balance.to_i / LIMIT), LIMIT].min
     end
 
     def random_color

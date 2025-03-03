@@ -4,14 +4,7 @@ module Admin
 
     def index
       @q_products = Product.includes(:image_attachment).order(:created_at).ransack(params[:q])
-
-      root_product_id = Setting.fetch_value(:root_product_id)
-      if root_product_id
-        form_products(root_product_id)
-      else
-        @result = @q_products.result
-      end
-
+      form_products
       @pagy, @products = pagy(@result, items: 20)
     end
 
@@ -57,16 +50,22 @@ module Admin
 
     private
 
-    def form_products(root_product_id)
+    def form_products
+      root_product_id  = Setting.fetch_value(:root_product_id).to_i
       session[:filter] = params[:filter].presence || session[:filter].presence || 'descendants'
-      root_product = Product.find(root_product_id)
-      @result = if root_product && session[:filter] == 'descendants'
-                  @q_products.result.where(id: root_product.descendants.ids).where.not(id: root_product.children.ids)
-                elsif root_product && session[:filter] == 'children'
-                  @q_products.result.where(id: root_product.children.ids)
-                else
-                  @q_products.result
-                end
+      root_product     = Product.find_by(id: root_product_id)
+      @result          = root_product.nil? ? @q_products.result : filter_products(root_product)
+    end
+
+    def filter_products(root_product)
+      case session[:filter]
+      when 'descendants'
+        @q_products.result.where(id: root_product.descendants.ids).where.not(id: root_product.children.ids)
+      when 'children'
+        @q_products.result.where(id: root_product.children.ids)
+      else
+        @q_products.result
+      end
     end
 
     def render_turbo_stream(notice)

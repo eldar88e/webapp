@@ -4,7 +4,7 @@ class Mailing
   attr_accessor :filter, :message
   attr_reader :scheduled_at
 
-  FILTERS = %w[ordered no_ordered all is_blocked add_cart users].freeze
+  FILTERS = %w[ordered no_ordered all blocked add_cart users].freeze
 
   validates :filter, inclusion: { in: FILTERS, message: I18n.t('errors.messages.filter_range') }
   validates :message, presence: true
