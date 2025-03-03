@@ -20,9 +20,11 @@
               <% if ENV.fetch('HOST', '').include?('mirena') %>
                 Telegram.WebApp.setHeaderColor('#3396a5');
                 Telegram.WebApp.setBackgroundColor('#3396a5');
+                Telegram.WebApp.setBottomBarColor('#3396a5');
               <% else %>
                 Telegram.WebApp.setHeaderColor('#000001');
                 Telegram.WebApp.setBackgroundColor('#000001');
+                Telegram.WebApp.setBottomBarColor('#000001');
               <% end %>
           }
     </script>
