@@ -38,23 +38,28 @@
 
                   // Проверка поддержки Accelerometer API
                   if (tg.Accelerometer && ball) {
-                      // Запуск отслеживания
-                      tg.Accelerometer.start();
+                      try {
+                          tg.Accelerometer.start();
+                          console.log('Accelerometer started');
 
-                      // Обработка данных
-                      tg.Accelerometer.on('acceleration', (data) => {
-                          // Смещаем шарик на основе ускорения
-                          const moveX = data.x * 20; // Множитель для усиления эффекта
-                          const moveY = data.y * 20;
+                          tg.Accelerometer.on('acceleration', (data) => {
+                              const moveX = data.x * 30; // Увеличил множитель
+                              const moveY = data.y * 30;
+                              console.log(`Accel: X=${data.x}, Y=${data.y}`);
 
-                          ball.style.transform = `translate(${-50 + moveX}%, ${-50 + moveY}%)`;
-                      });
+                              ball.style.transform = `translate(
+                                ${-50 + moveX}%,
+                                ${-50 + moveY}%
+                              )`;
+                          });
+
+                      } catch (e) {
+                          tg.showAlert("Ошибка доступа к датчикам: " + e.message);
+                      }
                   } else {
-                      tg.showAlert("Ваше устройство не поддерживает Accelerometer API");
+                      tg.showAlert("Акселерометр не поддерживается в вашей версии Telegram");
                   }
               });
-
-              //Telegram.WebApp.showAlert("Спасибо за заказ!");
           }
     </script>
 
