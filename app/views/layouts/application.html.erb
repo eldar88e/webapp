@@ -27,8 +27,13 @@
                 Telegram.WebApp.setBottomBarColor('#000001');
               <% end %>
 
-              Telegram.WebApp.MainButton.setText("Оформить заказ");
-              Telegram.WebApp.MainButton.show();
+              document.addEventListener("DOMContentLoaded", () => {
+                  setTimeout(() => {
+                      Telegram.WebApp.MainButton.setText("Оформить заказ");
+                      Telegram.WebApp.MainButton.show();
+                  }, 1000);
+              });
+
               //Telegram.WebApp.showAlert("Спасибо за заказ!");
           }
     </script>
