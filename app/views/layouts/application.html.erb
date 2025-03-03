@@ -32,6 +32,26 @@
                       Telegram.WebApp.MainButton.setText("Оформить заказ");
                       Telegram.WebApp.MainButton.show();
                   }, 1000);
+
+                  const tg = Telegram.WebApp;
+                  const ball = document.getElementById('ball');
+
+                  // Проверка поддержки Accelerometer API
+                  if (tg.Accelerometer && ball) {
+                      // Запуск отслеживания
+                      tg.Accelerometer.start();
+
+                      // Обработка данных
+                      tg.Accelerometer.on('acceleration', (data) => {
+                          // Смещаем шарик на основе ускорения
+                          const moveX = data.x * 20; // Множитель для усиления эффекта
+                          const moveY = data.y * 20;
+
+                          ball.style.transform = `translate(${-50 + moveX}%, ${-50 + moveY}%)`;
+                      });
+                  } else {
+                      tg.showAlert("Ваше устройство не поддерживает Accelerometer API");
+                  }
               });
 
               //Telegram.WebApp.showAlert("Спасибо за заказ!");

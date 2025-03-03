@@ -35,7 +35,7 @@
             </div>
           </div>
           <% if @product.image.attached? %>
-            <div style="background-image: url('<%= storage_path(@product.image) %>'); background-size: contain;
+            <div id="ball" style="background-image: url('<%= storage_path(@product.image) %>'); background-size: contain;
               background-repeat: no-repeat; background-position: center;" class="img absolute left-0 top-0"></div>
           <% end %>
         </div>
