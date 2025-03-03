@@ -34,7 +34,12 @@
 
       <div class="product-footer">
         <% if product.stock_quantity.positive?  %>
-          <% data = ENV.fetch('HOST', '').include?('mirena') ? { controller: 'open-cart vibration', action: 'click->open-cart#openCart click->vibration#makeVibration' } : {} %>
+          <% data = { controller: 'vibration', action: 'click->vibration#makeVibration' } %>
+          <% if ENV.fetch('HOST', '').include?('mirena') %>
+            <% data[:controller] += ' open-cart' %>
+            <% data[:action] += ' click->open-cart#openCart' %>
+          <% end %>
+          <%# data =  { controller: 'open-cart vibration', action: 'click->open-cart#openCart click->vibration#makeVibration' } %>
           <%= button_to cart_items_path, params: { cart_item: { product_id: product.id } }, class: 'btn-order', data: data do %>
             <div class="title-btn">Заказать</div>
             <div class="plus">
