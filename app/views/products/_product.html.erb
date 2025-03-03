@@ -34,19 +34,7 @@
 
       <div class="product-footer">
         <% if product.stock_quantity.positive?  %>
-          <% data = { controller: 'vibration', action: 'click->vibration#makeVibration' } %>
-          <% if ENV.fetch('HOST', '').include?('mirena') %>
-            <% data[:controller] += ' open-cart' %>
-            <% data[:action] += ' click->open-cart#openCart' %>
-          <% end %>
-          <%# data =  { controller: 'open-cart vibration', action: 'click->open-cart#openCart click->vibration#makeVibration' } %>
-          <%= button_to cart_items_path, params: { cart_item: { product_id: product.id } }, class: 'btn-order', data: data do %>
-            <div class="title-btn">Заказать</div>
-            <div class="plus">
-              <div class="plus-ico"></div>
-              <%= render partial: '/layouts/partials/cart_item_counter', locals: { id: product.id } %>
-            </div>
-          <% end %>
+          <%= render partial: '/products/btn', locals: { product: product } %>
         <% else %>
           <%= render partial: '/product_subscriptions/btn', locals: { product: product } %>
         <% end %>
