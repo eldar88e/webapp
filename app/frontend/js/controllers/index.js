@@ -30,3 +30,6 @@ application.register("cart", CartController)
 
 import OpenCartController from "./open_cart_controller"
 application.register("open-cart", OpenCartController)
+
+import VibrationController from "./vibration_controller"
+application.register("vibration", VibrationController)
