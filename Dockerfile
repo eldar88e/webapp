@@ -1,4 +1,4 @@
-FROM ruby:3.3.3-alpine AS miniapp
+FROM ruby:3.3.7-alpine AS miniapp
 
 RUN apk --update add --no-cache \
     build-base \
@@ -28,7 +28,7 @@ ENV BUNDLE_DEPLOYMENT="1" \
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
-RUN gem update --system 3.6.3
+RUN gem update --system 3.6.5
 RUN gem install bundler -v $(tail -n 1 Gemfile.lock)
 RUN bundle check || bundle install
 RUN bundle clean --force
