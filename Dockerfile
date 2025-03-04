@@ -2,6 +2,7 @@ FROM ruby:3.3.7-alpine AS miniapp
 
 RUN apk --update add --no-cache \
     build-base \
+    yaml-dev \
     tzdata \
     yarn \
     libc6-compat \
