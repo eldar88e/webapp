@@ -62,15 +62,25 @@ class Review < ApplicationRecord
   def acceptable_photos
     return unless photos.attached?
 
-    errors.add(:photos, 'можно загрузить не более 4 изображений') if photos.count > 4
-
+    validate_photos_count
     photos.each do |photo|
-      errors.add(:photos, "'#{photo.filename}' должна быть меньше 5 МБ") if photo.byte_size > 5.megabytes
-
-      acceptable_types = %w[image/jpeg image/png image/webp image/heic image/heif]
-      unless acceptable_types.include?(photo.content_type)
-        errors.add(:photos, "'#{photo.filename}' должна быть в формате JPEG, PNG, WEBP или HEIC")
-      end
+      validate_photo_size(photo)
+      validate_photo_type(photo)
     end
+  end
+
+  def validate_photos_count
+    errors.add(:photos, 'можно загрузить не более 4 изображений') if photos.count > 4
+  end
+
+  def validate_photo_size(photo)
+    errors.add(:photos, "'#{photo.filename}' должна быть меньше 5 МБ") if photo.byte_size > 5.megabytes
+  end
+
+  def validate_photo_type(photo)
+    acceptable_types = %w[image/jpeg image/png image/webp image/heic image/heif]
+    return if acceptable_types.include?(photo.content_type)
+
+    errors.add(:photos, "'#{photo.filename}' должна быть в формате JPEG, PNG, WEBP или HEIC")
   end
 end
