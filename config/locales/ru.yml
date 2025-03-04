@@ -122,6 +122,8 @@ ru:
       many: "%{count} отзывов"
       other: "%{count} отзыва"
   activerecord:
+    models:
+      user: "Пользователь"
     attributes:
       review:
         content: "Отзыв"
@@ -138,3 +140,4 @@ ru:
       rating_range: "должен быть от 1 до 5"
       filter_range: "должен быть С заказами, Без заказов, Заблокированные, Добавил в корзину но не купил или Все"
       subscription: "Вы уже подписаны на этот товар"
+      user_already_reviewed: "Вы уже оставили отзыв на этот товар"

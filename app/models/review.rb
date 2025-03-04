@@ -10,8 +10,8 @@ class Review < ApplicationRecord
 
   validates :content, presence: true, length: { maximum: 1000 }
   validates :rating, presence: true, inclusion: { in: 1..5, message: I18n.t('errors.messages.rating_range') }
+  validates :user, uniqueness: { scope: :product, message: I18n.t('errors.messages.user_already_reviewed') }
   validate :user_must_have_purchased_product
-  validate :user_cannot_review_twice, on: :create
   validate :acceptable_photos
 
   scope :approved, -> { where(approved: true) }
@@ -39,7 +39,7 @@ class Review < ApplicationRecord
   private
 
   def process_photos
-    ProcessReviewPhotosJob.perform_later(self) # TODO: Cкорее всего такую структуру sidekiq не поддерживает
+    ProcessReviewPhotosJob.perform_later(id)
   end
 
   def send_telegram_notification
@@ -57,12 +57,6 @@ class Review < ApplicationRecord
     return if user.orders.joins(:order_items).exists?(status: SHIPPED, order_items: { product_id: product_id })
 
     errors.add(:product, 'Вы не можете оставить отзыв на товар, который не покупали.')
-  end
-
-  def user_cannot_review_twice
-    return unless Review.exists?(user_id: user_id, product_id: product_id)
-
-    errors.add(:product, 'Вы уже оставили отзыв на этот товар.')
   end
 
   def acceptable_photos
