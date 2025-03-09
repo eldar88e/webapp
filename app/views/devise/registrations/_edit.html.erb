@@ -1,6 +1,6 @@
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name),
+<%= form_for(current_user, as: current_user, url: registration_path(current_user),
              html: { method: :put, data: { controller: 'dadata label_toggle' } }) do |form| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+  <%= render "devise/shared/error_messages", resource: current_user %>
 
   <%= render partial: 'devise/registrations/form_items', locals: { f: form } %>
 

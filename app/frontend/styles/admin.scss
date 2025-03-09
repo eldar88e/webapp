@@ -313,3 +313,16 @@ body.aside-hide {
   fill: #4884fc;
   opacity: 1;
 }
+
+.bank-cards {
+  .bank-cards-item {
+    .progress-bar {
+      div {
+        min-width: 5%;
+        @media (max-width: 768px) {
+          min-width: 30%;
+        }
+      }
+    }
+  }
+}

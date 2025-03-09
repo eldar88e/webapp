@@ -21,8 +21,8 @@ class ApplicationController < ActionController::Base
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :middle_name, :last_name, :phone_number,
-                                 :address, :street, :home, :postal_code, :apartment, :build)
+    keys = %i[first_name middle_name last_name phone_number address street home apartment postal_code build]
+    params.require(:user).permit(keys)
   end
 
   def filtered_params

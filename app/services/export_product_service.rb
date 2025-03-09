@@ -10,20 +10,21 @@ class ExportProductService < GoogleSheetsService
     values      = form_product_items
     value_range = form_values(values)
     row         = find_row_for_product(@product.id)
+    return save_row(values, value_range) if row.nil?
 
-    if row.nil?
-      empty_row = find_empty_row
-      range     = "#{@list_name}!A#{empty_row}:I#{empty_row + values.size - 1}"
-      @service.append_spreadsheet_value(SPREADSHEET_ID, range, value_range, value_input_option: 'RAW')
-    else
-      range = "#{@list_name}!A#{row}:D#{row}"
-      @service.update_spreadsheet_value(SPREADSHEET_ID, range, value_range, value_input_option: 'RAW')
-    end
-
+    range = "#{@list_name}!A#{row}:D#{row}"
+    @service.update_spreadsheet_value(SPREADSHEET_ID, range, value_range, value_input_option: 'RAW')
     nil
   end
 
   private
+
+  def save_row(values, value_range)
+    empty_row = find_empty_row
+    range     = "#{@list_name}!A#{empty_row}:I#{empty_row + values.size - 1}"
+    @service.append_spreadsheet_value(SPREADSHEET_ID, range, value_range, value_input_option: 'RAW')
+    nil
+  end
 
   def find_row_for_product(product_id)
     range = "#{@list_name}!A2:A"
