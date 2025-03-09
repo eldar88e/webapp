@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Привет, <%= @user.full_name %>!</h1>
+    <p></p>
+    <p>Произошла критическая ошибка на сервере <%= ENV.fetch('HOST') %></p>
+    <p></p>
+    <p>Ошибка: <%= @error %></p>
+    <p></p>
+    <p>Текст ошибки:</p>
+    <p><%= @message&.gsub(/\e\[[;?\d]*m/, '') %></p>
+  </body>
+</html>

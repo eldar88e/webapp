@@ -3,6 +3,6 @@ module.exports = {
     './app/views/**/*.html.erb',
     './app/helpers/**/*.rb',
     './app/frontend/styles/**/*.scss',
-    './app/frontend/js/**/*.js'
+    './app/frontend/javascript/**/*.js'
   ]
 }
