@@ -1,9 +1,8 @@
 require 'telegram/bot'
 
 class TelegramBotWorker
-  # TODO: Перевести в job и убрать лишний gem 'sidekiq-unique-jobs'
   include Sidekiq::Worker
-  sidekiq_options queue: 'telegram_bot', retry: true, lock: :until_executed
+  sidekiq_options queue: 'telegram_bot', retry: true
 
   TRACK_CACHE_PERIOD = 5.minutes
 

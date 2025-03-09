@@ -30,8 +30,8 @@ gem 'pagy'
 gem 'pundit'
 gem 'ransack'
 gem 'ruby-vips'
-gem 'sidekiq'
-gem 'sidekiq-unique-jobs'
+gem 'sidekiq', '~> 8.0'
+# gem 'sidekiq-unique-jobs'
 gem 'telegram-bot-ruby', require: false
 
 group :development, :test do
