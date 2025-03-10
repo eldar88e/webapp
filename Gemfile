@@ -29,6 +29,7 @@ gem 'googleauth', require: false
 gem 'pagy'
 gem 'pundit'
 gem 'ransack'
+gem 'rollbar'
 gem 'ruby-vips'
 gem 'sidekiq', '~> 8.0'
 # gem 'sidekiq-unique-jobs'
