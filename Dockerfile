@@ -40,13 +40,12 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
-RUN bandle exec assets:precompile
+RUN bundle exec assets:precompile
 # RUN bundle exec bootsnap precompile app/ lib/
 # ENTRYPOINT ["/app/bin/docker-entrypoint"]
 
 RUN addgroup -g 1000 deploy && adduser -u 1000 -G deploy -D -s /bin/sh deploy
-RUN chown -R deploy:deploy /app # db log storage tmp
-RUN bandle exec assets:precompile
+# RUN chown -R deploy:deploy /app # db log storage tmp
 
 USER deploy:deploy
 
