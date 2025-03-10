@@ -1,7 +1,7 @@
 services:
   base: &base
-    tty: true
-    stdin_open: true
+    # tty: true
+    # stdin_open: true
     image: s-miniapp
     build: .
     env_file: ./.env
