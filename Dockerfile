@@ -36,11 +36,11 @@ RUN bundle clean --force
 
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
-# RUN yarn vite build
 # RUN rm -rf node_modules
 
 COPY . .
 
+RUN bandle exec assets:precompile
 # RUN bundle exec bootsnap precompile app/ lib/
 # ENTRYPOINT ["/app/bin/docker-entrypoint"]
 
