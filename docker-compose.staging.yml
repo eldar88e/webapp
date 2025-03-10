@@ -11,8 +11,6 @@ services:
     volumes:
       - gems:/usr/local/bundle
       - .:/app
-    networks:
-      net:
     restart: always
 
   s-miniapp:
@@ -20,6 +18,7 @@ services:
     container_name: s-miniapp
     hostname: s-miniapp
     networks:
+      net:
       proxy-net:
         ipv4_address: 172.29.0.11
       s3:
@@ -33,6 +32,7 @@ services:
     hostname: s-miniapp-sidekiq
     command: bundle exec sidekiq
     networks:
+      net:
       s3:
         ipv4_address: 172.20.0.8
     extra_hosts:
@@ -40,7 +40,6 @@ services:
 
   pg:
     image: postgres:16.1
-    hostname: pg
     container_name: s-miniapp-pg
     environment:
       POSTGRES_USER: ${DB_USER}
