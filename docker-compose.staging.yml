@@ -5,18 +5,17 @@ services:
     image: s-miniapp
     build: .
     env_file: ./.env
-    depends_on:
-      - pg
-      - redis
     volumes:
       - gems:/usr/local/bundle
       - .:/app
-    restart: always
 
   s-miniapp:
     <<: *base
     container_name: s-miniapp
     hostname: s-miniapp
+    depends_on:
+      - pg
+      - redis
     networks:
       net:
       proxy-net:
@@ -25,18 +24,23 @@ services:
         ipv4_address: 172.20.0.7
     extra_hosts:
       - "${MINIO_DOMAIN}:${MINIO_IP}"
+    restart: always
 
   sidekiq:
     <<: *base
     container_name: s-miniapp-sidekiq
     hostname: s-miniapp-sidekiq
     command: bundle exec sidekiq
+    depends_on:
+      - pg
+      - redis
     networks:
       net:
       s3:
         ipv4_address: 172.20.0.8
     extra_hosts:
       - "${MINIO_DOMAIN}:${MINIO_IP}"
+    restart: always
 
   pg:
     image: postgres:16.1
