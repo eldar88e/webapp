@@ -1,9 +1,42 @@
 services:
+  base: &base
+    image: webapp
+    build: .
+    env_file: ./.env
+    volumes:
+      - gems:/usr/local/bundle
+      - .:/app
+
+  webapp:
+    <<: *base
+    container_name: webapp
+    hostname: webapp
+    depends_on:
+      - psql
+      - redis
+    command: ['bundle', 'exec', 'rails', 's', '-p', '3000', '-b', '0.0.0.0']
+    networks:
+      net:
+      proxy-net:
+        ipv4_address: 172.29.0.3
+    restart: always
+
+  sidekiq:
+    <<: *base
+    container_name: webapp-sidekiq
+    hostname: webapp-sidekiq
+    depends_on:
+      - psql
+      - redis
+    command: ['bundle', 'exec', 'sidekiq']
+    networks:
+      net:
+    restart: always
+
   psql:
     image: postgres:16.1
     container_name: webapp-psql
     hostname: psql
-    restart: unless-stopped
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -12,52 +45,10 @@ services:
       - db_data:/var/lib/postgresql/data
     networks:
       - net
-
-  webapp:
-    image: webapp
-    build: .
-    container_name: webapp
-    hostname: webapp
-    env_file: ./.env
-    depends_on:
-      - psql
-      - redis
-      - sidekiq
-    volumes:
-      - gems:/usr/local/bundle
-      - ./node_modules:/app/node_modules
-      - ./app/frontend:/app/app/frontend
-      - ./log:/app/log
-      - ./public:/app/public
-      - ./storage:/app/storage
-    networks:
-      net:
-      proxy-net:
-        ipv4_address: 172.29.0.3
-    restart: always
-
-  sidekiq:
-    image: webapp
-    build: .
-    container_name: webapp-sidekiq
-    hostname: webapp-sidekiq
-    env_file: ./.env
-    depends_on:
-      - psql
-      - redis
-    volumes:
-      - gems:/usr/local/bundle
-      - ./node_modules:/app/node_modules
-      - ./log:/app/log
-      - ./public:/app/public
-      - ./storage:/app/storage
-    command: bundle exec sidekiq
-    networks:
-      net:
-    restart: always
+    restart: unless-stopped
 
   redis:
-    image: redis:latest
+    image: redis:7.4.2-alpine3.21
     container_name: webapp-redis
     command: redis-server
     restart: unless-stopped

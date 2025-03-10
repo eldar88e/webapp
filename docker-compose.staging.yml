@@ -1,7 +1,5 @@
 services:
   base: &base
-    # tty: true
-    # stdin_open: true
     image: s-miniapp
     build: .
     env_file: ./.env
@@ -11,6 +9,8 @@ services:
 
   s-miniapp:
     <<: *base
+    # tty: true
+    # stdin_open: true
     container_name: s-miniapp
     hostname: s-miniapp
     command: ['bundle', 'exec', 'rails', 's', '-p', '3000', '-b', '0.0.0.0']
@@ -57,7 +57,7 @@ services:
     restart: unless-stopped
 
   redis:
-    image: redis:7-alpine3.21
+    image: redis:7.4.2-alpine3.21
     container_name: s-miniapp-redis
     command: redis-server
     networks:
