@@ -6,8 +6,6 @@ services:
     volumes:
       - gems:/usr/local/bundle
       - .:/app
-    networks:
-      - net
 
   miniapp:
     <<: *base
@@ -18,6 +16,7 @@ services:
       - redis
     command: ['bundle', 'exec', 'rails', 's', '-p', '3000', '-b', '0.0.0.0']
     networks:
+      net:
       proxy-net:
         ipv4_address: 172.29.0.10
     restart: always
@@ -31,6 +30,8 @@ services:
       - pg
       - redis
     command: ['bundle', 'exec', 'sidekiq']
+    networks:
+      net:
     restart: always
 
   pg:
