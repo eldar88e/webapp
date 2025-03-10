@@ -9,7 +9,7 @@ module Admin
     end
 
     def show
-      @start_date = params[:start_date] ? params[:start_date].to_date : 2.weeks.ago # Date.current.beginning_of_month
+      @start_date = params[:start_date] ? params[:start_date].to_date : Date.current.beginning_of_month
       @end_date   = params[:end_date] ? params[:end_date].to_date : Date.current.end_of_month
       @bank_cards = BankCard.all
       form_totals_by_card
