@@ -131,6 +131,8 @@ class ReportService
         TelegramService.call("#{msg} не нажатия на старт!", Setting.fetch_value(:test_id))
       elsif error.message.include?('bot was blocked')
         TelegramService.call("#{msg} добавления им бота в бан!", Setting.fetch_value(:test_id))
+      else
+        ErrorMailer.send_error("#{msg} #{error.message}", error.full_message).deliver_later
       end
     end
   end
