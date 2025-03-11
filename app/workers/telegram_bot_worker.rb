@@ -94,6 +94,7 @@ class TelegramBotWorker
 
     [user_state[:msg_id], user_state[:h_msg], message.message_id].each do |id|
       TelegramJob.perform_later(method: 'delete_msg', id: message.chat.id, msg_id: id)
+      sleep 0.3
     end
     Rails.cache.delete("user_#{message.chat.id}_state")
   end
