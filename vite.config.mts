@@ -8,8 +8,10 @@ export default defineConfig({
     RubyPlugin(),
   ],
   css: {
-    scss: {
-      api: 'modern-compiler',
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+      },
     },
     postcss: {
       plugins: [tailwindcss(), autoprefixer()],
