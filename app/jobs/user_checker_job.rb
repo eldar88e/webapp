@@ -16,6 +16,6 @@ class UserCheckerJob < ApplicationJob
     user.update(started: true, is_blocked: false)
     msg = "User #{user.id} started bot"
     Rails.logger.info msg
-    TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id))
+    TelegramService.call(msg, Setting.fetch_value(:test_id))
   end
 end

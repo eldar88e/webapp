@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '3.3.3'
+ruby '3.3.7'
 gem 'rails', '~> 7.2.2'
 
 gem 'bootsnap', require: false
@@ -24,12 +24,15 @@ gem 'image_processing'
 gem 'lograge'
 gem 'logstash-logger'
 # gem 'mongoid'
+gem 'google-api-client', require: false
+gem 'googleauth', require: false
 gem 'pagy'
 gem 'pundit'
 gem 'ransack'
+gem 'rollbar'
 gem 'ruby-vips'
-gem 'sidekiq'
-gem 'sidekiq-unique-jobs'
+gem 'sidekiq', '~> 8.0'
+# gem 'sidekiq-unique-jobs'
 gem 'telegram-bot-ruby', require: false
 
 group :development, :test do

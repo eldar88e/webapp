@@ -1,7 +1,8 @@
-FROM ruby:3.3.3-alpine AS miniapp
+FROM ruby:3.3.7-alpine3.21 AS miniapp
 
 RUN apk --update add --no-cache \
     build-base \
+    yaml-dev \
     tzdata \
     yarn \
     libc6-compat \
@@ -28,27 +29,24 @@ ENV BUNDLE_DEPLOYMENT="1" \
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
-RUN gem update --system 3.6.3
+RUN gem update --system 3.6.5
 RUN gem install bundler -v $(tail -n 1 Gemfile.lock)
 RUN bundle check || bundle install
 RUN bundle clean --force
 
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
-# RUN yarn vite build
 # RUN rm -rf node_modules
 
 COPY . .
 
+RUN bundle exec rails assets:precompile
 # RUN bundle exec bootsnap precompile app/ lib/
 # ENTRYPOINT ["/app/bin/docker-entrypoint"]
 
-RUN addgroup -g 1000 deploy && \
-    adduser -u 1000 -G deploy -D -s /bin/sh deploy && \
-    chown -R deploy:deploy /app # db log storage tmp
+RUN addgroup -g 1000 deploy && adduser -u 1000 -G deploy -D -s /bin/sh deploy
+# RUN chown -R deploy:deploy /app # db log storage tmp
 
 USER deploy:deploy
 
 EXPOSE 3000
-
-CMD ["./bin/rails", "server", "-b", "0.0.0.0"]

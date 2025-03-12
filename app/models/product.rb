@@ -22,6 +22,7 @@ class Product < ApplicationRecord
   before_update :notify_if_low_stock, if: :stock_quantity_changed?
   after_commit :clear_available_categories_cache, on: %i[create update destroy]
   after_commit :notify_subscribers_if_restocked, if: :saved_change_to_stock_quantity?
+  after_commit :export_product_google, on: :update, if: -> { IS_NOT_MIRENA && saved_change_to_stock_quantity? }
   after_commit :webhook_to_mirena, on: :update, if: lambda {
     IS_NOT_MIRENA && saved_change_to_stock_quantity? && id == Setting.fetch_value(:mirena_id).to_i
   }
@@ -54,6 +55,12 @@ class Product < ApplicationRecord
 
   def subscribed?(user)
     product_subscriptions.exists?(user: user)
+  end
+
+  def self.available_categories(root_id)
+    Rails.cache.fetch("available_categories_#{root_id}", expires_in: 30.minutes) do
+      exists?(root_id) ? find(root_id).children.available.order(:created_at) : []
+    end
   end
 
   def self.ransackable_attributes(_auth_object = nil)
@@ -95,5 +102,9 @@ class Product < ApplicationRecord
 
   def normalize_ancestry
     self.ancestry = ancestry.presence
+  end
+
+  def export_product_google
+    GoogleSheetsExporterJob.perform_later(ids: id, model: :product)
   end
 end

@@ -1,6 +1,7 @@
 module Admin
   class MessagesController < Admin::ApplicationController
     before_action :authorize_message, only: :destroy
+    before_action :set_user, only: :create
 
     def index
       @q_messages = Message.includes(:user).order(created_at: :desc).ransack(params[:q])
@@ -18,13 +19,12 @@ module Admin
     end
 
     def create
-      MailingJob.perform_later(filter: 'users', message: message_params[:text], user_ids: message_params[:user_id].to_i)
-      user     = User.find(message_params[:user_id])
-      @message = Message.new(text: message_params[:text], tg_id: user.tg_id, is_incoming: false,
+      MailingJob.perform_later(filter: 'users', message: message_params[:text], user_ids: @user.id)
+      @message = Message.new(text: message_params[:text], tg_id: @user.tg_id, is_incoming: false,
                              created_at: Time.current)
       render turbo_stream: [
         turbo_stream.prepend(:messages, partial: '/admin/messages/message', locals: { message: @message }),
-        success_notice('Сообщение успешно отправленно в очередь!')
+        success_notice('Сообщение успешно отправлено в очередь!')
       ]
     end
 
@@ -41,6 +41,10 @@ module Admin
     end
 
     private
+
+    def set_user
+      @user = User.find(message_params[:user_id])
+    end
 
     def authorize_message
       authorize [:admin, Message]

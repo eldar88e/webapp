@@ -31,7 +31,7 @@ class CartItemsController < ApplicationController
   end
 
   def render_remove_cart_item
-    return render_updated_item if @cart_items.where.not(product_id: Setting.fetch_value(:delivery_id)).size.positive?
+    return render_updated_item if @cart_items.size.positive?
 
     render turbo_stream: [
       turbo_stream.append(:modal, '<script>closeModal();</script>'.html_safe),

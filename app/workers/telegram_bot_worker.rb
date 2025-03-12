@@ -1,9 +1,8 @@
 require 'telegram/bot'
 
 class TelegramBotWorker
-  # TODO: Перевести в job и убрать лишний gem 'sidekiq-unique-jobs'
   include Sidekiq::Worker
-  sidekiq_options queue: 'telegram_bot', retry: true, lock: :until_executed
+  sidekiq_options queue: 'telegram_bot', retry: true
 
   TRACK_CACHE_PERIOD = 5.minutes
 
@@ -95,6 +94,7 @@ class TelegramBotWorker
 
     [user_state[:msg_id], user_state[:h_msg], message.message_id].each do |id|
       TelegramJob.perform_later(method: 'delete_msg', id: message.chat.id, msg_id: id)
+      sleep 0.3
     end
     Rails.cache.delete("user_#{message.chat.id}_state")
   end

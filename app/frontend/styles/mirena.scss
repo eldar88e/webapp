@@ -567,16 +567,22 @@ form label {
   svg {
     path {
       opacity: 1;
+      fill: rgb(66, 169, 185);
     }
   }
 
-  svg:hover path {
+  svg.filled-star:hover path, svg:hover path {
     fill: $primary-color;
     opacity: 1;
   }
 }
 
-.filled-star path {
+.rating-stars svg.filled-star path {
+  fill: #FFFFFF;
+  opacity: 1;
+}
+
+.stars svg.filled-star path {
   fill: #FFFFFF;
   opacity: 1;
 }

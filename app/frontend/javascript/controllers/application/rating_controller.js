@@ -3,11 +3,6 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
     static targets = ["stars", "hiddenInput"]
 
-    connect() {
-        console.log('hi!')
-       // this.updateStars(this.hiddenInputTarget.value || 0);
-    }
-
     select(event) {
         const selectedRating = parseInt(event.currentTarget.dataset.value, 10);
         this.hiddenInputTarget.value = selectedRating;

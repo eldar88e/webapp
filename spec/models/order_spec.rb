@@ -141,7 +141,7 @@ RSpec.describe Order, type: :model do
 
   describe '#order_items_str' do
     let(:vitamin) { create(:product, name: 'Витамин С') }
-    let!(:delivery_item) { create(:order_item, order: order, product: vitamin) }
+    let!(:vitamin_item) { create(:order_item, order: order, product: vitamin) }
 
     it 'excludes delivery for courier' do
       expect(order.order_items_str(true)).not_to include('Доставка')

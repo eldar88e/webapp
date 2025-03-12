@@ -10,8 +10,8 @@ class Review < ApplicationRecord
 
   validates :content, presence: true, length: { maximum: 1000 }
   validates :rating, presence: true, inclusion: { in: 1..5, message: I18n.t('errors.messages.rating_range') }
+  validates :user, uniqueness: { scope: :product, message: I18n.t('errors.messages.user_already_reviewed') }
   validate :user_must_have_purchased_product
-  validate :user_cannot_review_twice, on: :create
   validate :acceptable_photos
 
   scope :approved, -> { where(approved: true) }
@@ -39,7 +39,7 @@ class Review < ApplicationRecord
   private
 
   def process_photos
-    ProcessReviewPhotosJob.perform_later(self) # TODO: Cкорее всего такую структуру sidekiq не поддерживает
+    ProcessReviewPhotosJob.perform_later(id)
   end
 
   def send_telegram_notification
@@ -59,24 +59,28 @@ class Review < ApplicationRecord
     errors.add(:product, 'Вы не можете оставить отзыв на товар, который не покупали.')
   end
 
-  def user_cannot_review_twice
-    return unless Review.exists?(user_id: user_id, product_id: product_id)
-
-    errors.add(:product, 'Вы уже оставили отзыв на этот товар.')
-  end
-
   def acceptable_photos
     return unless photos.attached?
 
-    errors.add(:photos, 'можно загрузить не более 4 изображений') if photos.count > 4
-
+    validate_photos_count
     photos.each do |photo|
-      errors.add(:photos, "'#{photo.filename}' должна быть меньше 5 МБ") if photo.byte_size > 5.megabytes
-
-      acceptable_types = %w[image/jpeg image/png image/webp image/heic image/heif]
-      unless acceptable_types.include?(photo.content_type)
-        errors.add(:photos, "'#{photo.filename}' должна быть в формате JPEG, PNG, WEBP или HEIC")
-      end
+      validate_photo_size(photo)
+      validate_photo_type(photo)
     end
+  end
+
+  def validate_photos_count
+    errors.add(:photos, 'можно загрузить не более 4 изображений') if photos.count > 4
+  end
+
+  def validate_photo_size(photo)
+    errors.add(:photos, "'#{photo.filename}' должна быть меньше 5 МБ") if photo.byte_size > 5.megabytes
+  end
+
+  def validate_photo_type(photo)
+    acceptable_types = %w[image/jpeg image/png image/webp image/heic image/heif]
+    return if acceptable_types.include?(photo.content_type)
+
+    errors.add(:photos, "'#{photo.filename}' должна быть в формате JPEG, PNG, WEBP или HEIC")
   end
 end

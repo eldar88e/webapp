@@ -33,6 +33,6 @@ class OrdersController < ApplicationController
   end
 
   def update_user
-    current_user.update(filtered_params) if filtered_params.any?
+    current_user.update(filtered_params)
   end
 end

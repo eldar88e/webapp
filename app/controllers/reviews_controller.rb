@@ -3,8 +3,7 @@ class ReviewsController < ApplicationController
   before_action :detect_device, only: :new
 
   def new
-    @review = current_user.reviews.new
-    @review.product = @product
+    @review = current_user.reviews.new(product: @product)
     return unless turbo_frame_request?
 
     render turbo_stream: [
@@ -13,9 +12,7 @@ class ReviewsController < ApplicationController
   end
 
   def create
-    @review      = @product.reviews.new(review_params)
-    @review.user = current_user
-
+    @review = @product.reviews.new(review_params.merge(user: current_user))
     if @review.save
       render turbo_stream: [
         turbo_stream.update(:new_review, 'Ваш отзыв на модерации.'),

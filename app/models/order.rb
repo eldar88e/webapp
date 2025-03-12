@@ -17,7 +17,9 @@ class Order < ApplicationRecord
   before_update :assign_valid_or_random_card, if: -> { status == 'unpaid' }
   before_update :remove_cart, if: -> { status_changed?(from: 'unpaid', to: 'paid') }
   before_update :deduct_stock, if: -> { status_changed?(from: 'paid', to: 'processing') }
+  before_update :export_items_google, if: -> { status_changed?(from: 'paid', to: 'processing') }
   before_update :restock_stock, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
+  before_update :remove_items_google, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
   after_commit :notify_status_change, on: :update, unless: -> { status == 'initialized' }
   after_commit :update_main_stock, on: :update, if: -> { ENV.fetch('HOST', '').include?('mirena') }
 
@@ -123,10 +125,16 @@ class Order < ApplicationRecord
   def restock_stock
     order_items_with_product.each do |order_item|
       product = order_item.product
-      next if product.nil? || product.id == Setting.fetch_value(:delivery_id).to_i
-
       product.update(stock_quantity: product.stock_quantity + order_item.quantity)
       Rails.logger.info "Returned #{order_item.quantity} pcs #{product.name} to stock after order #{id} cancellation."
     end
+  end
+
+  def export_items_google
+    GoogleSheetsExporterJob.perform_later(ids: id, model: :order)
+  end
+
+  def remove_items_google
+    GoogleSheetsExporterJob.perform_later(ids: id, del: true, model: :order)
   end
 end

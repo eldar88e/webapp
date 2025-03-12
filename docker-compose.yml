@@ -1,8 +1,42 @@
 services:
+  base: &base
+    image: miniapp
+    build: .
+    env_file: ./.env
+    volumes:
+      - gems:/usr/local/bundle
+      - .:/app
+
+  miniapp:
+    <<: *base
+    container_name: miniapp
+    hostname: miniapp
+    depends_on:
+      - pg
+      - redis
+    command: ['bundle', 'exec', 'rails', 's', '-p', '3000', '-b', '0.0.0.0']
+    networks:
+      net:
+      proxy-net:
+        ipv4_address: 172.29.0.10
+    restart: always
+
+
+  sidekiq:
+    <<: *base
+    container_name: miniapp-sidekiq
+    hostname: miniapp-sidekiq
+    depends_on:
+      - pg
+      - redis
+    command: ['bundle', 'exec', 'sidekiq']
+    networks:
+      net:
+    restart: always
+
   pg:
     image: postgres:16.1
     container_name: miniapp-pg
-    restart: unless-stopped
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -10,57 +44,18 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
-      net:
-
-  miniapp:
-    tty: true
-    stdin_open: true
-    image: miniapp
-    build: .
-    container_name: miniapp
-    hostname: miniapp
-    env_file: ./.env
-    depends_on:
-      - pg
-      - redis
-      - sidekiq
-    volumes:
-      - gems:/usr/local/bundle
-      - .:/app
-    networks:
-      net:
-      proxy-net:
-        ipv4_address: 172.29.0.10
-    restart: always
-
-  sidekiq:
-    tty: true
-    stdin_open: true
-    image: miniapp
-    build: .
-    container_name: miniapp-sidekiq
-    hostname: miniapp-sidekiq
-    env_file: ./.env
-    depends_on:
-      - pg
-      - redis
-    volumes:
-      - gems:/usr/local/bundle
-      - .:/app
-    command: bundle exec sidekiq
-    networks:
-      net:
-    restart: always
+      - net
+    restart: unless-stopped
 
   redis:
-    image: redis:latest
+    image: redis:7.4.2-alpine3.21
     container_name: miniapp-redis
     command: redis-server
-    restart: unless-stopped
     networks:
       - net
     volumes:
       - redis:/data
+    restart: unless-stopped
 
 volumes:
   db_data:
