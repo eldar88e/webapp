@@ -15,7 +15,12 @@ class TelegramBotWorker
         process_bot(bot, message)
       rescue StandardError => e
         Rails.logger.error "#{self.class} | #{e.message}"
+        ErrorMailer.send_error("Stage 2 #{error.message}", error.full_message).deliver_later
       end
+    rescue StandardError => e
+      Rails.logger.error "#{self.class} | #{e.message}"
+      ErrorMailer.send_error("Stage 1 #{error.message}", error.full_message).deliver_later
+      raise e
     end
   end
 
