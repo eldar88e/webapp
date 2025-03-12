@@ -1,35 +1,35 @@
 @layer utilities {
-  @media (prefers-color-scheme: dark) {
-    .bg-gray-600 {
-      background-color: rgb(13 68 75);
-    }
+  .bg-gray-600 {
+    background-color: rgb(13 68 75);
+  }
 
-    .bg-gray-700 {
-      background-color: rgb(18 71 78);
-    }
+  .bg-gray-700 {
+    background-color: rgb(18 71 78);
+  }
 
-    .bg-gray-800 {
-      background-color: rgb(17 80 90);
-    }
+  .bg-gray-800 {
+    background-color: rgb(17 80 90);
+  }
 
-    .bg-gray-900 {
-      background-color: #3396a5;
-    }
+  .bg-gray-900 {
+    background-color: #3396a5;
+  }
 
-    .ring-blue-500 {
-      --tw-ring-color: rgb(53 123 114);
-    }
+  .ring-blue-500 {
+    --tw-ring-color: rgb(53 123 114);
+  }
 
-    .border-blue-500 {
-      border-color: rgb(53 123 114);
-    }
+  .border-blue-500 {
+    border-color: rgb(53 123 114);
+  }
+
+  .bg-gray-50 {
+    background-color: rgb(181, 252, 255);
   }
 }
 
 body {
   .body {
-    //@apply bg-blue-900;
-
     .sidebar {
       .wraper-menu {
         .main-sidebar {
