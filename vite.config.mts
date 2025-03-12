@@ -8,6 +8,9 @@ export default defineConfig({
     RubyPlugin(),
   ],
   css: {
+    scss: {
+      api: 'modern-compiler',
+    },
     postcss: {
       plugins: [tailwindcss(), autoprefixer()],
     },
@@ -21,6 +24,7 @@ export default defineConfig({
         admin: './app/frontend/entrypoints/admin.js',
       },
     },
+    chunkSizeWarningLimit: 800,
     sourcemap: false,
   },
   appType: 'custom',
