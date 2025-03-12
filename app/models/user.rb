@@ -82,6 +82,7 @@ class User < ApplicationRecord
       user.middle_name = tg_user['last_name']
       user.email       = "telegram_user_#{tg_user['id']}@example.com"
       user.password    = Devise.friendly_token[0, 20]
+      user.photo_url   = tg_user['photo_url']
       user.started     = started
     end
     log_user(current_user, started)
