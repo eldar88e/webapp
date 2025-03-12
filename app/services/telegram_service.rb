@@ -4,13 +4,14 @@ class TelegramService
   MESSAGE_LIMIT = 4_090
 
   def initialize(message, id = nil, **args)
-    @bot_token   = settings[:tg_token]
-    @chat_id     = id == :courier ? settings[:courier_tg_id] : (id || settings[:admin_chat_id])
-    @message     = message
-    @message_id  = nil
-    @markup      = args[:markup]
-    @markup_url  = args[:markup_url]
-    @markup_text = args[:markup_text] || 'Кнопка'
+    @bot_token      = settings[:tg_token]
+    @chat_id        = id == :courier ? settings[:courier_tg_id] : (id || settings[:admin_chat_id])
+    @message        = message
+    @message_id     = nil
+    @markup         = args[:markup]
+    @markup_url     = args[:markup_url]
+    @markup_text    = args[:markup_text] || 'Кнопка'
+    @markup_ext_url = args[:markup_ext_url]
   end
 
   def self.call(msg, id = nil, **args)
@@ -38,7 +39,7 @@ class TelegramService
   end
 
   def escape(text)
-    text.gsub(/\[.*?m/, '').gsub(/([-_*\[\]()~>#+=|{}.!])/, '\\\\\1') # delete `
+    text.gsub(/\[.*?m/, '').gsub(/([-_\[\]()~>#+=|{}.!])/, '\\\\\1') # delete `,*
   end
 
   def tg_send
@@ -79,7 +80,7 @@ class TelegramService
   end
 
   def form_url_keyboard
-    url = "https://t.me/#{settings[:tg_main_bot]}?startapp=url=#{@markup_url}"
+    url = @markup_ext_url.presence || "https://t.me/#{settings[:tg_main_bot]}?startapp=url=#{@markup_url}"
     [[Telegram::Bot::Types::InlineKeyboardButton.new(text: @markup_text, url: url)]]
   end
 
@@ -93,7 +94,7 @@ class TelegramService
   end
 
   def form_markup
-    return if @markup.nil? && @markup_url.nil?
+    return if @markup.nil? && @markup_url.nil? && @markup_ext_url.nil?
 
     keyboard = @markup ? form_keyboard : form_url_keyboard
     Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
