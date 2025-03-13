@@ -8,7 +8,7 @@
   <td class="px-6 py-4"><%= user.id %></td>
 
   <th scope="row" class="px-6 py-4 whitespace-nowrap">
-    <%= render partial: '/admin/users/user_name', locals: { user: product_subscription.user } %>
+    <%= render partial: 'user_name', locals: { user: user } %>
   </th>
 
   <td class="px-6 py-4"><%= user.phone_number %></td>
