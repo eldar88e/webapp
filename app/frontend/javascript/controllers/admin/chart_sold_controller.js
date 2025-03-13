@@ -34,25 +34,29 @@ export default class extends Controller {
   renderChart(dates, revenues) {
     const options = {
       chart: {
-        type: "line",
+        type: "area",
         height: 320,
       },
       stroke: {
         curve: 'smooth',
+        colors: ['#1C64F2'],
       },
-      markers: {
-        size: 6,
-        colors: ['#0f80de'],
-        strokeColors: '#eef7ff',
-        strokeWidth: 2,
-        hover: {
-          size: 8,
+      fill: {
+        type: "gradient", // Используем градиент для заливки
+        gradient: {
+          opacityFrom: 0.55,
+          opacityTo: 0,
+          shade: "#1C64F2",
+          gradientToColors: ["#1C64F2"],
         },
       },
+      dataLabels: {
+        enabled: false,
+      },
       grid: {
-        show: true, // Показывать сетку
-        borderColor: '#374151', // Цвет линий сетки
-        strokeDashArray: 1, // Длина штрихов (пунктир)
+        show: false,
+        //borderColor: '#374151',
+        //strokeDashArray: 1,
       },
       series: [
         {

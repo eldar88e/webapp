@@ -34,15 +34,16 @@ export default class extends Controller {
     renderChart(dates, users) {
       const options = {
         chart: {
-          type: "line",
+          type: "area",
           height: 350,
         },
         stroke: {
-          curve: 'smooth',
+            curve: 'smooth',
+            colors: ['#0e9f6e'],
         },
         markers: {
           size: 6,
-          colors: ['#0f80de'],
+          colors: ['#0e9f6e'],
           strokeColors: '#eef7ff',
           strokeWidth: 2,
           hover: {
@@ -50,9 +51,21 @@ export default class extends Controller {
           },
         },
         grid: {
-          show: true,
-          borderColor: '#374151',
-          strokeDashArray: 1,
+          show: false,
+          //borderColor: '#374151',
+          //strokeDashArray: 1,
+        },
+        fill: {
+          type: "gradient",
+          gradient: {
+              opacityFrom: 0.55,
+              opacityTo: 0,
+              shade: "#0e9f6e",
+              gradientToColors: ["#0e9f6e"],
+          },
+        },
+        dataLabels: {
+          enabled: false,
         },
         series: [
           {
