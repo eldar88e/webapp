@@ -7,21 +7,24 @@
 <div class="flex flex-wrap px-2 text-gray-900 dark:text-white">
   <div class="w-full md:w-1/2 px-2 py-2 md:py-4">
     <div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6 flex flex-col gap-4">
-      <h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-4"><%= @user.full_name %></h1>
-      <% %i[id username tg_id email phone_number full_address postal_code role is_blocked created_at].each do |attribute| %>
+      <div class="flex items-center gap-2 mb-4">
+        <%= render partial: '/admin/users/avatar', locals: { user: @user } %>
+        <h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white"><%= @user.full_name %></h1>
+      </div>
+      <% %i[id username tg_id email phone_number full_address postal_code role is_blocked started created_at].each do |attribute| %>
         <div>
           <span class="text-gray-700 dark:text-gray-400 text-sm"><%= t("helpers.label.user.#{attribute}") %>: </span>
           <span class="font-bold ml-2">
             <% if @user.send(attribute).blank? %>
-              <%= "< Не указано >" %>
+              <%= %i[is_blocked started].include?(attribute) ? 'Нет' : "< Не указано >" %>
             <% elsif attribute == :created_at %>
               <%= format_date @user.send(attribute) %>
             <% elsif attribute == :username %>
               <%= link_to "@#{@user.username}", "https://t.me/#{@user.username}", class: 'text-blue-600', target: "_blank" if @user.username.present? %>
             <% elsif attribute == :role %>
               <%= t("roles.#{@user.role}") %>
-            <% elsif attribute == :is_blocked %>
-              <%= @user.is_blocked ? 'Да' : 'Нет' %>
+            <% elsif %i[is_blocked started].include?(attribute) %>
+              Да
             <% else %>
               <%= @user.send(attribute) %>
             <% end %>
