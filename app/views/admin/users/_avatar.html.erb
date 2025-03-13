@@ -1,7 +1,10 @@
 <div class="w-8 h-8 rounded-full flex justify-center items-center overflow-hidden">
   <% if user.photo_url.present? %>
-    <%#= image_tag vite_asset_path user.photo_url %>
-    <% Rails.logger.info "#{user.id} | #{user.photo_url}" %>
+    <% begin %>
+      <%= image_tag vite_asset_path user.photo_url %>
+    <% rescue => e %>
+      <% Rails.logger.info "#{e} | #{user.id} | #{user.photo_url}" %>
+    <% end %>
   <% else %>
     <div class="w-8 h-8 bg-blue-800 flex items-center justify-center text-white font-normal">
       <%= user.first_name&.strip&.first %>
