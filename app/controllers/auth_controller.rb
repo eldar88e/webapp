@@ -53,14 +53,8 @@ class AuthController < ApplicationController
   end
 
   def update_tg_username(user, tg_user)
-    return if user.username == tg_user['username']
-
-    user.update(username: tg_user['username'])
-    msg = "User #{user.id} updated username #{user.username}"
-    Rails.logger.info msg
-    TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id))
-  rescue StandardError => e
-    Rails.logger.error e.message
+    user.update(photo_url: tg_user['photo_url']) # TODO: со временем убрать
+    user.update(username: tg_user['username']) if user.username != tg_user['username']
   end
 
   def valid_telegram_data?(data, secret_key)
