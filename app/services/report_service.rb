@@ -106,13 +106,12 @@ class ReportService
     private
 
     def schedule_review_requests(order, user)
-      order.order_items_with_product.each do |order_item|
+      order.order_items_with_product.each_with_index do |order_item, hours|
         product = order_item.product
         next if user.reviews.exists?(product_id: product.id)
 
-        SendReviewRequestJob.set(wait: REVIEW_WAIT).perform_later(
-          product_id: product.id, user_id: user.id, order_id: order.id
-        )
+        wait = REVIEW_WAIT + hours.hours
+        SendReviewRequestJob.set(wait: wait).perform_later(product_id: product.id, user_id: user.id, order_id: order.id)
       end
     end
 
