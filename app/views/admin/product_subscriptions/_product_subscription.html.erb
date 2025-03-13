@@ -5,16 +5,13 @@
       <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
     </div>
   </td>
-  <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-    <%= link_to product_subscription.user.full_name, admin_user_path(product_subscription.user) %>
-  </td>
-  <td class="px-6 py-4">
-    <%= product_subscription.product.name %>
-  </td>
-  <td class="px-6 py-4">
-    <%= format_date product_subscription.created_at %>
-  </td>
-  <td class="flex px-6 py-4">
+  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+      <%= render partial: '/admin/users/user_name', locals: { user: product_subscription.user } %>
+  </th>
 
-  </td>
+  <td class="px-6 py-4"><%= product_subscription.product.name %></td>
+
+  <td class="px-6 py-4"><%= format_date product_subscription.created_at %></td>
+
+  <td class="flex px-6 py-4"></td>
 </tr>

@@ -48,7 +48,7 @@ class AuthController < ApplicationController
   def sign_in_with_tg_id(tg_user_object)
     tg_user = JSON.parse tg_user_object
     user    = User.find_or_create_by_tg(tg_user, false)
-    update_tg_username(user, tg_user)
+    update_tg_username(user, tg_user) # TODO: сделать через job возможно еще добавить атрибутов для обновления
     sign_in(user)
   end
 

@@ -6,31 +6,19 @@
     </div>
   </td>
   <td class="px-6 py-4"><%= user.id %></td>
+
   <th scope="row" class="px-6 py-4 whitespace-nowrap">
-    <div class="flex items-center gap-2">
-      <%= render partial: 'avatar', locals: { user: user } %>
-      <div>
-        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-          <%= link_to user.full_name.presence || user.tg_id, admin_user_path(user) %>
-        </p>
-        <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-          <%= link_to "@#{user.username}", "https://t.me/#{user.username}", target: "_blank" if user.username.present? %>
-        </p>
-      </div>
-    </div>
+    <%= render partial: '/admin/users/user_name', locals: { user: product_subscription.user } %>
   </th>
-  <td class="px-6 py-4">
-    <%= user.phone_number %>
-  </td>
-  <td class="px-6 py-4">
-    <%= user.full_address %>
-  </td>
-  <td class="px-6 py-4">
-    <%= format_date user.created_at %>
-  </td>
-  <td class="px-6 py-4">
-   <%= t("roles.#{user.role}") %>
-  </td>
+
+  <td class="px-6 py-4"><%= user.phone_number %></td>
+
+  <td class="px-6 py-4"><%= user.full_address %></td>
+
+  <td class="px-6 py-4"><%= format_date user.created_at %></td>
+
+  <td class="px-6 py-4"><%= t("roles.#{user.role}") %></td>
+
   <td class="px-6 py-4">
     <% if user.is_blocked %>
       <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">

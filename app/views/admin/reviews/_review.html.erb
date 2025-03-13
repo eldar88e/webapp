@@ -5,16 +5,14 @@
       <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
     </div>
   </td>
-  <td class="px-6 py-4">
-    <%= review.id %>
-  </td>
-  <td class="px-6 py-4">
-    <%= review.product.name %>
-  </td>
-  <td class="px-6 py-4">
-    <% user = review.user %>
-    <%= link_to user.full_name, admin_user_path(user) %>
-  </td>
+  <td class="px-6 py-4"><%= review.id %></td>
+
+  <td class="px-6 py-4"><%= review.product.name %></td>
+
+  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+      <%= render partial: '/admin/users/user_name', locals: { user: review.user } %>
+  </th>
+
   <td class="px-6 py-4 flex">
     <div class="flex gap-1">
       <% (1..5).each do |i| %>
@@ -24,9 +22,8 @@
       <% end %>
     </div>
   </td>
-  <td class="px-6 py-4">
-    <%= review.content %>
-  </td>
+  <td class="px-6 py-4"><%= review.content %></td>
+
   <td class="px-6 py-4">
     <% if review.photos.attached? %>
       <div class="flex gap-1 mt-1">
@@ -37,12 +34,10 @@
       </div>
     <% end %>
   </td>
-  <td class="px-6 py-4">
-    <%= review.approved ? 1 : 0 %>
-  </td>
-  <td class="px-6 py-4">
-    <%= format_date review.created_at %>
-  </td>
+  <td class="px-6 py-4"><%= review.approved ? 1 : 0 %></td>
+
+  <td class="px-6 py-4"><%= format_date review.created_at %></td>
+
   <td class="flex items-center px-6 py-4">
     <%= link_to edit_admin_review_path(review), data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false },
                   class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' do %>

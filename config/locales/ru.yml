@@ -58,6 +58,7 @@ ru:
         role: "Роль"
       order:
         status: "Статус"
+        user: "Клиент"
         tracking_number: "Трек-номер"
         bank_card: "Банковская карта"
         updated_at: "Дата изменения"
