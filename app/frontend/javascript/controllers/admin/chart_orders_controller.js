@@ -40,7 +40,7 @@ export default class extends Controller {
         const labels_rus = labels.map(label => label_translate[label] || label);
         const options = {
             series: orders,
-            colors: ["#1C64F2", "#16BDCA", "#FDBA8C", "#E74694", "#775dd0"],
+            colors: ["#775dd0", "#1C64F2", "#16BDCA", "#FDBA8C", "#E74694", "#775dd0", "#ff8b4d"],
             chart: {
             height: 320,
                 width: "100%",
