@@ -38,9 +38,19 @@ export default class extends Controller {
             "paid": "Ожидание подтверждения платежа", "processing": "В процессе отправки", "shipped": "Отправлен",
             "cancelled": "Отменен", "overdue": "Просрочен" }
         const labels_rus = labels.map(label => label_translate[label] || label);
+        const statusColors = {
+            "initialized": "#16BDCA",
+            "unpaid": "#775dd0",
+            "paid": "#1C64F2",
+            "processing": "#ff8b4d",
+            "shipped": "#0e9f6e",
+            "cancelled": "#E74694",
+            "overdue": "#831843"
+        };
+        const colors = labels.map(label => statusColors[label] || "#FDBA8C");
         const options = {
             series: orders,
-            colors: ["#775dd0", "#1C64F2", "#16BDCA", "#FDBA8C", "#E74694", "#775dd0", "#ff8b4d"],
+            colors: colors,
             chart: {
             height: 320,
                 width: "100%",
