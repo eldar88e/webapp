@@ -40,8 +40,8 @@ export default class extends Controller {
         const labels_rus = labels.map(label => label_translate[label] || label);
         const statusColors = {
             "initialized": "#16BDCA",
-            "unpaid": "#775dd0",
-            "paid": "#1C64F2",
+            "unpaid": "#1C64F2",
+            "paid": "#775dd0",
             "processing": "#ff8b4d",
             "shipped": "#0e9f6e",
             "cancelled": "#E74694",
