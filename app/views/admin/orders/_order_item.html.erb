@@ -1,23 +1,19 @@
 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-  <td class="px-6 py-4">
-    <%= idx + 1 %>
-  </td>
-  <td class="px-2 py-2">
+  <td class="p-2"><%= idx + 1 %></td>
+
+  <td class="p-2">
     <div class="product-img">
       <% if order_item.product.image.attached? %>
-        <%= image_tag storage_path(order_item.product.image), alt: order_item.product.name, style: 'width: 50px;' %>
+        <%= image_tag storage_path(order_item.product.image), alt: order_item.product.name, style: 'width: 36px;' %>
       <% else %>
         <p>No image</p>
       <% end %>
     </div>
   </td>
-  <th scope="row" class="p-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+  <th scope="row" class="p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
     <%= order_item.product.name %>
   </th>
-  <td class="px-6 py-4">
-    <%= order_item.quantity %>шт.
-  </td>
-  <td class="px-6 py-4">
-    <%= order_item.price.to_i %><span style="margin-left: 3px">₽</span>
-  </td>
+  <td class="p-2"><%= order_item.quantity %>шт.</td>
+
+  <td class="p-2"><%= order_item.price.to_i %><span style="margin-left: 3px">₽</span></td>
 </tr>
