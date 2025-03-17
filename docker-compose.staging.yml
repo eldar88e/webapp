@@ -9,8 +9,8 @@ services:
 
   s-miniapp:
     <<: *base
-    # tty: true
-    # stdin_open: true
+    tty: true
+    stdin_open: true
     container_name: s-miniapp
     hostname: s-miniapp
     command: ['bundle', 'exec', 'rails', 's', '-p', '3000', '-b', '0.0.0.0']
@@ -21,10 +21,10 @@ services:
       net:
       proxy-net:
         ipv4_address: 172.29.0.11
-      s3:
-        ipv4_address: 172.20.0.7
-    extra_hosts:
-      - "${MINIO_DOMAIN}:${MINIO_IP}"
+      # s3:
+      #   ipv4_address: 172.20.0.7
+    # extra_hosts:
+    #   - "${MINIO_DOMAIN}:${MINIO_IP}"
     restart: always
 
   sidekiq:
@@ -37,10 +37,10 @@ services:
       - redis
     networks:
       net:
-      s3:
-        ipv4_address: 172.20.0.8
-    extra_hosts:
-      - "${MINIO_DOMAIN}:${MINIO_IP}"
+      # s3:
+      #   ipv4_address: 172.20.0.8
+    # extra_hosts:
+    #   - "${MINIO_DOMAIN}:${MINIO_IP}"
     restart: always
 
   pg:
@@ -75,5 +75,5 @@ networks:
   net:
   proxy-net:
     external: true
-  s3:
-    external: true
+  # s3:
+  #   external: true
