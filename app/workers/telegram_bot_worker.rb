@@ -14,17 +14,20 @@ class TelegramBotWorker
       bot.listen do |message|
         process_bot(bot, message)
       rescue StandardError => e
-        Rails.logger.error "#{self.class} | #{e.message}"
-        ErrorMailer.send_error("Stage 2 #{error.message}", error.full_message).deliver_later
+        process_error(e, 2)
       end
     rescue StandardError => e
-      Rails.logger.error "#{self.class} | #{e.message}"
-      ErrorMailer.send_error("Stage 1 #{error.message}", error.full_message).deliver_later
+      process_error(e, 1)
       raise e
     end
   end
 
   private
+
+  def process_error(error, stage)
+    Rails.logger.error "#{self.class} | #{error.message}"
+    ErrorMailer.send_error("Stage #{stage} #{error.message}", error.full_message).deliver_later
+  end
 
   def tg_token_present?
     return true if settings[:tg_token].present?

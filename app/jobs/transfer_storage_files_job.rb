@@ -33,20 +33,24 @@ class TransferStorageFilesJob < ApplicationJob
   def transfer(items, klass, column)
     count = 0
     items.find_each do |item| # get default 1000 items
-      next unless item.send(column).attached?
+      file = download_attachment(item, column, klass)
+      next if file.nil?
 
-      begin
-        file = item.send(column).download
-      rescue ActiveStorage::FileNotFoundError => e
-        Rails.logger.error "File with key #{item.send(column).key} not found for #{klass} ID: #{item.id}: #{e.message}"
-        next
-      end
       save_attachment(item, file, column)
       count += 1
     rescue StandardError => e
       Rails.logger.error "Failed to transfer file for #{klass}: #{item.id}: #{e.message}"
     end
     count
+  end
+
+  def download_attachment(item, column, klass)
+    return unless item.send(column).attached?
+
+    item.send(column).download
+  rescue ActiveStorage::FileNotFoundError => e
+    Rails.logger.error "File with key #{item.send(column).key} not found for #{klass} ID: #{item.id}: #{e.message}"
+    nil
   end
 
   def save_attachment(item, file, column)

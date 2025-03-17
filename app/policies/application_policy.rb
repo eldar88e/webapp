@@ -6,10 +6,10 @@ class ApplicationPolicy
     @record = record
   end
 
-  class Scope
+  # class Scope
     # NOTE: Be explicit about which records you allow access to!
     # def resolve
     #   scope.all
     # end
-  end
+  # end
 end
