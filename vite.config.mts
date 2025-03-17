@@ -18,8 +18,6 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'public/vite',
-    assetsDir: '',
     rollupOptions: {
       input: {
         application: './app/frontend/entrypoints/application.js',
@@ -29,7 +27,6 @@ export default defineConfig({
     chunkSizeWarningLimit: 800,
     sourcemap: false,
   },
-  appType: 'custom',
   server: {
     host: 'localhost',
     port: 3036,
