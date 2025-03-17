@@ -16,6 +16,6 @@ class UserCheckerJob < ApplicationJob
     user.update(started: true, is_blocked: false)
     msg = "User #{user.id} started bot"
     Rails.logger.info msg
-    TelegramService.call(msg, Setting.fetch_value(:test_id))
+    TelegramService.call(msg, Setting.fetch_value(:test_id)) # TODO: убрать в дальнейшем
   end
 end

@@ -67,19 +67,14 @@ class TelegramBotWorker
 
   def process_message(message)
     tg_user = message.chat.as_json
-    user    = User.find_or_create_by_tg(tg_user, true) # не обновляет username если user существует
-    user.update(started: true, is_blocked: false, username: tg_user['username']) # тех кто зарегался через webapp
+    user    = User.find_or_create_by_tg(tg_user, true)
+    TelegramJob.perform_later(msg: "User #{user.id} started bot", id: Setting.fetch_value(:test_id)) unless user.started
+    # TODO: убрать со временем уведомление админа
+    user.update(started: true, is_blocked: false, username: tg_user['username'], photo_url: tg_user['photo_url'])
     return if message.text == '/start'
 
-    save_message(message, user)
-    notify_admins(message, user)
-  end
-
-  def save_message(message, user)
-    Message.create!(tg_id: user.tg_id, text: message.text, tg_msg_id: message.message_id)
-  rescue StandardError => e
-    # TODO: Возможно в дальнейшем убрать!
-    Rails.logger.error "No save tg msg #{message.from.id}, #{message.text}, #{message.message_id}, #{e.message}"
+    Message.create(tg_id: user.tg_id, text: message.text, tg_msg_id: message.message_id)
+    notify_admins(message, user) # TODO: перенести в модель в callback
   end
 
   def notify_admins(message, user)
@@ -96,12 +91,15 @@ class TelegramBotWorker
 
     order = Order.find(user_state[:order_id])
     order.update(tracking_number: message.text, status: :shipped)
-
-    [user_state[:msg_id], user_state[:h_msg], message.message_id].each do |id|
-      TelegramJob.perform_later(method: 'delete_msg', id: message.chat.id, msg_id: id)
-      sleep 0.3
-    end
+    delete_old_msg(user_state, message)
     Rails.cache.delete("user_#{message.chat.id}_state")
+  end
+
+  def delete_old_msg(user_state, message)
+    [user_state[:msg_id], user_state[:h_msg], message.message_id].each_with_index do |id, index|
+      wait = (index + 1).seconds
+      TelegramJob.set(wait: wait).perform_later(method: 'delete_msg', id: message.chat.id, msg_id: id)
+    end
   end
 
   def i_paid(_bot, message)
