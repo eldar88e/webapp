@@ -33,6 +33,6 @@ class OrdersController < ApplicationController
   end
 
   def update_user
-    current_user.update(filtered_params)
+    current_user.update(filtered_params) # TODO: очистить перед сохранением
   end
 end

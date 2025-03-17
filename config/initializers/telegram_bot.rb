@@ -9,18 +9,18 @@ end
 
 Signal.trap('TERM') do
   bot = Rails.application.config.telegram_bot
-  return if bot.nil?
-
+  # return if bot.nil?
   Rails.logger.info "\nShutting down bot..."
   bot.stop
-  exit
+  # exit
+rescue StandardError => e
+  Rails.logger.error "Error during bot shutdown: #{e.message}"
 end
 
 Signal.trap('INT') do
   bot = Rails.application.config.telegram_bot
-  return if bot.nil?
-
   Rails.logger.info "\nShutting down bot..."
   bot.stop
-  exit
+rescue StandardError => e
+  Rails.logger.error "Error during bot shutdown: #{e.message}"
 end
