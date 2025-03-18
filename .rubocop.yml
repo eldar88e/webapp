@@ -10,6 +10,7 @@ AllCops:
     - 'spec/**/*'
     - 'bin/*'
     - 'app/services/report_service.rb'
+    - 'vendor/**/*'
 
 Style/Documentation:
   Enabled: false
