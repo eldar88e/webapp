@@ -745,12 +745,10 @@ ul.catalog-nav {
 }
 
 .notices {
-  //text-gray-500 bg-white
   background: $primary-color;
   color: #FFFFFF;
 
   .close, .close:hover, .close:focus {
-    // hover:bg-gray-100  focus:ring-gray-300  hover:text-gray-900 bg-white text-gray-400
     background: $primary-color;
     color: #FFFFFF;
     box-shadow: none;
