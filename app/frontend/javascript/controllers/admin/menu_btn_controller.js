@@ -5,5 +5,6 @@ export default class extends Controller {
 
     showMenu() {
         this.element.classList.toggle('aside-hide');
+        this.bodyTarget.classList.toggle('body-blur');
     }
 }

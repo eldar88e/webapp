@@ -1,3 +1,8 @@
+@import "tailwindcss";
+@source "../../../app/views/**/*.html.erb";
+@source "../../../app/views/**/*.rb";
+@source "../../../app/helpers/**/*.rb";
+
 $primary-color: #19707d;
 $primary-light: rgba(31, 128, 142, 1);
 $secondary-color: #3396a5;
