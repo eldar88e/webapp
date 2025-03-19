@@ -14,7 +14,8 @@ services:
     depends_on:
       - psql
       - redis
-    command: ['bundle', 'exec', 'rails', 's', '-p', '3000', '-b', '0.0.0.0']
+    entrypoint: ["./bin/docker-entrypoint"]
+    # command: ['bundle', 'exec', 'rails', 's', '-p', '3000', '-b', '0.0.0.0']
     networks:
       net:
       proxy-net:
@@ -28,6 +29,7 @@ services:
     depends_on:
       - psql
       - redis
+    entrypoint: []
     command: ['bundle', 'exec', 'sidekiq']
     networks:
       net:
