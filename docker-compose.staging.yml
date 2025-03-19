@@ -13,7 +13,7 @@ services:
     stdin_open: true
     container_name: s-miniapp
     hostname: s-miniapp
-    command: ['bundle', 'exec', 'rails', 's', '-p', '3000', '-b', '0.0.0.0']
+    entrypoint: ["./bin/docker-entrypoint"]
     depends_on:
       - pg
       - redis
@@ -31,6 +31,7 @@ services:
     <<: *base
     container_name: s-miniapp-sidekiq
     hostname: s-miniapp-sidekiq
+    entrypoint: []
     command: ['bundle', 'exec', 'sidekiq']
     depends_on:
       - pg
