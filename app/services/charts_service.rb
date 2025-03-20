@@ -1,14 +1,14 @@
 class ChartsService
-  DATE_STARTED_PROJECT = Time.zone.local(2024, 1, 1).beginning_of_year
+  DATE_STARTED_PROJECT = Time.zone.local(2024, 11, 1).beginning_of_year
   KEY_TRANSFORMATIONS  = {
-    nil => ->(key) { "#{I18n.t('date.abbr_day_names')[key.wday]}. #{key.day}" },
+    'last_week' => ->(key) { "#{I18n.t('date.abbr_day_names')[key.wday]}. #{key.day}" },
     'month' => ->(key) { "#{I18n.t('date.abbr_month_names')[key.month]} #{key.strftime('%-d')}" },
     'year' => ->(key) { I18n.t('date.abbr_month_names')[key.month] + " #{key.year} года" },
     'all' => ->(key) { "#{key.year} год" }
   }.freeze
 
   def initialize(period, per = nil)
-    @period     = period
+    @period     = period || 'last_week'
     @per        = form_per(per)
     @start_date = calculate_date_range
     @end_date   = Time.zone.today.end_of_day # TODO: переписать для диапазона с точным указанием даты через DatePicker
@@ -79,7 +79,7 @@ class ChartsService
 
   def prepare_date_key(range)
     range          = populate_missing_dates(range) if [nil, 'day'].include?(@per)
-    transformation = KEY_TRANSFORMATIONS[@period] || KEY_TRANSFORMATIONS[nil]
+    transformation = KEY_TRANSFORMATIONS[@period]
     range.transform_keys(&transformation)
   end
 
