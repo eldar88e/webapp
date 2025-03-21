@@ -1,19 +1,21 @@
-class Mailing
-  include ActiveModel::Model
+class Mailing < ApplicationRecord
+  MARKUP = { markup: 'mailing' }.freeze
 
-  attr_accessor :filter, :message
-  attr_reader :scheduled_at
+  belongs_to :user
 
-  FILTERS = %w[ordered no_ordered all blocked add_cart users].freeze
+  enum :target, { all_users: 0, ordered: 1, no_ordered: 2, blocked: 3, add_cart: 4 } # users: 5
 
-  validates :filter, inclusion: { in: FILTERS, message: I18n.t('errors.messages.filter_range') }
-  validates :message, presence: true
+  validates :send_at, presence: true
+  validates :message, presence: true, length: { maximum: 4000 }
 
-  def scheduled_at=(value)
-    @scheduled_at = begin
-      Time.zone.parse(value)
-    rescue StandardError
-      nil # TODO: нужна ошибка что бы выдать notice в controller
-    end
+  # after_create :schedule_mailing_job
+
+  private
+
+  def schedule_mailing_job
+    delay = [send_at - Time.current, 0].max
+    msg   = "Запущена рассылка на #{I18n.t("target.#{target}")}"
+    TelegramJob.set(wait: delay).perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
+    MailingJob.set(wait: delay).perform_later(filter: target, message: message, markup: MARKUP, id: id)
   end
 end

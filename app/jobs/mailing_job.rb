@@ -5,11 +5,14 @@ class MailingJob < ApplicationJob
     filter  = args[:filter]
     message = args[:message]
     markup  = args[:markup] || {}
-    return if message.blank? || Mailing::FILTERS.exclude?(filter)
+    return if message.blank? || Mailing.targets.keys.exclude?(filter)
 
     users = FetchUsersService.new(filter, args[:user_ids]).call
     users.each { |user| process_message(message, user, markup) }
-    TelegramService.call('Рассылка успешно завершена.', Setting.fetch_value(:admin_ids)) if filter != 'users'
+    return if filter == 'users'
+
+    TelegramService.call('Рассылка успешно завершена.', Setting.fetch_value(:admin_ids))
+    Mailing.find(args[:id]).update(completed: true)
     # TODO: Реализовать отправку Картинок, видео, репост.
   end
 

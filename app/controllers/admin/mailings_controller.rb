@@ -1,11 +1,11 @@
 module Admin
   class MailingsController < Admin::ApplicationController
-    MARKUP = 'mailing'.freeze
-
-    def index; end
+    def index
+      @mailings = Mailing.order(send_at: :desc).includes(:user)
+    end
 
     def new
-      @mailing = Mailing.new
+      @mailing = Mailing.new(target: nil)
       render turbo_stream: [
         turbo_stream.update(:modal_title, 'Запустить рассылку'),
         turbo_stream.update(:modal_body, partial: '/admin/mailings/new')
@@ -13,10 +13,11 @@ module Admin
     end
 
     def create
-      @mailing = Mailing.new(mailing_params)
-      if @mailing.valid?
-        # TODO: set scheduled_at: @mailing.scheduled_at
-        MailingJob.perform_later(filter: @mailing.filter, message: @mailing.message, markup: { markup: MARKUP })
+      @mailing         = Mailing.new(mailing_params)
+      @mailing.send_at = Time.current + 1.minute
+      @mailing.user    = current_user
+      if @mailing.save
+        #MailingJob.perform_later(filter: @mailing.filter, message: @mailing.message, markup: { markup: MARKUP })
         redirect_to admin_mailings_path, notice: t('mailing_success')
       else
         error_notice(@mailing.errors.full_messages, :unprocessable_entity)
@@ -26,7 +27,7 @@ module Admin
     private
 
     def mailing_params
-      params.require(:mailing).permit(:filter, :message, :scheduled_at)
+      params.require(:mailing).permit(:target, :message, :send_at)
     end
   end
 end

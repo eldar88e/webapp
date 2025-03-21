@@ -83,12 +83,11 @@ ru:
         number: 'Номер карты/телефона'
         fio: 'ФИО'
         active: 'Активна'
-  filters:
+  target:
     ordered: "С заказами"
     no_ordered: "Без заказов"
-    all: "Все"
+    all_users: "Всем клиентам"
     blocked: "Заблокированные"
-    user: "Пользователь"
     add_cart: "Добавили в корзину(без сделки)"
   pagy:
     aria_label:
@@ -136,6 +135,10 @@ ru:
         user_id: "ИД пользователя"
       cart_item:
         quantity: "Количество"
+      mailing:
+        send_at: "Запланировано на"
+        target: "Кому"
+        message: "Сообщение"
   errors:
     messages:
       already_in_cart: "уже добавлен в корзину"

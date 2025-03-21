@@ -16,28 +16,17 @@
               <label for="checkbox-all-search" class="sr-only">checkbox</label>
             </div>
           </th>
-          <th scope="col" class="px-6 py-3">
-            ID
-          </th>
-          <th scope="col" class="px-6 py-3">
-            www
-          </th>
-          <th scope="col" class="px-6 py-3">
-            Телефон
-          </th>
-          <th scope="col" class="px-6 py-3">
-            www
-          </th>
-          <th scope="col" class="px-6 py-3">
-            www
-          </th>
-          <th scope="col" class="px-6 py-3">
-            Действия
-          </th>
+          <th scope="col" class="px-6 py-3">ИД</th>
+          <th scope="col" class="px-6 py-3">Инициатор</th>
+          <th scope="col" class="px-6 py-3">Сообщение</th>
+          <th scope="col" class="px-6 py-3">Кому</th>
+          <th scope="col" class="px-6 py-3">Дата создания</th>
+          <th scope="col" class="px-6 py-3">Дата отправки</th>
+          <th scope="col" class="px-6 py-3">ОК</th>
         </tr>
       </thead>
       <tbody>
-
+        <%= render @mailings %>
       </tbody>
     </table>
   </div>
