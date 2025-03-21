@@ -18,8 +18,9 @@ class FetchUsersService
 
   def add_cart
     User.joins(cart: :cart_items)
+        .where(cart_items: { created_at: ...1.week.ago })
         .where.missing(:orders)
-        .or(User.where.not(orders: { status: %i[shipped processing] }))
+        .or(User.where.not(orders: { status: %i[paid processing shipped] }))
         .distinct
   end
 
