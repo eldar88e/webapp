@@ -3,7 +3,7 @@ class Mailing < ApplicationRecord
 
   belongs_to :user
 
-  enum :target, { all_users: 0, ordered: 1, no_ordered: 2, blocked: 3, add_cart: 4 } # users: 5
+  enum :target, { all_users: 0, ordered: 1, no_ordered: 2, blocked: 3, add_cart: 4, users: 5 }
 
   validates :send_at, presence: true
   validates :message, presence: true, length: { maximum: 4000 }
