@@ -3,7 +3,7 @@ import ApexCharts from "apexcharts";
 
 export default class extends Controller {
   static targets = ["chart"];
-  static values = { time: { type: Number, default: 600 } }
+  static values = { time: { type: Number, default: 1000 } }
 
   connect() {
     setTimeout(() => {

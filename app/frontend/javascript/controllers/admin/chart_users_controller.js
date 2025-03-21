@@ -4,7 +4,7 @@ import Localization from "./localization";
 
 export default class extends Controller {
     static targets = ["chart"];
-    static values = { time: { type: Number, default: 1000 } }
+    static values = { time: { type: Number, default: 1600 } }
 
     connect() {
         setTimeout(() => {

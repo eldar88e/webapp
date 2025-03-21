@@ -3,38 +3,38 @@
 @source "../../../app/views/**/*.rb";
 @source "../../../app/helpers/**/*.rb";
 
-@layer utilities {
-  .bg-gray-600 {
-    background-color: rgb(13 68 75);
-  }
+@utility bg-gray-600 {
+  background-color: rgb(13 68 75) !important;
+}
 
-  .bg-gray-700 {
-    background-color: rgb(18 71 78);
-  }
+@utility bg-gray-700 {
+  background-color: rgb(18 71 78) !important;
+}
 
-  .bg-gray-800 {
-    background-color: rgb(17 80 90);
-  }
+@utility bg-gray-800 {
+  background-color: rgb(17 80 90) !important;
+}
 
-  .bg-gray-900 {
-    background-color: #3396a5;
-  }
+@utility bg-gray-900 {
+  background-color: #3396a5 !important;
+}
 
-  .ring-blue-500 {
-    --tw-ring-color: rgb(53 123 114);
-  }
+@utility ring-blue-500 {
+  --tw-ring-color: rgb(53 123 114);
+}
 
-  .border-blue-500 {
-    border-color: rgb(53 123 114);
-  }
+@utility border-blue-500 {
+  border-color: rgb(53 123 114);
+}
 
-  .bg-gray-50 {
-    background-color: rgb(181, 252, 255);
-  }
+@utility bg-gray-50 {
+  background-color: rgb(181, 252, 255);
 }
 
 body {
   .body {
+    user-select: none;
+
     .sidebar {
       .wraper-menu {
         .main-sidebar {
