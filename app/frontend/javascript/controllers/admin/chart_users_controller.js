@@ -1,11 +1,15 @@
 import { Controller } from "@hotwired/stimulus";
 import ApexCharts from "apexcharts";
+import Localization from "./localization";
 
 export default class extends Controller {
     static targets = ["chart"];
+    static values = { time: { type: Number, default: 1600 } }
 
     connect() {
-        this.last_week();
+        setTimeout(() => {
+            this.last_week();
+        }, this.timeValue);
     }
 
     last_week() {

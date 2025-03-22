@@ -1,0 +1,31 @@
+<% content_for :title, 'Сообщения' %>
+
+<div id="orders" class="flex pt-6">
+  <div class="max-w-80 overflow-x-hidden">
+    <div></div>
+    <div>
+      <ul>
+        <% @messages.each do |message| %>
+          <li class="py-2 px-4">
+            <%= link_to admin_new_message_path(message.tg_id), data: { turbo_prefetch: false } do %>
+              <div class="flex gap-2">
+                <div class="flex items-center gap-2">
+                  <%= render partial: '/layouts/partials/avatar', locals: { user: message.user } %>
+                  <div>
+                    <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                      <%= message.user.full_name.presence %>
+                    </p>
+                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                      <%= message.text %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+  <%= turbo_frame_tag :chat, class: 'w-full' %>
+</div>

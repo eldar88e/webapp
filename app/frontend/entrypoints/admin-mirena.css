@@ -1,3 +1,4 @@
-@import "../styles/application.tailwind.css";
 @import "../styles/admin.scss";
 @import "../styles/admin-mirena.scss";
+@import "../styles/notice.scss";
+@import "../styles/preloader.scss";

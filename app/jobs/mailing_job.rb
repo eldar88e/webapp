@@ -5,12 +5,14 @@ class MailingJob < ApplicationJob
     filter  = args[:filter]
     message = args[:message]
     markup  = args[:markup] || {}
-    return if message.blank? || Mailing::FILTERS.exclude?(filter)
+    users   = FetchUsersService.new(filter, args[:user_ids]).call
+    users.each do |user|
+      user.messages.create(text: message, is_incoming: false, data: { markup: markup })
+      sleep 0.3
+    end
 
-    users = FetchUsersService.new(filter, args[:user_ids]).call
-    users.each { |user| process_message(message, user, markup) }
-    TelegramService.call('Рассылка успешно завершена.', Setting.fetch_value(:admin_ids)) if filter != 'users'
-    # TODO: Реализовать отправку Картинок, видео, репост.
+    TelegramService.call('Рассылка успешно завершена.', Setting.fetch_value(:admin_ids))
+    Mailing.find(args[:id]).update(completed: true)
   end
 
   private

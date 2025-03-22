@@ -3,28 +3,31 @@ import ApexCharts from "apexcharts";
 
 export default class extends Controller {
   static targets = ["chart"];
+  static values = { time: { type: Number, default: 200 } }
 
   connect() {
+    setTimeout(() => {
       this.last_week();
+    }, this.timeValue);
   }
 
   last_week() {
-      this.fetchRevenueData();
+      this.fetchData();
   }
 
   last_month() {
-      this.fetchRevenueData('&period=month');
+      this.fetchData('&period=month');
   }
 
   last_year() {
-      this.fetchRevenueData('&period=year');
+      this.fetchData('&period=year');
   }
 
   all() {
-      this.fetchRevenueData('&period=all');
+      this.fetchData('&period=all');
   }
 
-  async fetchRevenueData(params='') {
+  async fetchData(params='') {
     const response = await fetch(`/admin/analytics?type=revenue${params}`);
     const data = await response.json();
 
@@ -56,15 +59,13 @@ export default class extends Controller {
       },
       series: [
         {
-          name: "Продажи",
+          name: "Выручка",
           data: revenues,
         },
       ],
       xaxis: {
         categories: dates,
-        title: {
-          //text: "Дата",
-        },
+        title: {},
         labels: {
           style: {
             colors: 'rgb(156, 163, 175);',
@@ -74,12 +75,10 @@ export default class extends Controller {
         },
       },
       yaxis: {
-        title: {
-          // text: "Продажи",
-        },
+        title: { },
         labels: {
           formatter: function (value) {
-            return `₽${value}`;
+            return `${value} ₽`;
           },
           style: {
             colors: 'rgb(156, 163, 175);',
@@ -91,7 +90,7 @@ export default class extends Controller {
       tooltip: {
         y: {
           formatter: function (value) {
-            return `₽${value}`;
+            return `${value} ₽`;
           },
         },
       },

@@ -1,21 +1,21 @@
-$primary-color: #19707d;
-$primary-light: rgba(31, 128, 142, 1);
-$secondary-color: #3396a5;
-$turquoise-light: rgb(66, 169, 185);
+@import "tailwindcss";
+@source "../../../app/views/**/*.html.erb";
+@source "../../../app/views/**/*.rb";
+@source "../../../app/helpers/**/*.rb";
 
 body {
-  background: $secondary-color;
+  background: #3396a5;
 }
 
 .header {
-  background: $secondary-color;
+  background: #3396a5;
 
   form {
     max-height: 50px;
   }
 
   .logo {
-    background: linear-gradient(315deg, $primary-color 5.83%, #43b2c4 94.27%);
+    background: linear-gradient(315deg, #19707d 5.83%, #43b2c4 94.27%);
     color: #FFFFFF;
   }
 }
@@ -25,7 +25,7 @@ body {
 }
 
 .product {
-  background: linear-gradient(175deg, $primary-color -7.7%, rgb(50, 151, 165) 73.15%);
+  background: linear-gradient(175deg, #19707d -7.7%, rgb(50, 151, 165) 73.15%);
 
   .product-exist {
     margin-top: 5px;
@@ -84,8 +84,8 @@ body {
     justify-content: space-between;
 
     .btn-order {
-      background: $turquoise-light;
-      border: 1px solid $turquoise-light;
+      background: rgb(66, 169, 185);
+      border: 1px solid rgb(66, 169, 185);
       border-radius: 48px;
       padding: 5px;
       display: flex;
@@ -98,7 +98,7 @@ body {
       }
 
       &:hover, &:focus {
-        background: $primary-color;
+        background: #19707d;
       }
 
       .title-btn {
@@ -136,7 +136,7 @@ body {
           top: -1px;
           width: 15px;
           height: 15px;
-          background: $secondary-color;
+          background: #3396a5;
           color: #FFFFFF;
           border-radius: 50%;
           font-size: 12px;
@@ -163,7 +163,7 @@ body {
 }
 
 .modal {
-  background-color: $primary-color;
+  background-color: #19707d;
   border-radius: 48px;
   display: none;
   padding: 48px 36px;
@@ -223,19 +223,19 @@ body {
   }
 
   &::-webkit-scrollbar-track {
-    background: $primary-light;
+    background: rgba(31, 128, 142, 1);
     border: none;
     border-radius: 8px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: $turquoise-light; /* цвет ползунка */
+    background-color: rgb(66, 169, 185); /* цвет ползунка */
     border-radius: 8px; /* округлые края */
-    border: 4px solid $primary-light;
+    border: 4px solid rgba(31, 128, 142, 1);
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background-color: $primary-color; /* цвет ползунка при наведении */
+    background-color: #19707d; /* цвет ползунка при наведении */
   }
 }
 
@@ -259,8 +259,8 @@ body {
 }
 
 .btn {
-  background: $turquoise-light;
-  border: 1px solid $turquoise-light;
+  background: rgb(66, 169, 185);
+  border: 1px solid rgb(66, 169, 185);
   font-size: 18px;
   line-height: 22px;
   padding: 14px 26px;
@@ -269,7 +269,7 @@ body {
   transition: all 0.3s;
 
   &:hover {
-    background-color: $primary-light;
+    background-color: rgba(31, 128, 142, 1);
   }
 }
 
@@ -277,7 +277,7 @@ body {
   border: #FFFFFF 1px solid;
 
   &:hover {
-    background-color: $primary-color;
+    background-color: #19707d;
   }
 }
 
@@ -354,10 +354,10 @@ form label {
   padding-bottom: 6px;
 
   &:hover {
-    color: $turquoise-light;
+    color: rgb(66, 169, 185);
 
     &:after {
-      background-color: $turquoise-light;
+      background-color: rgb(66, 169, 185);
     }
   }
 
@@ -380,7 +380,7 @@ form label {
   height: 20px;
   border: none;
   border-radius: 50%;
-  background: $turquoise-light;
+  background: rgb(66, 169, 185);
   cursor: pointer;
   display: inline-flex;
   justify-content: center;
@@ -390,11 +390,11 @@ form label {
 }
 
 .form-check-input[type="checkbox"]:hover, .form-check-input[type="checkbox"]:checked:hover {
-  background-color: $secondary-color;
+  background-color: #3396a5;
 }
 
 .form-check-input[type="checkbox"]:checked {
-  background: $turquoise-light;
+  background: rgb(66, 169, 185);
 }
 
 .form-check-input[type="checkbox"]:checked::after {
@@ -431,7 +431,7 @@ form label {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: $primary-color;
+    color: #19707d;
   }
 }
 
@@ -458,21 +458,21 @@ form label {
 
 .address-wrapper {
   .suggestions-wrapper {
-    background: $secondary-color;
+    background: #3396a5;
 
     .suggestion-item {
       &:hover {
-        color: $primary-color;
+        color: #19707d;
       }
     }
 
     .suggestion-item:first-child {
-      color: $primary-color;
+      color: #19707d;
       cursor: default;
       font-size: 12px;
 
       &:hover {
-        color: $primary-color;
+        color: #19707d;
       }
     }
   }
@@ -526,7 +526,7 @@ form label {
 }
 
 .product-reviews .percentages .percentage {
-  background-color: $secondary-color;
+  background-color: #3396a5;
   height: 4px;
   border-radius: 2px;
   width: 157px;
@@ -572,7 +572,7 @@ form label {
   }
 
   svg.filled-star:hover path, svg:hover path {
-    fill: $primary-color;
+    fill: #19707d;
     opacity: 1;
   }
 }
@@ -662,7 +662,7 @@ ul.catalog-nav {
 .menu {
   transition: all 0.5s;
   padding: 48px 36px;
-  background-color: $primary-color;
+  background-color: #19707d;
   width: 100%;
   border-top-right-radius: 48px;
   border-bottom-left-radius: 48px;
@@ -698,11 +698,11 @@ ul.catalog-nav {
     }
 
     li:hover a, li:hover button {
-      color: $secondary-color;
+      color: #3396a5;
     }
 
     li:hover button svg path {
-      fill: $secondary-color;
+      fill: #3396a5;
     }
 
     li:last-child {
@@ -712,7 +712,7 @@ ul.catalog-nav {
 }
 
 .button_to .plus:hover {
-  color: $turquoise-light;
+  color: rgb(66, 169, 185);
 }
 
 .product-reviews .input-str {
@@ -735,23 +735,21 @@ ul.catalog-nav {
 .plus-ico, .plus-ico::after {
   width: 2px;
   height: 16px;
-  background-color: $primary-color;
+  background-color: #19707d;
   border-radius: 2px;
 }
 
 .notices {
-  //text-gray-500 bg-white
-  background: $primary-color;
+  background: #19707d;
   color: #FFFFFF;
 
   .close, .close:hover, .close:focus {
-    // hover:bg-gray-100  focus:ring-gray-300  hover:text-gray-900 bg-white text-gray-400
-    background: $primary-color;
+    background: #19707d;
     color: #FFFFFF;
     box-shadow: none;
   }
 
   .close:active {
-    color: $secondary-color;
+    color: #3396a5;
   }
 }

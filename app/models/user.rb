@@ -11,6 +11,7 @@ class User < ApplicationRecord
   has_many :reviews, dependent: :destroy
   has_many :product_subscriptions, dependent: :destroy
   has_many :subscribed_products, through: :product_subscriptions, source: :product
+  has_many :mailings, dependent: :destroy
 
   validates :tg_id, presence: true, uniqueness: true
   validates :postal_code,
