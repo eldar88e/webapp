@@ -8,7 +8,7 @@ class SubscribersNoticeJob < ApplicationJob
       sleep 0.3
     end
     product.product_subscriptions.destroy_all
-    msg = "Уведомление о поступлении #{product.name} успешно отправлено всем подписчикам"
+    msg = "🎉 Уведомление о поступлении '#{product.name}' успешно отправлено всем подписчикам на данный товар."
     TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids)) if product.subscribers.any?
   end
 
