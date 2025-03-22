@@ -13,11 +13,8 @@ module Admin
     end
 
     def create
-      @mailing         = Mailing.new(mailing_params)
-      @mailing.send_at = Time.current + 1.minute
-      @mailing.user    = current_user
+      @mailing = current_user.mailings.new(mailing_params)
       if @mailing.save
-        #MailingJob.perform_later(filter: @mailing.filter, message: @mailing.message, markup: { markup: MARKUP })
         redirect_to admin_mailings_path, notice: t('mailing_success')
       else
         error_notice(@mailing.errors.full_messages, :unprocessable_entity)

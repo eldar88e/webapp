@@ -11,22 +11,18 @@ class TelegramBotWorker
 
     Telegram::Bot::Client.run(settings[:tg_token]) do |bot|
       Rails.application.config.telegram_bot = bot
-      bot.listen do |message|
-        process_bot(bot, message)
-      rescue StandardError => e
-        process_error(e, 2)
-      end
+      bot.listen { |message| process_bot(bot, message) }
     rescue StandardError => e
-      process_error(e, 1)
+      process_error e
       raise e
     end
   end
 
   private
 
-  def process_error(error, stage)
+  def process_error(error)
     Rails.logger.error "#{self.class} | #{error.message}"
-    ErrorMailer.send_error("Stage #{stage} #{error.message}", error.full_message).deliver_later
+    ErrorMailer.send_error(error.message, error.full_message).deliver_later
   end
 
   def tg_token_present?
@@ -77,15 +73,6 @@ class TelegramBotWorker
     return if message.text == '/start'
 
     Message.create(tg_id: user.tg_id, text: message.text, tg_msg_id: message.message_id)
-    notify_admins(message, user) # TODO: перенести в модель в callback
-  end
-
-  def notify_admins(message, user)
-    msg = "‼️Входящее сообщение‼️\n️\n"
-    name = message.from.username.present? ? "@#{message.from.username}" : (user.full_name.presence || "User #{user.id}")
-    msg += "От: #{name}\n\n"
-    msg += message.text
-    TelegramJob.perform_later(msg: msg, id: settings[:admin_ids])
   end
 
   def input_tracking_number(message)
@@ -123,11 +110,13 @@ class TelegramBotWorker
     full_name    = parse_full_name(message.message.text)
     msg          = bot.api.send_message(chat_id: message.message.chat.id,
                                         text: I18n.t('tg_msg.set_track_num', order: order_number, fio: full_name))
-    Rails.cache.write(
-      "user_#{message.message.chat.id}_state",
-      { order_id: order_number, msg_id: message.message.message_id, h_msg: msg.message_id },
-      expires_in: TRACK_CACHE_PERIOD
-    )
+    save_cache(order_number, message, msg)
+  end
+
+  def save_cache(order_number, message, msg)
+    Rails.cache.write("user_#{message.message.chat.id}_state",
+                      { order_id: order_number, msg_id: message.message.message_id, h_msg: msg.message_id },
+                      expires_in: TRACK_CACHE_PERIOD)
   end
 
   def parse_order_number(text)

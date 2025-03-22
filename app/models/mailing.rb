@@ -5,6 +5,8 @@ class Mailing < ApplicationRecord
 
   enum :target, { all_users: 0, ordered: 1, no_ordered: 2, blocked: 3, add_cart: 4, users: 5 }
 
+  before_validation { self.send_at ||= Time.current }
+
   validates :send_at, presence: true
   validates :message, presence: true, length: { maximum: 4000 }
 

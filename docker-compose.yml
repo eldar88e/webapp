@@ -29,7 +29,11 @@ services:
     depends_on:
       - pg
       - redis
-    command: ['bundle', 'exec', 'sidekiq']
+    command: >
+      bash -c "bundle exec sidekiq -q default -q mailings &
+               bundle exec sidekiq -q telegram_bot -c 1 &&
+               wait"
+    # command: ['bundle', 'exec', 'sidekiq']
     networks:
       net:
     restart: always
