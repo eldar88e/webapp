@@ -33,7 +33,7 @@ class Message < ApplicationRecord
   private
 
   def notify_admin
-    msg = "✉️ Входящее сообщение\n️\nОт: #{user.full_name.presence || "User #{user.id}"}"
+    msg = "✉️ Входящее сообщение\n️\n👤: #{user.full_name.presence || "User #{user.id}"}"
     msg += "\n       @#{user.username}" if user.username.present?
     msg += "\n\n#{text}"
     TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
