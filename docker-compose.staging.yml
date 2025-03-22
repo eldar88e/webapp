@@ -33,7 +33,7 @@ services:
     hostname: s-miniapp-sidekiq
     entrypoint: []
     command: >
-      sh -c "bundle exec sidekiq -q telegram_bot -c 1 &
+      sh -c "SIDEKIQ_QUEUE=telegram_bot bundle exec sidekiq -q telegram_bot -c 1 &
              bundle exec sidekiq &&
              wait"
     depends_on:

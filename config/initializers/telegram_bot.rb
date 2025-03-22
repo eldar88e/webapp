@@ -6,7 +6,7 @@ Rails.application.config.after_initialize do
      (ENV['SIDEKIQ_QUEUE'] == 'telegram_bot')
 
     Rails.logger.info 'Run TelegramBotWorker after initialize...'
-    TelegramBotWorker.perform_async # if Rails.env.production?
+    TelegramBotWorker.perform_async if Rails.env.production?
   end
 end
 
