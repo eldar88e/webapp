@@ -32,7 +32,10 @@ services:
     container_name: s-miniapp-sidekiq
     hostname: s-miniapp-sidekiq
     entrypoint: []
-    command: ['bundle', 'exec', 'sidekiq']
+    command: >
+      bash -c "bundle exec sidekiq -q default -q mailings & 
+               bundle exec sidekiq -q telegram_bot -c 1 &&
+               wait"
     depends_on:
       - pg
       - redis
