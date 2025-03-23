@@ -1,4 +1,4 @@
-:concurrency: 6
+:concurrency: 4
 :queues:
   - default
   - telegram_bot
