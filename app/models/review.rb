@@ -44,7 +44,7 @@ class Review < ApplicationRecord
 
   def send_telegram_notification
     TelegramJob.perform_later(
-      msg: "🎉 Новый отзыв\n👤: #{user.user_name}\n💊: #{product.name}\n⭐: #{star_rating(rating)}\n\n#{content}",
+      msg: "🎉 Новый отзыв\n\n👤: #{user.user_name}\n💊: #{product.name}\n⭐: #{star_rating(rating)}\n\n#{content}",
       id: Setting.fetch_value(:admin_ids)
     )
   end
