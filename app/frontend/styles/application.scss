@@ -1,5 +1,7 @@
-@use "notice";
-@use "preloader";
+@import "tailwindcss";
+@source "../../../app/views/**/*.html.erb";
+@source "../../../app/views/**/*.rb";
+@source "../../../app/helpers/**/*.rb";
 
 @font-face {
   font-family: 'Montserrat';
@@ -328,8 +330,7 @@ main {
 }
 
 .footer {
-  color: rgba(255, 255, 255, 1);
-  margin-bottom: 40px;
+  padding-bottom: 40px;
 
   .line-footer {
     background: linear-gradient(90deg, rgba(71, 132, 252, 0) 0%, #4784FC 51%, rgba(71, 132, 252, 0) 100%);

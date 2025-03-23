@@ -8,6 +8,7 @@ namespace :admin do
   resources :mailings
   resources :analytics, only: :index
   resources :messages, only: %i[index new create destroy]
+  resources :new_messages
   resources :reviews
   resources :product_subscriptions, only: [:index]
   resources :bank_cards, only: %i[index new create edit update]

@@ -14,7 +14,8 @@ services:
     depends_on:
       - psql
       - redis
-    command: ['bundle', 'exec', 'rails', 's', '-p', '3000', '-b', '0.0.0.0']
+    entrypoint: ["./bin/docker-entrypoint"]
+    # command: ['bundle', 'exec', 'rails', 's', '-p', '3000', '-b', '0.0.0.0']
     networks:
       net:
       proxy-net:
@@ -28,7 +29,11 @@ services:
     depends_on:
       - psql
       - redis
-    command: ['bundle', 'exec', 'sidekiq']
+    entrypoint: []
+    command: >
+      sh -c "SIDEKIQ_QUEUE=telegram_bot bundle exec sidekiq -q telegram_bot -c 1 &
+             bundle exec sidekiq -q default &&
+             wait"
     networks:
       net:
     restart: always

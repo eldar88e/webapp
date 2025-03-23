@@ -11,6 +11,16 @@ AllCops:
     - 'bin/*'
     - 'app/services/report_service.rb'
     - 'vendor/**/*'
+    - 'app/jobs/abandoned_order_reminder_job.rb'
+
+Metrics/ClassLength:
+  Exclude:
+    - 'app/workers/telegram_bot_worker.rb'
+    - 'app/models/order.rb'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'config/environments/production.rb'
 
 Style/Documentation:
   Enabled: false

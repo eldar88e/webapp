@@ -1,26 +1,23 @@
 return if Rails.env.test?
 
 Rails.application.config.after_initialize do
-  if defined?(Sidekiq::CLI) && (Rails.env.production? || Rails.env.development?)
+  if defined?(Sidekiq::CLI) &&
+     (Rails.env.production? || Rails.env.development?) &&
+     (ENV['SIDEKIQ_QUEUE'] == 'telegram_bot')
+
     Rails.logger.info 'Run TelegramBotWorker after initialize...'
-    TelegramBotWorker.perform_async if Rails.env.production?
+    TelegramBotWorker.perform_async # if Rails.env.production?
   end
 end
 
-Signal.trap('TERM') do
-  bot = Rails.application.config.telegram_bot
-  # return if bot.nil?
-  Rails.logger.info "\nShutting down bot..."
-  bot.stop
-  # exit
-rescue StandardError => e
-  Rails.logger.error "Error during bot shutdown: #{e.message}"
-end
-
-Signal.trap('INT') do
-  bot = Rails.application.config.telegram_bot
-  Rails.logger.info "\nShutting down bot..."
-  bot.stop
-rescue StandardError => e
-  Rails.logger.error "Error during bot shutdown: #{e.message}"
+%w[TERM INT].each do |signal|
+  Signal.trap(signal) do
+    bot = Rails.application.config.telegram_bot
+    # return if bot.nil?
+    Rails.logger.info "\nShutting down bot..."
+    bot&.stop
+    # exit
+  rescue StandardError => e
+    Rails.logger.error "Error during bot shutdown: #{e.message}"
+  end
 end

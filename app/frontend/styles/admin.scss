@@ -1,5 +1,7 @@
-@use "notice";
-@use "preloader";
+@import "tailwindcss";
+@source "../../../app/views/**/*.html.erb";
+@source "../../../app/views/**/*.rb";
+@source "../../../app/helpers/**/*.rb";
 
 .nav-bar {
   border-bottom-width: 1px;
@@ -54,13 +56,15 @@ body {
       flex-shrink: 0;
       height: 100%;
       z-index: 20;
-      display: none;
+      margin-left: -250px;
+      display: flex;
       top: 0;
       left: 0;
       position: fixed;
+      transition: all 0.5s;
       @media (min-width: 1024px) {
         width: 16rem;
-        display: flex;
+        margin-left: 0;
       }
 
       .wraper-menu {
@@ -236,6 +240,7 @@ body {
 }
 
 body.aside-hide {
+
   .close {
     display: block;
     @media (min-width: 1024px) {
@@ -251,8 +256,17 @@ body.aside-hide {
   }
 
   .body {
+    .body-blur {
+      @apply blur-xs;
+
+      @media (min-width: 1024px) {
+        @apply blur-none;
+      }
+    }
+
     .sidebarBackdrop {
       display: block;
+
       @media (min-width: 1024px) {
         display: none;
       }
@@ -260,9 +274,23 @@ body.aside-hide {
 
     aside {
       &.sidebar {
-        display: flex;
+        margin-left: 0;
+
         @media (min-width: 1024px) {
           width: auto;
+          &:hover {
+            width: 16rem;
+
+            .main-sidebar {
+              span {
+                display: block;
+              }
+
+              p {
+                display: block;
+              }
+            }
+          }
         }
       }
 

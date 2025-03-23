@@ -1,31 +1,31 @@
-@layer utilities {
-  .bg-gray-600 {
-    background-color: rgb(13 68 75);
-  }
 
-  .bg-gray-700 {
-    background-color: rgb(18 71 78);
-  }
 
-  .bg-gray-800 {
-    background-color: rgb(17 80 90);
-  }
+@utility bg-gray-50 {
+  background-color: rgb(181, 252, 255) !important;
+}
 
-  .bg-gray-900 {
-    background-color: #3396a5;
-  }
+@utility bg-gray-600 {
+  background-color: rgb(25, 93, 110) !important;
+}
 
-  .ring-blue-500 {
-    --tw-ring-color: rgb(53 123 114);
-  }
+@utility bg-gray-700 {
+  background-color: rgb(17 80 95) !important;
+}
 
-  .border-blue-500 {
-    border-color: rgb(53 123 114);
-  }
+@utility bg-gray-800 {
+  background-color: rgb(17 80 90) !important;
+}
 
-  .bg-gray-50 {
-    background-color: rgb(181, 252, 255);
-  }
+@utility bg-gray-900 {
+  background-color: rgb(17, 70, 79) !important;
+}
+
+@utility ring-blue-500 {
+  --tw-ring-color: rgb(53 123 114) !important;
+}
+
+@utility border-blue-500 {
+  border-color: rgb(53 123 114) !important;
 }
 
 body {

@@ -1,0 +1,11 @@
+<div class="p-4 overflow-y-scroll h-[calc(100vh-18.5rem)]">
+  <% @chat.each do |message| %>
+    <div class="w-full">
+      <div class="flex ms-auto gap-[0.625rem] max-w-[404px] mt-2 <%= message.is_incoming ? 'justify-end' : 'justify-start' %>">
+        <div class="bg-gray-700 p-4 bg-gray-100 border-gray-200 rounded-bl-lg rounded-tr-lg rounded-br-lg">
+          <div class="text-white"><%= message.text %></div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,6 +1,9 @@
 class Message < ApplicationRecord
   belongs_to :user, primary_key: :tg_id, foreign_key: :tg_id, inverse_of: :messages
 
+  after_create :send_to_telegram, if: -> { !is_incoming? }
+  after_create :notify_admin, if: -> { is_incoming? }
+
   validates :text, presence: true
 
   ransacker :user_first_name do
@@ -21,5 +24,22 @@ class Message < ApplicationRecord
 
   def self.ransackable_associations(_auth_object = nil)
     %w[user]
+  end
+
+  def parsed_data
+    data.present? ? data.deep_symbolize_keys : {}
+  end
+
+  private
+
+  def notify_admin
+    msg = "✉️ Входящее сообщение\n️\n👤: #{user.full_name.presence || "User #{user.id}"}"
+    msg += "\n       @#{user.username}" if user.username.present?
+    msg += "\n\n#{text}"
+    TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
+  end
+
+  def send_to_telegram
+    ConsumerSenderTgJob.perform_later(msg_id: id, id: user.tg_id, msg: text, **parsed_data)
   end
 end

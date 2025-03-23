@@ -3,33 +3,46 @@
 // ./bin/rails generate stimulus controllerName
 
 import { application } from "./application"
+const controllers = import.meta.glob('./**/*_controller.js', { eager: true });
 
-import AgreementController from "./agreement_controller"
-application.register("agreement", AgreementController)
+Object.entries(controllers).forEach(([path, module]) => {
+    // Generate the controller name from the file path
+    const controllerName = path
+        .replace(/^\.\//, '')                  // Remove leading ./
+        .replace(/_controller\.js$/, '')       // Remove _controller.js
+        .replace(/\//g, '--')                  // Replace slashes with --
+        .replace(/_/g, '-');                  // Replace underscores with dashes
 
-import DadataController from "./dadata_controller"
-application.register("dadata", DadataController)
+    // Register the controller
+    application.register(controllerName, module.default);
+});
 
-import ButtonsController from "./buttons_controller"
-application.register("buttons", ButtonsController)
-
-import PhoneMaskController from "./phone_mask_controller"
-application.register("phone_mask", PhoneMaskController)
-
-import NoticesController from "./notices_controller"
-application.register("notices", NoticesController)
-
-import RatingController from "./rating_controller"
-application.register("rating", RatingController)
-
-import MenuController from "./menu_controller"
-application.register("menu", MenuController)
-
-import CartController from "./cart_controller"
-application.register("cart", CartController)
-
-import OpenCartController from "./open_cart_controller"
-application.register("open-cart", OpenCartController)
-
-import VibrationController from "./vibration_controller"
-application.register("vibration", VibrationController)
+// import AgreementController from "./agreement_controller"
+// application.register("agreement", AgreementController)
+//
+// import DadataController from "./dadata_controller"
+// application.register("dadata", DadataController)
+//
+// import ButtonsController from "./buttons_controller"
+// application.register("buttons", ButtonsController)
+//
+// import PhoneMaskController from "./phone_mask_controller"
+// application.register("phone_mask", PhoneMaskController)
+//
+// import NoticesController from "./notices_controller"
+// application.register("notices", NoticesController)
+//
+// import RatingController from "./rating_controller"
+// application.register("rating", RatingController)
+//
+// import MenuController from "./menu_controller"
+// application.register("menu", MenuController)
+//
+// import CartController from "./cart_controller"
+// application.register("cart", CartController)
+//
+// import OpenCartController from "./open_cart_controller"
+// application.register("open-cart", OpenCartController)
+//
+// import VibrationController from "./vibration_controller"
+// application.register("vibration", VibrationController)

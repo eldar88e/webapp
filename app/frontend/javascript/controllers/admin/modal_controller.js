@@ -4,14 +4,14 @@ export default class extends Controller {
     connect() {
         this.element.addEventListener('click', (event) => {
             if (event.target === this.element) {
-                this.element.classList.add('hidden');
-                this.element.classList.remove('flex');
+                this.close();
             }
         });
     }
 
     close(){
         this.element.classList.add('hidden');
-        this.element.classList.remove('flex');
+        document.getElementById('body').classList.remove('blur-xs');
+        document.getElementById('header').classList.remove('blur-xs');
     }
 }

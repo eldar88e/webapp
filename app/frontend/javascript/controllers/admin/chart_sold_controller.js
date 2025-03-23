@@ -3,28 +3,31 @@ import ApexCharts from "apexcharts";
 
 export default class extends Controller {
   static targets = ["chart"];
+  static values = { time: { type: Number, default: 1000 } }
 
   connect() {
-    this.fetchRevenueData();
+    setTimeout(() => {
+      this.last_week()
+    }, this.timeValue);
   }
 
   last_week() {
-    this.fetchRevenueData();
+    this.fetchData();
   }
 
   last_month() {
-    this.fetchRevenueData('&period=month');
+    this.fetchData('&period=month');
   }
 
   last_year() {
-    this.fetchRevenueData('&period=year');
+    this.fetchData('&period=year');
   }
 
   all() {
-    this.fetchRevenueData('&period=all');
+    this.fetchData('&period=all');
   }
 
-  async fetchRevenueData(params='') {
+  async fetchData(params='') {
     const response = await fetch(`/admin/analytics?type=sold${params}`);
     const data = await response.json();
 
@@ -55,8 +58,6 @@ export default class extends Controller {
       },
       grid: {
         show: false,
-        //borderColor: '#374151',
-        //strokeDashArray: 1,
       },
       series: [
         {

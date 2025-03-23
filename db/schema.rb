@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_03_04_000518) do
+ActiveRecord::Schema[7.2].define(version: 2025_03_22_045101) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -77,6 +77,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_04_000518) do
     t.datetime "updated_at", precision: nil, null: false
   end
 
+  create_table "mailings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "target", default: 0, null: false
+    t.datetime "send_at", null: false
+    t.boolean "completed", default: false
+    t.text "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_mailings_on_user_id"
+  end
+
   create_table "messages", force: :cascade do |t|
     t.text "text"
     t.bigint "tg_id"
@@ -84,6 +95,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_04_000518) do
     t.datetime "updated_at", null: false
     t.boolean "is_incoming", default: true, null: false
     t.bigint "tg_msg_id"
+    t.jsonb "data"
   end
 
   create_table "order_items", force: :cascade do |t|
@@ -198,6 +210,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_04_000518) do
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "products"
   add_foreign_key "carts", "users"
+  add_foreign_key "mailings", "users"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
   add_foreign_key "orders", "bank_cards"

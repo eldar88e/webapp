@@ -4,10 +4,13 @@ import Localization from "./localization";
 
 export default class extends Controller {
     static targets = ["chart"];
+    static values = { time: { type: Number, default: 600 } }
 
-    async connect() {
-        this.localization = new Localization("ru");
-        await this.last_week();
+    connect() {
+        setTimeout(() => {
+            this.localization = new Localization("ru");
+            this.last_week();
+        }, this.timeValue);
     }
 
     async last_week() {
