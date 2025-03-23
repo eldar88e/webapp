@@ -85,13 +85,13 @@ class User < ApplicationRecord
   end
 
   def self.assign_user_attributes(user, tg_user, started)
-    user.username    = tg_user['username']
-    user.first_name  = tg_user['first_name']
-    user.middle_name = tg_user['last_name']
-    user.email       = "telegram_user_#{tg_user['id']}@example.com"
-    user.password    = Devise.friendly_token[0, 20]
-    user.photo_url   = tg_user['photo_url']
-    user.started     = started
+    # user.first_name  = tg_user['first_name']
+    # user.middle_name = tg_user['last_name']
+    user.username  = tg_user['username']
+    user.email     = "tg_#{tg_user['id']}@#{ENV.fetch('HOST')}"
+    user.password  = Devise.friendly_token[0, 20]
+    user.photo_url = tg_user['photo_url']
+    user.started   = started
   end
 
   def self.log_user(user, started)
