@@ -122,7 +122,7 @@ ru:
       one: "%{count} отзыв"
       few: "%{count} отзыва"
       many: "%{count} отзывов"
-      other: "%{count} отзыва"
+      other: "%{count} отзывов"
   activerecord:
     models:
       user: "Пользователь"
