@@ -12,6 +12,7 @@ AllCops:
     - 'app/services/report_service.rb'
     - 'vendor/**/*'
     - 'app/jobs/abandoned_order_reminder_job.rb'
+    - 'config/deploy.rb'
 
 Metrics/ClassLength:
   Exclude:

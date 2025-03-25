@@ -1,80 +1,37 @@
-# config valid for current version and patch releases of Capistrano
-lock '~> 3.19.2'
+require 'sshkit'
+require 'sshkit/dsl'
+include SSHKit::DSL
 
-set :application, 'strattera'
-set :repo_url, 'git@github.com:eldar88e/webapp.git'
-set :branch, 'main'
-set :pty, true # Default value for :pty is false
-# set :keep_releases, 5 # Default value for keep_releases is 5
+SSHKit.config.output_verbosity = :debug
 
-server 'strattera.tgapp.online', user: 'deploy', roles: %w[app db worker]
+# Объявляем глобальные переменные (с префиксом `$`)
+$server = 'deploy@staging.tgapp.online'
+$app_path = '/home/deploy/miniapp_staging'
+$docker_compose_file = 'docker-compose.staging.yml'
+$rails_service = 's-miniapp'
 
-append :linked_files, '.env', 'key.json'
-append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'storage', 'node_modules', 'public/vite'
-
-namespace :deploy do
-  desc 'Start All servers inside Docker'
-  task :start do
-    on roles(:app) do
-      execute "docker compose -f #{fetch(:file)} up --build"
-    end
-  end
-
-  desc 'Restart Rails and Sidekiq inside Docker'
-  task :restart_rails_docker do
-    on roles(:app) do
-      execute "docker compose -f #{fetch(:file)} restart s-miniapp"
-      execute "docker compose -f #{fetch(:file)} restart sidekiq"
+def update
+  on $server do
+    within $app_path do
+      execute :git, 'pull'
+      execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails restart"
     end
   end
 end
 
-namespace :rails do
-  desc 'Open a Rails console'
-  task :console do
-    on roles(:app) do
-      execute "docker compose -f #{fetch(:file)} exec #{fetch(:docker_app_container)} bundle exec rails c"
+def restart_server
+  on $server do
+    within $app_path do
+      execute :docker, "compose -f #{$docker_compose_file} up --build #{$rails_service} sidekiq"
     end
   end
 end
 
-namespace :docker do
-  desc 'Down all servers'
-  task :down do
-    on roles(:app) do
-      execute "docker compose -f #{fetch(:file)} down"
-    end
-  end
+task_name = ARGV[0]
 
-  desc 'List running containers'
-  task :ps do
-    on roles(:app) do
-      execute "docker compose -f #{fetch(:file)} ps"
-    end
-  end
-
-  desc 'Stats docker containers'
-  task :stats do
-    on roles(:app) do
-      execute 'docker stats --no-stream'
-    end
-  end
+case task_name
+when 'update'
+  update
+when 'restart_server'
+  restart_server
 end
-
-after 'deploy:published', 'deploy:restart_rails_docker'
-
-# Default value for :format is :airbrussh.
-# set :format, :airbrussh
-
-# You can configure the Airbrussh format using :format_options.
-# These are the defaults.
-# set :format_options, command_output: true, log_file: "log/capistrano.log", color: :auto, truncate: :auto
-
-# Default value for default_env is {}
-# set :default_env, { path: "/opt/ruby/bin:$PATH" }
-
-# Default value for local_user is ENV['USER']
-# set :local_user, -> { `git config user.name`.chomp }
-
-# Uncomment the following to require manually verifying the host key before first deploy.
-# set :ssh_options, verify_host_key: :secure
