@@ -46,9 +46,9 @@ group :development do
   gem 'binding_of_caller'
   gem 'brakeman', require: false
   gem 'bullet' # , require: false unless defined?(Mongoid) for MongoDB
+  gem 'capistrano'
   gem 'letter_opener'
   gem 'web-console'
-  gem 'capistrano'
 end
 
 group :test do
