@@ -9,7 +9,7 @@ set :branch, 'main'
 server 'strattera.tgapp.online', user: 'deploy', roles: %w[app db worker]
 
 append :linked_files, '.env', 'key.json'
-append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'storage', 'node_modules'
+append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'storage', 'node_modules', 'public/vite'
 
 namespace :deploy do
   desc 'Start Rails inside Docker'

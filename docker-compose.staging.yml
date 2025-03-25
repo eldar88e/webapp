@@ -13,6 +13,7 @@ services:
       - ./tmp/pids:/app/tmp/pids
       - ./tmp/sockets:/app/tmp/sockets
       - ./key.json:/app/key.json
+      - ./public/vite:/app/public/vite
 
   s-miniapp:
     <<: *base
