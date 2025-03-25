@@ -1,3 +1,7 @@
 @import "../styles/application.scss";
 @import "../styles/notice.scss";
 @import "../styles/preloader.scss";
+
+@source "../../../app/views/**/*.html.erb";
+@source "../../../app/views/**/*.rb";
+@source "../../../app/helpers/**/*.rb";
