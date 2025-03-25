@@ -4,6 +4,7 @@ lock '~> 3.19.2'
 set :application, 'strattera'
 set :repo_url, 'git@github.com:eldar88e/webapp.git'
 set :branch, 'main'
+set :pty, true # Default value for :pty is false
 # set :keep_releases, 5 # Default value for keep_releases is 5
 
 server 'strattera.tgapp.online', user: 'deploy', roles: %w[app db worker]
@@ -12,24 +13,17 @@ append :linked_files, '.env', 'key.json'
 append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'storage', 'node_modules', 'public/vite'
 
 namespace :deploy do
-  desc 'Start Rails inside Docker'
-  task :restart do
+  desc 'Start All servers inside Docker'
+  task :start do
     on roles(:app) do
       execute "docker compose -f #{fetch(:file)} up --build"
     end
   end
 
-  desc 'Restart Rails inside Docker'
-  task :restart_rails do
+  desc 'Restart Rails and Sidekiq inside Docker'
+  task :restart_rails_docker do
     on roles(:app) do
-      execute "docker exec #{fetch(:docker_app_container)} bin/rails restart"
-    end
-  end
-
-  desc 'Restart Sidekiq inside Docker'
-  task :restart_sidekiq do
-    on roles(:worker) do
-      # execute "docker exec #{fetch(:docker_sidekiq_container)} pkill -TERM -f sidekiq"
+      execute "docker compose -f #{fetch(:file)} restart s-miniapp"
       execute "docker compose -f #{fetch(:file)} restart sidekiq"
     end
   end
@@ -45,6 +39,13 @@ namespace :rails do
 end
 
 namespace :docker do
+  desc 'Down all servers'
+  task :down do
+    on roles(:app) do
+      execute "docker compose -f #{fetch(:file)} down"
+    end
+  end
+
   desc 'List running containers'
   task :ps do
     on roles(:app) do
@@ -55,16 +56,12 @@ namespace :docker do
   desc 'Stats docker containers'
   task :stats do
     on roles(:app) do
-      execute 'docker stats'
+      execute 'docker stats --no-stream'
     end
   end
 end
 
-after 'deploy:published', 'deploy:restart_rails'
-after 'deploy:published', 'deploy:restart_sidekiq'
-
-# Default branch is :master
-# ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
+after 'deploy:published', 'deploy:restart_rails_docker'
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
@@ -72,15 +69,6 @@ after 'deploy:published', 'deploy:restart_sidekiq'
 # You can configure the Airbrussh format using :format_options.
 # These are the defaults.
 # set :format_options, command_output: true, log_file: "log/capistrano.log", color: :auto, truncate: :auto
-
-# Default value for :pty is false
-# set :pty, true
-
-# Default value for :linked_files is []
-# append :linked_files, "config/database.yml", 'config/master.key'
-
-# Default value for linked_dirs is []
-# append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system", "vendor", "storage"
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
