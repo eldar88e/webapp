@@ -15,7 +15,8 @@ def update
     within $app_path do
       execute :git, 'pull'
       execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails db:prepare"
-      execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails assets:precompile"
+      # bundle exec rails assets:precompile
+      execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} yarn vite build"
       execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails restart"
     end
   end

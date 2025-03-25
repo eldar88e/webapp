@@ -7,5 +7,6 @@ if [ -f tmp/pids/server.pid ]; then
 fi
 
 bundle exec rails db:prepare
-bundle exec rails assets:precompile
+# bundle exec rails assets:precompile
+yarn vite build
 bundle exec rails s -b 0.0.0.0
