@@ -12,6 +12,7 @@ services:
       - ./tmp/cache:/app/tmp/cache
       - ./tmp/pids:/app/tmp/pids
       - ./tmp/sockets:/app/tmp/sockets
+      - ./key.json:/app/key.json
 
   s-miniapp:
     <<: *base
