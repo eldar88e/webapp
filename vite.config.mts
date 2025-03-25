@@ -11,7 +11,7 @@ export default defineConfig({
       envOptions: { defineOn: "import.meta.env" },
       fullReload: {
         additionalPaths: ["config/routes.rb", "app/views/**/*"],
-        delay: 200,
+        delay: 300,
       },
     }),
   ],
