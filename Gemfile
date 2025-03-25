@@ -48,6 +48,7 @@ group :development do
   gem 'bullet' # , require: false unless defined?(Mongoid) for MongoDB
   gem 'letter_opener'
   gem 'web-console'
+  gem 'capistrano'
 end
 
 group :test do

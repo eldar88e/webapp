@@ -6,6 +6,12 @@ services:
     volumes:
       - gems:/usr/local/bundle
       - .:/app
+      - ./log:/app/log
+      - ./storage:/app/storage
+      - ./tmp/cache:/app/tmp/cache
+      - ./tmp/pids:/app/tmp/pids
+      - ./tmp/sockets:/app/tmp/sockets
+      - ./node_modules:/app/tmp/node_modules
 
   s-miniapp:
     <<: *base
