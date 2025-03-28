@@ -1,3 +1,5 @@
+# ruby config/deploy.rb update
+
 require 'sshkit'
 require 'sshkit/dsl'
 include SSHKit::DSL
@@ -5,10 +7,13 @@ include SSHKit::DSL
 SSHKit.config.output_verbosity = :debug
 
 $server = 'deploy@staging.tgapp.online'
+
 $app_name = 'miniapp_staging'
 $app_path = "/home/deploy/#{$app_name}"
 $docker_compose_file = 'docker-compose.staging.yml'
 $rails_service = 's-miniapp'
+
+# production mirena staging
 
 def update
   on $server do

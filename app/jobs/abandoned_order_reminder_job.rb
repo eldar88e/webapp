@@ -3,10 +3,9 @@ class AbandonedOrderReminderJob < ApplicationJob
   STEPS = { one: { wait: 48.hours, msg_type: :two }, two: { wait: 3.hours, msg_type: :overdue } }.freeze
 
   def perform(**args)
-    return if args[:order_id].blank? || args[:msg_type].blank?
+    return if args[:msg_type].blank?
 
-    order_id      = args[:order_id]
-    current_order = Order.find_by(id: order_id)
+    current_order = Order.find_by(id: args[:order_id])
     return if current_order.nil? || current_order.status != 'unpaid'
 
     process_remainder(args, current_order)
