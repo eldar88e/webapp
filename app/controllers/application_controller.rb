@@ -9,7 +9,12 @@ class ApplicationController < ActionController::Base
   def available_products
     product_id   = params[:category_id].presence || Setting.fetch_value(:default_product_id)
     raw_products = Product.find_by(id: product_id)
-    @products    = raw_products.present? ? raw_products.children.includes(:image_attachment).available : []
+    @products    = if raw_products.present?
+                     raw_products.children.includes(:image_attachment).available
+                                 .order(stock_quantity: :desc, created_at: :desc)
+                   else
+                     []
+                   end
   end
 
   def check_authenticate_user!
