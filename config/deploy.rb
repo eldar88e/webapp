@@ -48,9 +48,12 @@ def rebuild
   on $server do
     within $app_path do
       execute :git, 'pull'
+      execute :docker, "compose -f #{$docker_compose_file} up --build #{$rails_service} sidekiq"
       execute :docker, "compose -f #{$docker_compose_file} down #{$rails_service} sidekiq"
       execute :docker, "volume rm #{$app_name}_gems"
       execute :docker, "compose -f #{$docker_compose_file} up --build #{$rails_service} sidekiq"
+      execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} yarn vite build"
+      execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails restart"
     end
   end
 end
