@@ -26,7 +26,8 @@
             </div>
             <% if product.image.attached? %>
               <div class="img absolute left-0 top-0 flex justify-center">
-                  <%= image_tag storage_path(product.image), alt: product.name, loading: (@products.first == product ? 'eager' : 'lazy') %>
+                  <%= image_tag storage_path(product.image), alt: product.name, width: 196, height: 196,
+                                loading: (@products.first == product ? 'eager' : 'lazy') %>
               </div>
             <% end %>
           </div>
