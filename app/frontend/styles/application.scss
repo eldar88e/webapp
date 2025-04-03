@@ -54,6 +54,7 @@ body {
   }
 
   .logo {
+    cursor: pointer;
     background: linear-gradient(276.05deg, #5F35F7 5.83%, #5098F7 94.27%);
     font-size: 20px;
     padding: 13px 26px;
@@ -161,6 +162,7 @@ main {
     justify-content: space-between;
 
     .btn-order {
+      cursor: pointer;
       background: rgba(71, 132, 252, 1);
       border: 1px solid rgba(71, 132, 252, 1);
       border-radius: 48px;
@@ -168,7 +170,7 @@ main {
       display: flex;
       align-items: center;
       gap: 18px;
-      transition: all 1s;
+      transition: all 0.1s;
 
       @media screen and (max-width: 300px) {
         gap: 8px;
@@ -179,6 +181,7 @@ main {
       }
 
       .title-btn {
+        cursor: pointer;
         font-size: 18px;
         font-weight: 500;
         line-height: 22px;
@@ -346,6 +349,7 @@ main {
 }
 
 .btn {
+  cursor: pointer;
   background: rgba(71, 131, 252, 1);
   font-size: 18px;
   line-height: 22px;
@@ -496,6 +500,7 @@ form label {
       border-radius: 17px;
 
       .plus {
+        cursor: pointer;
         font-size: 18px;
         line-height: 22px;
         padding: 5px 16px;
@@ -825,6 +830,7 @@ ul.catalog-nav {
 }
 
 .burger-menu {
+  cursor: pointer;
   width: 50px;
   height: 50px;
   border: 1px solid #4884fc;
@@ -948,8 +954,14 @@ ul.catalog-nav {
   }
 }
 
-.button_to .plus:hover {
-  color: rgb(71, 131, 252);
+.button_to {
+  button {
+    cursor: pointer;
+  }
+
+  .plus:hover {
+    color: rgb(71, 131, 252);
+  }
 }
 
 .product-reviews .input-str {
