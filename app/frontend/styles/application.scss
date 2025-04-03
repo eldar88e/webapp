@@ -168,7 +168,7 @@ main {
       display: flex;
       align-items: center;
       gap: 18px;
-      transition: all 0.3s;
+      transition: all 1s;
 
       @media screen and (max-width: 300px) {
         gap: 8px;
