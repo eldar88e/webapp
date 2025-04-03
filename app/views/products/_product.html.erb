@@ -2,7 +2,7 @@
   <div class="product-wrapper">
     <div class="product">
       <div class="product-title">
-        <%= link_to product.name, product_path(product), data: { turbo_prefetch: false } %>
+        <%= link_to product.name, product_path(product), data: { turbo_prefetch: false }, title: product.name %>
       </div>
       <div class="product-exist">
         <% if product.stock_quantity.positive? %>
@@ -15,7 +15,7 @@
       </div>
 
       <div class="product-img">
-        <%= link_to product_path(product), data: { turbo_prefetch: false } do %>
+        <%= link_to product_path(product), data: { turbo_prefetch: false }, title: product.name do %>
           <div class="relative">
             <div role="status" class="absolute left-0 top-0 space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center">
               <div class="flex items-center justify-center w-48 h-48">

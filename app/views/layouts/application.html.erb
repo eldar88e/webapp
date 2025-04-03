@@ -2,6 +2,7 @@
 <html lang="ru">
   <head>
     <title><%= "#{settings[:app_name]&.capitalize}#{content_for(:title).present? ? " | #{content_for(:title)}" : ''}" %></title>
+    <meta name="description" content="<%= settings[:app_name] %>">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
@@ -14,7 +15,7 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
     <script>
           if (typeof Telegram !== "undefined") {
               <% if ENV.fetch('HOST', '').include?('mirena') %>
