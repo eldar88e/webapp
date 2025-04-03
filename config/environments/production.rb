@@ -21,8 +21,8 @@ Rails.application.configure do
   # config.require_master_key = true
 
   # Disable serving static files from `public/`, relying on NGINX/Apache to do so instead.
-  # !!! TODO: настроить nginx для обработки static files
   # config.public_file_server.enabled = false
+  config.public_file_server.headers = { 'Cache-Control' => "public, max-age=#{1.year.to_i}, immutable" }
 
   # Compress CSS using a preprocessor.
   # config.assets.css_compressor = :sass
