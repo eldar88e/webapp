@@ -31,6 +31,6 @@ module ApplicationHelper
   def local_storage_path(blob)
     return url_for(blob) unless Rails.env.production?
 
-    "/storage/#{blob.key[0..1]}/#{blob.key[2..3]}/#{blob.key}.#{blob.content_type.split('/').last}"
+    "/storage/#{blob.key[0..1]}/#{blob.key[2..3]}/#{blob.key}"
   end
 end

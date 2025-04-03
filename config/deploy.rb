@@ -17,6 +17,7 @@ SSH_ENV = {
 environment = (ARGV[0] || 'staging').to_sym
 config      = SSH_ENV[environment] || SSH_ENV[:staging]
 
+$branch              = 'main'
 $app_name            = config[:app_name]
 $app_path            = "/home/deploy/#{$app_name}"
 $docker_compose_file = config[:docker_compose_file]
@@ -27,6 +28,7 @@ $rails_service       = config[:rails_service]
 def update
   on $server do
     within $app_path do
+      execute :git, 'checkout', $branch
       execute :git, 'pull'
       execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails db:prepare"
       # bundle exec rails assets:precompile
@@ -47,6 +49,7 @@ end
 def rebuild
   on $server do
     within $app_path do
+      execute :git, 'checkout', $branch
       execute :git, 'pull'
       execute :docker, "compose -f #{$docker_compose_file} up --build #{$rails_service} sidekiq"
       execute :docker, "compose -f #{$docker_compose_file} down #{$rails_service} sidekiq"
