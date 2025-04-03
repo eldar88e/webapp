@@ -8,10 +8,19 @@ SSHKit.config.output_verbosity = :debug
 
 $server = 'deploy@staging.tgapp.online'
 
-$app_name = 'miniapp_staging'
-$app_path = "/home/deploy/#{$app_name}"
-$docker_compose_file = 'docker-compose.staging.yml'
-$rails_service = 's-miniapp'
+SSH_ENV = {
+  production: { app_name: 'miniapp', docker_compose_file: 'docker-compose.yml', rails_service: 'miniapp' },
+  staging: { app_name: 'miniapp_staging', docker_compose_file: 'docker-compose.staging.yml', rails_service: 's-miniapp' },
+  mirena: { app_name: 'webapp_mirena', docker_compose_file: 'docker-compose.mirena.yml', rails_service: 'webapp' }
+}.freeze
+
+environment = (ARGV[0] || 'staging').to_sym
+config      = SSH_ENV[environment] || SSH_ENV[:staging]
+
+$app_name            = config[:app_name]
+$app_path            = "/home/deploy/#{$app_name}"
+$docker_compose_file = config[:docker_compose_file]
+$rails_service       = config[:rails_service]
 
 # production mirena staging
 
@@ -38,6 +47,7 @@ end
 def rebuild
   on $server do
     within $app_path do
+      execute :git, 'pull'
       execute :docker, "compose -f #{$docker_compose_file} down #{$rails_service} sidekiq"
       execute :docker, "volume rm #{$app_name}_gems"
       execute :docker, "compose -f #{$docker_compose_file} up --build #{$rails_service} sidekiq"
@@ -45,7 +55,7 @@ def rebuild
   end
 end
 
-task_name = ARGV[0]
+task_name = ARGV[1]
 
 case task_name
 when 'update'
