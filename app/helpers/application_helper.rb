@@ -1,4 +1,6 @@
 module ApplicationHelper
+  include Pagy::Frontend
+
   def cart_items_total
     current_user.cart.cart_items.sum(&:quantity)
   end

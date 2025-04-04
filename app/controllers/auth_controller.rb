@@ -8,8 +8,9 @@ class AuthController < ApplicationController
     return unless current_user
     return redirect_to "/#{@btn_link}" if @btn_link.present?
 
-    available_products                             # redirect_to products_path if current_user
-    render 'products/index', layout: 'application' # redirect_to products_path if current_user
+    redirect_to products_path
+    # available_products
+    # render 'products/index', layout: 'application'
   end
 
   def telegram_auth
