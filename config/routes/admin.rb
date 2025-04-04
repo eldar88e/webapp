@@ -10,6 +10,6 @@ namespace :admin do
   resources :messages, only: %i[index new create destroy]
   resources :new_messages
   resources :reviews
-  resources :product_subscriptions, only: [:index]
+  resources :product_subscriptions, only: %i[index destroy]
   resources :bank_cards, only: %i[index new create edit update]
 end

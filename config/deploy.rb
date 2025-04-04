@@ -1,4 +1,4 @@
-# ruby config/deploy.rb update
+# ruby config/deploy.rb staging update
 
 require 'sshkit'
 require 'sshkit/dsl'

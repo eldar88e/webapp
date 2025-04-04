@@ -18,3 +18,8 @@ ru:
       create: "Отзыв успешно создан."
       update: "Отзыв успешно обновлен."
       destroy: "Отзыв успешно удален."
+  admin:
+    product_subscriptions:
+      destroy:
+        success: "Подписка успешно удалена."
+

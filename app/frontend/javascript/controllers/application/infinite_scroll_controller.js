@@ -20,10 +20,9 @@ export default class extends Controller {
             fetch(url, { headers: { Accept: "text/vnd.turbo-stream.html" } })
                 .then(response => response.text())
                 .then(html => {
-                    // Вставляем полученный turbo stream до блока пагинации
                     this.element.insertAdjacentHTML("beforebegin", html);
                 })
-                .catch(error => console.error("Ошибка загрузки следующей порции:", error));
+                .catch(error => console.error("Ошибка загрузки следующей страницы:", error));
         }
     }
 

@@ -7,12 +7,7 @@ class CartsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.replace(:pagination, partial: '/products/pagination'),
-          turbo_stream.append(:products, partial: '/products/products')
-        ]
-      end
+      format.turbo_stream { product_turbo_format }
     end
   end
 end
