@@ -55,8 +55,17 @@ def rebuild
       execute :docker, "compose -f #{$docker_compose_file} down #{$rails_service} sidekiq"
       execute :docker, "volume rm #{$app_name}_gems"
       execute :docker, "compose -f #{$docker_compose_file} up --build #{$rails_service} sidekiq"
+      execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails db:prepare"
       execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} yarn vite build"
       execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails restart"
+    end
+  end
+end
+
+def console
+  on $server do
+    within $app_path do
+      execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails console"
     end
   end
 end
@@ -70,4 +79,6 @@ when 'restart'
   restart
 when 'rebuild'
   rebuild
+when 'console'
+  console
 end
