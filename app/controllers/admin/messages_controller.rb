@@ -17,8 +17,7 @@ module Admin
     end
 
     def create
-      # MailingJob.perform_later(filter: 'users', message: message_params[:text], user_ids: @user.id)
-      @message = Message.new(text: message_params[:text], tg_id: @user.tg_id, is_incoming: false)
+      @message = Message.new(message_attributes)
       if @message.save
         render turbo_stream: [
           turbo_stream.prepend(:messages, partial: '/admin/messages/message', locals: { message: @message }),
@@ -40,6 +39,31 @@ module Admin
 
     private
 
+    def message_attributes
+      tg_media_file = find_or_create_tg_media_file
+      data          = form_tg_file(tg_media_file)
+      data[:markup] = params[:markup] if params[:markup]
+      data[:type]   = tg_media_file.file_type.split('/').at(0) if tg_media_file.present?
+      { text: message_params[:text], tg_id: @user.tg_id, is_incoming: false }.merge({ data: data })
+    end
+
+    def form_tg_file(tg_media_file)
+      tg_media_file&.file_id.present? ? { tg_file_id: tg_media_file.file_id } : { media_id: tg_media_file&.id }
+    end
+
+    def find_or_create_tg_media_file
+      return if message_params[:attachment].blank?
+
+      file_hash = Digest::MD5.file(message_params[:attachment]).hexdigest
+      TgMediaFile.find_or_create_by!(file_hash: file_hash) { |media| form_media_attr(media) }
+    end
+
+    def form_media_attr(media)
+      media.file_type = message_params[:attachment].content_type
+      media.original_filename = message_params[:attachment].original_filename
+      media.attachment = message_params[:attachment]
+    end
+
     def set_user
       @user = User.find(params[:user_id] || message_params[:user_id])
     end
@@ -49,7 +73,7 @@ module Admin
     end
 
     def message_params
-      params.require(:message).permit(:text, :user_id)
+      params.require(:message).permit(:text, :user_id, :attachment)
     end
   end
 end

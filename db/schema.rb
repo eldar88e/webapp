@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_03_22_045101) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_05_164628) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -174,6 +174,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_22_045101) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["variable"], name: "index_settings_on_variable", unique: true
+  end
+
+  create_table "tg_media_files", force: :cascade do |t|
+    t.string "file_id"
+    t.string "file_hash", null: false
+    t.string "file_type"
+    t.string "original_filename"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["file_hash"], name: "index_tg_media_files_on_file_hash", unique: true
   end
 
   create_table "users", force: :cascade do |t|
