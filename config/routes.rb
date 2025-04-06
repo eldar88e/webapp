@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   resources :cart_items, only: %i[create update]
   resources :orders, only: %i[index create update]
 
-  post '/auth/telegram_auth', to: 'auth#telegram_auth'
+  post '/auth/telegram', to: 'auth#telegram'
   get '/login', to: 'auth#login'
   get '/error-register', to: 'auth#error_register'
   get '/user-checker', to: 'auth#user_checker'

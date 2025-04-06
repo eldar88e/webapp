@@ -7,7 +7,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
   </head>
 
-  <body style="background-color: <%= ENV.fetch('HOST', '').include?('mirena') ? '#3396a5' : '#000001' %>">
+  <body style="background-color: <%= ENV.fetch('HOST', '').include?('mirena') ? '#3396a5' : '#000001' %>;">
     <%= yield %>
   </body>
 </html>

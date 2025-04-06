@@ -1,6 +1,6 @@
 class AuthController < ApplicationController
   skip_before_action :check_authenticate_user!
-  skip_before_action :check_started_user!, only: %i[telegram_auth error_register user_checker]
+  skip_before_action :check_started_user!, only: %i[telegram error_register user_checker]
   before_action :set_btn_link, only: :login
   layout 'login'
 
@@ -13,7 +13,7 @@ class AuthController < ApplicationController
     # render 'products/index', layout: 'application'
   end
 
-  def telegram_auth
+  def telegram
     data      = params.to_unsafe_h.except(:controller, :action)
     init_data = URI.decode_www_form(data['initData'].to_s).to_h
     return render_error_auth if init_data.blank? || init_data['user'].blank?

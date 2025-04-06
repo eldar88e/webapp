@@ -80,5 +80,5 @@ when 'restart'
 when 'rebuild'
   rebuild
 when 'console'
-  console
+  console #TODO: не работает
 end
