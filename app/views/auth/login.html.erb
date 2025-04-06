@@ -1,6 +1,5 @@
 <script>
     const tg_main_bot = "https://t.me/<%= settings[:tg_main_bot] %>";
-    <% binding.pry %>
     document.addEventListener("DOMContentLoaded", () => {
         if ( typeof Telegram !== "undefined" && Telegram.WebApp) {
             const initData = Telegram.WebApp.initData || "";
@@ -23,11 +22,13 @@
                         window.location.href = path;
                     } else {
                         console.log("Authentication failed: " + data.error);
+                        <% binding.pry %>
                         window.location.href = tg_main_bot;
                     }
                 })
                 .catch((error) => {
                     console.log("Error during authentication:", error);
+                    <% binding.pry %>
                     window.location.href = tg_main_bot;
                 });
         } else {
