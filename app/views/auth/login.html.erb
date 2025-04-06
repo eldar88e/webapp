@@ -4,7 +4,7 @@
         if ( typeof Telegram !== "undefined" && Telegram.WebApp) {
             const initData = Telegram.WebApp.initData || "";
 
-            fetch("/auth/telegram", {
+            fetch("/auth/telegram_auth", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -22,13 +22,13 @@
                         window.location.href = path;
                     } else {
                         console.log("Authentication failed: " + data.error);
-                        <% binding.pry %>
+                        <% Rails.logger.error 'Authentication failed' %>
                         window.location.href = tg_main_bot;
                     }
                 })
                 .catch((error) => {
                     console.log("Error during authentication:", error);
-                    <% binding.pry %>
+                    <% Rails.logger.error 'Error during authentication' %>
                     window.location.href = tg_main_bot;
                 });
         } else {

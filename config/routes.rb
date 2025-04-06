@@ -2,7 +2,7 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
   authenticate :user do
-    mount Sidekiq::Web => '/sidekiq'
+    mount Sidekiq::Web => '/admin/sidekiq'
   end
 
   devise_for :users, controllers: { registrations: 'users/registrations' }
@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   resources :cart_items, only: %i[create update]
   resources :orders, only: %i[index create update]
 
-  post '/auth/media_sender_service.rb', to: 'auth#telegram_auth'
+  post '/auth/telegram_auth', to: 'auth#telegram_auth'
   get '/login', to: 'auth#login'
   get '/error-register', to: 'auth#error_register'
   get '/user-checker', to: 'auth#user_checker'
