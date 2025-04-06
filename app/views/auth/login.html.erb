@@ -1,5 +1,6 @@
 <script>
     const tg_main_bot = "https://t.me/<%= settings[:tg_main_bot] %>";
+    <% binding.pry %>
     document.addEventListener("DOMContentLoaded", () => {
         if ( typeof Telegram !== "undefined" && Telegram.WebApp) {
             const initData = Telegram.WebApp.initData || "";

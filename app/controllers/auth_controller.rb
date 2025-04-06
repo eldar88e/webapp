@@ -5,7 +5,6 @@ class AuthController < ApplicationController
   layout 'login'
 
   def login
-    binding.pry
     return unless current_user
     return redirect_to "/#{@btn_link}" if @btn_link.present?
 
