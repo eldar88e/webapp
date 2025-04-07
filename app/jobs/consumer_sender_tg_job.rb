@@ -22,9 +22,9 @@ class ConsumerSenderTgJob < ApplicationJob
 
   def save_file_id(args, msg_attrs, message, result)
     media_file = TgMediaFile.find(args[:data][:media_id])
-    file_id    = form_file_id(result, media_file)
-    media_file.update(file_id: file_id)
-    msg_attrs[:data] = message.data.merge(file_id: file_id)
+    tg_file_id = form_file_id(result, media_file)
+    media_file.update(file_id: tg_file_id)
+    msg_attrs[:data] = message.data.merge(tg_file_id: tg_file_id)
   end
 
   def form_file_id(result, media_file)

@@ -35,8 +35,11 @@
   <% if @review.photos.attached? %>
     <div class="flex gap-1 mb-5">
       <% @review.photos.each do |photo| %>
-        <div style="background-image: url('<%= storage_path(photo.variant(:big), true) %>'); background-size: cover; border-radius: 4px;
-          background-repeat: no-repeat; background-position: center; width: 100px; height: 100px"></div>
+        <div class="edit-image-preview" id="<%= "attachment_#{photo.id}" %>" data-controller="attachment" data-attachment-id-value="<%= photo.id %>">
+          <div style="background-image: url('<%= storage_path(photo.variant(:big), true) %>'); background-size: cover; border-radius: 4px;
+            background-repeat: no-repeat; background-position: center; width: 100px; height: 100px"></div>
+          <button data-action="click->attachment#delete" class="shadow-sm absolute -bottom-full -right-full text-xs rounded bg-white cursor-pointer px-1">Удалить</button>
+        </div>
       <% end %>
     </div>
   <% end %>

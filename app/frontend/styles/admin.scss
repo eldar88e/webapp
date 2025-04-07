@@ -351,3 +351,13 @@ body.aside-hide {
     }
   }
 }
+
+.edit-image-preview {
+  @apply relative overflow-hidden transition-all duration-300;
+
+  &:hover {
+    button {
+      @apply bottom-1 right-1;
+    }
+  }
+}

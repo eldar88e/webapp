@@ -44,6 +44,14 @@
     <% end %>
   </th>
 
+  <th scope="col" class="px-6 py-3">
+    <% if message.parsed_data[:tg_file_id] %>
+      <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8v8a5 5 0 1 0 10 0V6.5a3.5 3.5 0 1 0-7 0V15a2 2 0 0 0 4 0V8"/>
+      </svg>
+    <% end %>
+  </th>
+
   <td class="flex items-center px-6 py-4">
     <%= link_to new_admin_message_path(user_id: message.user.id), class: blue_btn_styles,
                 data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false } do %>
