@@ -1,9 +1,7 @@
 class Mailing < ApplicationRecord
-  MARKUP = { markup: 'mailing' }.freeze
-
   belongs_to :user
 
-  enum :target, { all_users: 0, ordered: 1, no_ordered: 2, blocked: 3, add_cart: 4, users: 5 }
+  enum :target, { all_users: 0, ordered: 1, no_ordered: 2, blocked: 3, add_cart: 4, subscriptions: 5 } # , users: 6
 
   before_validation { self.send_at ||= Time.current }
 
@@ -18,6 +16,6 @@ class Mailing < ApplicationRecord
     delay = [send_at - Time.current, 0].max
     msg   = "Запущена рассылка для:\n#{I18n.t("target.#{target}")}"
     TelegramJob.set(wait: delay).perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
-    MailingJob.set(wait: delay).perform_later(filter: target, message: message, markup: MARKUP, id: id)
+    MailingJob.set(wait: delay).perform_later(id: id)
   end
 end

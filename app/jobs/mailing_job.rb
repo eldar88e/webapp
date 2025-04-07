@@ -2,20 +2,27 @@ class MailingJob < ApplicationJob
   queue_as :default
 
   def perform(**args)
-    filter  = args[:filter]
-    message = args[:message]
-    markup  = args[:markup] || {}
-    users   = FetchUsersService.new(filter, args[:user_ids]).call
-    users.each do |user|
-      user.messages.create(text: message, is_incoming: false, data: { markup: markup })
-      sleep 0.3
-    end
-
+    mailing = Mailing.find(args[:id])
+    users   = FetchUsersService.new(mailing.target, args[:user_ids]).call
+    users.each { |user| save_message(user, mailing) }
     TelegramService.call('Рассылка успешно завершена.', Setting.fetch_value(:admin_ids))
-    Mailing.find(args[:id]).update(completed: true)
+    mailing.update(completed: true)
   end
 
   private
+
+  def save_message(user, mailing)
+    user.messages.create(text: mailing.message, is_incoming: false, data: mailing.data)
+    update_tg_file_id(mailing)
+    sleep 0.3
+  end
+
+  def update_tg_file_id(mailing)
+    return unless mailing.data['media_id'] && mailing.data['tg_file_id'].blank?
+
+    tg_media_file = TgMediaFile.find_by(id: mailing.data['media_id'])
+    mailing.data['tg_file_id'] = tg_media_file.file_id if tg_media_file&.file_id.present?
+  end
 
   def process_message(message, user, markup)
     result = TelegramService.call(message, user.tg_id, **markup)

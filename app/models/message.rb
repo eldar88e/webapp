@@ -40,6 +40,6 @@ class Message < ApplicationRecord
   end
 
   def send_to_telegram
-    ConsumerSenderTgJob.perform_later(msg_id: id, id: user.tg_id, msg: text, **parsed_data)
+    ConsumerSenderTgJob.perform_later(msg_id: id, id: user.tg_id, msg: text, data: parsed_data)
   end
 end

@@ -89,6 +89,7 @@ ru:
     all_users: "Всем клиентам"
     blocked: "Заблокированные"
     add_cart: "Добавили в корзину(без сделки)"
+    subscriptions: "Подписчики"
   pagy:
     aria_label:
       nav:

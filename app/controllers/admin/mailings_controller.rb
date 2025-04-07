@@ -1,5 +1,9 @@
 module Admin
   class MailingsController < Admin::ApplicationController
+    MARKUP = { markup: 'to_catalog' }.freeze # TODO: менять через форму
+
+    before_action :form_mailing, only: :create
+
     def index
       @mailings = Mailing.order(send_at: :desc).includes(:user)
     end
@@ -13,7 +17,6 @@ module Admin
     end
 
     def create
-      @mailing = current_user.mailings.new(mailing_params)
       if @mailing.save
         redirect_to admin_mailings_path, notice: t('mailing_success')
       else
@@ -23,8 +26,13 @@ module Admin
 
     private
 
+    def form_mailing
+      @mailing      = current_user.mailings.new(mailing_params)
+      @mailing.data = AttachmentService.call(params[:mailing][:attachment]).merge(MARKUP)
+    end
+
     def mailing_params
-      params.require(:mailing).permit(:target, :message, :send_at)
+      params.require(:mailing).permit(:target, :message, :send_at) # TODO: добавить  :scheduled_at
     end
   end
 end

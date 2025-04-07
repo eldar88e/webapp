@@ -39,4 +39,8 @@ class FetchUsersService
   def blocked
     User.where(is_blocked: true)
   end
+
+  def subscriptions
+    User.joins(:product_subscriptions).distinct
+  end
 end
