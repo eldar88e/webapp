@@ -17,7 +17,7 @@ class Review < ApplicationRecord
   scope :approved, -> { where(approved: true) }
   scope :pending, -> { where(approved: false) }
 
-  after_commit :process_photos, on: :create
+  after_commit :process_photos, on: %i[create update]
   after_create_commit :send_telegram_notification
 
   def approve!

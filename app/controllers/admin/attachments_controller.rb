@@ -4,8 +4,7 @@ module Admin
 
     def destroy
       @attachment.destroy
-      # msg = 'Вложение успешно удалено.'
-      render turbo_stream: turbo_stream.remove("attachment_#{@attachment.id}")
+      head :no_content
     end
 
     private
