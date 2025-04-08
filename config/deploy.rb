@@ -70,6 +70,14 @@ def console
   end
 end
 
+def down
+  on $server do
+    within $app_path do
+      execute :docker, "compose -f #{$docker_compose_file} down"
+    end
+  end
+end
+
 task_name = ARGV[1]
 
 case task_name
@@ -79,6 +87,8 @@ when 'restart'
   restart
 when 'rebuild'
   rebuild
+when 'down'
+  down
 when 'console'
   console #TODO: не работает
 end
