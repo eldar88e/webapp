@@ -3,13 +3,7 @@ class AuthController < ApplicationController
   before_action :set_btn_link, only: :login
   layout 'login'
 
-  def login
-    return unless current_user
-    return redirect_to '/error-register' if current_user.started.blank? || current_user.is_blocked.present?
-    return redirect_to "/#{@btn_link}" if @btn_link.present?
-
-    redirect_to products_path
-  end
+  def login; end
 
   def telegram
     data      = params.to_unsafe_h.except(:controller, :action)
