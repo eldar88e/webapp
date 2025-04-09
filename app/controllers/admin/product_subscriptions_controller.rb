@@ -1,8 +1,7 @@
 module Admin
   class ProductSubscriptionsController < Admin::ApplicationController
     def index
-      subscriptions = ProductSubscription.includes(:user, :product).order(created_at: :desc)
-      @pagy, @product_subscriptions = pagy(subscriptions, items: 20)
+      @pagy, @product_subscriptions = pagy ProductSubscription.includes(:user, :product).order(created_at: :desc)
     end
 
     def destroy

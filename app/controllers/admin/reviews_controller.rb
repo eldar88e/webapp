@@ -5,7 +5,7 @@ module Admin
 
     def index
       @q_reviews = Review.includes(:user, :product, :photos_attachments).order(created_at: :desc).ransack(params[:q])
-      @pagy, @reviews = pagy(@q_reviews.result, items: 20)
+      @pagy, @reviews = pagy(@q_reviews.result)
     end
 
     def new

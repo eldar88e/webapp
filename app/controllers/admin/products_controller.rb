@@ -3,9 +3,8 @@ module Admin
     before_action :set_product, only: %i[edit update destroy]
 
     def index
-      @q_products = Product.includes(:image_attachment).order(:created_at).ransack(params[:q])
-      form_products
-      @pagy, @products = pagy(@result, items: 20)
+      @q_products      = Product.includes(:image_attachment).order(:created_at).ransack(params[:q])
+      @pagy, @products = pagy form_products
     end
 
     def new
@@ -54,7 +53,7 @@ module Admin
       root_product_id  = Setting.fetch_value(:root_product_id).to_i
       session[:filter] = params[:filter].presence || session[:filter].presence || 'descendants'
       root_product     = Product.find_by(id: root_product_id)
-      @result          = root_product.nil? ? @q_products.result : filter_products(root_product)
+      root_product.nil? ? @q_products.result : filter_products(root_product)
     end
 
     def filter_products(root_product)

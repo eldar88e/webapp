@@ -5,8 +5,9 @@ module Admin
     before_action :form_message, only: :create
 
     def index
-      @q_messages = Message.includes(:user).order(created_at: :desc).ransack(params[:q])
-      @pagy, @messages = pagy(@q_messages.result.joins(:user), items: 20)
+      @q_messages       = Message.includes(:user).ransack(params[:q])
+      @q_messages.sorts = 'created_at desc' if params[:q].nil?
+      @pagy, @messages  = pagy(@q_messages.result.joins(:user))
     end
 
     def new

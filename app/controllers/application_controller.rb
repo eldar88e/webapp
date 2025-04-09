@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   include MainConcerns
-  before_action :check_authenticate_user!, :check_started_user!
+  before_action :check_authenticate_user!
   include Pagy::Backend
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   # allow_browser versions: :modern
@@ -28,10 +28,6 @@ class ApplicationController < ActionController::Base
 
   def check_authenticate_user!
     redirect_to_telegram unless current_user
-  end
-
-  def check_started_user!
-    redirect_to '/error-register' if current_user && (current_user.started.blank? || current_user.is_blocked.present?)
   end
 
   def user_params

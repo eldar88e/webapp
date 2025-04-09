@@ -3,12 +3,11 @@ module Admin
     def index
       @q_messages = Message.select('DISTINCT ON (messages.tg_id) messages.*')
                            .order('messages.tg_id, messages.created_at DESC').ransack(params[:q])
-      @pagy, @messages = pagy(@q_messages.result, items: 20)
+      @pagy, @messages = pagy(@q_messages.result)
     end
 
     def show
-      chat = Message.where(tg_id: params[:id]).order(created_at: :desc)
-      @pagy, @chat = pagy(chat, items: 20)
+      @pagy, @chat = pagy Message.where(tg_id: params[:id]).order(created_at: :desc)
       render turbo_stream: turbo_stream.update(:chat, partial: 'admin/new_messages/show')
     end
   end

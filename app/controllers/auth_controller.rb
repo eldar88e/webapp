@@ -1,16 +1,14 @@
 class AuthController < ApplicationController
   skip_before_action :check_authenticate_user!
-  skip_before_action :check_started_user!, only: %i[telegram error_register user_checker]
   before_action :set_btn_link, only: :login
   layout 'login'
 
   def login
     return unless current_user
+    return redirect_to '/error-register' if current_user.started.blank? || current_user.is_blocked.present?
     return redirect_to "/#{@btn_link}" if @btn_link.present?
 
     redirect_to products_path
-    # available_products
-    # render 'products/index', layout: 'application'
   end
 
   def telegram
