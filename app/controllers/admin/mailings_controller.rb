@@ -28,7 +28,7 @@ module Admin
 
     def form_mailing
       @mailing      = current_user.mailings.new(mailing_params)
-      @mailing.data = AttachmentService.call(params[:mailing][:attachment]).merge(MARKUP)
+      @mailing.data = AttachmentService.call(params[:mailing][:attachment]).merge(markup: MARKUP)
     end
 
     def mailing_params

@@ -21,7 +21,9 @@ class ConsumerSenderTgJob < ApplicationJob
   end
 
   def save_file_id(args, msg_attrs, message, result)
-    media_file = TgMediaFile.find(args[:data][:media_id])
+    media_file = TgMediaFile.find_by(id: args[:data][:media_id])
+    return Rails.logger.error("Not found TgMediaFile for media_id: #{args[:data][:media_id]}") if media_file.blank?
+
     tg_file_id = form_file_id(result, media_file)
     media_file.update(file_id: tg_file_id)
     msg_attrs[:data] = message.data.merge(tg_file_id: tg_file_id)

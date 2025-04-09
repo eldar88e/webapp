@@ -3,7 +3,7 @@ require 'telegram/bot'
 module Tg
   class MarkupService
     def initialize(data)
-      @data      = data
+      @data      = data[:markup] || {}
       @keyboards = form_keyboards
     end
 
@@ -23,8 +23,8 @@ module Tg
 
     def form_keyboards
       [
-        (startapp_btn('Перейти в каталог') if @data[:markup].include? 'to_catalog'),
-        (ask_btn if @data[:markup].include? 'ask_btn'),
+        (startapp_btn if @data[:markup]&.include? 'to_catalog'),
+        (ask_btn if @data[:markup]&.include? 'ask_btn'),
         (form_url_keyboard(@data[:markup_ext_url]) if @data[:markup_ext_url].present?),
         (form_url_keyboard if @data[:markup_url].present?)
       ].compact
@@ -39,7 +39,7 @@ module Tg
       form_url_btn @data[:markup_text] || 'Кнопка', url
     end
 
-    def startapp_btn(btn_text)
+    def startapp_btn(btn_text = 'Перейти в каталог')
       form_url_btn btn_text, "https://t.me/#{settings[:tg_main_bot]}?startapp"
     end
 
