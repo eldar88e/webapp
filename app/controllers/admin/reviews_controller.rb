@@ -60,7 +60,7 @@ module Admin
     end
 
     def review_params
-      params.require(:review).permit(:content, :rating, :approved, :user_id, photos: [])
+      params.require(:review).permit(:content, :product_id, :rating, :approved, :user_id, photos: [])
     end
   end
 end

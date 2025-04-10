@@ -31,9 +31,10 @@ def update
       execute :git, 'checkout', $branch
       execute :git, 'pull'
       execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails db:prepare"
-      # bundle exec rails assets:precompile
+      # bundle exec rails assets:precompile TODO: не все изменения применяет vite
       execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} yarn vite build"
       execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails restart"
+      # TODO: перезагрузка sidekiq
     end
   end
 end
