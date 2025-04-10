@@ -15,8 +15,13 @@
 
 <div class="input-container">
   <%= f.text_field :phone_number, autocomplete: "tel", placeholder: '', class: "input-str", required: true,
-                   data: { controller: "phone_mask", action: "input->phone_mask#mask blur->phone_mask#check" }%>
+                   data: { controller: "phone_mask", action: "input->phone_mask#mask blur->phone_mask#check" } %>
   <%= f.label :phone_number %>
+</div>
+
+<div class="input-container">
+  <%= f.text_field :email, autocomplete: "email", class: "input-str", required: true %>
+  <%= f.label :email %>
 </div>
 
 <%= javascript_tag do %>
