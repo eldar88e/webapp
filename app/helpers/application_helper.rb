@@ -1,6 +1,10 @@
 module ApplicationHelper
   include Pagy::Frontend
 
+  def presence_email
+    current_user.email.match?(/tgapp.online|example.com/) ? '' : current_user.email
+  end
+
   def cart_items_total
     current_user.cart.cart_items.sum(&:quantity)
   end

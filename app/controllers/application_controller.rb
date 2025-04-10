@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
   end
 
   def user_params
-    keys = %i[first_name middle_name last_name phone_number address street home apartment postal_code build]
+    keys = %i[first_name middle_name last_name phone_number email address street home apartment postal_code build]
     params.require(:user).permit(keys)
   end
 
