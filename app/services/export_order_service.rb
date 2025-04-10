@@ -55,7 +55,7 @@ class ExportOrderService < GoogleSheetsService
   def save_first_row
     range = "#{@list_name}!A1:J1"
     value = [['ID заказа', 'Дата оплаты', 'ID клиента', 'ФИО', 'Адрес', 'Доставка',
-              'ID Товара', 'Название товара', 'Кол-во', 'Цена']]
+              'ID Товара', 'Название товара', 'Кол-во', 'Цена', 'Магазин']]
     response = @service.get_spreadsheet_values(SPREADSHEET_ID, range)
     return if response.values == value
 
@@ -64,7 +64,9 @@ class ExportOrderService < GoogleSheetsService
   end
 
   def form_order_items
-    @order.order_items.map { |i| order_info + [i.product.id, i.product.name, i.quantity, i.price.to_i] }
+    @order.order_items.map do |i|
+      order_info + [i.product.id, i.product.name, i.quantity, i.price.to_i, ENV.fetch('HOST')]
+    end
   end
 
   def order_info
