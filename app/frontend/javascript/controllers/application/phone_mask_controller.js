@@ -1,6 +1,22 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
+  connect() {
+    const valueSize = this.element.value.trim().length;
+    if (valueSize !== 18 && valueSize > 0) {
+      this.mask();
+      setTimeout(() => {
+        this.check();
+      }, 2000);
+    }
+  }
+
+  startMask() {
+    if (this.element.value.trim().length === 0) {
+      this.check();
+      this.element.value = "+7 ("
+    }
+  }
 
   mask() {
     this.element.setCustomValidity("");
