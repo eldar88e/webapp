@@ -53,7 +53,7 @@ class ExportOrderService < GoogleSheetsService
   end
 
   def save_first_row
-    range = "#{@list_name}!A1:J1"
+    range = "#{@list_name}!A1:K1"
     value = [['ID заказа', 'Дата оплаты', 'ID клиента', 'ФИО', 'Адрес', 'Доставка',
               'ID Товара', 'Название товара', 'Кол-во', 'Цена', 'Магазин']]
     response = @service.get_spreadsheet_values(SPREADSHEET_ID, range)

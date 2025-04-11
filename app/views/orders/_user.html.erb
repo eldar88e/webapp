@@ -1,10 +1,10 @@
 <div data-controller="agreement">
   <div class="form" data-agreement-target="form">
-    <%= form_with(model: current_user, url: orders_path, method: :post, data: { controller: "dadata" }) do |form| %>
+    <%= form_with(model: current_user, url: orders_path, method: :post, data: { controller: 'dadata' }) do |form| %>
       <%= render partial: 'devise/registrations/form_items', locals: { f: form } %>
 
       <div class="mt-6 flex items-center gap-4">
-        <%= form.check_box :agreement, class: 'form-check-input', checked: true, data: { agreement_target: "check_box" } %>
+        <%= form.check_box :agreement, class: 'form-check-input', checked: true, data: { agreement_target: 'check_box' } %>
 
         <%= link_to '#', class: 'agreement', data: { action: "click->agreement#visible" } do %>
           Я принимаю условия пользовательского соглашения

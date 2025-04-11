@@ -42,6 +42,8 @@ end
 def restart
   on $server do
     within $app_path do
+      execute :git, 'checkout', $branch
+      execute :git, 'pull'
       execute :docker, "compose -f #{$docker_compose_file} up --build #{$rails_service} sidekiq"
     end
   end

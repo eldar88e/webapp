@@ -9,13 +9,13 @@
 </div>
 
 <div class="input-container">
-  <%= f.text_field :last_name, autocomplete: "name", placeholder: '', class: "input-str", required: true %>
+  <%= f.text_field :last_name, autocomplete: 'name', placeholder: '', class: 'input-str', required: true %>
   <%= f.label :last_name %>
 </div>
 
 <div class="input-container">
-  <%= f.text_field :phone_number, autocomplete: "tel", placeholder: '', class: "input-str", required: true,
-                   data: { controller: "phone_mask", action: "input->phone_mask#mask blur->phone_mask#check" } %>
+  <%= f.text_field :phone_number, autocomplete: 'tel', placeholder: '', class: 'input-str', required: true,
+                   data: { controller: 'phone-mask', action: 'input->phone-mask#mask blur->phone-mask#check' } %>
   <%= f.label :phone_number %>
 </div>
 
