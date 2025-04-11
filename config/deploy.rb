@@ -54,13 +54,14 @@ def rebuild
     within $app_path do
       execute :git, 'checkout', $branch
       execute :git, 'pull'
-      execute :docker, "compose -f #{$docker_compose_file} up --build #{$rails_service} sidekiq"
+      execute :docker, "compose -f #{$docker_compose_file} build #{$rails_service} sidekiq"
       execute :docker, "compose -f #{$docker_compose_file} down #{$rails_service} sidekiq"
       execute :docker, "volume rm #{$app_name}_gems"
-      execute :docker, "compose -f #{$docker_compose_file} up --build #{$rails_service} sidekiq"
-      execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails db:prepare"
-      execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} yarn vite build"
-      execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails restart"
+      execute :docker, "compose -f #{$docker_compose_file} up #{$rails_service} sidekiq"
+      # execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails db:prepare"
+      # execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} yarn vite build"
+      # execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails restart"
+      # execute :docker, "compose -f #{$docker_compose_file} restart sidekiq"
     end
   end
 end
