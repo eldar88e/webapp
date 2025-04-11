@@ -6,6 +6,7 @@ class GoogleSheetsService
   SCOPES               = ['https://www.googleapis.com/auth/spreadsheets'].freeze
   SERVICE_ACCOUNT_FILE = './key.json'.freeze
   SPREADSHEET_ID       = Setting.fetch_value(:spreadsheet_id).freeze
+  FIRST_COLUMN         = 'A'.freeze
 
   def initialize(_model)
     sheets   = Google::Apis::SheetsV4
@@ -20,7 +21,7 @@ class GoogleSheetsService
   end
 
   def find_empty_row
-    range       = "#{@list_name}!A:A"
+    range       = "#{@list_name}!#{FIRST_COLUMN}:#{FIRST_COLUMN}"
     response    = @service.get_spreadsheet_values(SPREADSHEET_ID, range)
     filled_rows = response.values ? response.values.size : 1
     filled_rows + 1

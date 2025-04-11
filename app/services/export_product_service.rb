@@ -1,4 +1,6 @@
 class ExportProductService < GoogleSheetsService
+  LAST_COLUMN = 'D'.freeze
+
   def initialize(product)
     super
     @product   = product
@@ -12,7 +14,7 @@ class ExportProductService < GoogleSheetsService
     row         = find_row_for_product(@product.id)
     return save_row(values, value_range) if row.nil?
 
-    range = "#{@list_name}!A#{row}:D#{row}"
+    range = "#{@list_name}!#{FIRST_COLUMN}#{row}:#{LAST_COLUMN}#{row}"
     @service.update_spreadsheet_value(SPREADSHEET_ID, range, value_range, value_input_option: 'RAW')
     nil
   end
@@ -21,13 +23,13 @@ class ExportProductService < GoogleSheetsService
 
   def save_row(values, value_range)
     empty_row = find_empty_row
-    range     = "#{@list_name}!A#{empty_row}:I#{empty_row + values.size - 1}"
+    range     = "#{@list_name}!#{FIRST_COLUMN}#{empty_row}:#{LAST_COLUMN}#{empty_row + values.size - 1}"
     @service.append_spreadsheet_value(SPREADSHEET_ID, range, value_range, value_input_option: 'RAW')
     nil
   end
 
   def find_row_for_product(product_id)
-    range = "#{@list_name}!A2:A"
+    range    = "#{@list_name}!#{FIRST_COLUMN}2:#{FIRST_COLUMN}"
     response = @service.get_spreadsheet_values(SPREADSHEET_ID, range)
     return nil unless response.values
 
@@ -36,7 +38,7 @@ class ExportProductService < GoogleSheetsService
   end
 
   def save_first_row
-    range    = "#{@list_name}!A1:D1"
+    range    = "#{@list_name}!#{FIRST_COLUMN}1:#{LAST_COLUMN}1"
     value    = [['ID продукта', 'Название', 'Остатки', 'Цена']]
     response = @service.get_spreadsheet_values(SPREADSHEET_ID, range)
     return if response.values == value

@@ -24,7 +24,7 @@ module Tg
       end
       @result
     rescue StandardError => e
-      Rails.logger.error "Failed to send message to bot: #{e.message}"
+      Rails.logger.warn "Failed to send message to bot: #{e.message}"
       e
     end
 

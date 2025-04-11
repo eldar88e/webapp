@@ -1,4 +1,6 @@
 class ExportOrderService < GoogleSheetsService
+  LAST_COLUMN = 'K'.freeze
+
   def initialize(order)
     super
     @order     = order
@@ -10,7 +12,7 @@ class ExportOrderService < GoogleSheetsService
     empty_row   = find_empty_row
     values      = form_order_items
     value_range = form_values(values)
-    range       = "#{@list_name}!A#{empty_row}:J#{empty_row + values.size - 1}"
+    range       = "#{@list_name}!#{FIRST_COLUMN}#{empty_row}:#{LAST_COLUMN}#{empty_row + values.size - 1}"
     @service.append_spreadsheet_value(SPREADSHEET_ID, range, value_range, value_input_option: 'RAW')
     nil
   end
@@ -39,7 +41,7 @@ class ExportOrderService < GoogleSheetsService
 
   def find_ranges_for_order_items(order_id)
     ranges   = []
-    range    = "#{@list_name}!A2:A"
+    range    = "#{@list_name}!#{FIRST_COLUMN}2:#{FIRST_COLUMN}"
     response = @service.get_spreadsheet_values(SPREADSHEET_ID, range)
     response.values&.each_with_index do |row, index|
       next if row[0].to_i != order_id
@@ -53,7 +55,7 @@ class ExportOrderService < GoogleSheetsService
   end
 
   def save_first_row
-    range = "#{@list_name}!A1:K1"
+    range = "#{@list_name}!#{FIRST_COLUMN}1:#{LAST_COLUMN}1"
     value = [['ID заказа', 'Дата оплаты', 'ID клиента', 'ФИО', 'Адрес', 'Доставка',
               'ID Товара', 'Название товара', 'Кол-во', 'Цена', 'Магазин']]
     response = @service.get_spreadsheet_values(SPREADSHEET_ID, range)
@@ -65,8 +67,21 @@ class ExportOrderService < GoogleSheetsService
 
   def form_order_items
     @order.order_items.map do |i|
-      order_info + [i.product.id, i.product.name, i.quantity, i.price.to_i, ENV.fetch('HOST')]
+      prepare_mirena_order
+      product_id = prepare_mirena_product_id(i)
+      order_info + [product_id, i.product.name, i.quantity, i.price.to_i, ENV.fetch('HOST')]
     end
+  end
+
+  def prepare_mirena_product_id(order_item)
+    ENV.fetch('HOST').include?('mirena') ? "M_#{order_item.product.id}" : order_item.product.id
+  end
+
+  def prepare_mirena_order
+    return unless ENV.fetch('HOST').include?('mirena')
+
+    order_info[0] = "M_#{order_info[0]}"
+    order_info[2] = "M_#{order_info[2]}"
   end
 
   def order_info
