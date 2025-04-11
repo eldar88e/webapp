@@ -2,6 +2,10 @@
 
 module Users
   class RegistrationsController < ApplicationController
+    def new
+      super
+    end
+
     def edit
       render turbo_stream: turbo_stream.update(:modal, partial: '/devise/registrations/edit')
     end
