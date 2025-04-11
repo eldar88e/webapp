@@ -52,6 +52,7 @@ end
 def rebuild
   on $server do
     within $app_path do
+      execute :git, 'pull'
       execute :git, 'checkout', $branch
       execute :git, 'pull'
       execute :docker, "compose -f #{$docker_compose_file} build #{$rails_service} sidekiq"
