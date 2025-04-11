@@ -9,7 +9,7 @@
 
       <%= button_to settings[:app_name], root_path, class: 'logo', title: 'На главную', method: :get %>
 
-      <%= render '/layouts/partials/cart' %>
+      <%= render '/layouts/partials/cart' if current_user %>
     </div>
   </div>
 </div>
