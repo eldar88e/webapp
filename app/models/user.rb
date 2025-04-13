@@ -121,6 +121,6 @@ class User < ApplicationRecord
   end
 
   def resend_confirmation_email
-    send_confirmation_instructions
+    Devise::Mailer.confirmation_instructions(self, confirmation_token).deliver_later
   end
 end
