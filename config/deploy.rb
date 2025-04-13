@@ -17,7 +17,7 @@ SSH_ENV = {
 environment = (ARGV[0] || 'staging').to_sym
 config      = SSH_ENV[environment] || SSH_ENV[:staging]
 
-$branch              = 'main'
+$branch              = 'devise_confirmable'
 $app_name            = config[:app_name]
 $app_path            = "/home/deploy/#{$app_name}"
 $docker_compose_file = config[:docker_compose_file]
