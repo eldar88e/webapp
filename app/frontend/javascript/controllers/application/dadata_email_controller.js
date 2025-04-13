@@ -1,45 +1,21 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["suggestions", "suggestions_street", "address", "street", "post_code", "home", "apartment", "build"];
+  static targets = ["esuggestions"];
 
-  search(event) {
+  searchEmail(event) {
     const query = event.target.value.trim();
-    let suggestions = this.suggestionsTarget;
-    this.form_connection(query, suggestions);
+    this.form_connection(query);
   }
 
-  search_street(event) {
-    let query = event.target.value.trim();
-    let suggestions = this.suggestions_streetTarget;
-    this.form_connection(query, suggestions, true);
-  }
-
-  form_connection(query, suggestions, prefixStreet=false) {
+  form_connection(query) {
     if (!query) {
-      suggestions.textContent = '';
-      suggestions.style = "display: none;"
+      this.esuggestionsTarget.textContent = '';
+      this.esuggestionsTarget.style = "display: none;"
       return;
     }
 
-    if (prefixStreet) {
-      let address = this.addressTarget.value.trim();
-      if (address.length > 1) { query = `${address} ${query}`; }
-    }
-    const url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
-
-    let options = {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "Authorization": "Token " + dadata_token
-      },
-      body: JSON.stringify({query: query})
-    };
-
-    this.fetch_dadata(url, options, suggestions)
+    this.fetch_dadata(query)
   }
 
   pull_data(data, suggestions) {
@@ -59,13 +35,13 @@ export default class extends Controller {
     suggestionElement.classList.add("suggestion-item");
     if (id !== false) {
       suggestionElement.setAttribute("data-dadata-id-value", id);
-      suggestionElement.setAttribute("data-action", "click->dadata#setAddress");
+      suggestionElement.setAttribute("data-action", "click->dadata#setEmail");
     }
     suggestionElement.textContent = text;
     suggestions.appendChild(suggestionElement);
   }
 
-  setAddress(event) {
+  setEmail(event) {
     const idValue = event.target.dataset.dadataIdValue;
     const address = suggestions_cache[idValue]['data'];
 
@@ -87,13 +63,30 @@ export default class extends Controller {
     this.suggestions_streetTarget.style = "display: none;"
   }
 
-  fetch_dadata(url, options, suggestions) {
+  fetch_dadata(query) {
+    const url = "https://cleaner.dadata.ru/api/v1/clean/email";
+    const suggestions = this.esuggestionsTarget;
+    const options = {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": `Token ${dadata_token}`,
+        "X-Secret": dadata_secret_key
+      },
+      body: JSON.stringify([query])
+    };
+
+    console.log(options);
+
     fetch(url, options)
-        .then(response => {
-          if (!response.ok) { throw new Error(`HTTP error! Status: ${response.status}`); }
-          return response.json();
-        })
-        .then(data => { this.pull_data(data.suggestions, suggestions) })
+         .then(response => {
+           if (!response.ok) { throw new Error(`HTTP error! Status: ${response.status}`); }
+           return response.text();
+         })
+        //.then(data => { this.pull_data(data.suggestions, suggestions) })
+        .then(result => { console.log(result) })
         .catch(error => { console.error('Error fetching suggestions:', error); });
   }
 }
