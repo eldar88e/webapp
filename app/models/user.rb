@@ -15,9 +15,12 @@ class User < ApplicationRecord
   has_many :mailings, dependent: :destroy
 
   validates :tg_id, presence: true, uniqueness: true
-  validates :postal_code,
-            numericality: { only_integer: true, allow_nil: true, greater_than_or_equal_to: 0,
-                            less_than_or_equal_to: 999_999 }
+  validates :email, 'valid_email_2/email': { strict_mx: true, disposable: true }
+  validates :postal_code, numericality: { only_integer: true, allow_nil: true, greater_than_or_equal_to: 100_000,
+                                          less_than_or_equal_to: 999_999 }
+
+  before_update :reset_confirmation_if_email_changed, if: :will_save_change_to_email?
+  after_update :resend_confirmation_email, if: :saved_change_to_email?
 
   def admin?
     role == 'admin'
@@ -107,5 +110,17 @@ class User < ApplicationRecord
 
   def self.ransackable_associations(_auth_object = nil)
     %w[]
+  end
+
+  private
+
+  def reset_confirmation_if_email_changed
+    self.confirmed_at = nil
+    self.confirmation_token = Devise.friendly_token
+    self.confirmation_sent_at = Time.current
+  end
+
+  def resend_confirmation_email
+    send_confirmation_instructions
   end
 end

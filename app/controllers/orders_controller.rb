@@ -1,15 +1,16 @@
 class OrdersController < ApplicationController
+  before_action :handle_user_info, only: [:create], if: -> { params[:page].to_i == 1 }
+
   def index
     @orders = current_user.orders
   end
 
   def create
-    return handle_user_info if params[:page].to_i == 1
-    return error_notice('Вы не согласны с нашими условиями!') if params[:user][:agreement] != '1'
-    return error_notice(t('required_fields')) unless required_fields_filled?
+    return error_notice(t('.agreement')) if params[:user][:agreement] != '1'
+    return error_notice(t('.required_fields')) unless required_fields_filled?
+    return process_order if update_user
 
-    update_user
-    process_order
+    error_notice current_user.errors.full_messages
   end
 
   private
@@ -19,7 +20,7 @@ class OrdersController < ApplicationController
 
     if service[:success]
       render turbo_stream: [
-        success_notice('Ваш заказ успешно оформлен.'),
+        success_notice(t('.success')),
         turbo_stream.append(:modal, '<script>closeModal();</script>'.html_safe),
         turbo_stream.append(:modal, '<script>closeMiniApp();</script>'.html_safe)
       ]
@@ -33,6 +34,6 @@ class OrdersController < ApplicationController
   end
 
   def update_user
-    current_user.update(filtered_params) # TODO: очистить перед сохранением
+    current_user.update(filtered_params)
   end
 end

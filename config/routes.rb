@@ -24,6 +24,11 @@ Rails.application.routes.draw do
 
   post 'webhook/update-product-stock', to: 'webhook#update_product_stock'
 
+  devise_scope :user do
+    get '/edit_email', to: 'devise/registrations#edit_email', as: :edit_email
+    patch '/change_email', to: 'users/registrations#change_email', as: :change_email
+  end
+
   draw :admin
 
   match '*unmatched', to: 'application#redirect_to_telegram', via: :all,

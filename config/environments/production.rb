@@ -112,10 +112,11 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: ENV.fetch('HOST') }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: 'smtp.gmail.com',
-    port: 587,
+    address: 'smtp.beget.com',
+    # port: 587,
+    port: 25,
     domain: ENV.fetch('HOST'),
-    user_name: ENV.fetch('EMAIL_FROM', nil),
+    user_name: ENV.fetch('EMAIL_FROM', 'noreply@tgapp.online'),
     password: ENV.fetch('EMAIL_PASSWORD', nil),
     authentication: 'plain',
     enable_starttls_auto: true
