@@ -114,7 +114,7 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     address: 'smtp.beget.com',
     # port: 587,
-    port: 25,
+    port: 465,
     domain: ENV.fetch('HOST'),
     user_name: ENV.fetch('EMAIL_FROM', 'noreply@tgapp.online'),
     password: ENV.fetch('EMAIL_PASSWORD', nil),
