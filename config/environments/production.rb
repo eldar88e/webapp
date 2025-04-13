@@ -113,13 +113,14 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: 'smtp.beget.com',
-    # port: 587,
     port: 465,
     domain: ENV.fetch('HOST'),
-    user_name: ENV.fetch('EMAIL_FROM', 'noreply@tgapp.online'),
-    password: ENV.fetch('EMAIL_PASSWORD', nil),
-    authentication: 'plain',
-    enable_starttls_auto: true
+    user_name: ENV.fetch('EMAIL_FROM'),
+    password: ENV.fetch('EMAIL_PASSWORD'),
+    authentication: 'login',
+    ssl: true,
+    tls: true,
+    enable_starttls_auto: false
   }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to

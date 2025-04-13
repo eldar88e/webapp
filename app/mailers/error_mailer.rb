@@ -1,5 +1,5 @@
 class ErrorMailer < ApplicationMailer
-  default from: ENV.fetch('EMAIL_FROM', 'noreply@tgapp.online')
+  default from: ENV.fetch('EMAIL_FROM', 'noreply@example.com')
 
   def send_error(error, full_message)
     @error   = error
