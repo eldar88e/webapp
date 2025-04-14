@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   get '/user-checker', to: 'auth#user_checker'
 
   post 'webhook/update-product-stock', to: 'webhook#update_product_stock'
+  get '/proxy/clean_email', to: 'proxy#clean_email'
 
   devise_scope :user do
     get '/edit_email', to: 'devise/registrations#edit_email', as: :edit_email
