@@ -8,6 +8,7 @@ class AuthController < ApplicationController
   def telegram
     data      = params.to_unsafe_h.except(:controller, :action)
     init_data = URI.decode_www_form(data['initData'].to_s).to_h
+    binding.pry
     return render_error_auth if init_data.blank? || init_data['user'].blank?
 
     sign_in_with_tg_id(init_data['user'])
