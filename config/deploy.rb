@@ -56,7 +56,7 @@ def rebuild
       execute :git, 'checkout', $branch
       execute :git, 'pull'
       execute :docker, "compose -f #{$docker_compose_file} build #{$rails_service} sidekiq"
-      execute :docker, "compose -f #{$docker_compose_file} down #{$rails_service} sidekiq"
+      execute :docker, "compose -f #{$docker_compose_file} down #{$rails_service} sidekiq base"
       execute :docker, "volume rm #{$app_name}_gems"
       execute :docker, "compose -f #{$docker_compose_file} up #{$rails_service} sidekiq"
       # execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails db:prepare"
