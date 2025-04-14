@@ -19,6 +19,7 @@ class ProductsController < ApplicationController
   private
 
   def login
+    binding.pry
     return redirect_to login_path unless current_user
     return redirect_to '/error-register' if current_user.started.blank? || current_user.is_blocked.present?
 
