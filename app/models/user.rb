@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  EMAIL_HOST = 'strattera.tgapp.online'.freeze
+  EMAIL_HOST = 'tgapp.online'.freeze
 
   # Include default devise modules. Others available are:
   # :lockable, :timeoutable, :trackable and :omniauthable
