@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  EMAIL_HOST = 'strattera.tgapp.online'.freeze
+
   # Include default devise modules. Others available are:
   # :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable,
@@ -81,7 +83,7 @@ class User < ApplicationRecord
   end
 
   def self.find_or_create_by_tg(tg_user, started)
-    current_user = find_or_create_by(tg_id: tg_user['id']) do |user|
+    current_user = find_or_create_by!(tg_id: tg_user['id']) do |user|
       assign_user_attributes(user, tg_user, started)
     end
     log_user(current_user, started)
@@ -92,7 +94,7 @@ class User < ApplicationRecord
     # user.first_name  = tg_user['first_name']
     # user.middle_name = tg_user['last_name']
     user.username  = tg_user['username']
-    user.email     = "tg_#{tg_user['id']}@#{ENV.fetch('HOST')}"
+    user.email     = "tg_#{tg_user['id']}@#{EMAIL_HOST}"
     user.password  = Devise.friendly_token[0, 20]
     user.photo_url = tg_user['photo_url']
     user.started   = started
