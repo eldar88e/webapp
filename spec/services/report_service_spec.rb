@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe ReportService do
   let(:user) { create(:user, tg_id: 123) }
   let(:product) { create(:product) }
+  let!(:bank_card) { create(:bank_card) }
   let(:order) { create(:order, user: user, total_amount: 100) }
 
   before do
