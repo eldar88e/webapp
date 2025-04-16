@@ -15,6 +15,8 @@ class TelegramBotWorker
     rescue StandardError => e
       process_error e
       # raise e
+      sleep 5
+      retry
     end
   end
 
@@ -22,7 +24,7 @@ class TelegramBotWorker
 
   def process_error(error)
     Rails.logger.error "#{self.class} | #{error.message}"
-    ErrorMailer.send_error(error.message, error.full_message).deliver_later
+    # ErrorMailer.send_error(error.message, error.full_message).deliver_later
   end
 
   def tg_token_present?
