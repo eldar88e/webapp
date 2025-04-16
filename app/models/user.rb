@@ -15,6 +15,8 @@ class User < ApplicationRecord
   has_many :product_subscriptions, dependent: :destroy
   has_many :subscribed_products, through: :product_subscriptions, source: :product
   has_many :mailings, dependent: :destroy
+  has_many :ahoy_visits, class_name: 'Ahoy::Visit', dependent: :destroy
+  has_many :ahoy_events, class_name: 'Ahoy::Event', dependent: :destroy
 
   validates :tg_id, presence: true, uniqueness: true
   validates :email, 'valid_email_2/email': { strict_mx: true, disposable: true }
@@ -124,5 +126,6 @@ class User < ApplicationRecord
 
   def resend_confirmation_email
     Devise::Mailer.confirmation_instructions(self, confirmation_token).deliver_later
+    # TODO: tg notice
   end
 end
