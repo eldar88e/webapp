@@ -35,9 +35,6 @@ ru:
       cancelled: "Отменено"
       refunded: "Возвращено"
       overdue: "Просрочен"
-  helpers:
-    label:
-
   target:
     ordered: "С заказами"
     no_ordered: "Без заказов"
@@ -102,6 +99,8 @@ ru:
         message: "Сообщение"
       user:
         full_address: "Адрес"
+        username: "Тг-логин"
+        tg_id: "Тг-ид"
         created_at: "Дата регистрации"
         is_blocked: "Заблокирован"
         started: "Нажал на 'Старт'"

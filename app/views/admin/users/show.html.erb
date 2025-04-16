@@ -16,10 +16,12 @@
       </div>
       <% %i[id username tg_id email phone_number full_address postal_code is_blocked started created_at].each do |attribute| %>
         <div>
-          <span class="text-gray-700 dark:text-gray-400 text-sm"><%= t("helpers.label.user.#{attribute}") %>: </span>
+          <span class="text-gray-700 dark:text-gray-400 text-sm"><%= t("activerecord.attributes.user.#{attribute}") %>: </span>
           <span class="font-bold ml-2">
             <% if @user.send(attribute).blank? %>
               <%= %i[is_blocked started].include?(attribute) ? 'Нет' : "< Не указано >" %>
+            <% elsif attribute == :email %>
+              <%= @user.send(attribute) + (@user.confirmed_at ? ' ✔' : '') %>
             <% elsif attribute == :created_at %>
               <%= format_date @user.send(attribute) %>
             <% elsif attribute == :username %>
@@ -34,8 +36,14 @@
           </span>
         </div>
       <% end %>
+
+      <div>
+        <span class="text-gray-700 dark:text-gray-400 text-sm">Устройство: </span>
+        <span class="font-bold ml-2"><%= @user.ahoy_visits.last&.os || 'Не распознано' %></span>
+      </div>
     </div>
   </div>
+
   <div class="w-full md:w-1/2 px-2 py-2 md:py-4">
     <div class="w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6 flex">
       <%= link_to edit_admin_user_path(@user), data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false },
