@@ -1,8 +1,9 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  authenticate :user do
+  authenticate :user, ->(user) { user.admin? } do
     mount Sidekiq::Web => '/admin/sidekiq'
+    mount Blazer::Engine, at: '/admin/blazer'
   end
 
   devise_for :users, controllers: { registrations: 'users/registrations' }

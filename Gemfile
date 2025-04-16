@@ -35,6 +35,7 @@ gem 'telegram-bot-ruby', require: false
 gem 'valid_email2'
 
 gem 'ahoy_matey'
+gem 'blazer'
 gem 'geocoder'
 gem 'maxminddb'
 
