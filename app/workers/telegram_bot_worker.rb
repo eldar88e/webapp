@@ -14,7 +14,7 @@ class TelegramBotWorker
       bot.listen { |message| process_bot(bot, message) }
     rescue StandardError => e
       process_error e
-      raise e
+      # raise e
     end
   end
 
