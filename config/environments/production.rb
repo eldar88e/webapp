@@ -89,13 +89,28 @@ Rails.application.configure do
     config.lograge.custom_payload { |controller| { user_id: controller.current_user.try(:id) } }
     config.lograge.logger = logstash_logger
   else
-    file_logger = ActiveSupport::Logger.new("log/#{Rails.env}.json.log", 10, 20 * 1024 * 1024)
+    # file_logger = ActiveSupport::Logger.new("log/#{Rails.env}.json.log", 10, 20 * 1024 * 1024)
+    #
+    # file_logger.formatter = proc do |severity, timestamp, _progname, msg|
+    #   "#{{ timestamp: timestamp, level: severity, message: msg, request_id: Thread.current[:request_id] }.to_json}\n"
+    # end
+    #
+    # logger = ActiveSupport::TaggedLogging.new(file_logger)
 
-    file_logger.formatter = proc do |severity, timestamp, _progname, msg|
-      "#{{ timestamp: timestamp, level: severity, message: msg, request_id: Thread.current[:request_id] }.to_json}\n"
+    config.lograge.enabled = true
+    config.lograge.formatter = Lograge::Formatters::Json.new
+
+    config.lograge.custom_options = lambda do |event|
+      {
+        time: Time.now.iso8601,
+        request_id: event.payload[:request_id],
+        user_id: event.payload[:user_id], # если ты его передаёшь
+        remote_ip: event.payload[:remote_ip],
+        params: event.payload[:params].except('controller', 'action'),
+        controller: event.payload[:controller],
+        action: event.payload[:action]
+      }
     end
-
-    logger = ActiveSupport::TaggedLogging.new(file_logger)
   end
 
   config.logger    = logger
