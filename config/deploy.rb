@@ -33,8 +33,8 @@ def update
       execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails db:prepare"
       # bundle exec rails assets:precompile TODO: не все изменения применяет vite
       execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} yarn vite build"
+      execute :docker, "compose -f #{$docker_compose_file} restart base sidekiq"
       execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails restart"
-      # TODO: перезагрузка sidekiq
     end
   end
 end
@@ -44,7 +44,7 @@ def restart
     within $app_path do
       execute :git, 'checkout', $branch
       execute :git, 'pull'
-      execute :docker, "compose -f #{$docker_compose_file} up --build #{$rails_service} sidekiq"
+      execute :docker, "compose -f #{$docker_compose_file} up --build base #{$rails_service} sidekiq"
     end
   end
 end
@@ -55,10 +55,10 @@ def rebuild
       execute :git, 'pull'
       execute :git, 'checkout', $branch
       execute :git, 'pull'
-      execute :docker, "compose -f #{$docker_compose_file} build #{$rails_service} sidekiq"
-      execute :docker, "compose -f #{$docker_compose_file} down #{$rails_service} sidekiq base"
+      execute :docker, "compose -f #{$docker_compose_file} build base #{$rails_service} sidekiq"
+      execute :docker, "compose -f #{$docker_compose_file} down base #{$rails_service} sidekiq"
       execute :docker, "volume rm #{$app_name}_gems || true"
-      execute :docker, "compose -f #{$docker_compose_file} up --build #{$rails_service} sidekiq"
+      execute :docker, "compose -f #{$docker_compose_file} up --build base #{$rails_service} sidekiq"
       # execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails db:prepare"
       # execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} yarn vite build"
       # execute :docker, "compose -f #{$docker_compose_file} exec #{$rails_service} bundle exec rails restart"

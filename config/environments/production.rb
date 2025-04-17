@@ -62,7 +62,7 @@ Rails.application.configure do
     expires_in: 2.hours
   }
 
-  if Rails.env.production? && ENV.fetch('LOGSTASH_HOST', nil).present? && ENV.fetch('LOGSTASH_PORT', nil).present?
+  if ENV.fetch('LOGSTASH_HOST', nil).present? && ENV.fetch('LOGSTASH_PORT', nil).present?
     logstash_logger = LogStashLogger.new(
       type: :udp,
       host: ENV.fetch('LOGSTASH_HOST'),
