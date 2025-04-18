@@ -101,13 +101,13 @@ Rails.application.configure do
         result[:progname] = 'sidekiq'
         msg = message.dup
         msg.delete_prefix!('[ActiveJob] ')
-        job_name = msg[/\A\[(\w*Job\w*)\]/, 1]
-        msg.gsub!(/\A\[\w+Job\]\s/, '')
+        job_name = msg[/\[(\w+Job)\]/, 1]
+        msg.gsub!(job_name, '')
         result[:job_name] = job_name if job_name.present?
-        job_id = msg[/\A\[\w+-\w+-\w+-\w+-\w+\]/, 1]
-        msg.gsub!(/\A\[(\w+-\w+-\w+-\w+-\w+)\]\s/, '')
+        job_id = msg[/\A\[(\w+-\w+-\w+-\w+-\w+)\]/, 1]
+        msg.gsub!(job_id, '')
         result[:job_id] = job_id if job_id.present?
-        result[:message] = msg
+        result[:message] = msg.gsub(/\[\]|\(Job ID: \)/, '').strip.squeeze(' ')
       end
       "#{result.to_json}\n"
     end
