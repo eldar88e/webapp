@@ -83,7 +83,7 @@ Rails.application.configure do
         remote_ip: event.payload[:request]&.remote_ip,
         # process_id: Process.pid,
         request_id: event.payload[:headers]['action_dispatch.request_id'],
-        request_body: event.payload[:params].except('controller', 'action', 'authenticity_token')
+        request_body: event.payload[:params].except('controller', 'action', '_method', 'authenticity_token')
       }
     end
   else
