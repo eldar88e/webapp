@@ -90,28 +90,27 @@ Rails.application.configure do
     # config.lograge.logger = logstash_logger
   else
     file_logger = ActiveSupport::Logger.new('log/production.log', 10, 50.megabytes)
-
     file_logger.formatter = proc do |severity, timestamp, progname, msg|
       result = {
         timestamp: timestamp,
         level: severity,
-        progname: progname,
-        message: msg, request_id: Thread.current[:request_id]
+        progname: progname || defined?(Sidekiq::CLI) ? 'sidekiq' : 'rails',
+        message: msg
       }
       "#{result.to_json}\n"
     end
-
     logger = ActiveSupport::TaggedLogging.new(file_logger)
 
+    lograge_logger = ActiveSupport::Logger.new('log/production.log', 10, 50.megabytes)
+    lograge_logger.formatter = nil
     config.lograge.enabled = true
     config.lograge.formatter = Lograge::Formatters::Json.new
-
+    config.lograge.logger = lograge_logger
     config.lograge.custom_payload { |controller| { user_id: controller.current_user&.id } }
-
     config.lograge.custom_options = lambda do |event|
       result = {
         time: Time.current,
-        level: event.payload[:level] || 'info',
+        level: event.payload[:level] || 'INFO',
         request_id: event.payload[:headers]['action_dispatch.request_id'],
         user_id: event.payload[:user_id],
         remote_ip: event.payload[:request]&.remote_ip
