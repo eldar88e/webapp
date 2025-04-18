@@ -105,7 +105,7 @@ Rails.application.configure do
     config.lograge.custom_options = lambda do |event|
       {
         time: Time.now.iso8601,
-        request_id: event.payload[:request_id],
+        request_id: event.payload[:headers]['action_dispatch.request_id'],
         user_id: event.payload[:user_id],
         # remote_ip: event.payload[:remote_ip],
         remote_ip: event.payload[:request]&.remote_ip,
@@ -116,8 +116,8 @@ Rails.application.configure do
     end
   end
 
-  config.logger    = logger
-  config.log_tags  = [:request_id]
+  # config.logger    = logger
+  # config.log_tags  = [:request_id]
   config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
 
   # Disable caching for Action Mailer templates even if Action Controller
