@@ -101,7 +101,7 @@ Rails.application.configure do
     file_logger = ActiveSupport::Logger.new('log/production.log', 10, 50.megabytes)
     file_logger.formatter = proc do |severity, _timestamp, progname, message|
       result = {
-        timestamp: Time.current,
+        time: Time.current,
         level: severity,
         progname: progname || 'rails',
         message: message
