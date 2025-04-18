@@ -94,18 +94,28 @@ Rails.application.configure do
       result = {
         timestamp: timestamp,
         level: severity,
-        progname: progname || defined?(Sidekiq::CLI) ? 'sidekiq' : 'rails',
+        progname: progname || 'rails',
         message: msg
       }
+      if defined?(Sidekiq::CLI)
+        result[:progname] = 'sidekiq'
+        msg.delete_prefix!('[ActiveJob] ')
+        job_name = msg[/\A\[(\w*Job\w*)\]/, 1]
+        msg.gsub!(/\A\[\w+Job\]\s/, '')
+        result[:job_name] = job_name if job_name.present?
+        job_id = msg[/\A\[\w+-\w+-\w+-\w+-\w+\]/, 1]
+        msg.gsub!(/\A\[\w+-\w+-\w+-\w+-\w+\]\s/, '')
+        result[:job_id] = job_id if job_id.present?
+        result[:message]
+      end
       "#{result.to_json}\n"
     end
     logger = ActiveSupport::TaggedLogging.new(file_logger)
 
-    lograge_logger = ActiveSupport::Logger.new('log/production.log', 10, 50.megabytes)
-    # lograge_logger.formatter = nil
-    config.lograge.enabled = true
+    lograge_logger           = ActiveSupport::Logger.new('log/production.log', 10, 50.megabytes)
+    config.lograge.enabled   = true
     config.lograge.formatter = Lograge::Formatters::Json.new
-    config.lograge.logger = lograge_logger
+    config.lograge.logger    = lograge_logger
     config.lograge.custom_payload { |controller| { user_id: controller.current_user&.id } }
     config.lograge.custom_options = lambda do |event|
       result = {
