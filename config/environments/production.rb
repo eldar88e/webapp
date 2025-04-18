@@ -63,16 +63,6 @@ Rails.application.configure do
   }
 
   if ENV.fetch('LOGSTASH_HOST', nil).present? && ENV.fetch('LOGSTASH_PORT', nil).present?
-    logstash_lograge = LogStashLogger.new(
-      type: :udp,
-      host: ENV.fetch('LOGSTASH_HOST'),
-      port: ENV.fetch('LOGSTASH_PORT').to_i,
-      customize_event: lambda do |event|
-        event['host'] = { name: Socket.gethostname }
-        event['service'] = 'app'
-      end
-    )
-
     logstash_logger = LogStashLogger.new(
       type: :udp,
       host: ENV.fetch('LOGSTASH_HOST'),
@@ -87,16 +77,15 @@ Rails.application.configure do
 
     config.lograge.enabled = true
     config.lograge.formatter = Lograge::Formatters::Logstash.new
+    config.lograge.custom_payload { |controller| { user_id: controller.current_user.try(:id) } }
     config.lograge.custom_options = lambda do |event|
       {
         remote_ip: event.payload[:request]&.remote_ip,
         process_id: Process.pid,
         request_id: event.payload[:headers]['action_dispatch.request_id'],
-        request_body: event.payload[:params].except('controller', 'action', 'format')
+        request_body: event.payload[:params].except('controller', 'action', 'authenticity_token')
       }
     end
-    config.lograge.custom_payload { |controller| { user_id: controller.current_user.try(:id) } }
-    config.lograge.logger = logstash_lograge
   else
     file_logger = ActiveSupport::Logger.new('log/production.log', 10, 50.megabytes)
     file_logger.formatter = proc do |severity, _timestamp, progname, message|
