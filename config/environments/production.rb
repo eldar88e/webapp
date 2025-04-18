@@ -81,7 +81,7 @@ Rails.application.configure do
     config.lograge.custom_options = lambda do |event|
       {
         remote_ip: event.payload[:request]&.remote_ip,
-        process_id: Process.pid,
+        # process_id: Process.pid,
         request_id: event.payload[:headers]['action_dispatch.request_id'],
         request_body: event.payload[:params].except('controller', 'action', 'authenticity_token')
       }
