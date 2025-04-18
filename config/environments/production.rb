@@ -90,11 +90,17 @@ Rails.application.configure do
     # config.lograge.logger = logstash_logger
   else
     file_logger = ActiveSupport::Logger.new('log/production.log', 10, 50.megabytes)
-    #
-    # file_logger.formatter = proc do |severity, timestamp, _progname, msg|
-    #   "#{{ timestamp: timestamp, level: severity, message: msg, request_id: Thread.current[:request_id] }.to_json}\n"
-    # end
-    #
+
+    file_logger.formatter = proc do |severity, timestamp, progname, msg|
+      result = {
+        timestamp: timestamp,
+        level: severity,
+        progname: progname,
+        message: msg, request_id: Thread.current[:request_id]
+      }
+      "#{result.to_json}\n"
+    end
+
     logger = ActiveSupport::TaggedLogging.new(file_logger)
 
     config.lograge.enabled = true
