@@ -102,7 +102,7 @@ Rails.application.configure do
     logger = ActiveSupport::TaggedLogging.new(file_logger)
 
     lograge_logger = ActiveSupport::Logger.new('log/production.log', 10, 50.megabytes)
-    lograge_logger.formatter = nil
+    # lograge_logger.formatter = nil
     config.lograge.enabled = true
     config.lograge.formatter = Lograge::Formatters::Json.new
     config.lograge.logger = lograge_logger
