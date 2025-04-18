@@ -105,6 +105,7 @@ Rails.application.configure do
     config.lograge.custom_options = lambda do |event|
       result = {
         time: Time.current,
+        level: event.payload[:level] || 'info',
         request_id: event.payload[:headers]['action_dispatch.request_id'],
         user_id: event.payload[:user_id],
         remote_ip: event.payload[:request]&.remote_ip
