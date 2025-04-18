@@ -90,16 +90,17 @@ Rails.application.configure do
     # config.lograge.logger = logstash_logger
   else
     file_logger = ActiveSupport::Logger.new('log/production.log', 10, 50.megabytes)
-    file_logger.formatter = proc do |severity, timestamp, progname, msg|
+    file_logger.formatter = proc do |severity, timestamp, progname, message|
       result = {
         timestamp: timestamp,
         level: severity,
         progname: progname || 'rails',
-        message: msg
+        message: message
       }
       if defined?(Sidekiq::CLI)
         result[:progname] = 'sidekiq'
-        msg.delete_prefix!('[ActiveJob] ')
+        msg = message.dup
+        msg = msg.delete_prefix('[ActiveJob] ')
         job_name = msg[/\A\[(\w*Job\w*)\]/, 1]
         msg.gsub!(/\A\[\w+Job\]\s/, '')
         result[:job_name] = job_name if job_name.present?
