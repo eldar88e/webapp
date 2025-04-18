@@ -101,7 +101,7 @@ Rails.application.configure do
     file_logger = ActiveSupport::Logger.new('log/production.log', 10, 50.megabytes)
     file_logger.formatter = proc do |severity, _timestamp, progname, message|
       result = {
-        time: Time.current,
+        timestamp: Time.current,
         level: severity,
         progname: progname || 'rails',
         message: message
@@ -129,7 +129,7 @@ Rails.application.configure do
     config.lograge.custom_payload { |controller| { user_id: controller.current_user&.id } }
     config.lograge.custom_options = lambda do |event|
       result = {
-        time: Time.current,
+        timestamp: Time.current,
         level: event.payload[:level] || 'INFO',
         request_id: event.payload[:headers]['action_dispatch.request_id'],
         user_id: event.payload[:user_id],
