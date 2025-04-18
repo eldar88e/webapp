@@ -101,10 +101,10 @@ Rails.application.configure do
         result[:progname] = 'sidekiq'
         msg = message.dup
         msg.delete_prefix!('[ActiveJob] ')
-        job_name = msg[/\[(\w+Job)\]/, 1]
+        job_name = msg[/\[([\w|:]+Job)\]/, 1]
         msg.gsub!(job_name, '') if job_name.present?
         result[:job_name] = job_name if job_name.present?
-        job_id = msg[/\A\[(\w+-\w+-\w+-\w+-\w+)\]/, 1]
+        job_id = msg[/\[(\w+-\w+-\w+-\w+-\w+)\]/, 1]
         msg.gsub!(job_id, '') if job_id.present?
         result[:job_id] = job_id if job_id.present?
         result[:message] = msg.gsub(/\[\]|\(Job ID: \)/, '').strip.squeeze(' ')
