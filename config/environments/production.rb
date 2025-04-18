@@ -87,15 +87,15 @@ Rails.application.configure do
       }
     end
     config.lograge.custom_payload { |controller| { user_id: controller.current_user.try(:id) } }
-    config.lograge.logger = logstash_logger
+    # config.lograge.logger = logstash_logger
   else
-    # file_logger = ActiveSupport::Logger.new("log/#{Rails.env}.json.log", 10, 20 * 1024 * 1024)
+    file_logger = ActiveSupport::Logger.new('log/production.log', 10, 50.megabytes)
     #
     # file_logger.formatter = proc do |severity, timestamp, _progname, msg|
     #   "#{{ timestamp: timestamp, level: severity, message: msg, request_id: Thread.current[:request_id] }.to_json}\n"
     # end
     #
-    # logger = ActiveSupport::TaggedLogging.new(file_logger)
+    logger = ActiveSupport::TaggedLogging.new(file_logger)
 
     config.lograge.enabled = true
     config.lograge.formatter = Lograge::Formatters::Json.new
@@ -115,7 +115,7 @@ Rails.application.configure do
     end
   end
 
-  # config.logger    = logger
+  config.logger    = logger
   # config.log_tags  = [:request_id]
   config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
 
