@@ -100,14 +100,14 @@ Rails.application.configure do
       if defined?(Sidekiq::CLI)
         result[:progname] = 'sidekiq'
         msg = message.dup
-        msg = msg.delete_prefix('[ActiveJob] ')
+        msg.delete_prefix!('[ActiveJob] ')
         job_name = msg[/\A\[(\w*Job\w*)\]/, 1]
         msg.gsub!(/\A\[\w+Job\]\s/, '')
         result[:job_name] = job_name if job_name.present?
         job_id = msg[/\A\[\w+-\w+-\w+-\w+-\w+\]/, 1]
-        msg.gsub!(/\A\[\w+-\w+-\w+-\w+-\w+\]\s/, '')
+        msg.gsub!(/\A\[(\w+-\w+-\w+-\w+-\w+)\]\s/, '')
         result[:job_id] = job_id if job_id.present?
-        result[:message]
+        result[:message] = msg
       end
       "#{result.to_json}\n"
     end
