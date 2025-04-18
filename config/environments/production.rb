@@ -107,13 +107,9 @@ Rails.application.configure do
         time: Time.current,
         request_id: event.payload[:headers]['action_dispatch.request_id'],
         user_id: event.payload[:user_id],
-        # remote_ip: event.payload[:remote_ip],
-        remote_ip: event.payload[:request]&.remote_ip,
-        # params: event.payload[:params].except('controller', 'action'),
-        # controller: event.payload[:controller],
-        # action: event.payload[:action]
+        remote_ip: event.payload[:request]&.remote_ip
       }
-      params = event.payload[:params].except('controller', 'action')
+      params = event.payload[:params].except('controller', 'action', '_method', 'authenticity_token')
       result[:params] = params if params.present?
       result
     end
