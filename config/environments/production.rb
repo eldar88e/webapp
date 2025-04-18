@@ -103,16 +103,19 @@ Rails.application.configure do
     config.lograge.custom_payload { |controller| { user_id: controller.current_user&.id } }
 
     config.lograge.custom_options = lambda do |event|
-      {
-        time: Time.now.iso8601,
+      result = {
+        time: Time.current,
         request_id: event.payload[:headers]['action_dispatch.request_id'],
         user_id: event.payload[:user_id],
         # remote_ip: event.payload[:remote_ip],
         remote_ip: event.payload[:request]&.remote_ip,
-        params: event.payload[:params].except('controller', 'action'),
-        controller: event.payload[:controller],
-        action: event.payload[:action]
+        # params: event.payload[:params].except('controller', 'action'),
+        # controller: event.payload[:controller],
+        # action: event.payload[:action]
       }
+      params = event.payload[:params].except('controller', 'action')
+      result[:params] = params if params.present?
+      result
     end
   end
 
