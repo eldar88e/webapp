@@ -92,7 +92,7 @@ Rails.application.configure do
   # config.logger = logger
 
   # config.log_tags  = [:request_id]
-  config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
+  # config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
 
   # Disable caching for Action Mailer templates even if Action Controller
   # caching is enabled.
