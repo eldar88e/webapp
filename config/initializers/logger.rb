@@ -9,15 +9,17 @@ if Rails.env.production?
     }
     if defined?(Sidekiq::CLI)
       result[:progname] = 'sidekiq'
-      msg = message.dup
-      msg.delete_prefix!('[ActiveJob] ')
-      job_name = msg[/\[([\w|:]+Job)\]/, 1]
-      msg.gsub!(job_name, '') if job_name.present?
-      result[:job_name] = job_name if job_name.present?
-      job_id = msg[/\[(\w+-\w+-\w+-\w+-\w+)\]/, 1]
-      msg.gsub!(job_id, '') if job_id.present?
-      result[:job_id] = job_id if job_id.present?
-      result[:message] = msg.gsub(/\[\]|\(Job ID: \)/, '').strip.squeeze(' ')
+      if message.is_a?(Setting)
+        msg = message.dup
+        msg.delete_prefix!('[ActiveJob] ')
+        job_name = msg[/\[([\w|:]+Job)\]/, 1]
+        msg.gsub!(job_name, '') if job_name.present?
+        result[:job_name] = job_name if job_name.present?
+        job_id = msg[/\[(\w+-\w+-\w+-\w+-\w+)\]/, 1]
+        msg.gsub!(job_id, '') if job_id.present?
+        result[:job_id] = job_id if job_id.present?
+        result[:message] = msg.gsub(/\[\]|\(Job ID: \)/, '').strip.squeeze(' ')
+      end
     end
     "#{result.to_json}\n"
   end
