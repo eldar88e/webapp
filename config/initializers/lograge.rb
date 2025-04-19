@@ -7,10 +7,13 @@ Rails.application.configure do
   config.lograge.custom_payload { |controller| { user_id: controller.current_user&.id } }
   config.lograge.custom_options = lambda do |event|
     payload = event.payload || {}
-    status  = payload[:status] || event.status
     result  = {
       timestamp: Time.current,
-      level: (200..399).cover?(status.to_i) ? 'INFO' : 'ERROR', # payload[:level] || 'unknown',
+      level: if payload[:status].nil?
+               'UNKNOWN'
+             else
+               (200..399).cover?(payload[:status].to_i) ? 'INFO' : 'ERROR'
+             end, # payload[:level] || 'unknown',
       request_id: payload[:headers] && payload[:headers]['action_dispatch.request_id'],
       user_id: payload[:user_id],
       remote_ip: payload[:request]&.remote_ip
