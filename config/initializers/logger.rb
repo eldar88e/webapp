@@ -9,7 +9,7 @@ if Rails.env.production?
     }
     if defined?(Sidekiq::CLI)
       result[:progname] = 'sidekiq'
-      if message.is_a?(Setting)
+      if message.is_a?(String)
         msg = message.dup
         msg.delete_prefix!('[ActiveJob] ')
         job_name = msg[/\[([\w|:]+Job)\]/, 1]
