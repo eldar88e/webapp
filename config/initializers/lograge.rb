@@ -10,7 +10,7 @@ Rails.application.configure do
     status  = payload[:status] || event.status
     result  = {
       timestamp: Time.current,
-      level: (200..399).cover?(status.to_i) ? 'info' : 'error', # payload[:level] || 'unknown',
+      level: (200..399).cover?(status.to_i) ? 'INFO' : 'ERROR', # payload[:level] || 'unknown',
       request_id: payload[:headers] && payload[:headers]['action_dispatch.request_id'],
       user_id: payload[:user_id],
       remote_ip: payload[:request]&.remote_ip
