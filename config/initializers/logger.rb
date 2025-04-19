@@ -25,5 +25,4 @@ if Rails.env.production?
   end
 
   Rails.logger = ActiveSupport::TaggedLogging.new(file_logger)
-  Rails.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
 end
