@@ -62,35 +62,35 @@ Rails.application.configure do
     expires_in: 2.hours
   }
 
-  if ENV.fetch('LOGSTASH_HOST', nil).present? && ENV.fetch('LOGSTASH_PORT', nil).present?
-    # logstash_logger = LogStashLogger.new(
-    #   type: :udp,
-    #   host: ENV.fetch('LOGSTASH_HOST'),
-    #   port: ENV.fetch('LOGSTASH_PORT').to_i,
-    #   formatter: :json_lines,
-    #   customize_event: lambda do |event|
-    #     event['host'] = { name: Socket.gethostname }
-    #     event['service'] = defined?(Sidekiq::CLI) ? 'sidekiq' : 'app' # ['app']
-    #   end
-    # )
-    # logger = ActiveSupport::TaggedLogging.new(logstash_logger)
-    #
-    # config.lograge.enabled = true
-    # config.lograge.formatter = Lograge::Formatters::Logstash.new
-    # config.lograge.custom_payload { |controller| { user_id: controller.current_user.try(:id) } }
-    # config.lograge.custom_options = lambda do |event|
-    #   {
-    #     remote_ip: event.payload&.dig(:request)&.remote_ip,
-    #     # process_id: Process.pid,
-    #     request_id: event.payload[:headers]['action_dispatch.request_id'],
-    #     request_body: event.payload[:params].except('controller', 'action', '_method', 'authenticity_token')
-    #   }
-    # end
-  else
+  # if ENV.fetch('LOGSTASH_HOST', nil).present? && ENV.fetch('LOGSTASH_PORT', nil).present?
+  #   logstash_logger = LogStashLogger.new(
+  #     type: :udp,
+  #     host: ENV.fetch('LOGSTASH_HOST'),
+  #     port: ENV.fetch('LOGSTASH_PORT').to_i,
+  #     formatter: :json_lines,
+  #     customize_event: lambda do |event|
+  #       event['host'] = { name: Socket.gethostname }
+  #       event['service'] = defined?(Sidekiq::CLI) ? 'sidekiq' : 'app' # ['app']
+  #     end
+  #   )
+  #   logger = ActiveSupport::TaggedLogging.new(logstash_logger)
+  #
+  #   config.lograge.enabled = true
+  #   config.lograge.formatter = Lograge::Formatters::Logstash.new
+  #   config.lograge.custom_payload { |controller| { user_id: controller.current_user.try(:id) } }
+  #   config.lograge.custom_options = lambda do |event|
+  #     {
+  #       remote_ip: event.payload&.dig(:request)&.remote_ip,
+  #       # process_id: Process.pid,
+  #       request_id: event.payload[:headers]['action_dispatch.request_id'],
+  #       request_body: event.payload[:params].except('controller', 'action', '_method', 'authenticity_token')
+  #     }
+  #   end
+  # else
+  #
+  # end
+  # config.logger = logger
 
-  end
-
-  # config.logger    = logger
   # config.log_tags  = [:request_id]
   config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
 
