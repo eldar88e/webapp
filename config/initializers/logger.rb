@@ -1,5 +1,6 @@
 if Rails.env.production?
   file_logger = ActiveSupport::Logger.new("log/#{Rails.env}.log", 10, 50.megabytes)
+  file_logger.level = Logger::INFO
   file_logger.formatter = proc do |severity, _timestamp, progname, message|
     result = {
       timestamp: Time.current,

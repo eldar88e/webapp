@@ -1,5 +1,6 @@
 Rails.application.configure do
   lograge_logger           = ActiveSupport::Logger.new("log/#{Rails.env}.log", 10, 50.megabytes)
+  lograge_logger.level     = Logger::INFO
   config.lograge.enabled   = true
   config.lograge.formatter = Lograge::Formatters::Json.new
   config.lograge.logger    = lograge_logger
