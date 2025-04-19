@@ -63,74 +63,34 @@ Rails.application.configure do
   }
 
   if ENV.fetch('LOGSTASH_HOST', nil).present? && ENV.fetch('LOGSTASH_PORT', nil).present?
-    logstash_logger = LogStashLogger.new(
-      type: :udp,
-      host: ENV.fetch('LOGSTASH_HOST'),
-      port: ENV.fetch('LOGSTASH_PORT').to_i,
-      formatter: :json_lines,
-      customize_event: lambda do |event|
-        event['host'] = { name: Socket.gethostname }
-        event['service'] = defined?(Sidekiq::CLI) ? 'sidekiq' : 'app' # ['app']
-      end
-    )
-    logger = ActiveSupport::TaggedLogging.new(logstash_logger)
-
-    config.lograge.enabled = true
-    config.lograge.formatter = Lograge::Formatters::Logstash.new
-    config.lograge.custom_payload { |controller| { user_id: controller.current_user.try(:id) } }
-    config.lograge.custom_options = lambda do |event|
-      {
-        remote_ip: event.payload&.dig(:request)&.remote_ip,
-        # process_id: Process.pid,
-        request_id: event.payload[:headers]['action_dispatch.request_id'],
-        request_body: event.payload[:params].except('controller', 'action', '_method', 'authenticity_token')
-      }
-    end
+    # logstash_logger = LogStashLogger.new(
+    #   type: :udp,
+    #   host: ENV.fetch('LOGSTASH_HOST'),
+    #   port: ENV.fetch('LOGSTASH_PORT').to_i,
+    #   formatter: :json_lines,
+    #   customize_event: lambda do |event|
+    #     event['host'] = { name: Socket.gethostname }
+    #     event['service'] = defined?(Sidekiq::CLI) ? 'sidekiq' : 'app' # ['app']
+    #   end
+    # )
+    # logger = ActiveSupport::TaggedLogging.new(logstash_logger)
+    #
+    # config.lograge.enabled = true
+    # config.lograge.formatter = Lograge::Formatters::Logstash.new
+    # config.lograge.custom_payload { |controller| { user_id: controller.current_user.try(:id) } }
+    # config.lograge.custom_options = lambda do |event|
+    #   {
+    #     remote_ip: event.payload&.dig(:request)&.remote_ip,
+    #     # process_id: Process.pid,
+    #     request_id: event.payload[:headers]['action_dispatch.request_id'],
+    #     request_body: event.payload[:params].except('controller', 'action', '_method', 'authenticity_token')
+    #   }
+    # end
   else
-    file_logger = ActiveSupport::Logger.new('log/production.log', 10, 50.megabytes)
-    file_logger.formatter = proc do |severity, _timestamp, progname, message|
-      result = {
-        timestamp: Time.current,
-        level: severity,
-        progname: progname || 'rails',
-        message: message
-      }
-      if defined?(Sidekiq::CLI)
-        result[:progname] = 'sidekiq'
-        msg = message.dup
-        msg.delete_prefix!('[ActiveJob] ')
-        job_name = msg[/\[([\w|:]+Job)\]/, 1]
-        msg.gsub!(job_name, '') if job_name.present?
-        result[:job_name] = job_name if job_name.present?
-        job_id = msg[/\[(\w+-\w+-\w+-\w+-\w+)\]/, 1]
-        msg.gsub!(job_id, '') if job_id.present?
-        result[:job_id] = job_id if job_id.present?
-        result[:message] = msg.gsub(/\[\]|\(Job ID: \)/, '').strip.squeeze(' ')
-      end
-      "#{result.to_json}\n"
-    end
-    logger = ActiveSupport::TaggedLogging.new(file_logger)
 
-    lograge_logger           = ActiveSupport::Logger.new('log/production.log', 10, 50.megabytes)
-    config.lograge.enabled   = true
-    config.lograge.formatter = Lograge::Formatters::Json.new
-    config.lograge.logger    = lograge_logger
-    config.lograge.custom_payload { |controller| { user_id: controller.current_user&.id } }
-    config.lograge.custom_options = lambda do |event|
-      result = {
-        timestamp: Time.current,
-        level: event.payload[:level] || 'INFO',
-        request_id: event.payload[:headers]['action_dispatch.request_id'],
-        user_id: event.payload[:user_id],
-        remote_ip: event.payload[:request]&.remote_ip
-      }
-      params = event.payload[:params].except('controller', 'action', '_method', 'authenticity_token')
-      result[:params] = params if params.present?
-      result
-    end
   end
 
-  config.logger    = logger
+  # config.logger    = logger
   # config.log_tags  = [:request_id]
   config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
 
