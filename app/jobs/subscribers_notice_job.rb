@@ -38,14 +38,7 @@ class SubscribersNoticeJob < ApplicationJob
 
   def send_message(user, message)
     user.messages.create(**message)
-    update_tg_file_id(message)
+    Tg::FileService.update_file_id(message)
     sleep 0.3
-  end
-
-  def update_tg_file_id(message)
-    return unless message[:data][:media_id] && message[:data][:tg_file_id].blank?
-
-    tg_media_file = TgMediaFile.find_by(id: message[:data][:media_id])
-    message[:data][:tg_file_id] = tg_media_file.file_id if tg_media_file&.file_id.present?
   end
 end

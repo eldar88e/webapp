@@ -8,7 +8,7 @@ class SendReviewRequestJob < ApplicationJob
     return if order&.status != 'shipped'
 
     if ENV.fetch('HOST', '').include?('mirena')
-      send_review_request_mirena(user, product)
+      send_review_request_mirena(user)
     else
       send_review_request(user, product)
     end
@@ -17,24 +17,22 @@ class SendReviewRequestJob < ApplicationJob
   private
 
   def send_review_request(user, product)
-    msg    = I18n.t('tg_msg.review', product: product.name)
-    url    = "products_#{product.id}_reviews_new"
-    msg_id = TelegramService.call(msg, user.tg_id, markup_text: 'Оставить отзыв', markup_url: url)
-    if msg_id.instance_of?(Integer)
-      Rails.logger.info "Review request sent to user #{user.id} for product #{product.id}"
-    else
-      limit_user_privileges(msg_id, user)
-    end
+    text = I18n.t('tg_msg.review', product: product.name)
+    url  = "products_#{product.id}_reviews_new"
+    data = { markup: { markup_url: url, markup_text: '💬 Оставить отзыв' } }
+    create_msg(user, text, data)
   end
 
-  def send_review_request_mirena(user, product)
-    msg    = I18n.t('tg_msg.review_mirena')
-    url    = 'https://t.me/+Qee6vymWlYE1M2Fi'
-    msg_id = TelegramService.call(msg, user.tg_id, markup_text: '💬 Оставить отзыв', markup_ext_url: url)
-    if msg_id.instance_of?(Integer)
-      Rails.logger.info "Review request sent to user #{user.id} for product #{product.id} on Mirena"
-    else
-      limit_user_privileges(msg_id, user)
-    end
+  def send_review_request_mirena(user)
+    text = I18n.t('tg_msg.review_mirena')
+    url  = 'https://t.me/+Qee6vymWlYE1M2Fi'
+    data = { markup: { markup_ext_url: url, markup_text: '💬 Оставить отзыв' } }
+    create_msg(user, text, data)
+  end
+
+  def create_msg(user, text, data)
+    message = { text: text, is_incoming: false, data: data }
+    user.messages.create(**message)
+    # Tg::FileService.update_file_id(message) если добавить img то убрать комментарий
   end
 end

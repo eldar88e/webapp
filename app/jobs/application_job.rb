@@ -9,7 +9,7 @@ class ApplicationJob < ActiveJob::Base
 
   def limit_user_privileges(error, user)
     unless error.instance_of?(Telegram::Bot::Exceptions::ResponseError)
-      # Rails.logger.error("Telegram new sending error: #{error.message}")
+      Rails.logger.error("Telegram new sending error: #{error.message}")
       return ErrorMailer.send_error(error.message, error.full_message).deliver_later
     end
 
