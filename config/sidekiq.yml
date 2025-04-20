@@ -2,3 +2,4 @@
 :queues:
   - default
   - telegram_bot
+  - ahoy

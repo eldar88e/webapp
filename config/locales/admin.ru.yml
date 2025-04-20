@@ -1,9 +1,5 @@
 ru:
   controller:
-    settings:
-      create: "Настройка была успешно создана."
-      update: "Настройка была успешно обновлена."
-      destroy: "Настройка была успешно удалена."
     orders:
       destroy: "Заказ был успешно удален."
     products:
@@ -22,4 +18,8 @@ ru:
     product_subscriptions:
       destroy:
         success: "Подписка успешно удалена."
+    settings:
+      create: "Настройка была успешно создана."
+      update: "Настройка была успешно обновлена."
+      destroy: "Настройка была успешно удалена."
 

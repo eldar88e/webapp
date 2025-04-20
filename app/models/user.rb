@@ -1,7 +1,10 @@
 class User < ApplicationRecord
+  EMAIL_HOST = 'tgapp.online'.freeze
+
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
+  # :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable,
+         :confirmable
 
   enum :role, { user: 0, manager: 1, moderator: 2, admin: 3 }
 
@@ -12,11 +15,16 @@ class User < ApplicationRecord
   has_many :product_subscriptions, dependent: :destroy
   has_many :subscribed_products, through: :product_subscriptions, source: :product
   has_many :mailings, dependent: :destroy
+  has_many :ahoy_visits, class_name: 'Ahoy::Visit', dependent: :destroy
+  has_many :ahoy_events, class_name: 'Ahoy::Event', dependent: :destroy
 
   validates :tg_id, presence: true, uniqueness: true
-  validates :postal_code,
-            numericality: { only_integer: true, allow_nil: true, greater_than_or_equal_to: 0,
-                            less_than_or_equal_to: 999_999 }
+  validates :email, 'valid_email_2/email': { strict_mx: true, disposable: true }
+  validates :postal_code, numericality: { only_integer: true, allow_nil: true, greater_than_or_equal_to: 100_000,
+                                          less_than_or_equal_to: 999_999 }
+
+  before_update :reset_confirmation_if_email_changed, if: :will_save_change_to_email?
+  after_update :resend_confirmation_email, if: :saved_change_to_email?
 
   def admin?
     role == 'admin'
@@ -77,7 +85,7 @@ class User < ApplicationRecord
   end
 
   def self.find_or_create_by_tg(tg_user, started)
-    current_user = find_or_create_by(tg_id: tg_user['id']) do |user|
+    current_user = find_or_create_by!(tg_id: tg_user['id']) do |user|
       assign_user_attributes(user, tg_user, started)
     end
     log_user(current_user, started)
@@ -88,7 +96,7 @@ class User < ApplicationRecord
     # user.first_name  = tg_user['first_name']
     # user.middle_name = tg_user['last_name']
     user.username  = tg_user['username']
-    user.email     = "tg_#{tg_user['id']}@#{ENV.fetch('HOST')}"
+    user.email     = "tg_#{tg_user['id']}@#{EMAIL_HOST}"
     user.password  = Devise.friendly_token[0, 20]
     user.photo_url = tg_user['photo_url']
     user.started   = started
@@ -106,5 +114,18 @@ class User < ApplicationRecord
 
   def self.ransackable_associations(_auth_object = nil)
     %w[]
+  end
+
+  private
+
+  def reset_confirmation_if_email_changed
+    self.confirmed_at = nil
+    self.confirmation_token = Devise.friendly_token
+    self.confirmation_sent_at = Time.current
+  end
+
+  def resend_confirmation_email
+    Devise::Mailer.confirmation_instructions(self, confirmation_token).deliver_later
+    # TODO: tg notice
   end
 end

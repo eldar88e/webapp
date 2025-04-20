@@ -1,15 +1,27 @@
-<div class="input-container">
-  <%= f.text_field :middle_name, autocomplete: "name", placeholder: '', class: "input-str", required: true %>
+<%= javascript_tag do %>
+  window.dadata_token = "<%= settings[:dadata_token] %>"
+<% end %>
+
+<div class="input-container address-wrapper" data-controller="dadata-name">
+  <%= f.text_field :middle_name, autocomplete: "family-name", placeholder: '', class: "input-str", required: true, minlength: 2,
+                   data: { dadata_name_target: "name", action: "input->dadata-name#search focus->dadata-name#search blur->dadata-name#hidden" } %>
   <%= f.label :middle_name %>
+  <div class="suggestions-wrapper scrollable" data-dadata-name-target="suggestions">
+    <div class="suggestions-suggestions" style="display: none;"></div>
+  </div>
 </div>
 
-<div class="input-container">
-  <%= f.text_field :first_name, autocomplete: "name", placeholder: '', class: "input-str", required: true %>
+<div class="input-container address-wrapper" data-controller="dadata-name">
+  <%= f.text_field :first_name, autocomplete: "given-name", placeholder: '', class: "input-str", required: true, minlength: 2,
+                   data: { dadata_name_target: "name", action: "input->dadata-name#searchName focus->dadata-name#searchName blur->dadata-name#hidden" } %>
   <%= f.label :first_name %>
+  <div class="suggestions-wrapper scrollable" data-dadata-name-target="suggestions">
+    <div class="suggestions-suggestions" style="display: none;"></div>
+  </div>
 </div>
 
 <div class="input-container">
-  <%= f.text_field :last_name, autocomplete: 'name', placeholder: '', class: 'input-str', required: true %>
+  <%= f.text_field :last_name, autocomplete: 'additional-name', placeholder: '', class: 'input-str', required: true, minlength: 2 %>
   <%= f.label :last_name %>
 </div>
 
@@ -19,18 +31,18 @@
   <%= f.label :phone_number %>
 </div>
 
-<div class="input-container">
-  <%= f.email_field :email, value: presence_email, autocomplete: "email", placeholder: '', class: "input-str", required: true %>
+<div class="input-container" data-controller="dadata-email">
+  <%= f.email_field :email, value: presence_email, autocomplete: "email", placeholder: '', class: "input-str", required: true,
+                    data: { action: '', dadata_email_target: 'email' }%>
   <%= f.label :email %>
+  <div class="suggestions-wrapper scrollable" data-dadata-email-target="esuggestions">
+    <div class="suggestions-suggestions" style="display: none;"></div>
+  </div>
 </div>
 
-<%= javascript_tag do %>
-  window.dadata_token = "<%= settings[:dadata_token] %>"
-<% end %>
-
 <div class="input-container address-wrapper">
-  <%= f.text_field :address, autocomplete: "city-address", placeholder: '', required: true,
-                   class: "input-str", data: { dadata_target: "address", action: "input->dadata#search" } %>
+  <%= f.text_field :address, autocomplete: "city-address", placeholder: '', required: true, class: "input-str",
+                   data: { dadata_target: "address", action: "input->dadata#search focus->dadata#search blur->dadata#hidden" } %>
   <%= f.label :address %>
   <div class="suggestions-wrapper scrollable" data-dadata-target="suggestions">
     <div class="suggestions-suggestions" style="display: none;"></div>
@@ -38,8 +50,8 @@
 </div>
 
 <div class="input-container address-wrapper">
-  <%= f.text_field :street, autocomplete: "street-address", placeholder: '', required: true,
-                   class: "input-str", data: { dadata_target: "street", action: "input->dadata#search_street" } %>
+  <%= f.text_field :street, autocomplete: "street-address", placeholder: '', required: true, class: "input-str",
+                   data: { dadata_target: "street", action: "input->dadata#search_street focus->dadata#search_street blur->dadata#hiddenStreet" } %>
   <%= f.label :street %>
   <div class="suggestions-wrapper scrollable" data-dadata-target="suggestions_street">
     <div class="suggestions-suggestions" style="display: none;"></div>
@@ -71,7 +83,7 @@
   <div class="w-1/2">
     <div class="input-container">
       <%= f.number_field :postal_code, autocomplete: "postal-code", data: { dadata_target: "post_code" }, required: true,
-                         placeholder: '', class: "input-str", max: 999999 %>
+                         placeholder: '', class: "input-str", min: 100_000, max: 999_999 %>
       <%= f.label :postal_code %>
     </div>
   </div>

@@ -3,6 +3,7 @@ FactoryBot.define do
     user { create(:user) }
     total_amount { 100 }
     status { :unpaid }
+    bank_card { build(:bank_card) }
 
     trait :with_items do
       after(:create) do |order|

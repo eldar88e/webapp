@@ -1,11 +1,16 @@
 class ApplicationController < ActionController::Base
   include MainConcerns
   before_action :check_authenticate_user!
+  skip_before_action :check_authenticate_user!, if: :devise_confirmation_controller?
   include Pagy::Backend
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   # allow_browser versions: :modern
 
   private
+
+  def devise_confirmation_controller?
+    is_a?(Devise::ConfirmationsController)
+  end
 
   def available_products
     product_id = params[:category_id].presence || Setting.fetch_value(:default_product_id)

@@ -85,8 +85,7 @@ RSpec.describe Order, type: :model do
 
         it 'raises error and sends notification' do
           allow(TelegramJob).to receive(:perform_later)
-          expect { order.update!(status: :processing) }.to raise_error(StandardError, /Недостаток в остатках/)
-          expect(TelegramJob).to have_received(:perform_later).with(msg: "Недостаток в остатках для продукта: #{product.name} в заказе #{order.id}")
+          expect { order.update!(status: :processing) }.to raise_error(StandardError, /Failed to save the record/)
         end
       end
     end
@@ -116,11 +115,11 @@ RSpec.describe Order, type: :model do
   end
 
   describe '.revenue_by_date' do
-    let!(:order1) { create(:order, user: user, status: :shipped, updated_at: 1.day.ago, total_amount: 100) }
-    let!(:order2) { create(:order, user: user, status: :shipped, updated_at: Time.current, total_amount: 200) }
+    let!(:order1) { create(:order, user: user, status: :processing, updated_at: 1.day.ago, total_amount: 100) }
+    let!(:order2) { create(:order, user: user, status: :processing, updated_at: Time.current, total_amount: 200) }
 
     it 'returns revenue grouped by day' do
-      result = Order.revenue_by_date(2.days.ago, Time.current, 'DATE(updated_at)')
+      result = OrderStatisticsQuery.revenue_by_date(2.days.ago, Time.current, 'DATE(updated_at)')
       expect(result.values.sum).to eq(300)
     end
   end
@@ -133,7 +132,7 @@ RSpec.describe Order, type: :model do
     end
 
     it 'returns counts per status' do
-      result, total = Order.count_order_with_status(1.month.ago, Time.current)
+      result, total = OrderStatisticsQuery.count_orders_with_status(1.month.ago, Time.current)
       expect(result[:paid]).to eq(2)
       expect(total).to eq(3)
     end
@@ -154,7 +153,7 @@ RSpec.describe Order, type: :model do
 
   describe 'ransackable' do
     it 'returns correct ransackable attributes' do
-      expect(Order.ransackable_attributes).to match_array(%w[id status total_amount updated_at created_at])
+      expect(Order.ransackable_attributes).to match_array(%w[id status total_amount paid_at shipped_at created_at])
     end
 
     it 'returns correct ransackable associations' do

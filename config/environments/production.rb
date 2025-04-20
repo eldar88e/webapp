@@ -62,45 +62,37 @@ Rails.application.configure do
     expires_in: 2.hours
   }
 
-  if Rails.env.production? && ENV.fetch('LOGSTASH_HOST', nil).present? && ENV.fetch('LOGSTASH_PORT', nil).present?
-    logstash_logger = LogStashLogger.new(
-      type: :udp,
-      host: ENV.fetch('LOGSTASH_HOST'),
-      port: ENV.fetch('LOGSTASH_PORT').to_i,
-      formatter: :json_lines,
-      customize_event: lambda do |event|
-        event['host'] = { name: Socket.gethostname }
-        event['service'] = defined?(Sidekiq::CLI) ? 'sidekiq' : 'app' # ['app']
-      end
-    )
+  # if ENV.fetch('LOGSTASH_HOST', nil).present? && ENV.fetch('LOGSTASH_PORT', nil).present?
+  #   logstash_logger = LogStashLogger.new(
+  #     type: :udp,
+  #     host: ENV.fetch('LOGSTASH_HOST'),
+  #     port: ENV.fetch('LOGSTASH_PORT').to_i,
+  #     formatter: :json_lines,
+  #     customize_event: lambda do |event|
+  #       event['host'] = { name: Socket.gethostname }
+  #       event['service'] = defined?(Sidekiq::CLI) ? 'sidekiq' : 'app' # ['app']
+  #     end
+  #   )
+  #   logger = ActiveSupport::TaggedLogging.new(logstash_logger)
+  #
+  #   config.lograge.enabled = true
+  #   config.lograge.formatter = Lograge::Formatters::Logstash.new
+  #   config.lograge.custom_payload { |controller| { user_id: controller.current_user.try(:id) } }
+  #   config.lograge.custom_options = lambda do |event|
+  #     {
+  #       remote_ip: event.payload&.dig(:request)&.remote_ip,
+  #       # process_id: Process.pid,
+  #       request_id: event.payload[:headers]['action_dispatch.request_id'],
+  #       request_body: event.payload[:params].except('controller', 'action', '_method', 'authenticity_token')
+  #     }
+  #   end
+  # else
+  #
+  # end
+  # config.logger = logger
+  # config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
 
-    logger = ActiveSupport::TaggedLogging.new(logstash_logger)
-
-    config.lograge.enabled = true
-    config.lograge.formatter = Lograge::Formatters::Logstash.new
-    config.lograge.custom_options = lambda do |event|
-      {
-        remote_ip: event.payload[:request]&.remote_ip,
-        process_id: Process.pid,
-        request_id: event.payload[:headers]['action_dispatch.request_id'],
-        request_body: event.payload[:params].except('controller', 'action', 'format')
-      }
-    end
-    config.lograge.custom_payload { |controller| { user_id: controller.current_user.try(:id) } }
-    config.lograge.logger = logstash_logger
-  else
-    file_logger = ActiveSupport::Logger.new("log/#{Rails.env}.json.log", 10, 20 * 1024 * 1024)
-
-    file_logger.formatter = proc do |severity, timestamp, _progname, msg|
-      "#{{ timestamp: timestamp, level: severity, message: msg, request_id: Thread.current[:request_id] }.to_json}\n"
-    end
-
-    logger = ActiveSupport::TaggedLogging.new(file_logger)
-  end
-
-  config.logger    = logger
-  config.log_tags  = [:request_id]
-  config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
+  # config.log_tags  = [:request_id]
 
   # Disable caching for Action Mailer templates even if Action Controller
   # caching is enabled.
@@ -112,13 +104,15 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: ENV.fetch('HOST') }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: 'smtp.gmail.com',
-    port: 587,
+    address: 'smtp.beget.com',
+    port: 465,
     domain: ENV.fetch('HOST'),
-    user_name: ENV.fetch('EMAIL_FROM', nil),
-    password: ENV.fetch('EMAIL_PASSWORD', nil),
-    authentication: 'plain',
-    enable_starttls_auto: true
+    user_name: ENV.fetch('EMAIL_FROM'),
+    password: ENV.fetch('EMAIL_PASSWORD'),
+    authentication: 'login',
+    ssl: true,
+    tls: true,
+    enable_starttls_auto: false
   }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to

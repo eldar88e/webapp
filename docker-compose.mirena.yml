@@ -32,7 +32,7 @@ services:
     entrypoint: []
     command: >
       sh -c "SIDEKIQ_QUEUE=telegram_bot bundle exec sidekiq -q telegram_bot -c 1 &
-             bundle exec sidekiq -q default &&
+             bundle exec sidekiq -q default -q ahoy &&
              wait"
     networks:
       net:

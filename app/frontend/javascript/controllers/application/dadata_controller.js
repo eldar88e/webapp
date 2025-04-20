@@ -3,31 +3,42 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["suggestions", "suggestions_street", "address", "street", "post_code", "home", "apartment", "build"];
 
+  connect() {
+    this.city = null;
+    this.street = null;
+  }
+
   search(event) {
     const query = event.target.value.trim();
     let suggestions = this.suggestionsTarget;
-    this.form_connection(query, suggestions);
+    this.formConnection(query, suggestions);
+    this.suggestions_streetTarget.style = "display: none;"
   }
 
   search_street(event) {
     let query = event.target.value.trim();
     let suggestions = this.suggestions_streetTarget;
-    this.form_connection(query, suggestions, true);
+    this.formConnection(query, suggestions, true);
   }
 
-  form_connection(query, suggestions, prefixStreet=false) {
+  formConnection(query, suggestions, prefixStreet=false) {
     if (!query) {
+      suggestions.style.display = "none";
       suggestions.textContent = '';
-      suggestions.style = "display: none;"
       return;
     }
+    const entity = prefixStreet ? 'street' : 'city'
+    if (this[entity] === query) {
+      suggestions.style.display = "block";
+      return;
+    }
+
+    this[entity] = query;
 
     if (prefixStreet) {
       let address = this.addressTarget.value.trim();
       if (address.length > 1) { query = `${address} ${query}`; }
     }
-    let url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
-    let token = dadata_token;
 
     let options = {
       method: "POST",
@@ -35,15 +46,15 @@ export default class extends Controller {
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Token " + token
+        "Authorization": "Token " + dadata_token
       },
-      body: JSON.stringify({query: query})
+      body: JSON.stringify({ query: query })
     };
 
-    this.fetch_dadata(url, options, suggestions)
+    this.fetchDadata(options, suggestions)
   }
 
-  pull_data(data, suggestions) {
+  pullData(data, suggestions) {
     suggestions.textContent = '';
     if (data.length > 0) {
       this.append("Выберите один из вариантов...", suggestions);
@@ -78,6 +89,7 @@ export default class extends Controller {
     } else {
       this.addressTarget.value = "";
     }
+
     this.streetTarget.value = address['street_with_type'] ? address['street_with_type'] : "";
     this.post_codeTarget.value = address['postal_code'] ? address['postal_code'] : "";
     this.homeTarget.value = address['house'] ? address['house'] : "";
@@ -88,13 +100,26 @@ export default class extends Controller {
     this.suggestions_streetTarget.style = "display: none;"
   }
 
-  fetch_dadata(url, options, suggestions) {
+  fetchDadata(options, suggestions) {
+    const url = "//suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
     fetch(url, options)
         .then(response => {
           if (!response.ok) { throw new Error(`HTTP error! Status: ${response.status}`); }
           return response.json();
         })
-        .then(data => { this.pull_data(data.suggestions, suggestions) })
+        .then(data => { this.pullData(data.suggestions, suggestions) })
         .catch(error => { console.error('Error fetching suggestions:', error); });
+  }
+
+  hidden(event) {
+    setTimeout( () => {
+      this.suggestionsTarget.style = "display: none;"
+    }, 300)
+  }
+
+  hiddenStreet(event) {
+    setTimeout( () => {
+      this.suggestions_streetTarget.style = "display: none;"
+    }, 300)
   }
 }

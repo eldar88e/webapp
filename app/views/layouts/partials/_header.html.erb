@@ -3,13 +3,15 @@
 <div class="header">
   <div class="container mx-auto">
     <div class="flex items-center justify-between">
-      <button class="burger-menu" title="Меню" data-controller="menu" data-action="click->menu#show">
-        <span class="line"></span>
-      </button>
+      <% if current_user %>
+        <button class="burger-menu" title="Меню" data-controller="menu" data-action="click->menu#show">
+          <span class="line"></span>
+        </button>
+      <% end %>
 
       <%= button_to settings[:app_name], root_path, class: 'logo', title: 'На главную', method: :get %>
 
-      <%= render '/layouts/partials/cart' %>
+      <%= render '/layouts/partials/cart' if current_user %>
     </div>
   </div>
 </div>
@@ -19,7 +21,7 @@
     <nav>
       <ul>
         <li>
-          <%= link_to 'Админка', admin_path, title: 'Админ панель', data: { turbo: false } if current_user.admin_or_moderator_or_manager? %>
+          <%= link_to 'Админка', admin_path, title: 'Админ панель', data: { turbo: false } if current_user&.admin_or_moderator_or_manager? %>
         </li>
         <% available_categories.each do |category| %>
           <li>

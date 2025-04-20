@@ -26,7 +26,7 @@ module Admin
       @setting = Setting.new(setting_params)
 
       if @setting.save
-        redirect_to admin_settings_path, notice: t('controller.settings.create')
+        redirect_to admin_settings_path, notice: t('.create')
       else
         error_notice(@setting.errors.full_messages, :unprocessable_entity)
       end
@@ -34,7 +34,7 @@ module Admin
 
     def update
       if @setting.update(setting_params)
-        redirect_to admin_settings_path, notice: t('controller.settings.update')
+        redirect_to admin_settings_path, notice: t('.update')
       else
         error_notice(@setting.errors.full_messages, :unprocessable_entity)
       end
@@ -42,7 +42,7 @@ module Admin
 
     def destroy
       @setting.destroy!
-      redirect_to admin_settings_path, status: :see_other, notice: t('controller.settings.destroy')
+      redirect_to admin_settings_path, status: :see_other, notice: t('.destroy')
     end
 
     private

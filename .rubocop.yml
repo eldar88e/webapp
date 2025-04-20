@@ -22,6 +22,7 @@ Metrics/ClassLength:
 Metrics/BlockLength:
   Exclude:
     - 'config/environments/production.rb'
+    - 'config/routes.rb'
 
 Style/Documentation:
   Enabled: false
