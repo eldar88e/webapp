@@ -33,7 +33,33 @@
                         class: 'shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:shadow-sm-light' %>
   </div>
 
-  <div>
-    <%= form.submit "Запустить рассылку", class: blue_btn_styles %>
+  <div class="flex items-start mb-5">
+    <div class="flex items-center h-5">
+      <%= form.check_box :to_catalog, checked: true, class: "w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" %>
+    </div>
+    <%= form.label :to_catalog, 'Кнопка "каталог"', class: "ms-2 text-sm font-medium text-gray-900 dark:text-gray-300" %>
   </div>
+
+  <div data-controller="markups">
+    <div data-markups-target="container" class="space-y-4 mb-6">
+      <h3 class="text-white text-md font-semibold mb-2">Дополнительные кнопки</h3>
+    </div>
+
+    <template data-markups-target="template">
+      <div class="flex gap-2 mb-5">
+        <input name="mailing[markup_buttons][][text]" type="text" placeholder="Текст кнопки" required
+               class="w-1/2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+        <input name="mailing[markup_buttons][][url]" type="text" placeholder="Ссылка" required
+               class="w-1/2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+        <button type="button" class="top-2 right-2 text-white" data-action="click->markups#close">✕</button>
+      </div>
+    </template>
+
+    <button type="button" data-action="click->markups#add"
+            class="text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm px-4 py-2 mb-6">
+      + Добавить кнопку
+    </button>
+  </div>
+
+  <%= form.submit "Запустить рассылку", class: blue_btn_styles %>
 <% end %>

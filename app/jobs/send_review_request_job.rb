@@ -25,8 +25,8 @@ class SendReviewRequestJob < ApplicationJob
 
   def send_review_request_mirena(user)
     text = I18n.t('tg_msg.review_mirena')
-    url  = 'https://t.me/+Qee6vymWlYE1M2Fi'
-    data = { markup: { markup_ext_url: url, markup_text: '💬 Оставить отзыв' } }
+    url  = Setting.fetch_value(:reviews_group)
+    data = { markup: { markup_ext_url: url, markup_ext_text: '💬 Оставить отзыв' } }
     create_msg(user, text, data)
   end
 

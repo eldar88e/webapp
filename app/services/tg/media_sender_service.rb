@@ -88,9 +88,9 @@ module Tg
     end
 
     def form_markup
-      return if @data[:markup].nil?
+      return if @data[:markup].blank?
 
-      Tg::MarkupService.call(@data)
+      Tg::MarkupService.call(@data[:markup])
     end
 
     def next_text_part

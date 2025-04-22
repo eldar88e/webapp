@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_16_111200) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_22_084933) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -83,6 +83,27 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_16_111200) do
     t.index ["user_id"], name: "index_ahoy_visits_on_user_id"
     t.index ["visit_token"], name: "index_ahoy_visits_on_visit_token", unique: true
     t.index ["visitor_token", "started_at"], name: "index_ahoy_visits_on_visitor_token_and_started_at"
+  end
+
+  create_table "answer_options", force: :cascade do |t|
+    t.bigint "question_id", null: false
+    t.string "text"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["question_id"], name: "index_answer_options_on_question_id"
+  end
+
+  create_table "answers", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "question_id", null: false
+    t.bigint "answer_option_id"
+    t.text "answer_text"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["answer_option_id"], name: "index_answers_on_answer_option_id"
+    t.index ["question_id"], name: "index_answers_on_question_id"
+    t.index ["user_id", "question_id"], name: "index_answers_on_user_id_and_question_id", unique: true
+    t.index ["user_id"], name: "index_answers_on_user_id"
   end
 
   create_table "bank_cards", force: :cascade do |t|
@@ -254,6 +275,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_16_111200) do
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
   end
 
+  create_table "questions", force: :cascade do |t|
+    t.string "text"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "reviews", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "product_id", null: false
@@ -321,6 +348,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_16_111200) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "answer_options", "questions"
+  add_foreign_key "answers", "answer_options"
+  add_foreign_key "answers", "questions"
+  add_foreign_key "answers", "users"
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "products"
   add_foreign_key "carts", "users"

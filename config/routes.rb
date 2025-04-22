@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   resources :carts, only: [:index]
   resources :cart_items, only: %i[create update]
   resources :orders, only: %i[index create update]
+  resources :surveys, only: :index
+  post :add_answers, to: 'surveys#add_answers'
 
   post '/auth/telegram', to: 'auth#telegram'
   get '/login', to: 'auth#login'
