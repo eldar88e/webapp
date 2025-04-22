@@ -1,0 +1,12 @@
+<tr id="<%= dom_id answer %>" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+  <th class="px-6 py-4">
+    <%= render partial: '/admin/users/user_name', locals: { user: answer.user } %>
+  </th>
+  <td class="px-6 py-4">
+    <%= answer.question.text %>
+  </td>
+  <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+    <%= answer.answer_text || answer.answer_option.text %>
+  </td>
+  <td class="px-6 py-4"><%= format_date answer.created_at %></td>
+</tr>
