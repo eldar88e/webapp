@@ -14,7 +14,7 @@
       <li class="mb-2">3. Перейдите по ссылке, которую пришлёт бот, чтобы открыть каталог</li>
     </ul>
     <p class="mb-3">📌 Если не нажать /start, оформление заказа невозможно.</p>
-    <p>🔹 Авто-перенаправление:<br>Через 15 секунд вы будете автоматически перенаправлены в бота.</p>
+    <p>🔹 Авто-перенаправление:<br>Через <span id="countdown">15</span> секунд вы будете автоматически перенаправлены в бота.</p>
   </div>
 </div>
 
@@ -53,6 +53,12 @@
     const redirectToBot = () => {
         preloader.style.display = 'none';
         bot.style.display = 'block';
+        const countdownEl = document.getElementById('countdown');
+        let seconds = countdownEl.textContent;
+        setInterval(() => {
+            seconds--;
+            countdownEl.textContent = seconds;
+        }, 1000);
         setTimeout(() => {
             window.location.href = tg_main_bot;
         }, 15000);

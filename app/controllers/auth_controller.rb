@@ -1,6 +1,5 @@
 class AuthController < ApplicationController
-  skip_before_action :check_authenticate_user!
-  before_action :set_btn_link, only: :login
+  skip_before_action :check_authenticate_user!, only: %i[login telegram]
   layout 'login'
 
   def login; end
@@ -20,13 +19,12 @@ class AuthController < ApplicationController
   end
 
   def user_checker
-    user = User.find_by(id: params[:user_id].to_i)
-    if user.blank? || user.started.blank? || user.is_blocked.present?
-      msg = "User #{params[:user_id]} not found or no started or banned bot!"
+    if current_user.blank? || current_user.started.blank? || current_user.is_blocked.present?
+      msg = "User #{current_user.id} not started or banned bot!"
       Rails.logger.warn msg
       render json: { error: msg }
     else
-      render json: { started: user.started }
+      render json: { started: current_user.started }
     end
   end
 
@@ -54,11 +52,5 @@ class AuthController < ApplicationController
     check_string = data.sort.map { |k, v| "#{k}=#{v}" }.join("\n")
     hmac         = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('SHA256'), secret_key, check_string)
     hmac == data['hash']
-  end
-
-  def set_btn_link
-    return unless params['tgWebAppStartParam'].present? && params['tgWebAppStartParam'].include?('url=')
-
-    @btn_link = params['tgWebAppStartParam'].sub('url=', '').tr('_', '/') # TODO: возможно "_" убрать из url
   end
 end
