@@ -9,8 +9,10 @@
           <% if question.answer_options.any? %>
             <div class="space-y-2">
               <% question.answer_options.each do |option| %>
-                <div class="flex items-center">
-                  <%= form.radio_button "question_#{question.id}_options", option.id, required: true, id: "question_#{question.id}_option_#{option.id}", class: 'text-sm rounded-lg border-gray-600 ring-gray-600' %>
+                <div class="flex items-center ps-3">
+                  <div class="w-6">
+                    <%= form.radio_button "question_#{question.id}_options", option.id, required: true, id: "question_#{question.id}_option_#{option.id}", class: 'h-5 w-5' %>
+                  </div>
                   <%= form.label "question_#{question.id}_option_#{option.id}", option.text, class: 'ml-2 text-sm text-white' %>
                 </div>
               <% end %>
