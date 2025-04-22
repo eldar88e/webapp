@@ -809,6 +809,17 @@ form label {
 
 .new_review {
   padding-bottom: 40px;
+
+  a.btn-new-review {
+    border: 0.5px solid white;
+    border-radius: 5px;
+    padding: 5px 9px;
+
+    &:hover {
+      border-color: #1c64f2;
+      color: #1c64f2;
+    }
+  }
 }
 
 ul.catalog-nav {

@@ -113,7 +113,7 @@
 
           <div class="new_review">
             <%= turbo_frame_tag :new_review do %>
-              <%= link_to 'Оставить отзыв', new_product_review_path(@product), data: { turbo_prefetch: false } %>
+              <%= link_to 'Оставить отзыв', new_product_review_path(@product), class: 'btn-new-review', data: { turbo_prefetch: false } %>
             <% end %>
           </div>
 
