@@ -1,5 +1,6 @@
 class AuthController < ApplicationController
   skip_before_action :check_authenticate_user!, only: %i[login telegram]
+  before_action :set_btn_link, only: :login
   layout 'login'
 
   def login; end

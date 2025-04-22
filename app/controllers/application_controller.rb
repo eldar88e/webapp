@@ -47,4 +47,10 @@ class ApplicationController < ActionController::Base
   def required_fields_filled?
     filtered_params.except(:apartment, :build).values.size >= 8
   end
+
+  def set_btn_link
+    return if params['tgWebAppStartParam'].blank? || params['tgWebAppStartParam'].exclude?('url=')
+
+    @btn_link = params['tgWebAppStartParam'].sub('url=', '').tr('_', '/') # TODO: возможно "_" убрать из url
+  end
 end
