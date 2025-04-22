@@ -25,5 +25,15 @@ if Rails.env.production?
     "#{result.to_json}\n"
   end
 
-  Rails.logger = ActiveSupport::TaggedLogging.new(file_logger)
+  # Rails.logger = ActiveSupport::TaggedLogging.new(file_logger)
+
+  if defined?(Rails::Console)
+    base_logger = ActiveSupport::Logger.new($stdout)
+    logger      = ActiveSupport::BroadcastLogger.new(base_logger)
+    logger.broadcast_to(file_logger)
+  else
+    logger = file_logger
+  end
+
+  Rails.logger = ActiveSupport::TaggedLogging.new(logger)
 end
