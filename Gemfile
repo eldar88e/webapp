@@ -38,9 +38,10 @@ gem 'ahoy_matey'
 gem 'blazer'
 gem 'geocoder'
 gem 'maxminddb'
+gem 'pry'
 
 group :development, :test do
-  gem 'pry'
+
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
 end

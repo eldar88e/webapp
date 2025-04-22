@@ -3,6 +3,7 @@ class AuthController < ApplicationController
   layout 'login'
 
   def login
+    binding.pry
     @btn_link = params[:btn_link]
   end
 
