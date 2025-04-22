@@ -44,11 +44,11 @@ module Admin
     def form_custom_markups(markup_keys)
       params[:mailing][:markup_buttons].each do |button|
         type = button[:url].start_with?('http') ? 'ext' : nil
-        markup_keys.each { |key| form_markup_key(key, type) }
+        markup_keys.each { |key| form_markup_key(key, type, button) }
       end
     end
 
-    def form_markup_key(key, type)
+    def form_markup_key(key, type, button)
       field = ['markup', type, key].compact.join('_').to_sym
       @mailing.data[:markup][field] ||= []
       @mailing.data[:markup][field] << button[key]

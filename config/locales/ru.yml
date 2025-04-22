@@ -166,9 +166,8 @@ ru:
       change_email:
         success: "Email обновлён. Подтвердите новый адрес по ссылке из письма."
         failure: "Ошибка обновления email."
-  controller:
-    surveys:
-      add_answers:
-        success: "Опрос удачно пройден!"
-      index:
-        success: "Вы уже прошли опрос."
+  surveys:
+    add_answers:
+      success: "Опрос удачно пройден!"
+    index:
+      success: "Вы уже прошли опрос."
