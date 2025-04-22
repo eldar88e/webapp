@@ -1,9 +1,10 @@
 class AuthController < ApplicationController
   skip_before_action :check_authenticate_user!, only: %i[login telegram]
-  before_action :set_btn_link, only: :login
   layout 'login'
 
-  def login; end
+  def login
+    @btn_link = params[:btn_link]
+  end
 
   def telegram
     data      = params.to_unsafe_h.except(:controller, :action)
