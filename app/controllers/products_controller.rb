@@ -1,6 +1,6 @@
 class ProductsController < ApplicationController
   skip_before_action :check_authenticate_user!, only: :index
-  before_action :login, :available_products, only: :index
+  before_action :set_btn_link, :login, :available_products, only: :index
 
   def index
     @pagy, @products = pagy(@products, limit: 5)
@@ -19,11 +19,9 @@ class ProductsController < ApplicationController
   private
 
   def login
-    binding.pry
     return redirect_to login_path(btn_link: @btn_link) unless current_user
     return redirect_to '/error-register' if current_user.started.blank? || current_user.is_blocked.present?
 
-    set_btn_link
     redirect_to "/#{@btn_link}" if @btn_link.present?
   end
 
