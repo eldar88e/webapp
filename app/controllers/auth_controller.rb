@@ -34,7 +34,7 @@ class AuthController < ApplicationController
 
   def render_error_auth
     msg = "Params 'initData' is empty or empty user!"
-    Rails.logger.error msg
+    Rails.logger.warn msg
     render json: { error: msg }
   end
 
