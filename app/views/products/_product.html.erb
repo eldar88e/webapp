@@ -40,7 +40,12 @@
         <% else %>
           <%= render partial: '/product_subscriptions/btn', locals: { product: product } %>
         <% end %>
-        <div class="price"><%= product.price.to_i %><span style="margin-left: 3px">₽</span></div>
+        <div>
+          <% if product.old_price.present? %>
+            <div class="old-price"><%= product.old_price.to_i %><span style="margin-left: 3px">₽</span></div>
+          <% end %>
+          <div class="price"><%= product.price.to_i %><span style="margin-left: 3px">₽</span></div>
+        </div>
       </div>
     </div>
   </div>

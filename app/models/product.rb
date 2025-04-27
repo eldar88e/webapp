@@ -22,7 +22,7 @@ class Product < ApplicationRecord
   before_update :notify_if_low_stock, if: :stock_quantity_changed?
   after_commit :clear_available_categories_cache, on: %i[create update destroy]
   after_commit :notify_subscribers_if_restocked, if: :saved_change_to_stock_quantity?
-  after_commit :export_product_google, on: :update, if: -> { IS_NOT_MIRENA && saved_change_to_stock_quantity? }
+  after_commit :export_product_google, on: %i[update create], if: -> { should_export_product_google? }
   after_commit :webhook_to_mirena, on: :update, if: lambda {
     IS_NOT_MIRENA && saved_change_to_stock_quantity? && id == Setting.fetch_value(:mirena_id).to_i
   }
@@ -72,6 +72,12 @@ class Product < ApplicationRecord
   end
 
   private
+
+  def should_export_product_google?
+    return false unless IS_NOT_MIRENA
+
+    previous_changes.key?('id') || saved_change_to_stock_quantity?
+  end
 
   def webhook_to_mirena
     UpdateProductStockJob.perform_later(id, Setting.fetch_value(:mirena_webhook_url))

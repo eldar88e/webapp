@@ -1,13 +1,12 @@
 class FetchUsersService
-  def initialize(filter, user_ids = nil)
-    @filter   = filter
+  def initialize(user_ids = nil)
     @user_ids = user_ids
   end
 
-  def call
-    return [] if @filter.blank?
+  def self.call(filter, user_ids)
+    return [] if filter.blank?
 
-    send(@filter.to_sym)
+    new(user_ids).send(filter.to_sym)
   end
 
   private

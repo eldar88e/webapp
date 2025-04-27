@@ -24,6 +24,9 @@
     <%= product.stock_quantity %> шт.
   </td>
   <td class="px-6 py-4">
+    <div class="price"><%= product.old_price.to_i %><span style="margin-left: 3px">₽</span></div>
+  </td>
+  <td class="px-6 py-4">
     <div class="price"><%= product.price.to_i %><span style="margin-left: 3px">₽</span></div>
   </td>
   <td class="px-6 py-4">

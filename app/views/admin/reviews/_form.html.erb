@@ -1,4 +1,4 @@
-<%= form_with(model: @review, url: (method == :patch ? admin_review_path(@review) : admin_reviews_path)) do |form| %>
+<%= form_with(model: @review, url: (method == :patch ? admin_review_path(@review) : admin_reviews_path), data: { action: "submit->modal#close" }) do |form| %>
   <div class="flex gap-4">
     <div class="w-1/2">
       <div class="mb-5">
@@ -53,7 +53,5 @@
     <%= form.label :approved, "Одобрено", class: 'ml-2 text-sm font-medium text-gray-900 dark:text-white' %>
   </div>
 
-  <div>
-    <%= form.submit "Сохранить", data: { action: "submit->modal#close" }, class: blue_btn_styles %>
-  </div>
+  <%= form.submit "Сохранить", class: blue_btn_styles %>
 <% end %>

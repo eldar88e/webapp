@@ -1,6 +1,6 @@
 module Admin
   class MailingsController < Admin::ApplicationController
-    MARKUP = { markup: 'to_catalog' }.freeze # TODO: менять через форму
+    MARKUP = 'to_catalog'.freeze
 
     before_action :form_mailing, only: :create
 
@@ -28,7 +28,30 @@ module Admin
 
     def form_mailing
       @mailing      = current_user.mailings.new(mailing_params)
-      @mailing.data = AttachmentService.call(params[:mailing][:attachment]).merge(markup: MARKUP)
+      @mailing.data = AttachmentService.call(params[:mailing][:attachment])
+      form_markup
+    end
+
+    def form_markup
+      @mailing.data[:markup] = { markup: MARKUP } if params[:mailing][:to_catalog] == '1'
+      return if params[:mailing][:markup_buttons].blank?
+
+      @mailing.data[:markup] || {}
+      markup_keys = %i[url text]
+      form_custom_markups(markup_keys)
+    end
+
+    def form_custom_markups(markup_keys)
+      params[:mailing][:markup_buttons].each do |button|
+        type = button[:url].start_with?('http') ? 'ext' : nil
+        markup_keys.each { |key| form_markup_key(key, type, button) }
+      end
+    end
+
+    def form_markup_key(key, type, button)
+      field = ['markup', type, key].compact.join('_').to_sym
+      @mailing.data[:markup][field] ||= []
+      @mailing.data[:markup][field] << button[key]
     end
 
     def mailing_params

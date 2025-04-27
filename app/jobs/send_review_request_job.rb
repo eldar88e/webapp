@@ -1,5 +1,6 @@
 class SendReviewRequestJob < ApplicationJob
   queue_as :default
+  BTN_TITLE = '💬 Оставить отзыв'.freeze
 
   def perform(**args)
     product = Product.find(args[:product_id])
@@ -19,14 +20,14 @@ class SendReviewRequestJob < ApplicationJob
   def send_review_request(user, product)
     text = I18n.t('tg_msg.review', product: product.name)
     url  = "products_#{product.id}_reviews_new"
-    data = { markup: { markup_url: url, markup_text: '💬 Оставить отзыв' } }
+    data = { markup: { markup_url: url, markup_text: BTN_TITLE } }
     create_msg(user, text, data)
   end
 
   def send_review_request_mirena(user)
     text = I18n.t('tg_msg.review_mirena')
-    url  = 'https://t.me/+Qee6vymWlYE1M2Fi'
-    data = { markup: { markup_ext_url: url, markup_text: '💬 Оставить отзыв' } }
+    url  = Setting.fetch_value(:reviews_group)
+    data = { markup: { markup_ext_url: url, markup_ext_text: BTN_TITLE } }
     create_msg(user, text, data)
   end
 

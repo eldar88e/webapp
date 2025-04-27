@@ -47,7 +47,12 @@
         <% else %>
           <%= render partial: '/product_subscriptions/btn', locals: { product: @product } %>
         <% end %>
-        <div class="price"><%= @product.price.to_i %><span style="margin-left: 3px">₽</span></div>
+        <div>
+          <% if @product.old_price.present? %>
+            <div class="old-price"><%= @product.old_price.to_i %><span style="margin-left: 3px">₽</span></div>
+          <% end %>
+          <div class="price"><%= @product.price.to_i %><span style="margin-left: 3px">₽</span></div>
+        </div>
       </div>
     </div>
   </div>
@@ -113,7 +118,7 @@
 
           <div class="new_review">
             <%= turbo_frame_tag :new_review do %>
-              <%= link_to 'Оставить отзыв', new_product_review_path(@product), data: { turbo_prefetch: false } %>
+              <%= link_to 'Оставить отзыв', new_product_review_path(@product), class: 'btn-new-review', data: { turbo_prefetch: false } %>
             <% end %>
           </div>
 

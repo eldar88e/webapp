@@ -18,7 +18,7 @@ Rails.application.configure do
       user_id: payload[:user_id],
       remote_ip: payload[:request]&.remote_ip
     }
-    params = payload[:params]&.except('controller', 'action', 'format', '_method', 'authenticity_token')
+    params = payload[:params]&.except('controller', 'action', 'format', '_method', 'authenticity_token', 'auth')
     result[:params] = params if params.present?
     result
   end

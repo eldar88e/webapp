@@ -127,6 +127,7 @@ ru:
         name: "Название товара"
         image: "Картинка"
         price: "Цена"
+        old_price: "Старая цена"
         stock_quantity: "Остаток на складе"
         description: "Описание"
         ancestry: "Категория"
@@ -140,6 +141,14 @@ ru:
         number: 'Номер карты/телефона'
         fio: 'ФИО'
         active: 'Активна'
+      answer:
+        user: "Пользователь"
+    errors:
+      models:
+        answer:
+          attributes:
+            user:
+              already_answered: "уже ответил на данный вопрос"
   errors:
     messages:
       already_in_cart: "уже добавлен в корзину"
@@ -158,3 +167,8 @@ ru:
       change_email:
         success: "Email обновлён. Подтвердите новый адрес по ссылке из письма."
         failure: "Ошибка обновления email."
+  surveys:
+    add_answers:
+      success: "Опрос удачно пройден!"
+    index:
+      success: "Вы уже прошли опрос."

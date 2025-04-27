@@ -11,6 +11,7 @@ export default class extends Controller {
 
     close(){
         this.element.classList.add('hidden');
+        this.element.setAttribute('aria-hidden', 'true');
         document.getElementById('body').classList.remove('blur-xs');
         document.getElementById('header').classList.remove('blur-xs');
     }

@@ -13,4 +13,5 @@ namespace :admin do
   resources :product_subscriptions, only: %i[index destroy]
   resources :bank_cards, only: %i[index new create edit update]
   resources :attachments, only: %i[destroy]
+  resources :answers, only: :index
 end
