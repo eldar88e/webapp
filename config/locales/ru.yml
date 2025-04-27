@@ -127,6 +127,7 @@ ru:
         name: "Название товара"
         image: "Картинка"
         price: "Цена"
+        old_price: "Старая цена"
         stock_quantity: "Остаток на складе"
         description: "Описание"
         ancestry: "Категория"

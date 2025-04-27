@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_22_084933) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_27_091520) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -271,6 +271,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_22_084933) do
     t.integer "package_quantity"
     t.string "main_ingredient"
     t.string "brand"
+    t.decimal "old_price", precision: 10, scale: 2
     t.index ["ancestry"], name: "index_products_on_ancestry"
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
   end

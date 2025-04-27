@@ -240,6 +240,12 @@ main {
       font-size: 18px;
       line-height: 22px;
     }
+
+    .old-price {
+      text-decoration: line-through;
+      color: gray;
+      font-size: 0.9em;
+    }
   }
 }
 
