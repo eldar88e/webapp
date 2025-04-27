@@ -440,6 +440,14 @@ GEM
       faraday (>= 0.17.5, < 3.a)
       jwt (>= 1.5, < 3.0)
       multi_json (~> 1.10)
+    sprockets (4.2.2)
+      concurrent-ruby (~> 1.0)
+      logger
+      rack (>= 2.2.4, < 4)
+    sprockets-rails (3.5.2)
+      actionpack (>= 6.1)
+      activesupport (>= 6.1)
+      sprockets (>= 3.0.0)
     sshkit (1.24.0)
       base64
       logger
@@ -539,6 +547,7 @@ DEPENDENCIES
   ruby-vips
   shoulda-matchers
   sidekiq (~> 8.0)
+  sprockets-rails
   sshkit
   stimulus-rails
   telegram-bot-ruby

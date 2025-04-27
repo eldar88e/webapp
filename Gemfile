@@ -12,6 +12,7 @@ gem 'tzinfo-data', platforms: %i[windows jruby]
 
 gem 'pg', '~> 1.5'
 gem 'redis', '~> 5.4'
+gem 'sprockets-rails'
 gem 'vite_rails'
 
 # gem 'aws-sdk-s3'
