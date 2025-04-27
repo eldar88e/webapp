@@ -1,20 +1,13 @@
 file_logger = ActiveSupport::Logger.new("log/#{Rails.env}.log", 10, 50.megabytes)
 file_logger.level = Logger::INFO
 file_logger.formatter = proc do |severity, _timestamp, progname, message|
-  result = {
-    timestamp: Time.current,
-    level: severity,
-    progname: progname || 'rails'
-  }
+  result = { timestamp: Time.current, level: severity, progname: progname || 'rails', message: message }
 
-  case message
-  when String
-    result[:message] = message
-  when Exception
-    result[:message] = message.message
+  if message.instance_of?(Exception)
+    result[:message]     = message.message
     result[:error_class] = message.class.name
-    result[:backtrace] = (message.backtrace || []).take(10) # можно взять только первые 10 строк
-  else
+    result[:backtrace]   = (message.backtrace || []).take(10)
+  elsif message.class != String
     result[:message] = message.inspect
   end
 
