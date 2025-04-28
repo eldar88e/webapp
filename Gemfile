@@ -15,6 +15,9 @@ gem 'redis', '~> 5.4'
 gem 'sprockets-rails'
 gem 'vite_rails'
 
+gem 'slim-rails'
+gem 'view_component'
+
 # gem 'aws-sdk-s3'
 gem 'active_link_to'
 gem 'ancestry'

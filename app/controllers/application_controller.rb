@@ -1,10 +1,11 @@
 class ApplicationController < ActionController::Base
   include MainConcerns
-  before_action :check_authenticate_user!
+  before_action :check_authenticate_user!, :product_search
   skip_before_action :check_authenticate_user!, if: :devise_confirmation_controller?
   include Pagy::Backend
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   # allow_browser versions: :modern
+  helper_method :available_products
 
   private
 
@@ -12,7 +13,13 @@ class ApplicationController < ActionController::Base
     is_a?(Devise::ConfirmationsController)
   end
 
+  def product_search
+    @q_products = Product.includes(:image_attachment).available.order(stock_quantity: :desc, created_at: :desc).ransack(params[:q])
+  end
+
   def available_products
+    return @products if @products.present?
+
     product_id = params[:category_id].presence || Setting.fetch_value(:default_product_id)
     parent     = Product.find_by(id: product_id)
 

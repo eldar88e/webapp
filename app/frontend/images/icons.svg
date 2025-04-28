@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="search" viewBox="0 0 20 20" fill="none">
+    <path d="M9.16667 15.8333C12.8486 15.8333 15.8333 12.8486 15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333Z" stroke="#777777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M17.5 17.5L13.9167 13.9167" stroke="#777777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="cart" viewBox="0 0 24 24" fill="none">
+    <path d="M15 11L14 20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M19 11L15 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M2 11H22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M3.5 11L5.1 18.4C5.1935 18.8586 5.44485 19.2698 5.81028 19.5621C6.17572 19.8545 6.63211 20.0094 7.1 20H16.9C17.3679 20.0094 17.8243 19.8545 18.1897 19.5621C18.5552 19.2698 18.8065 18.8586 18.9 18.4L20.6 11" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M4.5 15.5H19.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M5 11L9 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M9 11L10 20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="unfavorite" viewBox="0 0 20 20" fill="none">
+    <path d="M15.8333 11.6667C17.075 10.45 18.3333 8.99167 18.3333 7.08333C18.3333 5.86776 17.8505 4.70197 16.9909 3.84243C16.1314 2.98289 14.9656 2.5 13.75 2.5C12.2833 2.5 11.25 2.91667 10 4.16667C8.75001 2.91667 7.71667 2.5 6.25001 2.5C5.03443 2.5 3.86864 2.98289 3.0091 3.84243C2.14956 4.70197 1.66667 5.86776 1.66667 7.08333C1.66667 9 2.91667 10.4583 4.16667 11.6667L10 17.5L15.8333 11.6667Z" style="stroke:currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="favorite" viewBox="0 0 20 20" fill="none">
+    <path d="M15.8333 11.6667C17.075 10.45 18.3333 8.99167 18.3333 7.08333C18.3333 5.86776 17.8505 4.70197 16.9909 3.84243C16.1314 2.98289 14.9656 2.5 13.75 2.5C12.2833 2.5 11.25 2.91667 10 4.16667C8.75001 2.91667 7.71667 2.5 6.25001 2.5C5.03443 2.5 3.86864 2.98289 3.0091 3.84243C2.14956 4.70197 1.66667 5.86776 1.66667 7.08333C1.66667 9 2.91667 10.4583 4.16667 11.6667L10 17.5L15.8333 11.6667Z" fill="#48C928" stroke="#48C928" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="catalog" viewBox="0 0 25 24" fill="none">
+    <rect x="3.75" y="3" width="7" height="7" rx="2" style="stroke:currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="3.75" y="14" width="7" height="7" rx="2" style="stroke:currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="14.75" y="3" width="7" height="7" rx="2" style="stroke:currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="14.75" y="14" width="7" height="7" rx="2" style="stroke:currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="profile" viewBox="0 0 25 24" fill="none">
+    <path d="M18.75 20C18.75 18.4087 18.1179 16.8826 16.9926 15.7574C15.8674 14.6321 14.3413 14 12.75 14C11.1587 14 9.63258 14.6321 8.50736 15.7574C7.38214 16.8826 6.75 18.4087 6.75 20" style="stroke:currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12.75 14C14.9591 14 16.75 12.2091 16.75 10C16.75 7.79086 14.9591 6 12.75 6C10.5409 6 8.75 7.79086 8.75 10C8.75 12.2091 10.5409 14 12.75 14Z" style="stroke:currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12.75 22C18.2728 22 22.75 17.5228 22.75 12C22.75 6.47715 18.2728 2 12.75 2C7.22715 2 2.75 6.47715 2.75 12C2.75 17.5228 7.22715 22 12.75 22Z" style="stroke:currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="support" viewBox="0 0 25 24" fill="none">
+    <path d="M3.25 11H6.25C6.78043 11 7.28914 11.2107 7.66421 11.5858C8.03929 11.9609 8.25 12.4696 8.25 13V16C8.25 16.5304 8.03929 17.0391 7.66421 17.4142C7.28914 17.7893 6.78043 18 6.25 18H5.25C4.71957 18 4.21086 17.7893 3.83579 17.4142C3.46071 17.0391 3.25 16.5304 3.25 16V11ZM3.25 11C3.25 9.8181 3.48279 8.64778 3.93508 7.55585C4.38738 6.46392 5.05031 5.47177 5.88604 4.63604C6.72177 3.80031 7.71392 3.13738 8.80585 2.68508C9.89778 2.23279 11.0681 2 12.25 2C13.4319 2 14.6022 2.23279 15.6942 2.68508C16.7861 3.13738 17.7782 3.80031 18.614 4.63604C19.4497 5.47177 20.1126 6.46392 20.5649 7.55585C21.0172 8.64778 21.25 9.8181 21.25 11M21.25 11V16C21.25 16.5304 21.0393 17.0391 20.6642 17.4142C20.2891 17.7893 19.7804 18 19.25 18H18.25C17.7196 18 17.2109 17.7893 16.8358 17.4142C16.4607 17.0391 16.25 16.5304 16.25 16V13C16.25 12.4696 16.4607 11.9609 16.8358 11.5858C17.2109 11.2107 17.7196 11 18.25 11H21.25Z" style="stroke:currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M21.25 16V18C21.25 19.0609 20.8286 20.0783 20.0784 20.8284C19.3283 21.5786 18.3109 22 17.25 22H12.25" style="stroke:currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="trash" viewBox="0 0 16 16" fill="none">
+    <path d="M2 4H14" stroke="#777777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12.6666 4V13.3333C12.6666 14 12 14.6667 11.3333 14.6667H4.66665C3.99998 14.6667 3.33331 14 3.33331 13.3333V4" stroke="#777777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M5.33331 3.99999V2.66666C5.33331 1.99999 5.99998 1.33333 6.66665 1.33333H9.33331C9.99998 1.33333 10.6666 1.99999 10.6666 2.66666V3.99999" stroke="#777777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M6.66669 7.33333V11.3333" stroke="#777777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M9.33337 7.33333V11.3333" stroke="#777777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+</svg>

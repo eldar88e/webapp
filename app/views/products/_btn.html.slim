@@ -1,0 +1,8 @@
+- data = { controller: 'vibration', action: 'click->vibration#makeVibration' }
+- if ENV.fetch('HOST', '').include?('mirena')
+  - data[:controller] += ' open-cart'
+  - data[:action] += ' click->open-cart#openCart'
+
+= button_to cart_items_path, params: { cart_item: { product_id: product.id } }, class: 'btn flex gap-1 justify-center align-center', data: data do
+  = render IconComponent.new name: :cart
+  .title-btn В корзину

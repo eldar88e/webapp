@@ -1,19 +1,11 @@
-<div id="<%= dom_id product %>">
+<div id="<%= dom_id product %>" class="w-1/2 md:w-1/3 lg:w-1/4 2xl:w-1/5">
   <div class="product-wrapper">
-    <div class="product">
-      <div class="product-title">
-        <%= link_to product.name, product_path(product), data: { turbo_prefetch: false }, title: product.name %>
+    <div class="product relative">
+      <div class="absolute right-0 top-0 z-10">
+        <span style="color: #777777;">
+          <%= render IconComponent.new name: :unfavorite %>
+        </span>
       </div>
-      <div class="product-exist">
-        <% if product.stock_quantity.positive? %>
-          <div class="have-product"></div>
-          <%= 'В наличии' %>
-        <% else %>
-          <div class="have-product no-have-product"></div>
-          <%= 'Нет в наличии' %>
-        <% end %>
-      </div>
-
       <div class="product-img">
         <%= link_to product_path(product), data: { turbo_prefetch: false }, title: product.name do %>
           <div class="relative">
@@ -25,27 +17,35 @@
               </div>
             </div>
             <% if product.image.attached? %>
-              <div class="img absolute left-0 top-0 flex justify-center">
+              <div class="absolute left-0 top-0 block w-full h-full">
+                <div class="flex justify-center items-center h-full">
                   <%= image_tag storage_path(product.image), alt: product.name, width: 196, height: 196,
                                 loading: (@products.first == product ? 'eager' : 'lazy') %>
+                </div>
               </div>
             <% end %>
           </div>
         <% end %>
       </div>
 
+      <div class="product-title">
+        <%= link_to product.name, product_path(product), data: { turbo_prefetch: false }, title: product.name %>
+      </div>
       <div class="product-footer">
-        <% if product.stock_quantity.positive?  %>
+        <% if product.stock_quantity.positive? %>
+          <% if product.old_price.present? %>
+            <div class="flex gap-1 mb-1 items-center">
+              <div class="price"><%= product.price.to_i %>₽</div>
+              <div class="old-price"><%= product.old_price.to_i %>₽</div>
+            </div>
+          <% else %>
+            <div class="price-without-old"><%= product.price.to_i %>₽</div>
+          <% end %>
           <%= render partial: '/products/btn', locals: { product: product } %>
         <% else %>
+          <div class="title-has">Нет в наличии</div>
           <%= render partial: '/product_subscriptions/btn', locals: { product: product } %>
         <% end %>
-        <div>
-          <% if product.old_price.present? %>
-            <div class="old-price"><%= product.old_price.to_i %><span style="margin-left: 3px">₽</span></div>
-          <% end %>
-          <div class="price"><%= product.price.to_i %><span style="margin-left: 3px">₽</span></div>
-        </div>
       </div>
     </div>
   </div>

@@ -3,6 +3,9 @@ class ProductsController < ApplicationController
   before_action :set_btn_link, :login, :available_products, only: :index
 
   def index
+    # @q_products      = @products.ransack(params[:q])
+    # @pagy, @products = pagy(@q_products.result, limit: 5)
+    @products = params[:q].nil? ? @products : @q_products.result
     @pagy, @products = pagy(@products, limit: 5)
     respond_to do |format|
       format.html

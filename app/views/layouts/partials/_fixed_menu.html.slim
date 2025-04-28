@@ -1,0 +1,18 @@
+.fixed-menu.z-50
+  ul
+    li
+      = active_link_to root_path, active: :exclusive do
+        = render IconComponent.new name: :catalog, size: 24
+        | Каталог
+    li
+      = active_link_to carts_path, active: :exclusive do
+        = render IconComponent.new name: :unfavorite, size: 24
+        | Избранное
+    li
+      = active_link_to edit_user_registration_path, active: :exclusive do
+        = render IconComponent.new name: :profile, size: 24
+        | Профиль
+    li
+      = active_link_to carts_path, active: :exclusive do
+        = render IconComponent.new name: :support, size: 24
+        | Поддержка

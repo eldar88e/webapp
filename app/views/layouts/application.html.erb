@@ -36,10 +36,12 @@
   </head>
 
   <body>
+    <%= render '/layouts/partials/notices' %>
+
     <header><%= render partial: '/layouts/partials/header' %></header>
 
     <main>
-      <div class="container mx-auto">
+      <div class="container mx-auto px-5">
         <div id="modal" class="modal <%= yield :model_class %>" style="<%= yield :model_style %>">
           <%= yield :modal %>
         </div>
@@ -49,6 +51,9 @@
     </main>
 
     <%= render partial: '/layouts/partials/footer' %>
+
+    <%= render partial: '/layouts/partials/fixed_menu' %>
+
     <%= render partial: '/layouts/partials/yandex_metrika' if Setting.fetch_value(:ym).present? %>
   </body>
 </html>
