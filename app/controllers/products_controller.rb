@@ -6,7 +6,7 @@ class ProductsController < ApplicationController
     # @q_products      = @products.ransack(params[:q])
     # @pagy, @products = pagy(@q_products.result, limit: 5)
     @products = params[:q].nil? ? @products : @q_products.result
-    @pagy, @products = pagy(@products, limit: 5)
+    @pagy, @products = pagy(@products, limit: 10)
     respond_to do |format|
       format.html
       format.turbo_stream { product_turbo_format }

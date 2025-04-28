@@ -18,7 +18,7 @@ module Users
     # end
 
     def edit
-      render turbo_stream: turbo_stream.update(:modal, partial: '/devise/registrations/edit')
+      # render turbo_stream: turbo_stream.update(:modal, partial: '/devise/registrations/edit')
     end
 
     def update

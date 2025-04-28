@@ -1,12 +1,12 @@
 <%= form_for(current_user, as: current_user, url: registration_path(current_user),
              html: { method: :put, data: { controller: 'dadata' } }) do |form| %>
-  <%= render "devise/shared/error_messages", resource: current_user %>
+  <div class="main-block mb-5">
+    <%= render "devise/shared/error_messages", resource: current_user %>
 
-  <%= render partial: 'devise/registrations/form_items', locals: { f: form } %>
-
-  <div class="mt-6">
-    <%= form.submit 'Сохранить', class: 'btn' %>
+    <%= render partial: 'devise/registrations/form_items', locals: { f: form } %>
   </div>
+
+  <%= form.submit 'Сохранить', class: 'btn btn-big mb-5' %>
 <% end %>
 
 <%#= link_to 'Мои заказы', orders_path %>
