@@ -6,8 +6,8 @@
   <%= f.label :middle_name %>
   <%= f.text_field :middle_name, autocomplete: "family-name", placeholder: '', class: "input-str", required: true, minlength: 2,
                    data: { dadata_name_target: "name", action: "input->dadata-name#search focus->dadata-name#search blur->dadata-name#hidden" } %>
-  <div class="suggestions-wrapper scrollable" data-dadata-name-target="suggestions">
-    <div class="suggestions-suggestions" style="display: none;"></div>
+  <div class="suggestions-wrapper">
+    <div class="suggestions scrollable" data-dadata-name-target="suggestions"></div>
   </div>
 </div>
 
@@ -15,8 +15,8 @@
   <%= f.label :first_name %>
   <%= f.text_field :first_name, autocomplete: "given-name", placeholder: '', class: "input-str", required: true, minlength: 2,
                    data: { dadata_name_target: "name", action: "input->dadata-name#searchName focus->dadata-name#searchName blur->dadata-name#hidden" } %>
-  <div class="suggestions-wrapper scrollable" data-dadata-name-target="suggestions">
-    <div class="suggestions-suggestions" style="display: none;"></div>
+  <div class="suggestions-wrapper">
+    <div class="suggestions scrollable" data-dadata-name-target="suggestions"></div>
   </div>
 </div>
 

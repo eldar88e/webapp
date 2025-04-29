@@ -52,9 +52,9 @@
     </defs>
   </symbol>
   <symbol id="right" viewBox="0 0 20 20" fill="none">
-    <path d="M7.5 15L12.5 10L7.5 5" stroke="#48C928" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M7.5 15L12.5 10L7.5 5" style="stroke:currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </symbol>
-  <svg id="cart2" viewBox="0 0 20 20" fill="none">
+  <symbol id="cart2" viewBox="0 0 20 20" fill="none">
     <g clip-path="url(#clip0_90_1858)">
       <path d="M6.66671 18.3333C7.12694 18.3333 7.50004 17.9602 7.50004 17.5C7.50004 17.0398 7.12694 16.6667 6.66671 16.6667C6.20647 16.6667 5.83337 17.0398 5.83337 17.5C5.83337 17.9602 6.20647 18.3333 6.66671 18.3333Z" stroke="#48C928" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M15.8333 18.3333C16.2936 18.3333 16.6667 17.9602 16.6667 17.5C16.6667 17.0398 16.2936 16.6667 15.8333 16.6667C15.3731 16.6667 15 17.0398 15 17.5C15 17.9602 15.3731 18.3333 15.8333 18.3333Z" stroke="#48C928" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -65,5 +65,8 @@
         <rect width="20" height="20" fill="white"/>
       </clipPath>
     </defs>
-  </svg>
+  </symbol>
+  <symbol id="admin" fill="none" viewBox="0 0 24 24">
+    <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M20 6H10m0 0a2 2 0 1 0-4 0m4 0a2 2 0 1 1-4 0m0 0H4m16 6h-2m0 0a2 2 0 1 0-4 0m4 0a2 2 0 1 1-4 0m0 0H4m16 6H10m0 0a2 2 0 1 0-4 0m4 0a2 2 0 1 1-4 0m0 0H4"/>
+  </symbol>
 </svg>

@@ -64,7 +64,6 @@ export default class extends Controller {
       window.suggestions_cache = data;
       data.forEach((value, index) => { this.append(value["unrestricted_value"], suggestions, index); });
       suggestions.style.display = "block";
-      console.log(suggestions.parentElement);
       suggestions.parentElement.style.display = "block";
     } else {
       suggestions.style.display = "none";

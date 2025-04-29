@@ -3,6 +3,23 @@
   - data[:controller] += ' open-cart'
   - data[:action] += ' click->open-cart#openCart'
 
-= button_to cart_items_path, params: { cart_item: { product_id: product.id } }, class: 'btn flex gap-1 justify-center align-center', data: data do
-  = render IconComponent.new name: :cart
-  .title-btn В корзину
+- if current_user.cart.cart_items.exists?(product_id: product.id)
+  - cart_item = current_user.cart.cart_items.find_by(product_id: product.id)
+  .btn.btn-secondary.flex.justify-between
+    = button_to cart_item_path(id: cart_item.id), data: { controller: 'vibration', action: 'click->vibration#makeVibration' },
+            params: { quantity: cart_item.quantity - 1 }, method: :patch, class: 'buy' do
+      .buy-btn
+        .minus-ico
+    .buy-info
+      .count
+        = "#{cart_item.quantity}шт."
+      .total
+        = "#{(cart_item.quantity * product.price).to_i}₽"
+    = button_to cart_item_path(id: cart_item.id), data: { controller: 'vibration', action: 'click->vibration#makeVibration' },
+            params: { quantity: cart_item.quantity + 1 }, method: :patch, class: 'buy'
+      .buy-btn
+        .plus-ico
+- else
+  = button_to cart_items_path, params: { cart_item: { product_id: product.id } }, class: 'btn flex gap-1 justify-center align-center', data: data do
+    = render IconComponent.new name: :cart
+    .title-btn В корзину

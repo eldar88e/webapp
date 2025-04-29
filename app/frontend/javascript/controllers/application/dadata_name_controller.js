@@ -26,11 +26,13 @@ export default class extends Controller {
   formConnection(query, type) {
     if (!query) {
       this.suggestionsTarget.style.display = "none";
+      this.suggestionsTarget.parentElement.style.display = "none";
       this.suggestionsTarget.textContent = '';
       return;
     }
     if (this.fio[type] === query) {
       this.suggestionsTarget.style.display = "block";
+      this.suggestionsTarget.parentElement.style.display = "block";
       return;
     }
 
@@ -69,6 +71,7 @@ export default class extends Controller {
       const filteredData = this.filterData(data, type);
       if (filteredData.length < 1) {
         suggestions.style.display = "none";
+        suggestions.parentElement.style.display = "none";
         return;
       }
 
@@ -78,8 +81,10 @@ export default class extends Controller {
         this.appendSuggestion(value, suggestions, type);
       });
       suggestions.style.display = "block";
+      suggestions.parentElement.style.display = "block";
     } else {
       suggestions.style.display = "none";
+      suggestions.parentElement.style.display = "none";
     }
   }
 
@@ -114,11 +119,13 @@ export default class extends Controller {
     const nameValue = this.nameTarget.getAttribute("name");
     nameValue === "user[middle_name]" ? this.fio.surname = this.nameTarget.value : this.fio.name = this.nameTarget.value;
     this.suggestionsTarget.style.display = "none";
+    this.suggestionsTarget.parentElement.style.display = "none";
   }
 
   hidden() {
     setTimeout( () => {
       this.suggestionsTarget.style.display = "none";
+      this.suggestionsTarget.parentElement.style.display = "none";
     }, 300)
   }
 }

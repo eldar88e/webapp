@@ -1,0 +1,22 @@
+- content_for :title, 'Каталог'
+- if @products&.first&.image&.attached?
+  = content_for :head, preload_link_tag(storage_path(@products.first.image), as: 'image', type: @products.first.image.blob.content_type)
+
+h1 = yield(:title)
+
+nav
+  ul.catalog-nav
+    - available_categories.each do |category|
+      li
+        = active_link_to products_path(category_id: category.id), title: "Перейти к #{category.name}", data: { turbo_prefetch: false, turbo_frame: 'products' }, active: /#{category.id}/ do
+          = category.name
+
+
+#products class="flex flex-wrap -mx-2"
+  - if @products.present?
+    = render @products
+  - else
+    .text-center.py-10.w-full Ничего не найдено.
+
+
+= render '/products/pagination'
