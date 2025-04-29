@@ -23,8 +23,8 @@
                   Telegram.WebApp.setHeaderColor('#3396a5');
                   Telegram.WebApp.setBackgroundColor('#3396a5');
                 <% else %>
-                  Telegram.WebApp.setHeaderColor('#000001');
-                  Telegram.WebApp.setBackgroundColor('#000001');
+                  Telegram.WebApp.setHeaderColor('#FFFFFF');
+                  Telegram.WebApp.setBackgroundColor('#FFFFFF');
                 <% end %>
             }
         });
@@ -42,10 +42,6 @@
 
     <main>
       <div class="container mx-auto px-5">
-        <div id="modal" class="modal <%= yield :model_class %>" style="<%= yield :model_style %>">
-          <%= yield :modal %>
-        </div>
-
         <%= yield %>
       </div>
     </main>
@@ -53,6 +49,10 @@
     <%= render partial: '/layouts/partials/footer' %>
 
     <%= render partial: '/layouts/partials/fixed_menu' %>
+
+    <div id="modal" class="modal <%= yield :model_class %>" style="<%= yield :model_style %>">
+      <%= yield :modal %>
+    </div>
 
     <%= render partial: '/layouts/partials/yandex_metrika' if Setting.fetch_value(:ym).present? %>
   </body>

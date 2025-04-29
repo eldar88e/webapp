@@ -2,12 +2,24 @@
 
 .main-block.mb-5
   .flex.justify-center
-    .w-18.h-18.rounded-full.overflow-hidden.flex-shrink-0.flex.items-center.justify-center.bg-red-500.mb-3
+    .w-18.h-18.rounded-full.overflow-hidden.flex-shrink-0.flex.items-center.justify-center.mb-3.profile-avatar
       - if current_user.photo_url.present?
         = image_tag current_user.photo_url
       - else
         = render IconComponent.new name: :profile, size: 40
-  h3.text-center
+  h3.text-center class="!mb-1"
     = current_user.full_name
+  .cashback
+    | Кешбек: 1000₽
+  button.btn.btn-big.btn-secondary.flex.justify-between.mb-2.items-center
+    .flex.justify-center.gap-2.items-center
+      = render IconComponent.new name: :clock
+      span Товары в ожидании
+    = render IconComponent.new name: :right
+  button.btn.btn-big.btn-secondary.flex.justify-between.items-center
+    .flex.justify-center.gap-2.items-center
+      = render IconComponent.new name: :cart2
+      span  История заказов
+    = render IconComponent.new name: :right
 
 = render '/devise/registrations/edit'

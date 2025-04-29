@@ -166,6 +166,11 @@ h3 {
   font-weight: 600;
   width: 100%;
   cursor: pointer;
+
+  &:hover, &:active, &:focus {
+    background: #3AA120;
+
+  }
 }
 
 .btn-big {
@@ -176,6 +181,10 @@ h3 {
 .btn-secondary {
   background: #48C9281A;
   color: #48C928;
+
+  &:hover, &:active, &:focus {
+    background: #48C92833;
+  }
 }
 
 .btn-disable {
@@ -226,6 +235,113 @@ h3 {
   box-shadow: 0px 0px 8px 0px #3D44530D;
 }
 
+.cashback {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.line-user {
+  color: #F0F0F0;
+  height: 1px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.profile-avatar {
+  color: white;
+  background-color: #48C928;
+}
+
+.profile-form {
+  .input-container {
+    margin-bottom: 12px;
+    position: relative;
+
+    label {
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 16px;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    input {
+      border-radius: 12px;
+      background-color: #F0F0F0;
+      border: 1px solid #F0F0F0;
+      color: #777777;
+      padding: 14px 16px;
+      width: 100%;
+
+      &:focus {
+        outline: none;
+        background-color: white;
+        border: 1px solid #48C928;
+      }
+    }
+  }
+
+  .suggestions-wrapper {
+    display: none;
+    position: absolute;
+    background: #f6f6f6;
+    padding: 10px;
+    z-index: 2;
+    width: 100%;
+
+    .suggestions {
+      display: none;
+      max-height: 200px;
+
+      .suggestion-item {
+        padding: 5px 0;
+        cursor: pointer;
+        font-size: 14px;
+
+        &:hover {
+          color: #000000;
+        }
+      }
+
+      .suggestion-item:first-child {
+        color: #808080;
+        cursor: default;
+        font-size: 12px;
+
+        &:hover {
+          color: #808080;
+        }
+      }
+    }
+  }
+}
+
+.scrollable {
+  padding-right: 8px;
+  margin-right: -8px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 15px; /* ширина вертикальной полосы прокрутки */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f6f6f6;
+    border: none;
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #48C928; /* цвет ползунка */
+    border-radius: 8px; /* округлые края */
+    border: 4px solid #f6f6f6;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #3AA120; /* цвет ползунка при наведении */
+  }
+}
+
 .footer {
   padding-top: 20px;
   padding-bottom: 72px;
@@ -235,4 +351,3 @@ h3 {
     color: #48C928;
   }
 }
-

@@ -12,7 +12,8 @@ export default class extends Controller {
     const query = event.target.value.trim();
     let suggestions = this.suggestionsTarget;
     this.formConnection(query, suggestions);
-    this.suggestions_streetTarget.style = "display: none;"
+    this.suggestions_streetTarget.style.display = "none";
+    this.suggestions_streetTarget.parentElement.style.display = "none";
   }
 
   search_street(event) {
@@ -24,12 +25,14 @@ export default class extends Controller {
   formConnection(query, suggestions, prefixStreet=false) {
     if (!query) {
       suggestions.style.display = "none";
+      suggestions.parentElement.style.display = "none";
       suggestions.textContent = '';
       return;
     }
     const entity = prefixStreet ? 'street' : 'city'
     if (this[entity] === query) {
       suggestions.style.display = "block";
+      suggestions.parentElement.style.display = "block";
       return;
     }
 
@@ -60,9 +63,12 @@ export default class extends Controller {
       this.append("Выберите один из вариантов...", suggestions);
       window.suggestions_cache = data;
       data.forEach((value, index) => { this.append(value["unrestricted_value"], suggestions, index); });
-      suggestions.style = "display: block;"
+      suggestions.style.display = "block";
+      console.log(suggestions.parentElement);
+      suggestions.parentElement.style.display = "block";
     } else {
-      suggestions.style = "display: none;"
+      suggestions.style.display = "none";
+      suggestions.parentElement.style.display = "none";
     }
   }
 
@@ -96,8 +102,10 @@ export default class extends Controller {
     this.apartmentTarget.value = address['flat'] ? address['flat'] : "";
     this.buildTarget.value = address['stead'] ? address['stead'] : "";
 
-    this.suggestionsTarget.style = "display: none;"
-    this.suggestions_streetTarget.style = "display: none;"
+    this.suggestionsTarget.style.display = "none";
+    this.suggestionsTarget.parentElement.style.display = "none";
+    this.suggestions_streetTarget.style.display = "none";
+    this.suggestions_streetTarget.parentElement.style.display = "none";
   }
 
   fetchDadata(options, suggestions) {
@@ -113,13 +121,15 @@ export default class extends Controller {
 
   hidden(event) {
     setTimeout( () => {
-      this.suggestionsTarget.style = "display: none;"
+      this.suggestionsTarget.style.display = "none";
+      this.suggestionsTarget.parentElement.style.display = "none";
     }, 300)
   }
 
   hiddenStreet(event) {
     setTimeout( () => {
-      this.suggestions_streetTarget.style = "display: none;"
+      this.suggestions_streetTarget.style.display = "none";
+      this.suggestions_streetTarget.parentElement.style.display = "none";
     }, 300)
   }
 }
