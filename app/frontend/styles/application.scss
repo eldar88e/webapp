@@ -77,6 +77,12 @@ h3 {
       color: #777777;
       font-weight: 400;
     }
+
+    &:focus-within {
+      button {
+        fill: #48C928;
+      }
+    }
   }
 }
 
@@ -315,6 +321,51 @@ h3 {
       }
     }
   }
+
+  .check-input-label {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+
+    .agreement {
+      color: #48C928;
+
+      &:hover {
+        color: #3AA120;
+      }
+    }
+  }
+
+  .form-check-input {
+    width: 20px;
+    height: 20px;
+
+    &:checked {
+      background-color: #48C928;
+    }
+  }
+}
+
+.price-title {
+  font-size: 12px;
+  line-height: 16px;
+  margin-bottom: 12px;
+}
+
+.end-price {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.cart-empty {
+  font-weight: 600;
+  color: #777777;
+}
+
+.btn-clear-cart {
+  @apply font-medium flex gap-1 items-center hover:text-gray-700;
+  color: #777777;
+  cursor: pointer;
 }
 
 .scrollable {
@@ -341,6 +392,10 @@ h3 {
   &::-webkit-scrollbar-thumb:hover {
     background-color: #3AA120; /* цвет ползунка при наведении */
   }
+}
+
+.green {
+  color: #48C928;
 }
 
 .btn {

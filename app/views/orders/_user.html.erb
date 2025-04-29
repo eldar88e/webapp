@@ -1,39 +1,49 @@
-<div data-controller="agreement">
-  <div class="form" data-agreement-target="form">
-    <%= form_with(model: current_user, url: orders_path, method: :post, data: { controller: 'dadata' }) do |form| %>
-      <%= render partial: 'devise/registrations/form_items', locals: { f: form } %>
+<%= form_with(model: current_user, url: orders_path, method: :post, data: { controller: 'dadata' }, class: 'profile-form') do |form| %>
+  <div class="main-block mb-5">
+    <%= render partial: 'devise/registrations/form_items', locals: { f: form } %>
 
-      <div class="mt-6 flex items-center gap-4">
-        <%= form.check_box :agreement, class: 'form-check-input', checked: true, data: { agreement_target: 'check_box' } %>
+    <div class="flex gap-2 items-center">
+      <%= form.check_box :agreement, class: 'form-check-input', checked: true, data: { agreement_target: 'check_box' } %>
 
-        <%= link_to '#', class: 'agreement', data: { action: "click->agreement#visible" } do %>
-          Я принимаю условия пользовательского соглашения
-        <% end %>
+      <div class="check-input-label">
+        <div>Я принимаю условия</div>
+        <%= link_to 'пользовательского соглашения', '#', class: 'agreement', data: { action: "click->agreement#visible" } %>
       </div>
-
-      <div class="mt-6">
-        <%= form.submit "Продолжить", class: "btn" %>
-      </div>
-    <% end %>
+    </div>
   </div>
 
-  <div class="agreement-text scrollable" data-agreement-target="agreement">
-    <div class="close" data-action="click->agreement#close"></div>
-    <% @contract = YAML.load_file(Rails.root.join("offer.yml"))["offer"] %>
-    <p><%= @contract["title"] %></p><br>
-    <p><%= @contract["intro"].gsub('%{bot}', settings[:tg_main_bot]) %></p><br>
-
-    <% @contract["sections"].each_with_index do |section, idx| %>
-      <p><%= section["title"] %></p><br>
-      <% section["items"].each_with_index do |item, i| %>
-        <p><%= (item.include?("•") ? '' : "#{idx+1}.#{i+1}. ") + item.gsub('%{bot}', settings[:tg_main_bot]) %></p><br>
-      <% end %>
-    <% end %>
-
-    <p><%= @contract['pss'] %></p><br>
-
-    <div class="btn inline-block" data-action="click->agreement#close">Назад</div>
-
-    <%#= link_to "Принять", '#', class: "btn mt-3", style: 'display: inline-block', data: { action: "click->agreement#agree" } %>
+  <div class="main-block mb-5">
+    <h3>Используйте бонусы</h3>
   </div>
+
+  <div class="mb-5">
+    <div class="flex justify-between"><div class="price-title">Товары:</div><div class="font-medium">55000₽</div></div>
+    <div class="flex justify-between"><div class="price-title">Скидка:</div><div class="font-medium green">-500₽</div></div>
+    <div class="flex justify-between"><div class="price-title">Доставка:</div><div class="font-medium">500₽</div></div>
+    <div class="flex justify-between"><div class="price-title">Итоговая стоимость:</div><div class="end-price">55000₽</div></div>
+  </div>
+
+  <div class="mb-5">
+    <%= form.submit "Оформить заказ", class: "btn btn-big" %>
+  </div>
+<% end %>
+
+<div class="agreement-text scrollable hidden" data-agreement-target="agreement">
+  <div class="close" data-action="click->agreement#close"></div>
+  <% @contract = YAML.load_file(Rails.root.join("offer.yml"))["offer"] %>
+  <p><%= @contract["title"] %></p><br>
+  <p><%= @contract["intro"].gsub('%{bot}', settings[:tg_main_bot]) %></p><br>
+
+  <% @contract["sections"].each_with_index do |section, idx| %>
+    <p><%= section["title"] %></p><br>
+    <% section["items"].each_with_index do |item, i| %>
+      <p><%= (item.include?("•") ? '' : "#{idx+1}.#{i+1}. ") + item.gsub('%{bot}', settings[:tg_main_bot]) %></p><br>
+    <% end %>
+  <% end %>
+
+  <p><%= @contract['pss'] %></p><br>
+
+  <div class="btn inline-block" data-action="click->agreement#close">Назад</div>
+
+  <%#= link_to "Принять", '#', class: "btn mt-3", style: 'display: inline-block', data: { action: "click->agreement#agree" } %>
 </div>

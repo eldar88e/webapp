@@ -1,8 +1,6 @@
 <%= form_for(current_user, as: current_user, url: registration_path(current_user),
              html: { method: :put, data: { controller: 'dadata' }, class: 'profile-form' }) do |form| %>
   <div class="main-block mb-5">
-    <h3>Личная информация</h3>
-
     <%= render "devise/shared/error_messages", resource: current_user %>
 
     <%= render partial: 'devise/registrations/form_items', locals: { f: form } %>

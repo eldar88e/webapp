@@ -2,6 +2,8 @@
   window.dadata_token = "<%= settings[:dadata_token] %>"
 <% end %>
 
+<h3>Личная информация</h3>
+
 <div class="input-container address-wrapper" data-controller="dadata-name">
   <%= f.label :middle_name %>
   <%= f.text_field :middle_name, autocomplete: "family-name", placeholder: '', class: "input-str", required: true, minlength: 2,

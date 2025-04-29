@@ -8,7 +8,7 @@ nav
   ul.catalog-nav
     - available_categories.each do |category|
       li
-        = active_link_to products_path(category_id: category.id), title: "Перейти к #{category.name}", data: { turbo_prefetch: false, turbo_frame: 'products' }, active: /#{category.id}/ do
+        = active_link_to products_path(category_id: category.id), title: "Перейти к #{category.name}", data: { turbo_prefetch: false, turbo_frame: 'products' }, active: ((category.id == Setting.fetch_value(:default_product_id).to_i && params[:category_id].nil?) || /#{category.id}/) do
           = category.name
 
 

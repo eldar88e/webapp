@@ -1,4 +1,7 @@
-<div id="<%= dom_id cart_item %>" class="cart-item" data-cart-target="itemQuantity">
+<div id="<%= dom_id cart_item %>" class="flex mb-2" data-cart-target="itemQuantity">
+  <div class="basis-1/4">
+    <%= image_tag storage_path(cart_item.product.image), alt: cart_item.product.name, width: 72, height: 72 %>
+  </div>
   <div class="basis-1/3">
     <%= link_to format_name(cart_item.product.name), product_path(cart_item.product), data: { turbo_prefetch: false } %>
   </div>
