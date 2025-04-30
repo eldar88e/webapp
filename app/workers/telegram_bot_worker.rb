@@ -141,11 +141,12 @@ class TelegramBotWorker
   end
 
   def initialize_first_btn
+    group_title = settings[:group_btn_title] || 'Перейти в группу'
     [
       # [Telegram::Bot::Types::InlineKeyboardButton.new(
       #   text: settings[:bot_btn_title], url: "https://t.me/#{settings[:tg_main_bot]}?startapp"
       # )],
-      [Telegram::Bot::Types::InlineKeyboardButton.new(text: settings[:group_btn_title], url: settings[:tg_group])],
+      [Telegram::Bot::Types::InlineKeyboardButton.new(text: group_title, url: settings[:tg_group])],
       [Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Задать вопрос', url: settings[:tg_support])]
     ]
   end
