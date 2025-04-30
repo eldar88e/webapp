@@ -14,3 +14,12 @@ local:
 #  endpoint: <%#= ENV.fetch('MINIO_HOST') %>
 #  bucket: <%#= ENV.fetch('MINIO_BUCKET') %>
 #  force_path_style: true
+
+#beget:
+#  service: S3
+#  access_key_id: <%#= ENV.fetch('BEGET_ACCESS') %>
+#  secret_access_key: <%#= ENV.fetch('BEGET_SECRET') %>
+#  region: us-east-1
+#  endpoint: <%#= ENV.fetch('BEGET_HOST') %>
+#  bucket: <%#= ENV.fetch('BEGET_BUCKET') %>
+#  force_path_style: true
