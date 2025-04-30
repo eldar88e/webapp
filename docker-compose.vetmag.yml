@@ -12,7 +12,7 @@ services:
     container_name: vetmag
     hostname: vetmag
     depends_on:
-      - psql
+      - pg
       - redis
     entrypoint: ["./bin/docker-entrypoint"]
     networks:
@@ -26,7 +26,7 @@ services:
     container_name: vetmag-sidekiq
     hostname: vetmag-sidekiq
     depends_on:
-      - psql
+      - pg
       - redis
     entrypoint: []
     environment:
@@ -38,7 +38,7 @@ services:
 
   pg:
     image: postgres:16.1
-    container_name: vetmag-psql
+    container_name: vetmag-pg
     hostname: pg
     environment:
       POSTGRES_USER: ${DB_USER}
