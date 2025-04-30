@@ -35,6 +35,7 @@ RUN bundle check || bundle install
 RUN bundle clean --force
 
 COPY package.json yarn.lock ./
+ENV ROLLUP_NO_NATIVE=true
 RUN yarn install --frozen-lockfile
 # RUN rm -rf node_modules
 
