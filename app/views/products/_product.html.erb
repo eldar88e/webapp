@@ -41,7 +41,9 @@
           <% else %>
             <div class="price-without-old"><%= product.price.to_i %>₽</div>
           <% end %>
-          <%= render partial: '/products/btn', locals: { product: product } %>
+          <%= turbo_frame_tag id="cart-btn-#{product.id}" do %>
+            <%= render partial: '/products/btn', locals: { product: product } %>
+          <% end %>
         <% else %>
           <div class="title-has">Нет в наличии</div>
           <%= render partial: '/product_subscriptions/btn', locals: { product: product } %>
