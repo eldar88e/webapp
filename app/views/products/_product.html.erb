@@ -1,11 +1,7 @@
 <div id="<%= dom_id product %>" class="w-1/2 md:w-1/3 lg:w-1/4 2xl:w-1/5">
   <div class="product-wrapper">
     <div class="product relative">
-      <div class="absolute right-0 top-0 z-10">
-        <span style="color: #777777;">
-          <%= render IconComponent.new name: :unfavorite %>
-        </span>
-      </div>
+      <%= render partial: '/favorites/button', locals: { product: product } %>
       <div class="product-img">
         <%= link_to product_path(product), data: { turbo_prefetch: false }, title: product.name do %>
           <div class="relative">

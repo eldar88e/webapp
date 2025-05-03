@@ -488,6 +488,41 @@ h3 {
       margin-right: -5px;
     }
   }
+
+  .cart-counter {
+    position: absolute;
+    background-color: white;
+    color: #48C928;
+    padding: 3px;
+    font-size: 10px;
+    line-height: 10px;
+    font-weight: 700;
+    right: -7px;
+    top: 9px;
+    border-radius: 50%;
+  }
+}
+
+.fav-btn {
+  color: #777777;
+  cursor: pointer;
+  transition: all 0.5s;
+
+  &:hover {
+    color: #48C928;
+  }
+
+  &.favorite {
+    color: #48C928;
+
+    svg {
+      fill: #48C928;
+    }
+  }
+}
+
+.favorite:hover {
+  color: #3AA120;
 }
 
 .footer {

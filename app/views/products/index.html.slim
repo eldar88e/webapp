@@ -11,12 +11,10 @@ nav
         = active_link_to products_path(category_id: category.id), title: "Перейти к #{category.name}", data: { turbo_prefetch: false, turbo_frame: 'products' }, active: ((category.id == Setting.fetch_value(:default_product_id).to_i && params[:category_id].nil?) || /#{category.id}/) do
           = category.name
 
-
 #products class="flex flex-wrap -mx-2"
   - if @products.present?
     = render @products
   - else
     .text-center.py-10.w-full Ничего не найдено.
-
 
 = render '/products/pagination'

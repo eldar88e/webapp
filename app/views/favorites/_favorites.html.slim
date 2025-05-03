@@ -1,0 +1,9 @@
+#favorites class="flex flex-wrap -mx-2"
+  - if @products.present?
+    = render @products
+  - else
+    .text-center.py-10.w-full Ничего не найдено.
+    .flex.items-center.w-full
+      = link_to 'Вернуться в каталог', root_path, class: "btn btn-secondary btn-big text-center"
+
+= render '/products/pagination'

@@ -6,7 +6,7 @@
           = render IconComponent.new name: :catalog, size: 24
           | Каталог
       li
-        = active_link_to carts_path, active: :exclusive do
+        = active_link_to favorites_path, active: :exclusive do
           = render IconComponent.new name: :unfavorite, size: 24
           | Избранное
       li

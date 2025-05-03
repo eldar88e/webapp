@@ -8,9 +8,6 @@ class CartsController < ApplicationController
 
   def destroy
     current_user.cart.cart_items.destroy_all
-    render turbo_stream: [
-      turbo_stream.replace(:cart, partial: '/carts/cart'),
-      success_notice('Корзина очищена.')
-    ]
+    render turbo_stream: [turbo_stream.replace(:cart, partial: '/carts/cart')]
   end
 end
