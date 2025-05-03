@@ -69,15 +69,15 @@
   <symbol id="admin" fill="none" viewBox="0 0 24 24">
     <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M20 6H10m0 0a2 2 0 1 0-4 0m4 0a2 2 0 1 1-4 0m0 0H4m16 6h-2m0 0a2 2 0 1 0-4 0m4 0a2 2 0 1 1-4 0m0 0H4m16 6H10m0 0a2 2 0 1 0-4 0m4 0a2 2 0 1 1-4 0m0 0H4"/>
   </symbol>
-  <symbol id="cart-empty" viewBox="0 0 40 40" fill="none">
-    <path d="M25 18.3335L23.3333 33.3335" stroke="#777777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M31.6667 18.3334L25 6.66675" stroke="#777777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M3.33331 18.3335H36.6666" stroke="#777777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M5.83331 18.3335L8.49998 30.6668C8.65582 31.4311 9.07473 32.1165 9.68379 32.6037C10.2928 33.091 11.0535 33.3492 11.8333 33.3335H28.1666C28.9465 33.3492 29.7071 33.091 30.3162 32.6037C30.9252 32.1165 31.3441 31.4311 31.5 30.6668L34.3333 18.3335" stroke="#777777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M7.5 25.8335H32.5" stroke="#777777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M8.33331 18.3334L15 6.66675" stroke="#777777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M15 18.3335L16.6667 33.3335" stroke="#777777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <symbol id="cart-empty" viewBox="0 0 40 40" fill="none" stroke="currentColor">
+    <path d="M25 18.3335L23.3333 33.3335" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M31.6667 18.3334L25 6.66675" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M3.33331 18.3335H36.6666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M5.83331 18.3335L8.49998 30.6668C8.65582 31.4311 9.07473 32.1165 9.68379 32.6037C10.2928 33.091 11.0535 33.3492 11.8333 33.3335H28.1666C28.9465 33.3492 29.7071 33.091 30.3162 32.6037C30.9252 32.1165 31.3441 31.4311 31.5 30.6668L34.3333 18.3335" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M7.5 25.8335H32.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M8.33331 18.3334L15 6.66675" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M15 18.3335L16.6667 33.3335"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M6 36L34 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M6 34L34 6" stroke="#777777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M6 34L34 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </symbol>
 </svg>

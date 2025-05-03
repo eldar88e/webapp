@@ -45,6 +45,9 @@
         <%= yield %>
       </div>
     </main>
+    <%= turbo_frame_tag 'cart-summary' do %>
+      <%= render CartComponent.new cart: current_user.cart %>
+    <% end %>
 
     <%= render partial: '/layouts/partials/footer' %>
 

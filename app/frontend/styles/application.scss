@@ -446,6 +446,23 @@ h3 {
   }
 }
 
+.cart-mini {
+  background-color: #48C928;
+  color: white;
+  position: fixed;
+  bottom: 72px;
+  left: 0;
+  width: 100%;
+
+  &:hover {
+    background-color: #3AA120;
+
+    svg {
+      margin-right: ;
+    }
+  }
+}
+
 .footer {
   padding-top: 20px;
   padding-bottom: 72px;

@@ -43,11 +43,13 @@ class CartItemsController < ApplicationController
   def respond_success
     respond_to do |format|
       format.turbo_stream do
-        render turbo_stream: turbo_stream.update(
-          "cart-btn-#{@cart_item.product.id}",
-          partial: '/products/btn',
-          locals: { product: @cart_item.product }
-        )
+        render turbo_stream: [
+          turbo_stream.update(
+            "cart-btn-#{@cart_item.product.id}", partial: '/products/btn', locals: { product: @cart_item.product }
+          ),
+          turbo_stream.update('cart-summary', partial: '/carts/cart_summary'),
+          success_notice('Количество товара изменено.')
+        ]
       end
       format.json do
         render json: {
@@ -70,6 +72,7 @@ class CartItemsController < ApplicationController
   def render_create_success
     render turbo_stream: [
       success_notice('Товар добавлен в корзину.'),
+      turbo_stream.update('cart-summary', partial: '/carts/cart_summary'),
       turbo_stream.update("cart-btn-#{@cart_item.product.id}", partial: '/products/btn', locals: { product: @cart_item.product })
     ] # + update_item_counters(cart_item_params[:product_id])
   end
