@@ -8,4 +8,5 @@
             div
               div Корзина #{@total_price.to_i} ₽
               div Товаров: #{@cart.cart_items.sum { |i| i.quantity }}шт.
-          = render IconComponent.new name: :right, size: 24
+          .right-arrow
+            = render IconComponent.new name: :right, size: 24

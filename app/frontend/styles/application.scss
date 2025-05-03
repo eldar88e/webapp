@@ -195,8 +195,12 @@ h3 {
 }
 
 .btn-disable {
-  background: #7777771A;
+  background-color: #7777771A;
   color: #777777;
+
+  &:hover {
+    background-color: rgba(82, 82, 82, 0.15);
+  }
 }
 
 
@@ -457,8 +461,8 @@ h3 {
   &:hover {
     background-color: #3AA120;
 
-    svg {
-      margin-right: ;
+    .right-arrow {
+      margin-right: -5px;
     }
   }
 }
