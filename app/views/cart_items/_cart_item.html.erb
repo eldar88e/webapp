@@ -1,6 +1,10 @@
 <div id="<%= dom_id cart_item %>" class="flex mb-2" data-cart-target="itemQuantity">
   <div class="basis-1/4">
-    <%= image_tag storage_path(cart_item.product.image), alt: cart_item.product.name, width: 72, height: 72 %>
+    <% if cart_item.product.image.attached? %>
+      <%= image_tag storage_path(cart_item.product.image), alt: cart_item.product.name, width: 72, height: 72 %>
+    <% else %>
+      <%# TODO: если нет картинка %>
+    <% end %>
   </div>
   <div class="basis-1/3">
     <%= link_to format_name(cart_item.product.name), product_path(cart_item.product), data: { turbo_prefetch: false } %>
