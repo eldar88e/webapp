@@ -5,6 +5,14 @@ class OrdersController < ApplicationController
     @orders = current_user.orders
   end
 
+  def show
+    @order = current_user.orders.find(params[:id])
+    render turbo_stream: [
+      turbo_stream.update('modal-block', partial: '/orders/show', locals: { order: @order }),
+      turbo_stream.append(:modal, '<script>openModal();</script>'.html_safe)
+    ]
+  end
+
   def create
     return error_notice(t('.agreement')) if params[:user][:agreement] != '1'
     return error_notice(t('.required_fields')) unless required_fields_filled?
@@ -21,7 +29,7 @@ class OrdersController < ApplicationController
     if service[:success]
       render turbo_stream: [
         success_notice(t('.success')),
-        turbo_stream.append(:modal, '<script>closeModal();</script>'.html_safe),
+        # turbo_stream.append(:modal, '<script>closeModal();</script>'.html_safe),
         turbo_stream.append(:modal, '<script>closeMiniApp();</script>'.html_safe)
       ]
     else

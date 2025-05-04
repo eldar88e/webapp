@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_03_154910) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_04_180019) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -312,6 +312,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_03_154910) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["variable"], name: "index_settings_on_variable", unique: true
+  end
+
+  create_table "support_entries", force: :cascade do |t|
+    t.string "question"
+    t.text "answer"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "tg_media_files", force: :cascade do |t|

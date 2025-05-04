@@ -1,0 +1,14 @@
+h2.mb-5 Заказ№#{order.id}
+
+.main-block
+  .font-semibold.mb-3 Товаров: #{order.order_items.sum(&:quantity)}
+  - order.order_items.each do |order_item|
+    .mb-2.flex.justify-between.items-center.gap-1.order-item
+      .flex.gap-4.items-center
+        - if order_item.product.image.attached?
+          .w-18.h-18
+            = image_tag order_item.product.image
+        .mb-3 = order_item.product.name
+      .bg-gray-200.text-center.py-1.px-4.rounded-lg
+        .count = "#{order_item.quantity} шт"
+        .price = "#{order_item.price.to_i}₽"

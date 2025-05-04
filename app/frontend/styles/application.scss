@@ -57,6 +57,12 @@ h1 {
   margin-top: 4px;
 }
 
+h2 {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 28px;
+}
+
 h3 {
   font-weight: 600;
   font-size: 17px;
@@ -532,6 +538,43 @@ h3 {
   font-weight: 600;
   font-size: 17px;
   color: #48C928;
+}
+
+.modal {
+  position: fixed;
+  z-index: 100;
+  width: 100%;
+  left: 0;
+  top: 0;
+  background: #0000003d;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding-top: 72px;
+
+  .modal-block {
+    border-radius: 20px 20px 0 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+}
+
+.order-item {
+  .count {
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .price {
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 12px;
+    color: #777777;
+  }
 }
 
 .footer {

@@ -54,7 +54,10 @@
     <%= render partial: '/layouts/partials/fixed_menu' %>
 
     <div id="modal" class="modal <%= yield :model_class %>" style="<%= yield :model_style %>">
-      <%= yield :modal %>
+      <div id="modal-block" class="bg-white w-full p-5 modal-block"><%= yield :modal %></div>
+      <button class="close">
+        <%= render IconComponent.new name: :close %>
+      </button>
     </div>
 
     <%= render partial: '/layouts/partials/yandex_metrika' if Setting.fetch_value(:ym).present? %>

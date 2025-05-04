@@ -1,9 +1,24 @@
 window.closeModal = function() {
-    document.getElementById('modal').style.display = 'none';
+    const modal = document.getElementById('modal');
+    modal.style.display = 'none';
+
+    const modalBlock = modal.querySelector('.modal-block');
+    if (modalBlock) {
+        modalBlock.innerHTML = '';
+    }
 };
 
 window.openModal = function() {
-    document.getElementById('modal').style.display = 'block';
+    const modal = document.getElementById('modal');
+    modal.style.display = 'flex';
+
+    const handleOutsideClick = function(event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    };
+
+    modal.addEventListener('click', handleOutsideClick, { once: true });
 };
 
 window.clearModal = function() {
