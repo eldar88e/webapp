@@ -7,3 +7,13 @@ h1 = yield(:title)
 h3.mb-4 Часто задаваемые вопросы
 
 - @questions.each do |question|
+  .main-block.mb-2
+    .question data-controller="faq"
+      .flex.justify-between.items-center
+        .font-semibold.cursor-pointer data-action="click->faq#toggle"
+          = question.question
+        button.open-icon data-action="click->faq#toggle" data-faq-target="arrow"
+          = render IconComponent.new name: :down
+      .answer data-faq-target="answer"
+        .h-4
+        = question.answer

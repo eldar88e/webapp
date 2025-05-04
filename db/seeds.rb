@@ -1,10 +1,11 @@
 if Rails.env.development?
-  User.find_or_create_by!(email: 'test@test.tt') do |user|
+  User.find_or_create_by!(email: 'eldar@mail.ru') do |user|
     user.tg_id      = 123456
     user.password   = '12345678'
-    user.username   = '@test_user'
+    user.username   = 'test_user'
     user.first_name = 'Test'
     user.role       = 'admin'
+    user.started    = true
   end
 
   user = User.first
@@ -13,20 +14,21 @@ if Rails.env.development?
     " bibendum pulvinar posuere nunc risus sodales nibh. Felis congue est erat scelerisque mi turpis habitant."
 
   products = [
-    { name: 'Витамин C', stock_quantity: 1000, price: 1000 },
-    { name: 'Витамин D', stock_quantity: 0, price: 2000 },
-    { name: 'Витамин D', stock_quantity: 50, price: 3000 }
+    { name: 'Маргарита', stock_quantity: 1000, price: 1000, old_price: 1200 },
+    { name: 'С курицей', stock_quantity: 0, price: 1800 },
+    { name: 'С колбасой', stock_quantity: 50, price: 2100 },
+    { name: 'С грибами', stock_quantity: 50, price: 1500 }
   ]
 
   root_product = Product.find_or_create_by!({ name: 'Товары'})
-  vitamins     = Product.create!({ name: 'Витамины', ancestry: root_product.id })
-  bads         = Product.create!({ name: 'БАДы', ancestry: root_product.id })
+  product_one  = Product.create!({ name: 'Пицца', ancestry: root_product.id })
+  product_two  = Product.create!({ name: 'Пиде', ancestry: root_product.id })
 
-  Product.create!({ name: 'Прополис', stock_quantity: 60, price: 5000, ancestry: "#{root_product.id}/#{bads.id}" })
+  Product.create!({ name: 'Карышык', stock_quantity: 60, price: 2300, ancestry: "#{root_product.id}/#{product_two.id}" })
 
   products.each do |product|
     product[:description] = description
-    product[:ancestry]    = "#{root_product.id}/#{vitamins.id}"
+    product[:ancestry]    = "#{root_product.id}/#{product_one.id}"
     Product.create!(product)
   end
 
@@ -73,8 +75,20 @@ if Rails.env.development?
   settings = [
     { variable: 'app_name',	value: 'Test' },
     { variable: 'root_product_id',	value: root_product.id },
-    { variable: 'default_product_id',	value: vitamins.id },
+    { variable: 'default_product_id',	value: product_one.id },
     { variable: 'delivery_price',	value: 500 },
+    { variable: 'tg_main_bot' },
+    { variable: 'admin_chat_id' },
+    { variable: 'courier_tg_id' },
+    { variable: 'admin_ids' },
+    { variable: 'tg_token' },
+    { variable: 'tg_support' },
+    { variable: 'tg_group' },
+    { variable: 'preview_msg' },
+    { variable: 'spreadsheet_id' },
+    { variable: 'group_btn_title', value: 'Группа' },
+    { variable: 'bot_btn_title', value: 'Каталог' },
+    { variable: 'test_id' },
   ]
 
   settings.each { |i| Setting.create!(i) }

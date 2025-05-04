@@ -1,6 +1,6 @@
-h2.mb-5 Заказ№#{order.id}
+h2.mb-5 Заказ №#{order.id}
 
-.main-block
+.main-block.mb-12
   .font-semibold.mb-3 Товаров: #{order.order_items.sum(&:quantity)}
   - order.order_items.each do |order_item|
     .mb-2.flex.justify-between.items-center.gap-1.order-item
@@ -12,3 +12,19 @@ h2.mb-5 Заказ№#{order.id}
       .bg-gray-200.text-center.py-1.px-4.rounded-lg
         .count = "#{order_item.quantity} шт"
         .price = "#{order_item.price.to_i}₽"
+
+.mb-5
+  .flex.justify-between
+    .price-title Товары:
+    .font-medium 55000₽
+  .flex.justify-between
+    .price-title Скидка:
+    .font-medium.green -500₽
+  .flex.justify-between
+    .price-title Доставка:
+    .font-medium 500₽
+  .flex.justify-between
+    div Итоговая стоимость:
+    .end-price 55000₽
+
+button.btn.btn-big onclick="closeModal()" Закрыть

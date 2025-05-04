@@ -1,7 +1,7 @@
 .pt-6.px-4
-  h1.text-xl.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 Настройки
+  h1.text-xl.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 Вопросы ответы
 
-  = link_to 'Создать', new_admin_setting_path, class: blue_btn_styles,
+  = link_to 'Создать', new_admin_support_path, class: blue_btn_styles,
     data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false }
 
 .pt-6
@@ -9,12 +9,12 @@
     table.w-full.text-sm.text-left.rtl:text-right.text-gray-500.dark:text-gray-400
       thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
         tr
-          th.px-6.py-3 scope="col"
-            = sort_link(@q_settings, :variable, 'Переменная', data: { turbo_prefetch: false })
-          th.px-6.py-3 scope="col"Значение
-          th scope="col" class="px-6 py-3" Описание
+          th.px-6.py-3 scope="col" ИД
+          th.px-6.py-3 scope="col" Вопрос
+          th scope="col" class="px-6 py-3" Ответ
           th scope="col" class="px-6 py-3" Действия
       tbody
-        = render @settings
+        - @questions.each do |question|
+          = render partial: '/admin/supports/question', locals: { question: question }
 
   = render partial: '/layouts/partials/admin/pagy'

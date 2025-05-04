@@ -51,8 +51,8 @@
       </clipPath>
     </defs>
   </symbol>
-  <symbol id="right" viewBox="0 0 20 20" fill="none">
-    <path d="M7.5 15L12.5 10L7.5 5" style="stroke:currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <symbol id="right" viewBox="0 0 20 20" fill="none" style="stroke:currentColor">
+    <path d="M7.5 15L12.5 10L7.5 5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </symbol>
   <symbol id="cart2" viewBox="0 0 20 20" fill="none">
     <g clip-path="url(#clip0_90_1858)">
@@ -79,5 +79,8 @@
     <path d="M15 18.3335L16.6667 33.3335"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M6 36L34 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M6 34L34 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="down" viewBox="0 0 20 20" fill="none" style="stroke:currentColor">
+    <path d="M15 12.5L10 7.5L5 12.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </symbol>
 </svg>
