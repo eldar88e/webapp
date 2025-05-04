@@ -1,16 +1,15 @@
-.mb-3 id="<%= dom_id order %>"
-  .main-block
-    .flex.justify-between
-      h3 class="!mb-1"
-        = "Заказ №#{order.id}"
-      .order-total = order.total_amount.to_i.to_s + '₽'
-    div
-      - if order.status == 'shipped'
-        = format_date order.shipped_at
-      - elsif order.status == 'processing'
-        = format_date order.paid_at
-      - elsif %w[unpaid paid].include? order.status
-        = format_date order.created_at
-    div class=("mb-2 font-semibold #{order.status == 'shipped' ? 'text-[#48C928]' : 'text-red-500'}")
-      = t("order.statuses.#{order.status}")
-    = link_to 'Подробнее', '#', class: 'btn btn-secondary w-full flex justify-center'
+.main-block.mb-3
+  .flex.justify-between
+    h3 class="!mb-1"
+      = "Заказ №#{order.id}"
+    .order-total = order.total_amount.to_i.to_s + '₽'
+  div
+    - if order.status == 'shipped'
+      = format_date order.shipped_at
+    - elsif order.status == 'processing'
+      = format_date order.paid_at
+    - elsif %w[unpaid paid].include? order.status
+      = format_date order.created_at
+  div class=("mb-2 font-semibold #{order.status == 'shipped' ? 'text-[#48C928]' : 'text-red-500'}")
+    = t("order.statuses.#{order.status}")
+  = link_to 'Подробнее', '#', class: 'btn btn-secondary w-full flex justify-center'
