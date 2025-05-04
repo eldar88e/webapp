@@ -1,0 +1,7 @@
+- content_for :title, 'Товары в ожидании'
+- if @products&.first&.image&.attached?
+  = content_for :head, preload_link_tag(storage_path(@products.first.image), as: 'image', type: @products.first.image.blob.content_type)
+
+h1 = yield(:title)
+
+= render partial: 'product_subscriptions/product_subscriptions'

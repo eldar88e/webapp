@@ -499,7 +499,10 @@ h3 {
     font-weight: 700;
     right: -7px;
     top: 9px;
-    border-radius: 50%;
+    min-width: 16px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
   }
 }
 

@@ -7,11 +7,9 @@
         = image_tag current_user.photo_url
       - else
         = render IconComponent.new name: :profile, size: 40
-  h3.text-center class="!mb-1"
-    = current_user.full_name
-  .cashback
-    | Кешбек: 1000₽
-  button.btn.btn-big.btn-secondary.flex.justify-between.mb-2.items-center
+  h3.text-center class="!mb-1" = current_user.full_name
+  .cashback Кешбек: 1000₽
+  = link_to product_subscriptions_path, class: "btn btn-big btn-secondary flex justify-between mb-2 items-center" do
     .flex.justify-center.gap-2.items-center
       = render IconComponent.new name: :clock
       span Товары в ожидании

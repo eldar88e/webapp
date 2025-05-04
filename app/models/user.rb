@@ -13,6 +13,7 @@ class User < ApplicationRecord
   has_one :cart, dependent: :destroy
   has_many :reviews, dependent: :destroy
   has_many :product_subscriptions, dependent: :destroy
+  has_many :subscriptions_products, through: :product_subscriptions, source: :product
   has_many :subscribed_products, through: :product_subscriptions, source: :product
   has_many :mailings, dependent: :destroy
   has_many :ahoy_visits, class_name: 'Ahoy::Visit', dependent: :destroy

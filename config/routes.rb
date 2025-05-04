@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     resource :product_subscription, only: %i[create destroy]
     resource :favorites, only: %i[create destroy]
   end
+  resources :product_subscriptions, only: :index
   resources :favorites, only: %i[index]
   resources :carts, only: %i[index destroy]
   resources :cart_items, only: %i[create update]

@@ -16,7 +16,7 @@ class FavoritesController < ApplicationController
     current_user.favorites.find_by(product: @product)&.destroy
     stream = [turbo_stream.replace("favorite-btn-#{@product.id}", partial: '/favorites/button', locals: { product: @product }),
               success_notice('Удалено из избранного.')]
-    if request.url.include?('/products/')
+    if request.referer&.include?('/favorites')
       favorite_products
       stream << turbo_stream.replace(:favorites, partial: '/favorites/favorites')
     end
