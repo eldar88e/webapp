@@ -14,7 +14,7 @@
       = render IconComponent.new name: :clock
       span Товары в ожидании
     = render IconComponent.new name: :right
-  button.btn.btn-big.btn-secondary.flex.justify-between.items-center
+  = link_to orders_path, class: 'btn btn-big btn-secondary flex justify-between items-center' do
     .flex.justify-center.gap-2.items-center
       = render IconComponent.new name: :cart2
       span  История заказов

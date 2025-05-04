@@ -1,0 +1,9 @@
+- content_for :title, 'История заказов'
+
+h1 = yield(:title)
+
+- if @orders.present?
+  #orders
+    = render @orders
+- else
+  div Заказы отсутствуют!
