@@ -9,10 +9,9 @@
       = render '/carts/cart_items'
     = render 'orders/user'
   - else
-    .my-20
-      .flex.justify-center
-        .mb-3
-          .flex.justify-center.mb-1 = render IconComponent.new name: 'cart-empty', size: 40
-          .cart-empty = t('empty_cart')
-      .flex.justify-center
-        = link_to 'Вернуться в каталог', root_path, class: "btn btn-secondary btn-big text-center"
+    .no-items-wrapper
+      .w-full
+        .flex.justify-center.text-gray-no-active.w-full.mb-1
+          = render IconComponent.new name: 'cart-empty', size: 40
+        .no-items-title = t('empty_cart')
+        = link_to 'Вернуться в каталог', root_path, class: "block btn btn-secondary btn-big text-center"

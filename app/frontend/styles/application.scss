@@ -84,10 +84,22 @@ h3 {
       font-weight: 400;
     }
 
+    button {
+      cursor: pointer;
+    }
+
     &:focus-within {
       button {
         color: #48C928;
+
+        &:hover {
+          color: #3AA120;
+        }
       }
+    }
+
+    button:hover {
+      color: #48C928;
     }
   }
 }
@@ -264,6 +276,12 @@ h3 {
   box-shadow: 0px 0px 8px 0px #3D44530D;
 }
 
+.card-block {
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0px 4px 4px 0px #0000000D;
+}
+
 .cashback {
   text-align: center;
   margin-bottom: 16px;
@@ -365,6 +383,21 @@ h3 {
     &:checked {
       background-color: #48C928;
     }
+  }
+}
+
+.text-gray-no-active {
+  color: #777777;
+}
+
+.no-items-wrapper {
+  @apply flex items-center w-full;
+  height: 75vh;
+
+  .no-items-title {
+    @apply text-center w-full mb-3;
+    color: #777777;
+    font-weight: 600;
   }
 }
 

@@ -2,8 +2,11 @@
   - if @products.present?
     = render @products
   - else
-    .text-center.py-10.w-full Ничего не найдено.
-    .flex.items-center.w-full
-      = link_to 'Вернуться в каталог', root_path, class: "btn btn-secondary btn-big text-center"
+    .no-items-wrapper
+      .w-full
+        .flex.justify-center.text-gray-no-active.w-full.mb-1
+          = render IconComponent.new name: 'no-favorite', size: 40
+        .no-items-title Нет избранных товаров
+        = link_to 'Вернуться в каталог', root_path, class: "block btn btn-secondary btn-big text-center"
 
 = render '/products/pagination'
