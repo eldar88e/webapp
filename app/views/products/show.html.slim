@@ -1,6 +1,7 @@
 style
   |
     .header { position: absolute; width: 100%; }
+    .btn { padding: 18px; border-radius: 20px; }
 
 .card-main-block
   ul.breadcrumb
@@ -23,7 +24,7 @@ style
       - if @product.stock_quantity.positive?
         .have-product В наличии
       - else
-        .have-product.no-have-product Нет в наличии
+        .no-have-product Нет в наличии
     .card-favorite
       = render partial: '/favorites/button', locals: { product: @product }
   - if @product.stock_quantity.positive?
@@ -33,9 +34,6 @@ style
       .card-price= @product.price.to_i.to_s + '₽'
 
   - if @product.stock_quantity.positive?
-    style
-      |
-        #cart-btn-#{@product.id} .btn { padding: 18px; border-radius: 20px; }
     = turbo_frame_tag id="cart-btn-#{@product.id}" do
       = render partial: '/products/btn', locals: { product: @product }
   - else
@@ -43,28 +41,25 @@ style
 
 - if %i[brand weight dosage_form package_quantity main_ingredient].any? { |i| @product.send(i).present? }
   .card-block.mb-3
-    .product-wrapper
-      .product
-        h2 О товаре
+    .font-semibold.mb-4 О товаре
+    ul.properties-list
+      - %i[brand weight dosage_form package_quantity main_ingredient].each do |key|
+        - next if @product.send(key).blank?
 
-        ul.properties-list
-          - %i[brand weight dosage_form package_quantity main_ingredient].each do |key|
-            - next if @product.send(key).blank?
-
-            li
-              .variable style="#{'width: 99px;' if key == :package_quantity}" = t("helpers.label.product.#{key}")
-              .value = @product.send(key)
+        li.flex.justify-between.mb-3
+          .variable style="#{'width: 99px;' if key == :package_quantity}" = t("activerecord.attributes.product.#{key}") + ':'
+          .value = @product.send(key)
 
 
 - if @product.description.present?
   .card-block.mb-3
-    h2 Описание
+    .font-semibold.mb-4 Описание
     .product-description
       = @product.description
 
 - if ENV.fetch('HOST', '').exclude?('mirena')
   .card-block.mb-3
-    h2 Отзывы
+    .font-semibold.mb-4 Отзывы
     .product-reviews
       - if @reviews.present?
         .reviews-header
