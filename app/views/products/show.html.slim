@@ -64,22 +64,18 @@ style
       - if @reviews.present?
         .reviews-header
           .review-count
-            .flex.items-center.gap-1
-              .average-rating = @reviews.average(:rating).round(1)
-                svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"
-                  path d="M12.5679 0.741794C12.7608 0.41066 13.2392 0.41066 13.4321 0.741794L17.4151 7.58018C17.4857 7.70148 17.6041 7.78749 17.7413 7.8172L25.4758 9.49208C25.8503 9.57318 25.9981 10.0281 25.7428 10.3139L20.4699 16.2151C20.3764 16.3198 20.3312 16.459 20.3453 16.5986L21.1425 24.4722C21.1811 24.8534 20.7941 25.1346 20.4434 24.9801L13.2016 21.7889C13.0732 21.7322 12.9268 21.7322 12.7984 21.7888L5.55656 24.9801C5.20589 25.1346 4.81888 24.8534 4.85748 24.4722L5.65467 16.5986C5.66881 16.459 5.62359 16.3198 5.53006 16.2151L0.257184 10.3139C0.00185633 10.0281 0.149683 9.57318 0.524209 9.49208L8.25871 7.8172C8.39591 7.78749 8.5143 7.70148 8.58495 7.58018L12.5679 0.741794Z" fill="white"
-                .text = t('reviews.count', count: @reviews.size)
-
+            .average-rating.flex.items-center.gap-1
+              span = @reviews.average(:rating).round(1)
+              = render IconComponent.new name: :star, size: 28
+            .counter = t('reviews.count', count: @reviews.size)
+            = turbo_frame_tag :new_review do
+              = link_to 'Оставить отзыв', new_product_review_path(@product), class: 'btn-new-review', data: { turbo_prefetch: false }
         .percentages
           - percentages(@product).each do |percentage|
             .percentage-wrap
               .rating = percentage[:rating]
-                .percentage
-                  div style="width: #{percentage[:percentage]}%;"
-
-    .new_review
-      = turbo_frame_tag :new_review do
-        = link_to 'Оставить отзыв', new_product_review_path(@product), class: 'btn-new-review', data: { turbo_prefetch: false }
+              .percentage
+                div style="width: #{percentage[:percentage]}%;"
 
     - if @reviews.present?
       = render partial: '/reviews/review', collection: @reviews, as: :review
