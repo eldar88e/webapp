@@ -1,45 +1,48 @@
-.card-block
-  ul.breadcrumb
-    li
-      = link_to 'Каталог', root_path
-    li
-      span = @product.name
+style
+  |
+    .header { position: absolute; width: 100%; }
 
+.card-main-block
+  ul.breadcrumb
+    li = link_to 'Каталог', root_path
+    li = @product.name
 
   .product-img
-    .relative
-      div role="status" class="flex justify-center space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center"
-        .flex.items-center.justify-center.w-48.h-48
-          svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18"
-            path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z"
-      - if @product.image.attached?
-        div style="background-image: url('<%= storage_path(@product.image) %>'); background-size: contain; background-repeat: no-repeat; background-position: center;" class="img absolute left-0 top-0"
+    div role="status" class="flex justify-center space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center"
+      .flex.items-center.justify-center.w-60.h-60
+        svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18"
+          path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z"
+    - if @product.image.attached?
+      .img.absolute.left-0.top-0 style="background-image: url('#{storage_path(@product.image)}'); background-size: contain; background-repeat: no-repeat; background-position: center;"
 
-  = @product.name
-
-  .product-exist
-    - if @product.stock_quantity.positive?
-      .have-product
-      span В наличии
-    - else
-      .have-product.no-have-product
-      span Нет в наличии
-
+.card-block.mb-3
+  .flex.justify-between.mb-3
+    div
+      .font-semibold.text-base
+        = @product.name
+      - if @product.stock_quantity.positive?
+        .have-product В наличии
+      - else
+        .have-product.no-have-product Нет в наличии
+    .card-favorite
+      = render partial: '/favorites/button', locals: { product: @product }
+  - if @product.stock_quantity.positive?
+    .mb-3.flex.items-end.gap-1
+      - if @product.old_price.present?
+        .card-old-price = @product.old_price.to_i.to_s + '₽'
+      .card-price= @product.price.to_i.to_s + '₽'
 
   - if @product.stock_quantity.positive?
-    = render partial: '/products/btn', locals: { product: @product }
+    style
+      |
+        #cart-btn-#{@product.id} .btn { padding: 18px; border-radius: 20px; }
+    = turbo_frame_tag id="cart-btn-#{@product.id}" do
+      = render partial: '/products/btn', locals: { product: @product }
   - else
     = render partial: '/product_subscriptions/btn', locals: { product: @product }
-    div
-      - if @product.old_price.present?
-        .old-price
-          = @product.old_price.to_i
-          span style="margin-left: 3px" ₽
-      .price
-        = @product.price.to_i
-        span style="margin-left: 3px" ₽
 
-  - if %i[brand weight dosage_form package_quantity main_ingredient].any? { |i| @product.send(i).present? }
+- if %i[brand weight dosage_form package_quantity main_ingredient].any? { |i| @product.send(i).present? }
+  .card-block.mb-3
     .product-wrapper
       .product
         h2 О товаре
@@ -54,13 +57,13 @@
 
 
 - if @product.description.present?
-  .card-block
+  .card-block.mb-3
     h2 Описание
     .product-description
       = @product.description
 
 - if ENV.fetch('HOST', '').exclude?('mirena')
-  .card-block
+  .card-block.mb-3
     h2 Отзывы
     .product-reviews
       - if @reviews.present?

@@ -1,0 +1,8 @@
+- data = { controller: 'vibration', action: 'click->vibration#makeVibration' }
+
+div id="subscribe_#{product.id}"
+  - if product.subscribed? current_user
+    = button_to 'Отписаться', product_product_subscription_path(product_id: product.id), method: :delete, class: 'btn btn-disable', data: data
+  - else
+    = button_to 'Подписаться', product_product_subscription_path(product_id: product.id), class: 'btn btn-secondary', data: data
+

@@ -144,10 +144,12 @@ h3 {
   box-shadow: 0px 4px 16px 0px #3D44531A;
   box-shadow: 0px 0px 8px 0px #3D44530D;
   padding: 12px;
+  position: relative;
 
   .product-img {
     height: 175px;
     overflow: hidden;
+    position: relative;
   }
 
   .product-title {
@@ -227,6 +229,69 @@ h3 {
   }
 }
 
+.breadcrumb {
+  margin-bottom: 8px;
+  line-height: 1;
+
+  li {
+    display: inline-block;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    transition: all 0.5s;
+
+    a {
+      opacity: 60%;
+
+      &:hover {
+        color: #3AA120;
+        opacity: 100%;
+
+        &:after {
+          color: #3D4453;
+          opacity: 60%;
+        }
+      }
+
+      &:after {
+        content: '/';
+        margin: 0 5px;
+      }
+    }
+  }
+}
+
+.product-img {
+  height: 240px;
+  position: relative;
+}
+
+.have-product {
+  font-weight: 500;
+  font-size: 13px;
+  color: #48C928;
+}
+
+.card-price {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.card-old-price {
+  opacity: 40%;
+  text-decoration: line-through;
+}
+
+.card-favorite {
+  padding: 12px;
+  border-radius: 12px;
+  background-color: #F0F0F0;
+
+  form {
+    height: 20px;
+  }
+}
 
 .fixed-menu {
   position: fixed;
@@ -277,9 +342,18 @@ h3 {
 }
 
 .card-block {
+  margin-left: -20px;
+  margin-right: -20px;
   padding: 20px;
   background-color: white;
-  box-shadow: 0px 4px 4px 0px #0000000D;
+  box-shadow: 0px 4px 16px 0px #3D44531A;
+  box-shadow: 0px 0px 8px 0px #3D44530D;
+}
+
+.card-main-block {
+  @apply px-5 -mx-5 bg-white;
+  padding-top: 92px;
+  padding-bottom: 0;
 }
 
 .cashback {
