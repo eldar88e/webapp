@@ -8,8 +8,10 @@
       = format_date order.shipped_at
     - elsif order.status == 'processing'
       = format_date order.paid_at
-    - elsif %w[unpaid paid].include? order.status
+    - elsif order.status == 'unpaid'
       = format_date order.created_at
+    - else
+      = format_date order.updated_at
   div class=("mb-2 font-semibold #{order.status == 'shipped' ? 'text-[#48C928]' : 'text-red-500'}")
     = t("order.statuses.#{order.status}")
   = link_to 'Подробнее', order_path(order), data: { turbo_prefetch: false }, class: 'btn btn-secondary w-full flex justify-center'

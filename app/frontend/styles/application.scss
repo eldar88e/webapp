@@ -623,7 +623,7 @@ h3 {
 
 .no-items-wrapper {
   @apply flex items-center w-full;
-  height: 75vh;
+  height: 70vh;
 
   .no-items-title {
     @apply text-center w-full mb-3;
@@ -825,6 +825,8 @@ h3 {
     bottom: -100%;
     left: 0;
     width: 100%;
+    max-height: 89vh;
+    overflow-y: auto;
   }
 
   .open {
@@ -833,6 +835,10 @@ h3 {
 }
 
 .history-order-items {
+  padding-right: 10px;
+  overflow-y: auto;
+  max-height: 214px;
+
   .history-order-item {
     @apply mb-2 flex justify-between items-center gap-1;
 

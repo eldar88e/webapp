@@ -15,6 +15,10 @@ nav
   - if @products.present?
     = render @products
   - else
-    .text-center.py-10.w-full Ничего не найдено.
+    .no-items-wrapper
+      .w-full
+        .flex.justify-center.text-gray-no-active.w-full.mb-1
+          /= render IconComponent.new name: 'no-favorite', size: 40
+        .no-items-title Ничего не найдено
 
 = render '/products/pagination'
