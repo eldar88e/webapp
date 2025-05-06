@@ -2,7 +2,7 @@ class OrdersController < ApplicationController
   before_action :handle_user_info, only: [:create], if: -> { params[:page].to_i == 1 }
 
   def index
-    @orders = current_user.orders
+    @orders = current_user.orders.order(updated_at: :desc)
   end
 
   def show
