@@ -13,7 +13,7 @@ window.closeModal = function() {
 
     setTimeout(() => {
         modal.style.display = 'none';
-        modalBlock.innerHTML = '';
+        document.getElementById('modal-block').innerHTML = '';
     }, 300);
 };
 

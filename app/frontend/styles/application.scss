@@ -890,6 +890,15 @@ h3 {
   .open {
     bottom: 0;
   }
+
+  .close {
+    cursor: pointer;
+    float: right;
+
+    &:hover {
+      color: #48C928;
+    }
+  }
 }
 
 .history-order-items {

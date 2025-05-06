@@ -1,12 +1,7 @@
 <% content_for :title, "Корзина" %>
 
-<%# content_for :model_class, "right" %>
-<%# content_for :model_style, "display: block;" %>
-
-<%# content_for :modal do %>
-  <h1><%= yield(:title) %></h1>
-  <%= render '/carts/cart' %>
-<%# end %>
+<h1><%= yield(:title) %></h1>
+<%= render '/carts/cart' %>
 
 <style>
     .cart-mini { display: none; }
