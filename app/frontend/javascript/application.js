@@ -1,7 +1,16 @@
+let handleOutsideClick;
+
 window.closeModal = function() {
     const modal = document.getElementById('modal');
     const modalBlock = modal.querySelector('.modal-block');
+
     modalBlock.classList.toggle("open");
+
+    if (handleOutsideClick) {
+        modal.removeEventListener('click', handleOutsideClick);
+        handleOutsideClick = null;
+    }
+
     setTimeout(() => {
         modal.style.display = 'none';
         modalBlock.innerHTML = '';
@@ -10,20 +19,21 @@ window.closeModal = function() {
 
 window.openModal = function() {
     const modal = document.getElementById('modal');
+    const modalBlock = modal.querySelector('.modal-block');
+
     modal.style.display = 'flex';
 
-    const modalBlock = modal.querySelector('.modal-block');
     setTimeout(() => {
         modalBlock.classList.toggle("open");
     }, 50);
 
-    const handleOutsideClick = function(event) {
+    handleOutsideClick = function (event) {
         if (event.target === modal) {
             closeModal();
         }
     };
 
-    modal.addEventListener('click', handleOutsideClick, { once: true });
+    modal.addEventListener('click', handleOutsideClick);
 };
 
 window.clearModal = function() {
