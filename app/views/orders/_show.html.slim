@@ -1,19 +1,23 @@
 h2.mb-5 Заказ №#{order.id}
 
-.main-block.mb-12
+.main-block.mb-11
   .font-semibold.mb-3 Товаров: #{order.order_items.sum(&:quantity)}
-  - order.order_items.each do |order_item|
-    .mb-2.flex.justify-between.items-center.gap-1.order-item
-      .flex.gap-4.items-center
-        - if order_item.product.image.attached?
+  .history-order-items
+    - order.order_items.each do |order_item|
+      .history-order-item
+        .flex.gap-4.items-center
           .history-img
-            = image_tag order_item.product.image
-        .mb-3
-          div = order_item.product.name
-          .history-price #{order_item.product.price.to_i}₽/шт
-      .bg-gray-200.text-center.py-1.px-4.rounded-lg
-        .count = "#{order_item.quantity} шт"
-        .price = "#{order_item.price.to_i * order_item.quantity}₽"
+            div role="status" class="flex justify-center space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center"
+              .flex.items-center.justify-center.w-full.h-18
+                = render IconComponent.new name: 'no-image', size: 30
+            - if order_item.product.image.attached?
+              = image_tag order_item.product.image
+          .mb-3
+            div = order_item.product.name
+            .history-price #{order_item.product.price.to_i}₽/шт
+        .bg-gray-200.text-center.py-1.px-4.rounded-lg
+          .count = "#{order_item.quantity} шт"
+          .price = "#{order_item.price.to_i * order_item.quantity}₽"
 
 - total_product_price = order.order_items.sum { |i| i.price * i.quantity }.to_i
 / TODO: отнять еще скидку

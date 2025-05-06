@@ -150,6 +150,7 @@ h3 {
     height: 175px;
     overflow: hidden;
     position: relative;
+    color: #48C928;
   }
 
   .product-title {
@@ -368,6 +369,7 @@ h3 {
   .product-img {
     position: relative;
     padding-bottom: 8px;
+    color: #48C928;
 
     .img {
       width: 100%;
@@ -689,6 +691,7 @@ h3 {
   .buy-info {
     margin-top: -4px;
     height: 20px;
+    text-align: center;
 
     .count {
       color: #3D4453;
@@ -829,33 +832,49 @@ h3 {
   }
 }
 
-.history-price {
-  margin-top: 4px;
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 16px;
-}
+.history-order-items {
+  .history-order-item {
+    @apply mb-2 flex justify-between items-center gap-1;
 
-.history-img {
-  background-color: #F0F0F0;
-  height: 72px;
-  width: 72px;
-  border-radius: 8px;
-  overflow: hidden;
-}
+    &:last-child {
+      margin-bottom: 0;
+    }
 
-.order-item {
-  .count {
-    font-weight: 600;
-    font-size: 12px;
-    line-height: 16px;
-  }
+    .count {
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 16px;
+    }
 
-  .price {
-    font-weight: 500;
-    font-size: 10px;
-    line-height: 12px;
-    color: #777777;
+    .price {
+      font-weight: 500;
+      font-size: 10px;
+      line-height: 12px;
+      color: #777777;
+    }
+
+    .history-price {
+      margin-top: 4px;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 16px;
+    }
+
+    .history-img {
+      background-color: #F0F0F0;
+      height: 72px;
+      width: 72px;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      color: #48C928;
+
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    }
   }
 }
 

@@ -12,7 +12,7 @@
         .minus-ico
     .buy-info
       .count
-        = "#{cart_item.quantity}шт."
+        = "#{cart_item.quantity} шт"
       .total
         = "#{(cart_item.quantity * product.price).to_i}₽"
     = button_to cart_item_path(id: cart_item.id), data: { controller: 'vibration', action: 'click->vibration#makeVibration' },
