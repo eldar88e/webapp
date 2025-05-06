@@ -11,7 +11,8 @@ h2.mb-5 Заказ №#{order.id}
               .flex.items-center.justify-center.w-full.h-18
                 = render IconComponent.new name: 'no-image', size: 30
             - if order_item.product.image.attached?
-              = image_tag order_item.product.image
+              .absolute.top-0.left-0.flex.justify-center.items-center.w-full.h-full
+                = image_tag order_item.product.image
           .mb-3
             div = order_item.product.name
             .history-price #{order_item.product.price.to_i}₽/шт
