@@ -1,9 +1,8 @@
 <% if @pagy.next %>
-  <div id="pagination"
-       data-controller="infinite-scroll"
-       data-infinite-scroll-url="<%= products_path(format: :turbo_stream, page: @pagy.next) if @pagy.next %>">
+  <div id="pagination" class="-mt-12">
     <div class="load8">
       <div class="loader">Loading...</div>
     </div>
+    <div class="-mt-12" data-controller="infinite-scroll" data-infinite-scroll-url="<%= products_path(format: :turbo_stream, page: @pagy.next) if @pagy.next %>"></div>
   </div>
 <% end %>

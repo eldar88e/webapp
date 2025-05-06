@@ -6,9 +6,8 @@ export default class extends Controller {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     setTimeout(() => {
-                        document.body.style.background = 'red';
                         this.loadMore();
-                    }, 500);
+                    }, 800);
                 }
             });
         });
