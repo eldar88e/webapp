@@ -30,10 +30,9 @@ h2.mb-5 Заказ №#{order.id}
   .flex.justify-between
     .price-title Скидка:
     .font-medium.green Доделать
-  - if order.has_delivery.present?
-    .flex.justify-between
-      .price-title Доставка:
-      .font-medium #{order.total_amount.to_i - total_product_price}₽
+  .flex.justify-between
+    .price-title Доставка:
+    .font-medium #{order.has_delivery.present? ? (order.total_amount.to_i - total_product_price) : 0}₽
   .flex.justify-between
     div Итоговая стоимость:
     .end-price #{order.total_amount.to_i}₽
