@@ -33,7 +33,7 @@ h2.mb-5 Заказ №#{order.id}
   - if order.has_delivery.present?
     .flex.justify-between
       .price-title Доставка:
-      .font-medium #{total_product_price + order.total_amount.to_i}₽
+      .font-medium #{order.total_amount.to_i - total_product_price}₽
   .flex.justify-between
     div Итоговая стоимость:
     .end-price #{order.total_amount.to_i}₽
