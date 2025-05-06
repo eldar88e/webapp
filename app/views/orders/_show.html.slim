@@ -6,25 +6,31 @@ h2.mb-5 Заказ №#{order.id}
     .mb-2.flex.justify-between.items-center.gap-1.order-item
       .flex.gap-4.items-center
         - if order_item.product.image.attached?
-          .w-18.h-18
+          .history-img
             = image_tag order_item.product.image
-        .mb-3 = order_item.product.name
+        .mb-3
+          div = order_item.product.name
+          .history-price #{order_item.product.price.to_i}₽/шт
       .bg-gray-200.text-center.py-1.px-4.rounded-lg
         .count = "#{order_item.quantity} шт"
-        .price = "#{order_item.price.to_i}₽"
+        .price = "#{order_item.price.to_i * order_item.quantity}₽"
+
+- total_product_price = order.order_items.sum { |i| i.price * i.quantity }.to_i
+/ TODO: отнять еще скидку
 
 .mb-5
   .flex.justify-between
     .price-title Товары:
-    .font-medium 55000₽
+    .font-medium #{total_product_price}₽
   .flex.justify-between
     .price-title Скидка:
-    .font-medium.green -500₽
-  .flex.justify-between
-    .price-title Доставка:
-    .font-medium 500₽
+    .font-medium.green Доделать
+  - if order.has_delivery.present?
+    .flex.justify-between
+      .price-title Доставка:
+      .font-medium #{total_product_price + order.total_amount.to_i}₽
   .flex.justify-between
     div Итоговая стоимость:
-    .end-price 55000₽
+    .end-price #{order.total_amount.to_i}₽
 
 button.btn.btn-big onclick="closeModal()" Закрыть

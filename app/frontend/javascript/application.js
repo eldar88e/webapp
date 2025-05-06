@@ -1,16 +1,21 @@
 window.closeModal = function() {
     const modal = document.getElementById('modal');
-    modal.style.display = 'none';
-
     const modalBlock = modal.querySelector('.modal-block');
-    if (modalBlock) {
+    modalBlock.classList.toggle("open");
+    setTimeout(() => {
+        modal.style.display = 'none';
         modalBlock.innerHTML = '';
-    }
+    }, 300);
 };
 
 window.openModal = function() {
     const modal = document.getElementById('modal');
     modal.style.display = 'flex';
+
+    const modalBlock = modal.querySelector('.modal-block');
+    setTimeout(() => {
+        modalBlock.classList.toggle("open");
+    }, 50);
 
     const handleOutsideClick = function(event) {
         if (event.target === modal) {

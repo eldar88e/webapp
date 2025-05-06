@@ -1,6 +1,6 @@
 style
   |
-    .header { position: absolute; width: 100%; }
+    body { background-color: white; }
     .btn { padding: 18px; border-radius: 20px; }
 
 .card-main-block
@@ -10,19 +10,21 @@ style
 
   .product-img
     div role="status" class="flex justify-center space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center"
-      .flex.items-center.justify-center.w-60.h-60
-        svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18"
-          path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z"
+      .flex.items-center.justify-center.w-full.h-58.text-gray-200
+        = render IconComponent.new name: 'no-image', size: 40
     - if @product.image.attached?
       .img.absolute.left-0.top-0 style="background-image: url('#{storage_path(@product.image)}'); background-size: contain; background-repeat: no-repeat; background-position: center;"
 
 .card-block.mb-3
   .flex.justify-between.mb-3
     div
-      .font-semibold.text-base
+      .font-semibold.text-base.leading-tight.mb-1
         = @product.name
       - if @product.stock_quantity.positive?
-        .have-product В наличии
+        .flex.items-center class="gap-1.5"
+          .have-product-ico
+            = render IconComponent.new name: :checked, size: 10
+          .have-product В наличии
       - else
         .no-have-product Нет в наличии
     .card-favorite
@@ -41,7 +43,7 @@ style
 
 - if %i[brand weight dosage_form package_quantity main_ingredient].any? { |i| @product.send(i).present? }
   .card-block.mb-3
-    .font-semibold.mb-4 О товаре
+    .title-card О товаре
     ul.properties-list
       - %i[brand weight dosage_form package_quantity main_ingredient].each do |key|
         - next if @product.send(key).blank?
@@ -50,32 +52,33 @@ style
           .variable style="#{'width: 99px;' if key == :package_quantity}" = t("activerecord.attributes.product.#{key}") + ':'
           .value = @product.send(key)
 
-
-- if @product.description.present?
-  .card-block.mb-3
-    .font-semibold.mb-4 Описание
-    .product-description
-      = @product.description
+    - if @product.description.present?
+      .product-description-line
+      .title-card Описание
+      .product-description
+        = @product.description
 
 - if ENV.fetch('HOST', '').exclude?('mirena')
-  .card-block.mb-3
-    .font-semibold.mb-4 Отзывы
-    .product-reviews
-      - if @reviews.present?
+  .card-block
+    - if @reviews.present?
+      .product-reviews
         .reviews-header
-          .review-count
-            .average-rating.flex.items-center.gap-1
-              span = @reviews.average(:rating).round(1)
-              = render IconComponent.new name: :star, size: 28
-            .counter = t('reviews.count', count: @reviews.size)
-            = turbo_frame_tag :new_review do
-              = link_to 'Оставить отзыв', new_product_review_path(@product), class: 'btn-new-review', data: { turbo_prefetch: false }
+          .average-rating.flex.items-center.gap-1
+            span = @reviews.average(:rating).round(1)
+            = render IconComponent.new name: :star, size: 28
+          .counter = t('reviews.count', count: @reviews.size)
+          = turbo_frame_tag :new_review do
+            = link_to 'Оставить отзыв', new_product_review_path(@product), class: 'btn-new-review', data: { turbo_prefetch: false }
         .percentages
           - percentages(@product).each do |percentage|
             .percentage-wrap
               .rating = percentage[:rating]
               .percentage
                 div style="width: #{percentage[:percentage]}%;"
+    - else
+      .title-card Отзывы
+      = turbo_frame_tag :new_review do
+        = link_to 'Оставить отзыв', new_product_review_path(@product), class: 'btn-new-review', data: { turbo_prefetch: false }
 
     - if @reviews.present?
       = render partial: '/reviews/review', collection: @reviews, as: :review

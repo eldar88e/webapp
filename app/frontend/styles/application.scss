@@ -261,9 +261,15 @@ h3 {
   }
 }
 
-.product-img {
-  height: 240px;
-  position: relative;
+.have-product-ico {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #48C928;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
 }
 
 .have-product {
@@ -357,21 +363,57 @@ h3 {
 
 .card-main-block {
   @apply px-5 -mx-5 bg-white;
-  padding-top: 92px;
   padding-bottom: 0;
 
-  .product-img .img {
-    width: 100%;
-    height: 240px;
+  .product-img {
+    position: relative;
+    padding-bottom: 8px;
+
+    .img {
+      width: 100%;
+      height: 232px;
+    }
   }
 }
 
 .properties-list {
   li {
+    font-size: 12px;
+    line-height: 16px;
+
     &:last-child {
       margin-bottom: 0;
     }
+
+    .variable {
+      width: 40%;
+      max-width: 150px;
+    }
+
+    .value {
+      font-weight: 500;
+      text-align: right;
+    }
   }
+}
+
+.title-card {
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #777777;
+}
+
+.product-description {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.product-description-line {
+  width: 100%;
+  height: 1px;
+  margin: 16px 0;
+  background-color: #F0F0F0;
 }
 
 .product-reviews {
@@ -380,26 +422,17 @@ h3 {
   margin-bottom: 20px;
 
   .average-rating {
-    color: #FFE61C;
+    color: #FFA929;
     font-weight: 700;
     font-size: 32px;
     line-height: 36px;
   }
 
-  .btn-new-review {
-    color: #48C928;
-    font-weight: 600;
-    margin-top: 8px;
-    display: flex;
-  }
-
-  .review-count {
-    .counter {
-      font-weight: 500;
-      font-size: 12px;
-      line-height: 16px;
-      color: #777777;
-    }
+  .counter {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    color: #777777;
   }
 
   .percentages {
@@ -435,6 +468,17 @@ h3 {
   }
 }
 
+.btn-new-review {
+  color: #48C928;
+  font-weight: 600;
+  margin-top: 8px;
+  display: flex;
+
+  &:hover {
+    color: #777777;
+  }
+}
+
 .review {
   display: flex;
   gap: 8px;
@@ -443,10 +487,27 @@ h3 {
     display: flex;
     gap: 1px;
     margin-bottom: 8px;
+    color: rgba(119, 119, 119, 0.4);
+
+    .filled-star {
+      color: #FFA929;
+    }
   }
 
   .filled-star {
     color: #48C928;
+  }
+
+  .img-block {
+    display: flex;
+    margin-top: 8px;
+    gap: 4px;
+
+    div {
+      width: 50px;
+      height: 50px;
+      border-radius: 4px;
+    }
   }
 }
 
@@ -757,10 +818,30 @@ h3 {
     background-color: #f9f9f9;
     border-radius: 20px 20px 0 0;
     position: fixed;
-    bottom: 0;
+    transition: all 0.5s;
+    bottom: -100%;
     left: 0;
     width: 100%;
   }
+
+  .open {
+    bottom: 0;
+  }
+}
+
+.history-price {
+  margin-top: 4px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.history-img {
+  background-color: #F0F0F0;
+  height: 72px;
+  width: 72px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .order-item {
