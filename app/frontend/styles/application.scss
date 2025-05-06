@@ -137,13 +137,6 @@ h3 {
   }
 }
 
-.product-img {
-  height: 172px;
-  overflow: hidden;
-  position: relative;
-  color: #48C928;
-}
-
 .product-wrapper {
   background-color: white;
   border-radius: 20px;
@@ -491,6 +484,7 @@ h3 {
 .review {
   display: flex;
   gap: 8px;
+  margin-bottom: 20px;
 
   .stars {
     display: flex;

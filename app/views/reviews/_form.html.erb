@@ -26,7 +26,7 @@
   <div class="input-container !mb-4 review-photos" data-controller="image-input">
     <%= form.label :photos, 'Фотографии' %>
     <div class="flex gap-1 flex-wrap">
-      <div id="preview" class="flex gap-1 flex-wrap"></div>
+      <div data-image-input-target="preview" class="flex gap-1 flex-wrap"></div>
       <div class="wrapper-ico">
         <div class="add-img-ico">
           <%= render IconComponent.new name: 'add-img', size: 24 %>
@@ -36,7 +36,7 @@
     </div>
   </div>
 
-  <div class="mb-5">
+  <div class="mb-5 review-form-submit">
     <%= form.submit "Опубликовать", class: 'btn btn-big' %>
   </div>
 <% end %>

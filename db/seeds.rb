@@ -1,10 +1,19 @@
 if Rails.env.development?
-  user = User.find_or_create_by!(email: 'eldar@mail.ru') do |u|
+  user_one = User.find_or_create_by!(email: 'user_test@mail.ru') do |u|
     u.tg_id      = 123456
     u.password   = '12345678'
     u.username   = 'test_user'
     u.first_name = 'Test'
     u.role       = 'admin'
+    u.started    = true
+  end
+
+  user_two = User.find_or_create_by!(email: 'user@mail.ru') do |u|
+    u.tg_id      = 1234567
+    u.password   = '12345678'
+    u.username   = 'test2_user'
+    u.first_name = 'Test 2'
+    u.role       = 'user'
     u.started    = true
   end
 
@@ -32,21 +41,25 @@ if Rails.env.development?
     Product.create!(product)
   end
 
-  orders = Order.create!(
-    [
-      { user_id: user.id, status: :shipped, created_at: 1.month.ago,
-        paid_at: 1.month.ago + 1.hour, shipped_at: 1.month.ago + 2.hour },
-      { user_id: user.id, status: :shipped, created_at: 2.weeks.ago,
-        paid_at: 2.weeks.ago + 1.hour, shipped_at: 2.weeks.ago + 2.hour },
-      { user_id: user.id, status: :shipped, created_at: 5.days.ago,
-        paid_at: 5.days.ago + 2.hour, shipped_at: 5.days.ago + 4.hour },
-      { user_id: user.id, status: :shipped, created_at: 1.days.ago,
-        paid_at: 1.days.ago + 2.hour, shipped_at: 1.days.ago + 4.hour },
-      { user_id: user.id, status: :shipped, created_at: 1.hour.ago,
-        paid_at: 1.hour.ago + 5.minute, shipped_at: 1.hour.ago + 30.minute },
-      { user_id: user.id, status: :unpaid, created_at: rand(1..10).days.ago },
-      { user_id: user.id, status: :paid, created_at: 12.days.ago, paid_at: rand(1..10).days.ago }
-    ])
+  orders = []
+  [user_one, user_two].each do |user|
+    result = Order.create!(
+      [
+        { user_id: user.id, status: :shipped, created_at: 1.month.ago,
+          paid_at: 1.month.ago + 1.hour, shipped_at: 1.month.ago + 2.hour },
+        { user_id: user.id, status: :shipped, created_at: 2.weeks.ago,
+          paid_at: 2.weeks.ago + 1.hour, shipped_at: 2.weeks.ago + 2.hour },
+        { user_id: user.id, status: :shipped, created_at: 5.days.ago,
+          paid_at: 5.days.ago + 2.hour, shipped_at: 5.days.ago + 4.hour },
+        { user_id: user.id, status: :shipped, created_at: 1.days.ago,
+          paid_at: 1.days.ago + 2.hour, shipped_at: 1.days.ago + 4.hour },
+        { user_id: user.id, status: :shipped, created_at: 1.hour.ago,
+          paid_at: 1.hour.ago + 5.minute, shipped_at: 1.hour.ago + 30.minute },
+        { user_id: user.id, status: :unpaid, created_at: rand(1..10).days.ago },
+        { user_id: user.id, status: :paid, created_at: 12.days.ago, paid_at: rand(1..10).days.ago }
+      ])
+    orders += result
+  end
 
   products_children = root_product.descendants.where.not(id: root_product.children.ids)
 
@@ -62,8 +75,10 @@ if Rails.env.development?
     order.update!(total_amount: total_amount)
   end
 
-  product = user.orders.sample.order_items.sample.product
-  user.reviews.create!(product: product, rating: rand(1..4), content: 'Все очень вкусно', approved: true)
+  [user_one, user_two].each do |user|
+    product = user.orders.sample.order_items.sample.product
+    user.reviews.create!(product: product, rating: rand(1..4), content: 'Все очень вкусно', approved: true)
+  end
 
   settings = [
     { variable: 'app_name',	value: 'Test' },
@@ -85,4 +100,6 @@ if Rails.env.development?
   ]
 
   settings.each { |i| Setting.create!(i) }
+
+  puts 'Finished!'
 end

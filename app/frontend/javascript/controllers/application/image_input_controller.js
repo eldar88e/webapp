@@ -1,9 +1,11 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
+    static targets = ["preview"]
+
     connect() {
         const input = document.getElementById("review_photos");
-        const preview = document.getElementById("preview");
+        const preview = this.previewTarget;
 
         input.addEventListener("change", function () {
             preview.innerHTML = "";

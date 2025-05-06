@@ -1,3 +1,9 @@
+<style>
+    .title-review { display: none; }
+    body { background-color: white; }
+    .review-form-submit { margin-bottom: 0 }
+</style>
+
 <h2>Оставить отзыв</h2>
 <%= link_to @review.product.name, product_path(@review.product), data: { turbo: false }, class: 'flex font-medium mt-1 mb-5' %>
 
@@ -22,10 +28,6 @@
     <% end %>
   </div>
   -->
-  <style>
-    .title-review { display: none; }
-    body { background-color: white; }
-  </style>
 
   <%= turbo_frame_tag :new_review_page do %>
     <%= render partial: '/reviews/form', locals: { method: :post } %>
