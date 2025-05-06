@@ -1,33 +1,42 @@
+<div class="mt-4 title-review">
+  <h2>Оставить отзыв</h2>
+  <%= link_to @review.product.name, product_path(@review.product), data: { turbo: false }, class: 'flex font-medium mt-1 mb-5' %>
+</div>
+
 <%= form_with(model: @review, url: (method == :patch ? product_review_path(@review) : product_reviews_path),
-              data: { controller: :rating }) do |form| %>
+              data: { controller: :rating }, class: 'profile-form') do |form| %>
   <%= form.hidden_field :rating, data: { rating_target: "hiddenInput" } %>
 
-  <div class="mt-4">
-    <h3 class="title-h">Оставить отзыв для <%= link_to @review.product.name, product_path(@review.product), data: { turbo_prefetch: false } %></h3>
-  </div>
-
-  <div class="input-container mt-4">
-    <p>Рейтинг</p>
+  <div class="input-container mt-4 !mb-4">
+    <label class="text-center !mb-2">Рейтинг</label>
     <div class="rating-stars">
         <% (1..5).each do |rate| %>
-          <svg class="<%='filled-star' if rate <= (@review.rating || 0) %>" data-action="click->rating#select" data-rating-target="stars" data-value="<%= rate %>" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path opacity="0.4" d="M5.39041 0.372255C5.65808 -0.124085 6.34192 -0.124085 6.60959 0.372255L8.06378 3.06884C8.16363 3.254 8.33562 3.3846 8.53496 3.42664L11.438 4.03887C11.9724 4.15156 12.1837 4.83133 11.8148 5.25077L9.81044 7.52958C9.67281 7.68605 9.60712 7.89737 9.63047 8.10852L9.97048 11.1835C10.0331 11.7495 9.47982 12.1696 8.98415 11.9325L6.29121 10.6443C6.10629 10.5558 5.89371 10.5558 5.70879 10.6443L3.01585 11.9325C2.52018 12.1696 1.96693 11.7495 2.02952 11.1835L2.36953 8.10852C2.39288 7.89737 2.32719 7.68605 2.18956 7.52958L0.18521 5.25077C-0.183715 4.83133 0.0276041 4.15156 0.561954 4.03887L3.46504 3.42664C3.66438 3.3846 3.83637 3.254 3.93622 3.06884L5.39041 0.372255Z" fill="white"/>
-          </svg>
+          <span class="<%= 'filled-star' if rate <= (@review.rating || 0) %>" data-action="click->rating#select" data-rating-target="stars" data-value="<%= rate %>">
+            <%= render IconComponent.new name: :star, size: 32 %>
+          </span>
         <% end %>
     </div>
   </div>
 
-  <div class="input-container">
-    <%= form.file_field :photos, accept: 'image/jpeg,image/png,image/webp,image/heic,image/heif', multiple: !@is_android, class: "input-str" %>
-    <%= form.label :photos, 'Фотографии' %>
-  </div>
-
-  <div class="input-container">
-    <%= form.text_area :content, required: true, class: "input-str", rows: 3, minlength: 5, maxlength: 1000 %>
+  <div class="input-container !mb-4">
     <%= form.label :content, 'Отзыв' %>
+    <%= form.text_area :content, required: true, class: "input-str", rows: 3, minlength: 5, maxlength: 1000 %>
   </div>
 
-  <div class="mt-4">
-    <%= form.submit "Отправить", class: 'btn' %>
+  <div class="input-container !mb-4 review-photos" data-controller="image-input">
+    <%= form.label :photos, 'Фотографии' %>
+    <div class="flex gap-1 flex-wrap">
+      <div id="preview" class="flex gap-1 flex-wrap"></div>
+      <div class="wrapper-ico">
+        <div class="add-img-ico">
+          <%= render IconComponent.new name: 'add-img', size: 24 %>
+        </div>
+        <%= form.file_field :photos, accept: 'image/jpeg,image/png,image/webp,image/heic,image/heif', multiple: !@is_android, class: "input-str" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-5">
+    <%= form.submit "Опубликовать", class: 'btn btn-big' %>
   </div>
 <% end %>

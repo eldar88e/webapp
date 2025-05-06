@@ -137,6 +137,13 @@ h3 {
   }
 }
 
+.product-img {
+  height: 172px;
+  overflow: hidden;
+  position: relative;
+  color: #48C928;
+}
+
 .product-wrapper {
   background-color: white;
   border-radius: 20px;
@@ -147,7 +154,7 @@ h3 {
   position: relative;
 
   .product-img {
-    height: 175px;
+    height: 172px;
     overflow: hidden;
     position: relative;
     color: #48C928;
@@ -543,7 +550,7 @@ h3 {
       display: block;
     }
 
-    input {
+    input, textarea {
       border-radius: 12px;
       background-color: #F0F0F0;
       border: 1px solid #F0F0F0;
@@ -556,6 +563,25 @@ h3 {
         background-color: white;
         border: 1px solid #48C928;
       }
+    }
+  }
+
+  .rating-stars {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+
+    span {
+      color: #777777;
+      cursor: pointer;
+
+      &:hover {
+        color: #FFA929;
+      }
+    }
+
+    .filled-star {
+      color: #FFA929;
     }
   }
 
@@ -613,6 +639,40 @@ h3 {
 
     &:checked {
       background-color: #48C928;
+    }
+  }
+}
+
+.review-photos {
+  input[type="file"] {
+    width: 72px;
+    height: 72px;
+    color: transparent;
+    background-color: transparent;
+    z-index: 1;
+    cursor: pointer;
+
+    &:focus {
+      background-color: transparent;
+      border: none;
+    }
+  }
+
+  .wrapper-ico {
+    @apply relative flex overflow-hidden rounded-xl;
+
+    &:hover .add-img-ico {
+      color: #3AA120;
+    }
+
+    .add-img-ico {
+      @apply absolute top-0 left-0 flex justify-center items-center w-full h-full;
+      background-color: #f0f0f0;
+      color: #48C928;
+
+      &:hover {
+        color: #3AA120;
+      }
     }
   }
 }

@@ -1,14 +1,12 @@
 if Rails.env.development?
-  User.find_or_create_by!(email: 'eldar@mail.ru') do |user|
-    user.tg_id      = 123456
-    user.password   = '12345678'
-    user.username   = 'test_user'
-    user.first_name = 'Test'
-    user.role       = 'admin'
-    user.started    = true
+  user = User.find_or_create_by!(email: 'eldar@mail.ru') do |u|
+    u.tg_id      = 123456
+    u.password   = '12345678'
+    u.username   = 'test_user'
+    u.first_name = 'Test'
+    u.role       = 'admin'
+    u.started    = true
   end
-
-  user = User.first
 
   description = "Lorem ipsum dolor sit amet consectetur. Auctor et semper sem nullam egestas viverra. Posuere nibh" \
     " bibendum pulvinar posuere nunc risus sodales nibh. Felis congue est erat scelerisque mi turpis habitant."
@@ -63,6 +61,9 @@ if Rails.env.development?
     total_amount = order.order_items.sum("quantity * price")
     order.update!(total_amount: total_amount)
   end
+
+  product = user.orders.sample.order_items.sample.product
+  user.reviews.create!(product: product, rating: rand(1..4), content: 'Все очень вкусно', approved: true)
 
   settings = [
     { variable: 'app_name',	value: 'Test' },

@@ -67,14 +67,14 @@ style
             span = @reviews.average(:rating).round(1)
             = render IconComponent.new name: :star, size: 28
           .counter = t('reviews.count', count: @reviews.size)
-          = turbo_frame_tag :new_review do
-            = link_to 'Оставить отзыв', new_product_review_path(@product), class: 'btn-new-review', data: { turbo_prefetch: false }
+          = link_to 'Оставить отзыв', new_product_review_path(@product), class: 'btn-new-review', data: { turbo_prefetch: false, turbo_frame: :new_review }
         .percentages
           - percentages(@product).each do |percentage|
             .percentage-wrap
               .rating = percentage[:rating]
               .percentage
                 div style="width: #{percentage[:percentage]}%;"
+      = turbo_frame_tag :new_review do
     - else
       .title-card Отзывы
       = turbo_frame_tag :new_review do
