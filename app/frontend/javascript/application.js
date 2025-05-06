@@ -15,7 +15,7 @@ window.openModal = function() {
     const modalBlock = modal.querySelector('.modal-block');
     setTimeout(() => {
         modalBlock.classList.toggle("open");
-    }, 50);
+    }, 100);
 
     const handleOutsideClick = function(event) {
         if (event.target === modal) {
