@@ -872,6 +872,12 @@ h3 {
   }
 }
 
+.brand-color-link {
+  &:hover {
+    color: #48C928;
+  }
+}
+
 .question {
   .answer {
     font-weight: 500;

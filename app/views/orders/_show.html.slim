@@ -14,7 +14,7 @@ h2.mb-5 Заказ №#{order.id}
               .absolute.top-0.left-0.flex.justify-center.items-center.w-full.h-full
                 = image_tag order_item.product.image
           .mb-3
-            div = order_item.product.name
+            = link_to order_item.product.name, product_path(order_item.product), class: 'brand-color-link'
             .history-price #{order_item.product.price.to_i}₽/шт
         .bg-gray-200.text-center.py-1.px-4.rounded-lg
           .count = "#{order_item.quantity} шт"
