@@ -21,7 +21,11 @@ class User < ApplicationRecord
   has_many :answers, dependent: :destroy
   has_many :favorites, dependent: :destroy
   has_many :favorite_products, through: :favorites, source: :product
+  has_many :bonus_logs, dependent: :destroy
+  belongs_to :account_tier, optional: true
 
+  # validates :order_count, numericality: { greater_than_or_equal_to: 0 }
+  validates :bonus_balance, numericality: { greater_than_or_equal_to: 0 }
   validates :tg_id, presence: true, uniqueness: true
   validates :email, 'valid_email_2/email': { strict_mx: true, disposable: true }
   validates :postal_code, numericality: { only_integer: true, allow_nil: true, greater_than_or_equal_to: 100_000,
@@ -29,6 +33,8 @@ class User < ApplicationRecord
 
   before_update :reset_confirmation_if_email_changed, if: :will_save_change_to_email?
   after_update :resend_confirmation_email, if: :saved_change_to_email?
+  after_save :check_and_upgrade_account_tier, if: :order_count_changed?
+  after_save :notify_account_tier, if: :account_tier_changed?
 
   def admin?
     role == 'admin'
@@ -40,6 +46,14 @@ class User < ApplicationRecord
 
   def manager?
     role == 'manager'
+  end
+
+  def add_bonus(amount, reason)
+    transaction do
+      bonus_logs.create!(bonus_amount: amount, reason: reason)
+      self.bonus_balance += amount
+      save!
+    end
   end
 
   def admin_or_moderator_or_manager?
@@ -131,5 +145,24 @@ class User < ApplicationRecord
   def resend_confirmation_email
     Devise::Mailer.confirmation_instructions(self, confirmation_token).deliver_later
     # TODO: tg notice
+  end
+
+  def order_count_changed?
+    saved_change_to_attribute?(:order_count)
+  end
+
+  def account_tier_changed?
+    saved_change_to_attribute?(:account_tier)
+  end
+
+  def notify_account_tier
+    AccountTierNoticeJob.perform_later(id)
+  end
+
+  def check_and_upgrade_account_tier
+    return update(account_tier: AccountTier.order(:order_threshold).first) if account_tier.blank?
+
+    next_tier = account_tier.next
+    update(account_tier: next_tier) if next_tier && order_count >= next_tier.order_threshold
   end
 end

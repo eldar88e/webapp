@@ -39,4 +39,15 @@ module ApplicationHelper
 
     "/storage/#{blob.key[0..1]}/#{blob.key[2..3]}/#{blob.key}"
   end
+
+  def remaining_to_next_tier
+    current_tier  = current_user.account_tier
+    account_tiers = AccountTier.all
+    return account_tiers.first.order_threshold if current_tier.blank?
+    return 'Вы достигли максимального уровня' if current_tier == account_tiers.last
+
+    next_tier = account_tiers.where('order_threshold > ?', current_tier.order_threshold).first
+    remaining_orders = next_tier.order_threshold - current_user.order_count
+    [remaining_orders, 0].max
+  end
 end

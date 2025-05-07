@@ -25,6 +25,11 @@ ru:
     submit_tracking: "Привязать трек"
   mailing_success: "Рассылка успешно запланирована!"
   empty_cart: "Корзина пуста"
+  orders_to_next_level:
+    one: "%{count} заказ до следующего уровня"
+    few: "%{count} заказа до следующего уровня"
+    many: "%{count} заказов до следующего уровня"
+    other: "%{count} заказов до следующего уровня"
   order:
     statuses:
       initialized: "Инициализирован"

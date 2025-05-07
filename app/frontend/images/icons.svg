@@ -108,4 +108,9 @@
     <path d="M21 14.9999L17.914 11.9139C17.5389 11.539 17.0303 11.3284 16.5 11.3284C15.9697 11.3284 15.4611 11.539 15.086 11.9139L6 20.9999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M9 11C10.1046 11 11 10.1046 11 9C11 7.89543 10.1046 7 9 7C7.89543 7 7 7.89543 7 9C7 10.1046 7.89543 11 9 11Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </symbol>
+  <symbol id="info" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+    <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M8 11V8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M8 5.33333H8.00667" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
 </svg>

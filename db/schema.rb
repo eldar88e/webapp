@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_04_180019) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_07_154404) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "account_tiers", force: :cascade do |t|
+    t.string "title", null: false
+    t.integer "order_threshold", default: 0, null: false
+    t.integer "bonus_percentage", default: 0, null: false
+    t.integer "order_amount_threshold", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["title"], name: "index_account_tiers_on_title", unique: true
+  end
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -169,6 +179,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_04_180019) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["creator_id"], name: "index_blazer_queries_on_creator_id"
+  end
+
+  create_table "bonus_logs", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "bonus_amount"
+    t.string "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_bonus_logs_on_user_id"
   end
 
   create_table "cart_items", force: :cascade do |t|
@@ -358,6 +377,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_04_180019) do
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
+    t.integer "bonus_balance", default: 0, null: false
+    t.bigint "account_tier_id"
+    t.integer "order_count", default: 0, null: false
+    t.index ["account_tier_id"], name: "index_users_on_account_tier_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -370,6 +393,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_04_180019) do
   add_foreign_key "answers", "answer_options"
   add_foreign_key "answers", "questions"
   add_foreign_key "answers", "users"
+  add_foreign_key "bonus_logs", "users"
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "products"
   add_foreign_key "carts", "users"
@@ -384,4 +408,5 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_04_180019) do
   add_foreign_key "product_subscriptions", "users"
   add_foreign_key "reviews", "products"
   add_foreign_key "reviews", "users"
+  add_foreign_key "users", "account_tiers"
 end
