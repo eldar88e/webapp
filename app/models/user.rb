@@ -126,6 +126,10 @@ class User < ApplicationRecord
     Rails.logger.warn "User #{user.id} has been not correct registered"
   end
 
+  def next_account_tier
+    account_tier ? account_tier.next : AccountTier.order(:order_threshold).first
+  end
+
   def self.ransackable_attributes(_auth_object = nil)
     %w[id first_name middle_name last_name username address created_at role is_blocked started]
   end

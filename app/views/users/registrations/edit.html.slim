@@ -21,12 +21,12 @@
     - left = remaining_to_next_tier
     - if left.is_a? Integer
       .flex.justify-between.mb-2.gap-1
-        - total = current_user.account_tier.next.order_threshold
+        - total = current_user.next_account_tier&.order_threshold
         - [*1..total].each do |i|
           .h-1.bg-white.rounded style="width: #{100 / left}%" class="#{'!bg-white/40' if i > (total - left)}"
       div = t('orders_to_next_level', count: left)
     - else
-      div = left
+      div Вы достигли максимального уровня
 
 .main-block.mb-5
   = link_to product_subscriptions_path, class: "btn btn-big btn-secondary flex justify-between mb-2 items-center" do

@@ -44,7 +44,7 @@ module ApplicationHelper
     current_tier  = current_user.account_tier
     account_tiers = AccountTier.all
     return account_tiers.first.order_threshold if current_tier.blank?
-    return 'Вы достигли максимального уровня' if current_tier == account_tiers.last
+    return if current_tier == account_tiers.last
 
     next_tier = account_tiers.where('order_threshold > ?', current_tier.order_threshold).first
     remaining_orders = next_tier.order_threshold - current_user.order_count

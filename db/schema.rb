@@ -18,7 +18,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_07_154404) do
     t.string "title", null: false
     t.integer "order_threshold", default: 0, null: false
     t.integer "bonus_percentage", default: 0, null: false
-    t.integer "order_amount_threshold", default: 0, null: false
+    t.integer "order_min_amount", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["title"], name: "index_account_tiers_on_title", unique: true
