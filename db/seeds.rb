@@ -92,7 +92,7 @@ if Rails.env.development?
     { variable: 'tg_token' },
     { variable: 'tg_support' },
     { variable: 'tg_group' },
-    { variable: 'preview_msg' },
+    { variable: 'preview_msg', value: 'Текст приветствия!' },
     { variable: 'spreadsheet_id' },
     { variable: 'group_btn_title', value: 'Группа' },
     { variable: 'bot_btn_title', value: 'Каталог' },

@@ -11,7 +11,7 @@ class AccountTierNoticeJob < ApplicationJob
 
   def form_message(user)
     text = "🎉 Ваш уровень повышен до '#{user.account_tier.title}'!"
-    data = { markup: :to_catalog }
+    data = { markup: { markup: 'to_catalog' } }
     { text: text, is_incoming: false, data: data }
   end
 

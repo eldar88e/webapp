@@ -156,7 +156,7 @@ class User < ApplicationRecord
   end
 
   def account_tier_changed?
-    saved_change_to_attribute?(:account_tier)
+    saved_change_to_attribute?(:account_tier_id)
   end
 
   def notify_account_tier
