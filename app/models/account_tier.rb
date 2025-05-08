@@ -9,6 +9,6 @@ class AccountTier < ApplicationRecord
   scope :first_level, -> { order(:order_threshold).first }
 
   def next
-    AccountTier.where('order_threshold > ?', order_threshold).first_level
+    AccountTier.where('order_threshold > ?', order_threshold).order(:order_threshold).first
   end
 end

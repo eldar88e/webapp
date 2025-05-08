@@ -103,5 +103,12 @@ if Rails.env.development?
 
   BankCard.create!(name: 'One bank', fio: 'Name', number: 123)
 
+  AccountTier.create!(
+    [{ title: 'silver', order_threshold: 1, bonus_percentage: 1, order_min_amount: 2000 },
+     { title: 'gold', order_threshold: 5, bonus_percentage: 3, order_min_amount: 2000 },
+     { title: 'vip', order_threshold: 11, bonus_percentage: 5, order_min_amount: 2000 },
+    ]
+  )
+
   puts 'Finished!'
 end
