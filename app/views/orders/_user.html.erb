@@ -3,11 +3,11 @@
     <%= render partial: 'devise/registrations/form_items', locals: { f: form } %>
 
     <div class="flex gap-2 items-center">
-      <%= form.check_box :agreement, class: 'form-check-input', checked: true, data: { agreement_target: 'check_box' } %>
+      <%= form.check_box :agreement, class: 'form-check-input', checked: true, required: true %>
 
       <div class="check-input-label">
         <div>Я принимаю условия</div>
-        <%= link_to 'пользовательского соглашения', '#', class: 'agreement', data: { action: "click->agreement#visible" } %>
+        <%= link_to 'пользовательского соглашения', '#', class: 'agreement', data: { controller: :agreement, action: "click->agreement#open" } %>
       </div>
     </div>
   </div>
@@ -17,10 +17,18 @@
   </div>
 
   <div class="mb-5">
-    <div class="flex justify-between"><div class="price-title">Товары:</div><div class="font-medium">55000₽</div></div>
+    <div class="flex justify-between">
+      <div class="price-title">Товары:</div>
+      <div class="font-medium">
+        <%= total_price = @cart_items.sum { |i| i.product.price * i.quantity } %>₽
+      </div>
+    </div>
     <div class="flex justify-between"><div class="price-title">Скидка:</div><div class="font-medium green">-500₽</div></div>
     <div class="flex justify-between"><div class="price-title">Доставка:</div><div class="font-medium">500₽</div></div>
-    <div class="flex justify-between"><div class="price-title">Итоговая стоимость:</div><div class="end-price">55000₽</div></div>
+    <div class="flex justify-between">
+      <div class="price-title">Итоговая стоимость:</div>
+      <div class="end-price"><%= total_price %>₽</div>
+    </div>
   </div>
 
   <div class="mb-5">
@@ -28,22 +36,20 @@
   </div>
 <% end %>
 
-<div class="agreement-text scrollable hidden" data-agreement-target="agreement">
-  <div class="close" data-action="click->agreement#close"></div>
+<div class="hidden" id="agreement">
   <% @contract = YAML.load_file(Rails.root.join("offer.yml"))["offer"] %>
-  <p><%= @contract["title"] %></p><br>
-  <p><%= @contract["intro"].gsub('%{bot}', settings[:tg_main_bot]) %></p><br>
+  <h2 class="mb-5">Пользовательское соглашение</h2>
 
-  <% @contract["sections"].each_with_index do |section, idx| %>
-    <p><%= section["title"] %></p><br>
-    <% section["items"].each_with_index do |item, i| %>
-      <p><%= (item.include?("•") ? '' : "#{idx+1}.#{i+1}. ") + item.gsub('%{bot}', settings[:tg_main_bot]) %></p><br>
+  <div class="overflow-y-scroll -me-2 pe-2" style="height: 78vh">
+    <p><%= @contract["intro"].gsub('%{bot}', settings[:tg_main_bot]) %></p><br>
+
+    <% @contract["sections"].each_with_index do |section, idx| %>
+      <p><%= section["title"] %></p><br>
+      <% section["items"].each_with_index do |item, i| %>
+        <p><%= (item.include?("•") ? '' : "#{idx+1}.#{i+1}. ") + item.gsub('%{bot}', settings[:tg_main_bot]) %></p><br>
+      <% end %>
     <% end %>
-  <% end %>
-
-  <p><%= @contract['pss'] %></p><br>
-
-  <div class="btn inline-block" data-action="click->agreement#close">Назад</div>
-
-  <%#= link_to "Принять", '#', class: "btn mt-3", style: 'display: inline-block', data: { action: "click->agreement#agree" } %>
+    <p><%= @contract['pss'] %></p><br>
+    <div class="btn btn-big text-center" onclick="closeModal()">Закрыть</div>
+  </div>
 </div>

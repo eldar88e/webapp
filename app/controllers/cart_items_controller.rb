@@ -53,7 +53,7 @@ class CartItemsController < ApplicationController
       format.json do
         render json: {
           success: true,
-          cart_item: @cart_item.as_json(only: [:id, :quantity]),
+          cart_item: @cart_item.as_json(only: %i[id quantity]),
           total_price: current_user.cart.total_price
         }, status: :ok
       end

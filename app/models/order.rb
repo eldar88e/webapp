@@ -5,6 +5,7 @@ class Order < ApplicationRecord
 
   validates :status, presence: true
   validates :total_amount, presence: true
+  validates :bonus, numericality: { greater_than_or_equal_to: 0 }
 
   enum :status, { initialized: 0, unpaid: 1, paid: 2, processing: 3, shipped: 4, cancelled: 5, overdue: 7, refunded: 8 }
 
@@ -13,14 +14,17 @@ class Order < ApplicationRecord
   before_save -> { self.shipped_at = Time.current }, if: -> { status == 'shipped' }
 
   before_update :cache_status, if: -> { status_changed? }
-  before_update :apply_delivery, if: -> { status == 'unpaid' }
+  before_update :update_total_amount, if: -> { status == 'unpaid' || bonus_changed? }
+  # before_update :apply_delivery, if: -> { status == 'unpaid' }
   before_update :assign_valid_or_random_card, if: -> { status == 'unpaid' }
   before_update :remove_cart, if: -> { status_changed?(from: 'unpaid', to: 'paid') }
   before_update :deduct_stock, if: -> { status_changed?(from: 'paid', to: 'processing') }
   before_update :export_items_google, if: -> { status_changed?(from: 'paid', to: 'processing') }
   before_update :restock_stock, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
   before_update :remove_items_google, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
+
   after_update :up_order_count, if: -> { previous_changes['status'] == %w[processing shipped] }
+
   after_commit :notify_status_change, on: :update, unless: -> { status == 'initialized' }
   after_commit :update_main_stock, on: :update, if: -> { ENV.fetch('HOST', '').include?('mirena') }
 
@@ -86,9 +90,12 @@ class Order < ApplicationRecord
     UpdateProductStockJob.perform_later(mirena.product_id, Setting.fetch_value(:main_webhook_url), mirena.quantity)
   end
 
-  def apply_delivery
+  # apply_delivery
+  def update_total_amount
     self.has_delivery = order_items.count == 1 && order_items.first.quantity == 1
-    self.total_amount = total_price
+    total_price_without_bonus = total_price
+    result = bonus.zero? ? total_price_without_bonus : total_price_without_bonus - bonus
+    self.total_amount = result
   end
 
   def assign_valid_or_random_card
