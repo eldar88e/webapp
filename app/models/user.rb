@@ -167,6 +167,7 @@ class User < ApplicationRecord
   end
 
   def notify_bonus_user
-    UserBonusNoticeJob.perform_later(id, previous_changes[:bonus_balance].last)
+    bonus = previous_changes[:bonus_balance].last - previous_changes[:bonus_balance].first
+    UserBonusNoticeJob.perform_later(id, bonus)
   end
 end
