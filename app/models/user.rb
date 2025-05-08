@@ -34,6 +34,7 @@ class User < ApplicationRecord
   before_update :reset_confirmation_if_email_changed, if: :will_save_change_to_email?
   after_update :resend_confirmation_email, if: :saved_change_to_email?
   after_update :check_and_upgrade_account_tier
+  after_commit :notify_bonus_user, on: :update, if: -> { previous_changes[:bonus_balance].present? }
 
   def admin?
     role == 'admin'
@@ -163,5 +164,9 @@ class User < ApplicationRecord
 
     update(account_tier: account_tier)
     AccountTierNoticeJob.perform_later(id)
+  end
+
+  def notify_bonus_user
+    UserBonusNoticeJob.perform_later(id, previous_changes[:bonus_balance].at(0))
   end
 end

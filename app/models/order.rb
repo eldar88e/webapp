@@ -24,6 +24,7 @@ class Order < ApplicationRecord
   before_update :remove_items_google, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
 
   after_update :up_order_count, if: -> { previous_changes['status'] == %w[processing shipped] }
+  after_update :provide_bonus, if: :should_provide_bonus?
 
   after_commit :notify_status_change, on: :update, unless: -> { status == 'initialized' }
   after_commit :update_main_stock, on: :update, if: -> { ENV.fetch('HOST', '').include?('mirena') }
@@ -148,5 +149,18 @@ class Order < ApplicationRecord
 
   def remove_items_google
     GoogleSheetsExporterJob.perform_later(ids: id, del: true, model: :order)
+  end
+
+  def should_provide_bonus?
+    previous_changes[:status] == %w[processing shipped] && bonus.zero? && user.account_tier.present?
+  end
+
+  def provide_bonus
+    total = total_amount
+    total -= Setting.fetch_value(:delivery_price).to_i if has_delivery?
+    return if total < user.account_tier.order_min_amount
+
+    result = ((total * user.account_tier.bonus_percentage / 100) / 50.0).round * 50
+    user.bonus_logs.create!(bonus_amount: result, reason: :order)
   end
 end

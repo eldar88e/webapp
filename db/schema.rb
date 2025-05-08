@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_07_154404) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_08_175507) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -272,6 +272,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_07_154404) do
     t.datetime "shipped_at"
     t.boolean "has_delivery", default: false, null: false
     t.bigint "bank_card_id"
+    t.integer "bonus", default: 0, null: false
     t.index ["bank_card_id"], name: "index_orders_on_bank_card_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
