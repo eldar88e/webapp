@@ -33,8 +33,7 @@ class User < ApplicationRecord
 
   before_update :reset_confirmation_if_email_changed, if: :will_save_change_to_email?
   after_update :resend_confirmation_email, if: :saved_change_to_email?
-  after_save :check_and_upgrade_account_tier, if: :order_count_changed?
-  after_save :notify_account_tier, if: :account_tier_changed?
+  after_update :check_and_upgrade_account_tier
 
   def admin?
     role == 'admin'
@@ -127,7 +126,7 @@ class User < ApplicationRecord
   end
 
   def next_account_tier
-    account_tier ? account_tier.next : AccountTier.order(:order_threshold).first
+    account_tier ? account_tier.next : AccountTier.first_level
   end
 
   def self.ransackable_attributes(_auth_object = nil)
@@ -151,22 +150,18 @@ class User < ApplicationRecord
     # TODO: tg notice
   end
 
-  def order_count_changed?
-    saved_change_to_attribute?(:order_count)
-  end
-
-  def account_tier_changed?
-    saved_change_to_attribute?(:account_tier_id)
-  end
-
-  def notify_account_tier
-    AccountTierNoticeJob.perform_later(id)
-  end
-
   def check_and_upgrade_account_tier
-    return update(account_tier: AccountTier.order(:order_threshold).first) if account_tier.blank?
+    return if !saved_change_to_attribute?(:order_count) || order_count.zero?
+    return update_tier_and_notify(AccountTier.first_level) if account_tier.blank?
 
     next_tier = account_tier.next
-    update(account_tier: next_tier) if next_tier && order_count >= next_tier.order_threshold
+    update_tier_and_notify(next_tier) if next_tier && order_count >= next_tier.order_threshold
+  end
+
+  def update_tier_and_notify(account_tier)
+    return if account_tier_id == account_tier.id
+
+    update(account_tier: account_tier)
+    AccountTierNoticeJob.perform_later(id)
   end
 end

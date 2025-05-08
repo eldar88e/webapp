@@ -20,6 +20,7 @@ class Order < ApplicationRecord
   before_update :export_items_google, if: -> { status_changed?(from: 'paid', to: 'processing') }
   before_update :restock_stock, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
   before_update :remove_items_google, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
+  after_update :up_order_count, if: -> { previous_changes['status'] == %w[processing shipped] }
   after_commit :notify_status_change, on: :update, unless: -> { status == 'initialized' }
   after_commit :update_main_stock, on: :update, if: -> { ENV.fetch('HOST', '').include?('mirena') }
 
@@ -67,6 +68,10 @@ class Order < ApplicationRecord
   end
 
   private
+
+  def up_order_count
+    user.update(order_count: user.order_count + 1)
+  end
 
   def cache_status
     @cache_status ||= status_was

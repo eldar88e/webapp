@@ -101,5 +101,7 @@ if Rails.env.development?
 
   settings.each { |i| Setting.create!(i) }
 
+  BankCard.create!(name: 'One bank', fio: 'Name', number: 123)
+
   puts 'Finished!'
 end
