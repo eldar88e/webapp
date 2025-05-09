@@ -45,7 +45,7 @@
   <% @contract = YAML.load_file(Rails.root.join("offer.yml"))["offer"] %>
   <h2 class="mb-5">Пользовательское соглашение</h2>
 
-  <div class="overflow-y-scroll -me-2 pe-2" style="height: 75vh">
+  <div class="overflow-y-scroll -me-2 pe-2" style="height: 74vh">
     <p><%= @contract["intro"].gsub('%{bot}', settings[:tg_main_bot]) %></p><br>
 
     <% @contract["sections"].each_with_index do |section, idx| %>
