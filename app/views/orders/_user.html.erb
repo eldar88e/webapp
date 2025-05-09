@@ -1,15 +1,20 @@
-<%= form_with(model: current_user, url: orders_path, method: :post, data: { controller: 'dadata' }, class: 'profile-form') do |form| %>
+<%= form_with(model: current_user, url: orders_path, method: :post,
+              data: { controller: 'dadata' }, class: 'profile-form') do |form| %>
   <div class="main-block mb-5">
     <%= render partial: 'devise/registrations/form_items', locals: { f: form } %>
 
-    <div class="flex gap-2 items-center">
-      <%= form.check_box :agreement, class: 'form-check-input', checked: true, required: true %>
+    <label class="checkbox-label">
+      <%= form.check_box :agreement, class: 'form-check-input', checked: true %>
+      <div class="custom-checkbox"></div>
 
-      <div class="check-input-label">
+      <div>
         <div>Я принимаю условия</div>
-        <%= link_to 'пользовательского соглашения', '#', class: 'agreement', data: { controller: :agreement, action: "click->agreement#open" } %>
+        <%= link_to 'пользовательского соглашения', '#', class: 'agreement',
+                    data: { controller: :agreement, action: "click->agreement#open" } %>
       </div>
-    </div>
+    </label>
+
+    <%#= image_tag vite_asset_path 'icons.svg#checked' %>
   </div>
 
   <div class="main-block mb-5">
@@ -53,3 +58,22 @@
     <div class="btn btn-big text-center" onclick="closeModal()">Закрыть</div>
   </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form.profile-form');
+        const checkbox = document.getElementById('user_agreement');
+        const checkmark = document.querySelector('.checkbox-label');
+
+        form.addEventListener('submit', function(event) {
+            if (!checkbox.checked) {
+                checkmark.classList.add('error');
+                event.preventDefault();
+            }
+        });
+
+        checkbox.addEventListener('change', function() {
+            if (checkbox.checked) checkmark.classList.remove('error');
+        });
+    });
+</script>

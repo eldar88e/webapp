@@ -643,7 +643,7 @@ h3 {
     }
   }
 
-  .check-input-label {
+  .checkbox-label {
     font-weight: 500;
     font-size: 12px;
     line-height: 16px;
@@ -657,12 +657,39 @@ h3 {
     }
   }
 
-  .form-check-input {
-    width: 20px;
-    height: 20px;
+  .checkbox-label {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    cursor: pointer;
 
-    &:checked {
+    input[type="checkbox"] {
+      //display: none;
+      visibility: hidden;
+      width: 1px;
+    }
+
+    .custom-checkbox {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #777777;
+      border-radius: 3px;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    input[type="checkbox"]:checked + .custom-checkbox {
       background-color: #48C928;
+      border-color: #48C928;
+      background-image: url('../images/checked.svg');
+    }
+
+    &.error {
+      color: red;
+
+      .custom-checkbox {
+        border-color: red;
+      }
     }
   }
 }
