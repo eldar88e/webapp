@@ -21,8 +21,6 @@ h2.mb-5 Заказ №#{order.id}
           .price = "#{order_item.price.to_i * order_item.quantity}₽"
 
 - total_product_price = order.order_items.sum { |i| i.price * i.quantity }.to_i
-/ TODO: отнять еще скидку
-
 .mb-5
   .flex.justify-between
     .price-title Товары:

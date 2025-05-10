@@ -160,13 +160,13 @@ class Order < ApplicationRecord
   end
 
   def should_provide_bonus?
-    previous_changes[:status] == %w[processing shipped] && bonus.zero? && user.account_tier.present?
+    previous_changes[:status] == %w[processing shipped] && bonus.zero? && user.account_tier&.bonus_percentage&.positive?
   end
 
   def provide_bonus
     total           = form_subtotal
     bonus_threshold = Setting.fetch_value(:bonus_threshold).to_i
-    return if total < bonus_threshold || bonus_threshold.zero?
+    return if bonus_threshold.zero? || total < bonus_threshold
 
     result = ((total * user.account_tier.bonus_percentage / 100) / 50.0).round * 50
     user.bonus_logs.create!(bonus_amount: result, reason: :order, source: self)
