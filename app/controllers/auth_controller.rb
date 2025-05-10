@@ -46,8 +46,12 @@ class AuthController < ApplicationController
   end
 
   def update_tg_username(user, tg_user)
-    user.update(photo_url: tg_user['photo_url'])
-    user.update(username: tg_user['username']) if user.username != tg_user['username']
+    user.update(
+      photo_url: tg_user['photo_url'],
+      username: tg_user['username'],
+      first_name_raw: tg_user['first_name'],
+      last_name_raw: tg_user['last_name']
+    )
   end
 
   def valid_telegram_data?(data, secret_key)

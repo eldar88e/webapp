@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_09_231819) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_10_192354) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -384,6 +384,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_09_231819) do
     t.integer "bonus_balance", default: 0, null: false
     t.bigint "account_tier_id"
     t.integer "order_count", default: 0, null: false
+    t.string "first_name_raw"
+    t.string "last_name_raw"
     t.index ["account_tier_id"], name: "index_users_on_account_tier_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
