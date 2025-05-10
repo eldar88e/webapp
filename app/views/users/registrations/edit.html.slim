@@ -15,7 +15,7 @@
         div Ваш баланс
         .bonus-balance #{current_user.bonus_balance}₽
       .account-tier
-        div = current_user.account_tier&.title || 'Старт'
+        div = current_user.account_tier&.title || 'Гость'
         = render IconComponent.new name: :info, size: 16
   .bonus-block-footer
     - left = remaining_to_next_tier
