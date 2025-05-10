@@ -39,7 +39,7 @@ h2.mb-5 Заказ №#{order.id}
     .end-price #{order.total_amount.to_i}₽
   - bonus = order.bonus_logs.first&.bonus_amount
   - if bonus.present? && bonus.positive?
-    .text-center
+    .text-center.mt-3
       .bonus-user-up
         | Начислено бонусов:
         span.price #{order.bonus_logs.first.bonus_amount}₽

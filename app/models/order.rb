@@ -83,7 +83,8 @@ class Order < ApplicationRecord
   end
 
   def up_order_count
-    user.update(order_count: user.order_count + 1) if form_subtotal >= 5_000
+    bonus_threshold = Setting.fetch_value(:bonus_threshold).to_i
+    user.update(order_count: user.order_count + 1) if bonus_threshold.positive? && form_subtotal >= bonus_threshold
   end
 
   def cache_status
