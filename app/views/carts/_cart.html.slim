@@ -1,6 +1,6 @@
 .cart id="cart"
   - if @cart_items.present?
-    #react-cart data-cart-items="#{@cart_items_json}" data-delivery-price="#{Setting.fetch_value(:delivery_price)}" data-cart-id="#{current_user.cart.id}" data-bonus="#{current_user.bonus_balance}" data-percent="#{current_user.account_tier&.bonus_percentage.to_i}"
+    #react-cart data-cart-items="#{@cart_items_json}" data-delivery-price="#{Setting.fetch_value(:delivery_price)}" data-cart-id="#{current_user.cart.id}" data-bonus="#{current_user.bonus_balance}" data-percent="#{current_user.account_tier&.bonus_percentage.to_i}" data-order-min-amount="#{current_user.account_tier&.order_min_amount.to_i}"
     = render 'orders/user'
   - else
     .no-items-wrapper

@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const cartId = parseInt(el.dataset.userCartId)
     const deliveryPrice = parseInt(el.dataset.deliveryPrice || 0)
     const percent = parseInt(el.dataset.percent || 0)
+    const orderMinAmount = parseInt(el.dataset.orderMinAmount || 0)
 
     const root = createRoot(el)
     root.render(<Cart items={items} cartId={cartId} />)
@@ -19,6 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const summaryEl = document.getElementById('react-cart-summary')
     if (summaryEl) {
         const root = createRoot(summaryEl)
-        root.render(<CartSummary deliveryPrice={deliveryPrice} bonus={bonus} percent={percent} />)
+        root.render(<CartSummary deliveryPrice={deliveryPrice} bonus={bonus} percent={percent} orderMinAmount={orderMinAmount} />)
     }
 })

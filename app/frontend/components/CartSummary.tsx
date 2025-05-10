@@ -11,7 +11,7 @@ declare global {
     }
 }
 
-export default function CartSummary({ bonus, deliveryPrice, percent }: { bonus: number; deliveryPrice: number; percent: number }) {
+export default function CartSummary({ bonus, deliveryPrice, percent, orderMinAmount }: { bonus: number; deliveryPrice: number; percent: number; orderMinAmount: number; }) {
     const [useDelivery, setDelivery] = useState(false)
     const [totalPrice, setTotalPrice] = useState(0)
     const [appliedBonus, setAppliedBonus] = useState(0)
@@ -42,7 +42,7 @@ export default function CartSummary({ bonus, deliveryPrice, percent }: { bonus: 
         [maxApplicableBonus]
     )
     const final = totalPrice + deliveryFee - appliedBonus
-    const bonusDisabled = totalPrice < 2000 || applicableBonusSteps === 0
+    const bonusDisabled = totalPrice < orderMinAmount || applicableBonusSteps === 0
     const upBonus = Math.floor((totalPrice * percent / 100) / 50) * 50;
 
     return (
@@ -66,9 +66,9 @@ export default function CartSummary({ bonus, deliveryPrice, percent }: { bonus: 
                         disabled={bonusDisabled}
                     />
                 </div>
-                {totalPrice < 2000 && (
+                {totalPrice < orderMinAmount && (
                     <p className="text-xs text-gray-500">
-                        Бонусы можно применить при сумме заказа от&nbsp;2000₽
+                        Бонусы можно применить при сумме заказа от&nbsp;{orderMinAmount}₽
                     </p>
                 )}
                 {bonus < 100 && (
@@ -96,7 +96,7 @@ export default function CartSummary({ bonus, deliveryPrice, percent }: { bonus: 
                     <div className="end-price">{final}₽</div>
                 </div>
                 <div style={{ height: '20px', width: '100%' }}>
-                    {appliedBonus === 0 && percent > 0 && (
+                    {appliedBonus === 0 && percent > 0 && totalPrice > orderMinAmount && (
                         <div className="bonus-user-up">Начислим кэшбек после оплаты:<span className="price">{upBonus}₽</span></div>
                     )}
                 </div>
