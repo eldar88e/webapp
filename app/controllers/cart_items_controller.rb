@@ -25,18 +25,20 @@ class CartItemsController < ApplicationController
 
   def respond_success
     respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.update(
-            "cart-btn-#{@cart_item.product.id}", partial: '/products/btn', locals: { product: @cart_item.product }
-          ),
-          turbo_stream.update('cart-summary', partial: '/carts/cart_summary')
-        ]
-      end
+      format.turbo_stream { handle_success_turbo }
       format.json do
         render json: { success: true, cart_item: { id: @cart_item.id, quantity: @cart_item.quantity } }, status: :ok
       end
     end
+  end
+
+  def handle_success_turbo
+    render turbo_stream: [
+      turbo_stream.update(
+        "cart-btn-#{@cart_item.product.id}", partial: '/products/btn', locals: { product: @cart_item.product }
+      ),
+      turbo_stream.update('cart-summary', partial: '/carts/cart_summary')
+    ]
   end
 
   def respond_error(errors)

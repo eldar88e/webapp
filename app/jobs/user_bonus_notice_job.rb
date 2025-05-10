@@ -2,7 +2,6 @@ class UserBonusNoticeJob < ApplicationJob
   queue_as :default
 
   def perform(id, bonus)
-
     user    = User.find(id)
     message = form_message(user, bonus)
     send_message(user, message)

@@ -29,10 +29,10 @@ class ProductSubscriptionsController < ApplicationController
   private
 
   def update_page(stream)
-    if request.referer&.include?('/product_subscriptions')
-      product_subscriptions
-      stream << turbo_stream.replace(:product_subscriptions, partial: '/product_subscriptions/product_subscriptions')
-    end
+    return unless request.referer&.include?('/product_subscriptions')
+
+    product_subscriptions
+    stream << turbo_stream.replace(:product_subscriptions, partial: '/product_subscriptions/product_subscriptions')
   end
 
   def set_product

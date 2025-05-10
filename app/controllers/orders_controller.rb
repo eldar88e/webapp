@@ -1,6 +1,4 @@
 class OrdersController < ApplicationController
-  before_action :handle_user_info, only: [:create], if: -> { params[:page].to_i == 1 }
-
   def index
     @orders = current_user.orders.order(updated_at: :desc)
   end
@@ -25,20 +23,17 @@ class OrdersController < ApplicationController
 
   def process_order
     service = CreateOrderService.call(current_user, params[:user][:bonus])
+    return handle_success_notice if service[:success]
 
-    if service[:success]
-      render turbo_stream: [
-        success_notice(t('.success')),
-        turbo_stream.append(:modal, '<script>window.location.href = "/";</script>'.html_safe),
-        turbo_stream.append(:modal, '<script>closeMiniApp();</script>'.html_safe)
-      ]
-    else
-      redirect_to products_path, alert: service[:error]
-    end
+    redirect_to products_path, alert: service[:error]
   end
 
-  def handle_user_info
-    render turbo_stream: turbo_stream.update(:modal, partial: '/orders/user')
+  def handle_success_notice
+    render turbo_stream: [
+      success_notice(t('.success')),
+      turbo_stream.append(:modal, '<script>window.location.href = "/";</script>'.html_safe),
+      turbo_stream.append(:modal, '<script>closeMiniApp();</script>'.html_safe)
+    ]
   end
 
   def update_user

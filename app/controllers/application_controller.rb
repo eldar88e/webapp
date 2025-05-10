@@ -14,7 +14,9 @@ class ApplicationController < ActionController::Base
   end
 
   def product_search
-    @q_products = Product.includes(:image_attachment).available.order(stock_quantity: :desc, created_at: :desc).ransack(params[:q])
+    @q_products = Product.includes(:image_attachment).available
+                         .order(stock_quantity: :desc, created_at: :desc)
+                         .ransack(params[:q])
   end
 
   def available_products
