@@ -33,7 +33,10 @@ style
     .mb-3.flex.items-end.gap-1
       - if @product.old_price.present?
         .card-old-price = @product.old_price.to_i.to_s + '₽'
-      .card-price= @product.price.to_i.to_s + '₽'
+      .card-price
+        = @product.price.to_i.to_s + '₽'
+        - if @product.old_price.present?
+          span.price-percent -#{((@product.old_price - @product.price) / @product.old_price * 100).round}%
 
   - if @product.stock_quantity.positive?
     = turbo_frame_tag id="cart-btn-#{@product.id}" do

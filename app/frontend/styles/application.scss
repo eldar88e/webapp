@@ -292,6 +292,9 @@ h3 {
   font-weight: 700;
   font-size: 24px;
   line-height: 28px;
+  display: flex;
+  gap: 4px;
+  align-items: start;
 }
 
 .card-old-price {
@@ -428,6 +431,16 @@ h3 {
     font-size: 12px;
     line-height: 16px;
   }
+}
+
+.price-percent {
+  color: white;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 12px;
+  padding: 2px 4px;
+  border-radius: 8px;
+  background: linear-gradient(276.05deg, #128859 5.83%, #48C928 94.27%);
 }
 
 .bonus-user-up {
