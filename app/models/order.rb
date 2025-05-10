@@ -7,6 +7,7 @@ class Order < ApplicationRecord
   validates :status, presence: true
   validates :total_amount, presence: true
   validates :bonus, numericality: { greater_than_or_equal_to: 0 }
+  validate :bonus_check, if: -> { bonus&.positive? }
 
   enum :status, { initialized: 0, unpaid: 1, paid: 2, processing: 3, shipped: 4, cancelled: 5, overdue: 7, refunded: 8 }
 
@@ -26,7 +27,7 @@ class Order < ApplicationRecord
 
   after_update :up_order_count, if: -> { previous_changes['status'] == %w[processing shipped] }
   after_update :provide_bonus, if: :should_provide_bonus?
-  after_update :deduct_bonus!, if: -> { previous_changes[:status] == %w[processing shipped] && !bonus.zero? }
+  after_update :deduct_bonus!, if: -> { previous_changes[:status] == %w[processing shipped] && bonus.positive? }
 
   after_commit :notify_status_change, on: :update, unless: -> { status == 'initialized' }
   after_commit :update_main_stock, on: :update, if: -> { ENV.fetch('HOST', '').include?('mirena') }
@@ -76,6 +77,11 @@ class Order < ApplicationRecord
 
   private
 
+  def bonus_check
+    errors.add(:bonus, 'не может быть больше баланса пользователя') if bonus > user.bonus_balance
+    errors.add(:bonus, 'должен быть кратен 100') unless (bonus % 100).zero?
+  end
+
   def up_order_count
     user.update(order_count: user.order_count + 1)
   end
@@ -97,8 +103,7 @@ class Order < ApplicationRecord
   def update_total_amount
     self.has_delivery = order_items.count == 1 && order_items.first.quantity == 1
     total_price_without_bonus = total_price
-    result = bonus.zero? ? total_price_without_bonus : total_price_without_bonus - bonus
-    self.total_amount = result
+    self.total_amount = bonus.zero? ? total_price_without_bonus : total_price_without_bonus - bonus
   end
 
   def assign_valid_or_random_card
