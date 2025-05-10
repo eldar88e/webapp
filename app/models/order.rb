@@ -83,7 +83,7 @@ class Order < ApplicationRecord
   end
 
   def up_order_count
-    user.update(order_count: user.order_count + 1)
+    user.update(order_count: user.order_count + 1) if form_subtotal >= 5_000
   end
 
   def cache_status
@@ -163,12 +163,16 @@ class Order < ApplicationRecord
   end
 
   def provide_bonus
-    total = total_amount
-    total -= Setting.fetch_value(:delivery_price).to_i if has_delivery?
-    return if total < user.account_tier.order_min_amount
+    total           = form_subtotal
+    bonus_threshold = Setting.fetch_value(:bonus_threshold).to_i
+    return if total < bonus_threshold || bonus_threshold.zero?
 
     result = ((total * user.account_tier.bonus_percentage / 100) / 50.0).round * 50
     user.bonus_logs.create!(bonus_amount: result, reason: :order, source: self)
+  end
+
+  def form_subtotal
+    has_delivery? ? total_amount - Setting.fetch_value(:delivery_price).to_i : total_amount
   end
 
   def deduct_bonus!

@@ -97,6 +97,7 @@ if Rails.env.development?
     { variable: 'group_btn_title', value: 'Группа' },
     { variable: 'bot_btn_title', value: 'Каталог' },
     { variable: 'test_id' },
+    { variable: 'bonus_threshold', value: 5_000 },
   ]
 
   settings.each { |i| Setting.create!(i) }

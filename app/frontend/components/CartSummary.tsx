@@ -11,7 +11,7 @@ declare global {
     }
 }
 
-export default function CartSummary({ bonus, deliveryPrice, percent, orderMinAmount }: { bonus: number; deliveryPrice: number; percent: number; orderMinAmount: number; }) {
+export default function CartSummary({ bonus, deliveryPrice, percent, bonusThreshold }: { bonus: number; deliveryPrice: number; percent: number; bonusThreshold: number }) {
     const [useDelivery, setDelivery] = useState(false)
     const [totalPrice, setTotalPrice] = useState(0)
     const [appliedBonus, setAppliedBonus] = useState(0)
@@ -42,41 +42,37 @@ export default function CartSummary({ bonus, deliveryPrice, percent, orderMinAmo
         [maxApplicableBonus]
     )
     const final = totalPrice + deliveryFee - appliedBonus
-    const bonusDisabled = totalPrice < orderMinAmount || applicableBonusSteps === 0
+    const bonusDisabled = totalPrice < bonusThreshold || applicableBonusSteps === 0
     const upBonus = Math.floor((totalPrice * percent / 100) / 50) * 50;
 
     return (
         <div className="cart-summary mt-6">
-            <div className="main-block mb-5 bonus-block-cart">
-                <h3>Используйте бонусы</h3>
-                <div className="bonus-ranges">
-                    <div>0</div>
-                    <div>{applicableBonusSteps}</div>
+            {!bonusDisabled && (
+                <div className="main-block mb-5 bonus-block-cart">
+                    <h3>Используйте бонусы</h3>
+                    <div className="bonus-ranges">
+                        <div>0</div>
+                        <div>{applicableBonusSteps}</div>
+                    </div>
+                    <div className="px-3">
+                        <input
+                            className="bonus-range"
+                            name="user[bonus]"
+                            type="range"
+                            min={0}
+                            max={applicableBonusSteps}
+                            step={100}
+                            value={appliedBonus}
+                            onChange={(e) => setAppliedBonus(parseInt(e.target.value, 10))}
+                        />
+                    </div>
+                    {bonus < 100 && (
+                        <p className="text-xs text-gray-500">
+                            У&nbsp;вас недостаточно бонусов (нужно ≥ 100)
+                        </p>
+                    )}
                 </div>
-                <div className="px-3">
-                    <input
-                        className="bonus-range"
-                        name="user[bonus]"
-                        type="range"
-                        min={0}
-                        max={applicableBonusSteps}
-                        step={100}
-                        value={appliedBonus}
-                        onChange={(e) => setAppliedBonus(parseInt(e.target.value, 10))}
-                        disabled={bonusDisabled}
-                    />
-                </div>
-                {totalPrice < orderMinAmount && (
-                    <p className="text-xs text-gray-500">
-                        Бонусы можно применить при сумме заказа от&nbsp;{orderMinAmount}₽
-                    </p>
-                )}
-                {bonus < 100 && (
-                    <p className="text-xs text-gray-500">
-                        У&nbsp;вас недостаточно бонусов (нужно ≥ 100)
-                    </p>
-                )}
-            </div>
+            )}
 
             <div className="mb-5">
                 <div className="flex justify-between">
@@ -96,7 +92,7 @@ export default function CartSummary({ bonus, deliveryPrice, percent, orderMinAmo
                     <div className="end-price">{final}₽</div>
                 </div>
                 <div style={{ height: '20px', width: '100%' }}>
-                    {appliedBonus === 0 && percent > 0 && totalPrice > orderMinAmount && (
+                    {appliedBonus === 0 && percent > 0 && totalPrice > bonusThreshold && (
                         <div className="bonus-user-up">Начислим кэшбек после оплаты:<span className="price">{upBonus}₽</span></div>
                     )}
                 </div>
