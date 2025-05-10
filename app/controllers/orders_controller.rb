@@ -24,12 +24,12 @@ class OrdersController < ApplicationController
   private
 
   def process_order
-    service = CreateOrderService.call(current_user)
+    service = CreateOrderService.call(current_user, params[:user][:bonus])
 
     if service[:success]
       render turbo_stream: [
         success_notice(t('.success')),
-        # turbo_stream.append(:modal, '<script>closeModal();</script>'.html_safe),
+        turbo_stream.append(:modal, '<script>window.location.href = "/";</script>'.html_safe),
         turbo_stream.append(:modal, '<script>closeMiniApp();</script>'.html_safe)
       ]
     else

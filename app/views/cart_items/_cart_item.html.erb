@@ -10,15 +10,11 @@
     <%= link_to format_name(cart_item.product.name), product_path(cart_item.product), data: { turbo_prefetch: false } %>
   </div>
   <div class="quantity">
-    <% if cart_item.product.name == 'Доставка' %>
-      <span>Услуга</span>
-    <% else %>
-      <%= button_to '-', cart_item_path(id: cart_item.id), params: { down: true }, method: :patch, class: 'plus',
-                    data: { controller: 'vibration', action: 'click->vibration#makeVibration' } %>
-      <div class="num"><%= cart_item.quantity %></div>
-      <%= button_to '+', cart_item_path(id: cart_item.id), params: { up: true }, method: :patch, class: 'plus',
-                    data: { controller: 'vibration', action: 'click->vibration#makeVibration' } %>
-    <% end %>
+    <%= button_to '-', cart_item_path(id: cart_item.id), params: { down: true }, method: :patch, class: 'plus',
+                  data: { controller: 'vibration', action: 'click->vibration#makeVibration' } %>
+    <div class="num"><%= cart_item.quantity %></div>
+    <%= button_to '+', cart_item_path(id: cart_item.id), params: { up: true }, method: :patch, class: 'plus',
+                  data: { controller: 'vibration', action: 'click->vibration#makeVibration' } %>
   </div>
    <div class="cart-item-price">
      <%= cart_item.product.price.to_i %>₽

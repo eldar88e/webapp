@@ -2,6 +2,7 @@ class Order < ApplicationRecord
   belongs_to :user
   belongs_to :bank_card, optional: true
   has_many :order_items, dependent: :destroy
+  has_many :bonus_logs, as: :source, dependent: :nullify
 
   validates :status, presence: true
   validates :total_amount, presence: true
@@ -25,6 +26,7 @@ class Order < ApplicationRecord
 
   after_update :up_order_count, if: -> { previous_changes['status'] == %w[processing shipped] }
   after_update :provide_bonus, if: :should_provide_bonus?
+  after_update :deduct_bonus!, if: -> { previous_changes[:status] == %w[processing shipped] && !bonus.zero? }
 
   after_commit :notify_status_change, on: :update, unless: -> { status == 'initialized' }
   after_commit :update_main_stock, on: :update, if: -> { ENV.fetch('HOST', '').include?('mirena') }
@@ -161,6 +163,10 @@ class Order < ApplicationRecord
     return if total < user.account_tier.order_min_amount
 
     result = ((total * user.account_tier.bonus_percentage / 100) / 50.0).round * 50
-    user.bonus_logs.create!(bonus_amount: result, reason: :order)
+    user.bonus_logs.create!(bonus_amount: result, reason: :order, source: self)
+  end
+
+  def deduct_bonus!
+    user.bonus_logs.create!(bonus_amount: -bonus, reason: :order_deduct, source: self)
   end
 end

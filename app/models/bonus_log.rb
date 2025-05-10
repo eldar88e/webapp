@@ -1,8 +1,10 @@
 class BonusLog < ApplicationRecord
   belongs_to :user
+  belongs_to :source, polymorphic: true, optional: true
 
   validates :reason, presence: true
-  validates :bonus_amount, numericality: { greater_than_or_equal_to: 0 }
+  validates :bonus_amount, numericality: true
+  # validates :source_type, inclusion: { in: %w[Order Ask] }, allow_nil: true
 
   after_create :update_user_bonus
 

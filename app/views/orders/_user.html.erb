@@ -13,28 +13,9 @@
                     data: { controller: :agreement, action: "click->agreement#open" } %>
       </div>
     </label>
-
-    <%#= image_tag vite_asset_path 'icons.svg#checked' %>
   </div>
 
-  <div class="main-block mb-5">
-    <h3>Используйте бонусы</h3>
-  </div>
-
-  <div class="mb-5">
-    <div class="flex justify-between">
-      <div class="price-title">Товары:</div>
-      <div class="font-medium">
-        <%= total_price = @cart_items.sum { |i| i.product.price * i.quantity } %>₽
-      </div>
-    </div>
-    <div class="flex justify-between"><div class="price-title">Скидка:</div><div class="font-medium green">-500₽</div></div>
-    <div class="flex justify-between"><div class="price-title">Доставка:</div><div class="font-medium">500₽</div></div>
-    <div class="flex justify-between">
-      <div class="price-title">Итоговая стоимость:</div>
-      <div class="end-price"><%= total_price %>₽</div>
-    </div>
-  </div>
+  <div id="react-cart-summary"></div>
 
   <div class="mb-5">
     <%= form.submit "Оформить заказ", class: "btn btn-big" %>
