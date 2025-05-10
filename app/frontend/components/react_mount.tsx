@@ -20,6 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const summaryEl = document.getElementById('react-cart-summary')
     if (summaryEl) {
         const root = createRoot(summaryEl)
-        root.render(<CartSummary deliveryPrice={deliveryPrice} bonus={bonus} percent={percent} orderMinAmount={orderMinAmount} bonusThreshold={bonusThreshold} />)
+        root.render(<CartSummary deliveryPrice={deliveryPrice} bonus={bonus} percent={percent} bonusThreshold={bonusThreshold} />)
     }
 })
