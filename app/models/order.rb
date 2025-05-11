@@ -25,8 +25,8 @@ class Order < ApplicationRecord
   before_update :restock_stock, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
   before_update :remove_items_google, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
 
-  after_update :up_order_count, if: -> { previous_changes['status'] == %w[processing shipped] }
   after_update :provide_bonus, if: :should_provide_bonus?
+  after_update :up_order_count, if: -> { previous_changes['status'] == %w[processing shipped] }
   after_update :deduct_bonus!, if: -> { previous_changes[:status] == %w[processing shipped] && bonus.positive? }
 
   after_commit :notify_status_change, on: :update, unless: -> { status == 'initialized' }

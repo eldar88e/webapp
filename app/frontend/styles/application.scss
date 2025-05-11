@@ -408,6 +408,10 @@ h3 {
     display: flex;
     gap: 4px;
     align-items: center;
+
+    &:hover {
+      color: #3AA120;
+    }
   }
 
   .bonus-block-footer {
