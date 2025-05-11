@@ -28,12 +28,13 @@
               .flex.flex-wrap.py-2
                 .w-1/2.pe-4.title = item.title
                 .w-1/2.desc
-                  .mb-2 #{item.bonus_percentage}%
+                  .mb-2 #{item.bonus_percentage}% кэшбека
                   div
                     - if item.order_threshold == 1
                       | Присваивается при первом заказе
                     - else
                       = item.order_threshold.to_s + ' ' + 'выполненных заказа'
+            .py-2.font-medium class="text-[10px]" Бонусы начисляются при заказах от #{Setting.fetch_value(:bonus_threshold)}₽.
   .bonus-block-footer
     - left = remaining_to_next_tier
     - if left.is_a? Integer

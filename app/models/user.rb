@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   EMAIL_HOST = 'tgapp.online'.freeze
 
+  attr_accessor :bonus_balance_diff
+
   # Include default devise modules. Others available are:
   # :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable,
@@ -32,10 +34,11 @@ class User < ApplicationRecord
                                           less_than_or_equal_to: 999_999 }
 
   before_update :reset_confirmation_if_email_changed, if: :will_save_change_to_email?
+  before_update :store_bonus_balance_diff, if: -> { bonus_balance_changed? }
   after_update :resend_confirmation_email, if: :saved_change_to_email?
   after_update :check_and_upgrade_account_tier
   after_commit :notify_update_account_tier, if: -> { previous_changes[:account_tier_id].present? }
-  after_commit :notify_bonus_user, on: :update, if: -> { previous_changes[:bonus_balance].present? }
+  after_commit :notify_bonus_user, on: :update, if: -> { bonus_balance_diff.present? }
 
   def admin?
     role == 'admin'
@@ -165,11 +168,14 @@ class User < ApplicationRecord
   end
 
   def notify_update_account_tier
-    AccountTierNoticeJob.perform_later(id)
+    AccountTierNoticeJob.set(wait: 0.3.seconds).perform_later(id)
   end
 
   def notify_bonus_user
-    bonus = previous_changes[:bonus_balance].last - previous_changes[:bonus_balance].first
-    UserBonusNoticeJob.perform_later(id, bonus)
+    UserBonusNoticeJob.set(wait: 0.5.seconds).perform_later(id, bonus_balance_diff)
+  end
+
+  def store_bonus_balance_diff
+    self.bonus_balance_diff = bonus_balance - (bonus_balance_before_last_save || 0)
   end
 end
