@@ -11,16 +11,9 @@ class UserBonusNoticeJob < ApplicationJob
 
   def form_message(user, bonus)
     text = <<~TEXT.squeeze(' ').chomp
-      Здравствуйте, #{user.full_name}!
+      #{user.first_name}, вам начислено #{bonus}₽ кэшбэка за ваш заказ №#{user.orders.last.id}
 
-      Мы рады сообщить, что на ваш бонусный счёт был добавлен бонус в размере #{bonus}₽.
-
-      Ваш текущий баланс бонусов теперь составляет #{user.bonus_balance}₽.
-      Эти бонусы могут быть использованы для оплаты заказов.
-
-      Спасибо, что выбираете нас!
-      С уважением,
-      #{Setting.fetch_value(:app_name)}
+      Спасибо, что вы с нами!
     TEXT
     data = { markup: { markup: 'to_catalog' } }
     { text: text, is_incoming: false, data: data }

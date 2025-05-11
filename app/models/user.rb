@@ -34,6 +34,7 @@ class User < ApplicationRecord
   before_update :reset_confirmation_if_email_changed, if: :will_save_change_to_email?
   after_update :resend_confirmation_email, if: :saved_change_to_email?
   after_update :check_and_upgrade_account_tier
+  after_commit :notify_update_account_tier, if: -> { previous_changes[:account_tier_id].present? }
   after_commit :notify_bonus_user, on: :update, if: -> { previous_changes[:bonus_balance].present? }
 
   def admin?
@@ -157,16 +158,13 @@ class User < ApplicationRecord
 
   def check_and_upgrade_account_tier
     return if !saved_change_to_attribute?(:order_count) || order_count.zero?
-    return update_tier_and_notify(AccountTier.first_level) if account_tier.blank?
+    return update(account_tier: AccountTier.first_level) if account_tier.blank?
 
     next_tier = account_tier.next
-    update_tier_and_notify(next_tier) if next_tier && order_count >= next_tier.order_threshold
+    update(account_tier: next_tier) if next_tier && order_count >= next_tier.order_threshold
   end
 
-  def update_tier_and_notify(account_tier)
-    return if account_tier_id == account_tier.id
-
-    update(account_tier: account_tier)
+  def notify_update_account_tier
     AccountTierNoticeJob.perform_later(id)
   end
 
