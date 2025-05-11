@@ -38,7 +38,7 @@ class User < ApplicationRecord
   after_update :resend_confirmation_email, if: :saved_change_to_email?
   after_update :check_and_upgrade_account_tier
   after_commit :notify_update_account_tier, if: -> { previous_changes[:account_tier_id].present? }
-  after_commit :notify_bonus_user, on: :update, if: -> { bonus_balance_diff.present? }
+  after_commit :notify_bonus_user, on: :update, if: -> { bonus_balance_diff.present? && bonus_balance_diff.positive? }
 
   def admin?
     role == 'admin'
