@@ -1,6 +1,6 @@
 admin:
   id: 1
-  email: admin@example.com
+  email: admin@mail.ru
   role: admin
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
   tg_id: 123456
@@ -8,7 +8,7 @@ admin:
 
 customer:
   id: 2
-  email: customer@example.com
+  email: customer@mail.ru
   role: user
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
   tg_id: 654321
@@ -16,7 +16,7 @@ customer:
 
 jack:
   id: 3
-  email: jack@example.com
+  email: jack@mail.ru
   role: user
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
   tg_id: 6543210
