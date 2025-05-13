@@ -1,0 +1,35 @@
+app_name:
+  variable: app_name
+  value: Test
+
+root_product_id:
+  variable: root_product_id
+  value: 1
+
+default_product_id:
+  variable: default_product_id
+  value: 2
+
+delivery_price:
+  variable: delivery_price
+  value: 500
+
+tg_main_bot:
+  variable: tg_main_bot
+  value: el_notify
+
+preview_msg:
+  variable: preview_msg
+  value: "Текст приветствия!"
+
+group_btn_title:
+  variable: group_btn_title
+  value: "Группа"
+
+bot_btn_title:
+  variable: bot_btn_title
+  value: "Каталог"
+
+bonus_threshold:
+  variable: bonus_threshold
+  value: 5000

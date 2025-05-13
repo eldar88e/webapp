@@ -60,7 +60,12 @@ group :development do
 end
 
 group :test do
+  gem 'capybara'
+  gem 'selenium-webdriver'
+
   gem 'factory_bot_rails'
+  # gem 'database_cleaner'
+
   gem 'rspec-rails'
   gem 'shoulda-matchers'
 end

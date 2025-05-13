@@ -1,0 +1,14 @@
+start:
+  title: "Старт"
+  order_threshold: 1
+  bonus_percentage: 1
+
+silver:
+  title: "Серебрянный"
+  order_threshold: 10
+  bonus_percentage: 2
+
+gold:
+  title: "Золотой"
+  order_threshold: 30
+  bonus_percentage: 3
