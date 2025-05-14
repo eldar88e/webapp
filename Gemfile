@@ -28,7 +28,7 @@ gem 'googleauth', require: false
 gem 'i18n'
 gem 'image_processing'
 gem 'lograge'
-gem 'logstash-logger'
+# gem 'logstash-logger'
 gem 'pagy'
 gem 'pundit'
 gem 'ransack'
