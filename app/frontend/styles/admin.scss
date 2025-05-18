@@ -74,7 +74,6 @@ body {
               padding-top: .5rem;
 
               a {
-                --tw-text-opacity: 1;
                 font-weight: 400;
                 font-size: 1rem;
                 line-height: 1.5rem;
@@ -84,10 +83,10 @@ body {
                 display: flex;
 
                 &.active {
-                  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+                  @apply bg-gray-100;
 
                   @media (prefers-color-scheme: dark) {
-                    background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+                    @apply bg-gray-700;
                   }
                 }
 
@@ -108,10 +107,10 @@ body {
                 }
 
                 &:hover {
-                  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+                  @apply bg-gray-300;
 
                   @media (prefers-color-scheme: dark) {
-                    background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+                    @apply bg-gray-900;
                   }
 
                   svg {

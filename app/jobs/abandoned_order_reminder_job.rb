@@ -20,9 +20,10 @@ class AbandonedOrderReminderJob < ApplicationJob
     # tg не дает боту удалить сообщения старше 48 часов
     TelegramMsgDelService.remove(current_tg_id, current_order.msg_id) if args[:msg_type] != :two
     update_bank_card(current_order)
-    msg    = form_msg(args[:msg_type], current_order)
-    msg_id = TelegramService.call(msg, current_tg_id, markup: 'i_paid')
-    save_msg_id(msg_id, current_order, args)
+    msg = form_msg(args[:msg_type], current_order)
+    current_order.user.messages.create(**msg)
+    # msg_id = TelegramService.call(msg, current_tg_id, markup: 'i_paid')
+    # save_msg_id(msg_id, current_order, args)
   end
 
   def update_bank_card(order)
@@ -54,10 +55,11 @@ class AbandonedOrderReminderJob < ApplicationJob
   def form_msg(msg_type, order)
     user = order.user
     card = order.bank_card.bank_details
-    "#{I18n.t("tg_msg.unpaid.reminder.#{msg_type}", order: order.id)}\n\n" + I18n.t(
+    text = "#{I18n.t("tg_msg.unpaid.reminder.#{msg_type}", order: order.id)}\n\n" + I18n.t(
       'tg_msg.unpaid.main',
       card: card, price: order.total_amount, items: order.order_items_str,
       address: user.full_address, postal_code: user.postal_code, fio: user.full_name, phone: user.phone_number
     )
+    { text: text, is_incoming: false, data: { markup: { markup: 'i_paid' } } }
   end
 end
