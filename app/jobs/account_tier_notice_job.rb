@@ -4,7 +4,7 @@ class AccountTierNoticeJob < ApplicationJob
   def perform(id)
     user    = User.find(id)
     message = form_message(user)
-    send_message(user, message)
+    user.messages.create(**message)
   end
 
   private
@@ -28,9 +28,5 @@ class AccountTierNoticeJob < ApplicationJob
       Теперь вы получаете #{user.account_tier.bonus_percentage}% кэшбэка на сумму заказа от \
       #{Setting.fetch_value(:bonus_threshold)}₽!
     TEXT
-  end
-
-  def send_message(user, message)
-    user.messages.create(**message)
   end
 end

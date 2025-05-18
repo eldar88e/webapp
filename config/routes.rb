@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   authenticate :user, ->(user) { user.admin? } do
     mount Sidekiq::Web => '/admin/sidekiq'
     mount Blazer::Engine, at: '/admin/blazer'
+    mount ActiveStorageDashboard::Engine, at: '/admin/active-storage-dashboard'
   end
 
   devise_for :users, controllers: { registrations: 'users/registrations' }

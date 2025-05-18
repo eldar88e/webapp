@@ -40,15 +40,15 @@ class TelegramBotWorker
     when Telegram::Bot::Types::CallbackQuery
       handle_callback(bot, message)
     when Telegram::Bot::Types::Message
+      return input_tracking_number(message) if message.chat.id == settings[:courier_tg_id].to_i
+
       handle_message(bot, message)
       # else bot.api.send_message(chat_id: message.from.id, text: I18n.t('tg_msg.error_data'))
     end
   end
 
   def save_preview_video(bot, message)
-    return send_firs_msg(bot, message.chat.id) unless settings[:admin_ids].split(',').include?(message.chat.id.to_s)
-
-    bot.api.send_message(chat_id: message.chat.id, text: "ID Вашего видео:\n#{message.video.file_id}")
+    bot.api.send_message(chat_id: message.chat.id, text: "ID видео:\n#{message.video.file_id}")
   end
 
   def handle_callback(bot, message)
@@ -56,11 +56,9 @@ class TelegramBotWorker
   end
 
   def handle_message(bot, message)
-    return input_tracking_number(message) if message.chat.id == settings[:courier_tg_id].to_i
-
     if message.text.present?
       process_message(message)
-    elsif message.video.present?
+    elsif message.video.present? && settings[:admin_ids].split(',').include?(message.chat.id.to_s)
       return save_preview_video(bot, message)
     end
     send_firs_msg(bot, message.chat.id)
@@ -69,12 +67,18 @@ class TelegramBotWorker
   def process_message(message)
     tg_user = message.chat.as_json
     user    = User.find_or_create_by_tg(tg_user, true)
-    TelegramJob.perform_later(msg: "User #{user.id} started bot", id: Setting.fetch_value(:test_id)) unless user.started
-    # TODO: убрать со временем уведомление админа
-    user.update(started: true, is_blocked: false, username: tg_user['username'], photo_url: tg_user['photo_url'])
+    unlock_user(user) unless user.started
     return if message.text == '/start'
 
     Message.create(tg_id: user.tg_id, text: message.text, tg_msg_id: message.message_id)
+  end
+
+  def unlock_user(user)
+    msg = "User #{user.id} started bot"
+    Rails.logger.info msg
+    TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id))
+    # TODO: убрать со временем уведомление админа
+    user.update(started: true, is_blocked: false)
   end
 
   def input_tracking_number(message)
