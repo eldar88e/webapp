@@ -14,7 +14,7 @@
           <span class="text-gray-700 dark:text-gray-400"><%= @user.role %></span>
         </div>
       </div>
-      <% %i[id username tg_id email phone_number full_address postal_code is_blocked started created_at bonus_balance].each do |attribute| %>
+      <% %i[id username tg_id email phone_number full_address postal_code is_blocked started created_at bonus_balance order_count].each do |attribute| %>
         <div>
           <span class="text-gray-700 dark:text-gray-400 text-sm"><%= t("activerecord.attributes.user.#{attribute}") %>: </span>
           <span class="font-bold ml-2">

@@ -122,6 +122,8 @@ ru:
         build: "Корпус"
         postal_code: "Индекс"
         role: "Роль"
+        bonus_balance: "Баланс"
+        order_count: "Счетчик заказов"
       order:
         status: "Статус"
         user: "Клиент"
