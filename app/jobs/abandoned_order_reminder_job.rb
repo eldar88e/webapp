@@ -5,25 +5,32 @@ class AbandonedOrderReminderJob < ApplicationJob
   def perform(**args)
     return if args[:msg_type].blank?
 
-    current_order = Order.find_by(id: args[:order_id])
-    return if current_order.nil? || current_order.status != 'unpaid'
+    order = Order.find_by(id: args[:order_id])
+    return if order.nil? || order.status != 'unpaid'
 
-    process_remainder(args, current_order)
+    process_remainder(args, order)
   end
 
   private
 
-  def process_remainder(args, current_order)
-    current_tg_id = current_order.user.tg_id
-    return current_order.update(status: :overdue) if args[:msg_type] == :overdue
+  def process_remainder(args, order)
+    return if handle_overdue_status_if_blocked?(order, args)
 
     # tg не дает боту удалить сообщения старше 48 часов
-    TelegramMsgDelService.remove(current_tg_id, current_order.msg_id) if args[:msg_type] != :two
-    update_bank_card(current_order)
-    msg = form_msg(args[:msg_type], current_order)
-    current_order.user.messages.create(**msg)
-    # msg_id = TelegramService.call(msg, current_tg_id, markup: 'i_paid')
-    # save_msg_id(msg_id, current_order, args)
+    TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if args[:msg_type] != :two
+    update_bank_card(order)
+    msg = form_msg(args[:msg_type], order)
+    order.user.messages.create(**msg)
+    schedule_reminders(args)
+    # msg_id = TelegramService.call(msg, tg_id, markup: 'i_paid')
+    # save_msg_id(msg_id, order, args)
+  end
+
+  def handle_overdue_status_if_blocked?(order, args)
+    return false if args[:msg_type].to_s != 'overdue' || !order.user.is_blocked?
+
+    order.update(status: :overdue)
+    true
   end
 
   def update_bank_card(order)
@@ -32,6 +39,7 @@ class AbandonedOrderReminderJob < ApplicationJob
     order.update_columns(bank_card_id: BankCard.sample_bank_card_id)
   end
 
+  ############# TODO: удалить
   def save_msg_id(msg_id, order, args)
     user = order.user
     if msg_id.instance_of?(Integer)
@@ -43,10 +51,11 @@ class AbandonedOrderReminderJob < ApplicationJob
       order.update(status: :overdue)
     end
   end
+  #############
 
   def schedule_reminders(args)
     next_step = STEPS[args[:msg_type]]
-    return unless next_step
+    return if next_step.blank?
 
     AbandonedOrderReminderJob.set(wait: next_step[:wait])
                              .perform_later(order_id: args[:order_id], msg_type: next_step[:msg_type])
