@@ -1,8 +1,12 @@
 .header
   .container.mx-auto.px-5.py-3
-    = search_form_for @q_products, url: products_path, method: :get do |f|
-      .header-search
-        = f.search_field :name_cont, placeholder: '', class: 'block w-full pe-7 focus:border-none outline-none',
-                data: { controller: 'search-animate', action: "focus->search-animate#stop blur->search-animate#start", search_animate_words_value: available_products.pluck(:name) }
-        = button_tag type: 'submit', class: 'block bg-transparent border-none' do
-          = render IconComponent.new name: :search
+    - if ENV.fetch('HOST').include? 'mirena'
+      marquee behavior="scroll" direction="left" scrollamount="7"
+        .py-1.font-semibold Бесплатная доставка почтой РФ по всей России от 2 до 7 дней.
+    - else
+      = search_form_for @q_products, url: products_path, method: :get do |f|
+        .header-search
+          = f.search_field :name_cont, placeholder: '', class: 'block w-full pe-7 focus:border-none outline-none',
+                  data: { controller: 'search-animate', action: "focus->search-animate#stop blur->search-animate#start", search_animate_words_value: available_products.pluck(:name) }
+          = button_tag type: 'submit', class: 'block bg-transparent border-none' do
+            = render IconComponent.new name: :search

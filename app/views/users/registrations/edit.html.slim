@@ -58,7 +58,7 @@
       span  История заказов
     = render IconComponent.new name: :right
   - if current_user.admin_or_moderator_or_manager?
-    a.btn.btn-big.btn-secondary.flex.justify-between.items-center.mt-2 class="!bg-red-100/70 hover:!bg-red-200/70 !text-red-500" href="/admin" data-turbo="false"
+    a.btn.btn-big.btn-secondary.flex.justify-between.items-center.mt-2 class="!bg-red-100/70 hover:!bg-red-300/50 !text-red-500" href="/admin" data-turbo="false"
       .flex.justify-center.gap-2.items-center
         = render IconComponent.new name: :admin
         span  Админка
