@@ -8,11 +8,11 @@ class SendReviewRequestJob < ApplicationJob
     order   = user.orders.find_by(id: args[:order_id])
     return if order&.status != 'shipped'
 
-    if ENV.fetch('HOST', '').include?('mirena')
-      send_review_request_mirena(user)
-    else
-      send_review_request(user, product)
-    end
+    # if ENV.fetch('HOST', '').include?('mirena')
+    #   send_review_request_mirena(user)
+    # else
+    send_review_request(user, product)
+    # end
   end
 
   private

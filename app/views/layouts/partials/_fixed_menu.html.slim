@@ -2,13 +2,19 @@
   .container.mx-auto.px-5
     ul
       li
-        = active_link_to root_path, active: [products: :index] do
-          = render IconComponent.new name: :catalog, size: 24
-          | Каталог
-      li
-        = active_link_to favorites_path, active: :exclusive do
-          = render IconComponent.new name: :unfavorite, size: 24
-          | Избранное
+        - unless ENV.fetch('HOST').include? 'mirena'
+          = active_link_to root_path, active: [products: :index] do
+            = render IconComponent.new name: :catalog, size: 24
+            | Каталог
+        - else
+          = active_link_to product_path(Setting.fetch_value(:mirena_id)), active: :exclusive do
+            = render IconComponent.new name: :catalog, size: 24
+            | Заказать
+      - unless ENV.fetch('HOST').include? 'mirena'
+        li
+          = active_link_to favorites_path, active: :exclusive do
+            = render IconComponent.new name: :unfavorite, size: 24
+            | Избранное
       li
         = active_link_to edit_user_registration_path, active: :exclusive do
           = render IconComponent.new name: :profile, size: 24

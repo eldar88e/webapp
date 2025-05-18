@@ -1013,6 +1013,9 @@ h3 {
 
 .favorite:hover {
   color: #3AA120;
+  svg {
+    fill: #3AA120;
+  }
 }
 
 .order-total {
