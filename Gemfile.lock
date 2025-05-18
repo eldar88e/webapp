@@ -48,6 +48,8 @@ GEM
     active_link_to (1.0.5)
       actionpack
       addressable
+    active_storage_dashboard (0.1.6)
+      rails (>= 5.2.0)
     activejob (7.2.2.1)
       activesupport (= 7.2.2.1)
       globalid (>= 0.3.6)
@@ -106,7 +108,7 @@ GEM
     brakeman (7.0.2)
       racc
     builder (3.3.0)
-    bullet (8.0.6)
+    bullet (8.0.7)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     capybara (3.40.0)
@@ -233,10 +235,10 @@ GEM
     jbuilder (2.13.0)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
-    json (2.11.3)
+    json (2.12.0)
     jwt (2.10.1)
       base64
-    language_server-protocol (3.17.0.4)
+    language_server-protocol (3.17.0.5)
     launchy (3.1.1)
       addressable (~> 2.8)
       childprocess (~> 5.0)
@@ -321,7 +323,7 @@ GEM
     pundit (2.5.0)
       activesupport (>= 3.0.0)
     racc (1.8.1)
-    rack (3.1.14)
+    rack (3.1.15)
     rack-proxy (0.7.7)
       rack
     rack-session (2.1.1)
@@ -405,7 +407,7 @@ GEM
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
     rspec-support (3.13.3)
-    rubocop (1.75.5)
+    rubocop (1.75.6)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -423,12 +425,12 @@ GEM
       lint_roller (~> 1.1)
       rubocop (>= 1.75.0, < 2.0)
       rubocop-ast (>= 1.38.0, < 2.0)
-    rubocop-rails (2.31.0)
+    rubocop-rails (2.32.0)
       activesupport (>= 4.2.0)
       lint_roller (~> 1.1)
       rack (>= 1.1)
       rubocop (>= 1.75.0, < 2.0)
-      rubocop-ast (>= 1.38.0, < 2.0)
+      rubocop-ast (>= 1.44.0, < 2.0)
     ruby-progressbar (1.13.0)
     ruby-vips (2.2.3)
       ffi (~> 1.12)
@@ -542,6 +544,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_link_to
+  active_storage_dashboard
   ahoy_matey
   ancestry
   better_errors

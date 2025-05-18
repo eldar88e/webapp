@@ -38,6 +38,7 @@ gem 'sidekiq', '~> 8.0'
 gem 'telegram-bot-ruby', require: false
 gem 'valid_email2'
 
+gem 'active_storage_dashboard'
 gem 'ahoy_matey'
 gem 'blazer'
 gem 'geocoder'
