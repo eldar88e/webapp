@@ -2,7 +2,9 @@ class AccountTierNoticeJob < ApplicationJob
   queue_as :default
 
   def perform(id)
-    user    = User.find(id)
+    user = User.find(id)
+    return if user.account_tier.blank?
+
     message = form_message(user)
     user.messages.create(**message)
   end
