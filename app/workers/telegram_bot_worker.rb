@@ -24,7 +24,7 @@ class TelegramBotWorker
 
   def process_error(error)
     Rails.logger.error "#{self.class} | #{error.message}"
-    # ErrorMailer.send_error(error.message, error.full_message).deliver_later
+    ErrorMailer.send_error(error.message, error.full_message).deliver_later
   end
 
   def tg_token_present?
@@ -47,10 +47,6 @@ class TelegramBotWorker
     end
   end
 
-  def save_preview_video(bot, message)
-    bot.api.send_message(chat_id: message.chat.id, text: "ID видео:\n#{message.video.file_id}")
-  end
-
   def handle_callback(bot, message)
     send(message.data.to_sym, bot, message) if respond_to?(message.data.to_sym, true)
   end
@@ -58,10 +54,32 @@ class TelegramBotWorker
   def handle_message(bot, message)
     if message.text.present?
       process_message(message)
-    elsif message.video.present? && settings[:admin_ids].split(',').include?(message.chat.id.to_s)
-      return save_preview_video(bot, message)
+      send_firs_msg(bot, message.chat.id)
+    elsif message.video.present?
+      save_preview_video(bot, message)
+    elsif message.photo.present?
+      save_photo(message)
+    else
+      other_message(bot, message)
     end
+  end
+
+  def other_message(bot, message)
+    TelegramJob.perform_later(msg: "Неизв. тип сообщения от #{message.chat.id}", id: Setting.fetch_value(:test_id))
     send_firs_msg(bot, message.chat.id)
+  end
+
+  def save_preview_video(bot, message)
+    return unless settings[:admin_ids].split(',').include?(message.chat.id.to_s)
+
+    bot.api.send_message(chat_id: message.chat.id, text: "ID видео:\n#{message.video.file_id}")
+  end
+
+  def save_photo(message)
+    tg_id   = message.chat.id
+    file_id = message.photo.last.file_id
+    msg_id  = message.message_id
+    TgFileDownloaderJob.perform_later(tg_id: tg_id, file_id: file_id, msg: message.caption, msg_id: msg_id)
   end
 
   def process_message(message)
@@ -70,7 +88,7 @@ class TelegramBotWorker
     unlock_user(user) unless user.started
     return if message.text == '/start'
 
-    Message.create(tg_id: user.tg_id, text: message.text, tg_msg_id: message.message_id)
+    user.messages.create(text: message.text, tg_msg_id: message.message_id)
   end
 
   def unlock_user(user)

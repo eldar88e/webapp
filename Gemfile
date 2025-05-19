@@ -42,6 +42,7 @@ gem 'active_storage_dashboard'
 gem 'ahoy_matey'
 gem 'blazer'
 gem 'geocoder'
+# gem 'gretel'
 gem 'maxminddb'
 
 group :development, :test do
