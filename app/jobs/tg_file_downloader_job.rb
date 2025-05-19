@@ -21,15 +21,25 @@ class TgFileDownloaderJob < ApplicationJob
 
     tg_file = TgMediaFile.find_or_create_by!(file_hash: file_hash) do |media|
       media.file_id   = args[:file_id]
-      media.file_hash = file_hash
       media.file_type = file_type
       media.original_filename = name
-      media.attachment.attach(io: tempfile, filename: name, content_type: file_type)
-      media.save
     end
+
+    attach_file(tg_file, name, file_type, tempfile) unless tg_file.attachment.attached?
+
     user.messages.create(
       text: args[:msg], tg_msg_id: args[:msg_id],
       data: { tg_file_id: tg_file.file_id, media_id: tg_file.id }
+    )
+  end
+
+  private
+
+  def attach_file(media_file, name, file_type, tempfile)
+    media_file.attachment.attach(
+      io: tempfile,
+      filename: name,
+      content_type: file_type
     )
   end
 end
