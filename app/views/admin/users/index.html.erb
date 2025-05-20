@@ -28,7 +28,7 @@
         <% end %>
       </div>
       <div class="text-gray-900 dark:text-white font-bold text-2xl leading-none space-y-3 mt-3">
-        <%= User.joins(:orders).where(orders: { status: %w[shipped processed] }).distinct.count %>
+        <%= User.joins(:orders).where(orders: { status: %w[shipped processing] }).distinct.count %>
       </div>
       <p class="mt-3 text-gray-500 dark:text-gray-400"> Клиенты </p>
     </div>
