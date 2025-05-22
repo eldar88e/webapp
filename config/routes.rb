@@ -39,6 +39,7 @@ Rails.application.routes.draw do
   end
 
   draw :admin
+  draw :api_v1
 
   match '*unmatched', to: 'application#redirect_to_telegram', via: :all,
                       constraints: ->(req) { !req.path.start_with?('/rails/active_storage') }
