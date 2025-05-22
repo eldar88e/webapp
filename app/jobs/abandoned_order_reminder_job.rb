@@ -27,7 +27,7 @@ class AbandonedOrderReminderJob < ApplicationJob
   end
 
   def handle_overdue_status_if_blocked?(order, args)
-    return false if args[:msg_type].to_s != 'overdue' || !order.user.is_blocked?
+    return false if args[:msg_type].to_s != 'overdue' && !order.user.is_blocked?
 
     order.update(status: :overdue)
     true
