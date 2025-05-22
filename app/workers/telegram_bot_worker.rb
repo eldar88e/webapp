@@ -117,8 +117,10 @@ class TelegramBotWorker
   end
 
   def i_paid(_bot, message)
-    user  = User.find_by(tg_id: message.from.id)
-    order = user.orders.find_by(msg_id: message.message.message_id)
+    user         = User.find_by(tg_id: message.from.id)
+    order_number = parse_order_number(message.message.text)
+    order        = user.orders.find(order_number)
+    # order = user.orders.find_by(msg_id: message.message.message_id)
     order.update(status: :paid)
   end
 
