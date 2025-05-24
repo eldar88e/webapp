@@ -45,6 +45,8 @@ gem 'geocoder'
 # gem 'gretel'
 gem 'maxminddb'
 
+gem 'panko_serializer'
+
 group :development, :test do
   gem 'pry'
   gem 'rubocop-performance', require: false
