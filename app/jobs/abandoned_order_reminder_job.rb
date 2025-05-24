@@ -6,7 +6,7 @@ class AbandonedOrderReminderJob < ApplicationJob
     return if args[:msg_type].blank?
 
     order = Order.find_by(id: args[:order_id])
-    return if order.nil? || order.status != 'unpaid'
+    return if order&.status != 'unpaid'
 
     process_remainder(args, order)
   end
@@ -22,8 +22,6 @@ class AbandonedOrderReminderJob < ApplicationJob
     msg = form_msg(args[:msg_type], order)
     order.user.messages.create(**msg)
     schedule_reminders(args)
-    # msg_id = TelegramService.call(msg, tg_id, markup: 'i_paid')
-    # save_msg_id(msg_id, order, args)
   end
 
   def handle_overdue_status_if_blocked?(order, args)
@@ -38,20 +36,6 @@ class AbandonedOrderReminderJob < ApplicationJob
 
     order.update_columns(bank_card_id: BankCard.sample_bank_card_id)
   end
-
-  ############# TODO: удалить
-  def save_msg_id(msg_id, order, args)
-    user = order.user
-    if msg_id.instance_of?(Integer)
-      user.update(is_blocked: false, started: true)
-      order.update_columns(msg_id: msg_id)
-      schedule_reminders(args)
-    else
-      limit_user_privileges(msg_id, user)
-      order.update(status: :overdue)
-    end
-  end
-  #############
 
   def schedule_reminders(args)
     next_step = STEPS[args[:msg_type]]

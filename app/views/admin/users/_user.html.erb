@@ -7,11 +7,11 @@
   </td>
   <td class="px-6 py-4"><%= user.id %></td>
 
-  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+  <th scope="row" class="py-4 w-full max-w-44">
     <%= render partial: 'user_name', locals: { user: user } %>
   </th>
 
-  <td class="px-6 py-4"><%= user.phone_number %></td>
+  <td class="px-6 py-4 whitespace-nowrap"><%= user.phone_number %></td>
 
   <td class="px-6 py-4"><%= user.full_address %></td>
 
