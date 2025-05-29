@@ -8,8 +8,7 @@ module Api
       private
 
       def authenticate_with_token!
-        token = request.headers['Authorization'].to_s.split(' ').last
-        return if token.present? && ENV.fetch('JWT_SECRET') == token
+        return if ENV.fetch('JWT_SECRET') == request.headers['Authorization']
 
         render json: { error: 'Unauthorized' }, status: :unauthorized
       end
