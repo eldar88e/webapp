@@ -19,6 +19,7 @@ class Review < ApplicationRecord
 
   after_commit :process_photos, on: %i[create update]
   after_create_commit :send_telegram_notification
+  after_commit :clear_reviews_cache, on: %i[create update destroy]
 
   def approve!
     update!(approved: true)
@@ -26,6 +27,12 @@ class Review < ApplicationRecord
 
   def reject!
     update!(approved: false)
+  end
+
+  def self.count_all_reviews
+    Rails.cache.fetch(:all_reviews, expires_in: 6.hours) do
+      where(approved: false).size
+    end
   end
 
   def self.ransackable_attributes(_auth_object = nil)
@@ -82,5 +89,9 @@ class Review < ApplicationRecord
     return if acceptable_types.include?(photo.content_type)
 
     errors.add(:photos, "'#{photo.filename}' должна быть в формате JPEG, PNG, WEBP или HEIC")
+  end
+
+  def clear_reviews_cache
+    Rails.cache.delete_multi(%i[all_reviews])
   end
 end

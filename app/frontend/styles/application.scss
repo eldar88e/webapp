@@ -834,6 +834,16 @@ h3 {
     padding: 17px 4px;
     cursor: pointer;
 
+    &:active {
+      .plus-ico {
+        transform: scale(1.2);
+      }
+
+      .minus-ico {
+        transform: scale(0.8);
+      }
+    }
+
     .plus-ico {
       margin: 0 4px;
     }
@@ -954,6 +964,16 @@ h3 {
       content: '';
       display: block;
       transform: rotate(90deg);
+    }
+
+    &:active {
+      .plus-ico {
+        transform: scale(1.2);
+      }
+
+      .minus-ico {
+        transform: scale(0.8);
+      }
     }
   }
 }

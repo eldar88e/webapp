@@ -64,13 +64,29 @@ body {
         margin-left: 0;
       }
 
-      .wraper-menu {
+      .wrapper-menu {
         border-right-width: 1px;
 
         .main-sidebar {
           height: 90vh;
 
           .slidebar-menu {
+            .count-main-menu {
+              background-color: white;
+              color: black;
+              border-radius: 8px;
+              display: flex;
+              min-width: 16px;
+              height: 16px;
+              justify-content: center;
+              align-items: center;
+              font-size: 10px;
+              font-weight: 600;
+              margin-top: -12px;
+              margin-left: -5px;
+              padding: 0 2px;
+            }
+
             li {
               padding-top: .5rem;
 
@@ -298,6 +314,21 @@ body.aside-hide {
     .main-content {
       @media (min-width: 1024px) {
         padding-left: 4rem;
+      }
+    }
+
+    .sidebar {
+      .wrapper-menu {
+        .main-sidebar {
+          .slidebar-menu {
+            .count-main-menu {
+              margin-left: -10px;
+              @media (max-width: 1024px) {
+                margin-left: -3px;
+              }
+            }
+          }
+        }
       }
     }
   }

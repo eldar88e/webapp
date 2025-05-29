@@ -2,4 +2,10 @@
   <symbol id="mini-arrow" aria-hidden="true" stroke="currentColor" fill="none" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v13m0-13 4 4m-4-4-4 4"></path>
   </symbol>
+  <symbol id="check" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>
+  </symbol>
+  <svg id="uncheck" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <rect width="12" height="12" x="6" y="6" stroke="currentColor" stroke-linejoin="round" stroke-width="2" rx="1"/>
+  </svg>
 </svg>

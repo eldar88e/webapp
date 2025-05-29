@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react"
+import iconsUrl from '../images/icons.svg?url';
+import NoticePortal from "./NoticePortal";
 
 type CartItem = {
     id: number
@@ -11,6 +13,7 @@ type CartItem = {
 
 export default function Cart({ items, cartId }: { items: CartItem[]; cartId: number }) {
     const [cart, setCart] = useState(items)
+    const [notice, setNotice] = useState<string | null>(null);
 
     const updateQuantity = async (id: number, direction: 'up' | 'down') => {
         const params = new URLSearchParams()
@@ -36,29 +39,18 @@ export default function Cart({ items, cartId }: { items: CartItem[]; cartId: num
                         : prev.filter(item => item.id !== updatedItem.id)
                 )
             } else {
-                const errors = data.errors;
-                const notices = document.getElementById("notices");
-                if (!notices) return;
-
-                notices.insertAdjacentHTML('beforeend', `<div data-controller="notices" data-notices-text-value="danger"  class="flex items-center w-full max-w-xs p-2 mb-2 rounded-lg shadow bg-white notices" role="alert">
-                                         <div>
-                                            <svg class="w-5 h-5 text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>
-                                            </svg>
-                                          </div>
-                                          <div class="ms-3 text-sm font-normal">${errors}</div>
-                                          <button data-action="click->notices#close" type="button" class="ms-auto -mx-1.5 -my-1.5 rounded-lg p-1.5 inline-flex items-center justify-center h-8 w-8 bg-white focus:text-green-600 close" data-dismiss-target="#toast-danger" aria-label="Close">
-                                            <span class="sr-only">Close</span>
-                                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                            </svg>
-                                          </button>                                     
-                                      </div>`);
+                setNotice(data.errors || "Ошибка обновления");
             }
         } else {
-            console.error("Ошибка обновления")
+            setNotice("Ошибка обновления");
         }
     }
+
+    useEffect(() => {
+        if (!notice) return;
+        const timeout = setTimeout(() => setNotice(null), 5000);
+        return () => clearTimeout(timeout);
+    }, [notice]);
 
     const totalQuantity = useMemo(
         () => cart.reduce((sum, item) => sum + item.quantity, 0),
@@ -80,6 +72,13 @@ export default function Cart({ items, cartId }: { items: CartItem[]; cartId: num
 
     return (
         <div className="main-block mb-5">
+            {notice && (
+                <NoticePortal
+                    message={notice}
+                    type="danger"
+                    onClose={() => setNotice(null)}
+                />
+            )}
             <div className="cart-items" id="cart_items">
                 <div className="flex justify-between items-center mb-3">
                     <div className="font-semibold">Товаров: {totalQuantity}</div>
@@ -101,7 +100,12 @@ export default function Cart({ items, cartId }: { items: CartItem[]; cartId: num
                             }
                         }}
                     >
-                        <span>Очистить корзину</span>
+                        <div className="flex items-center gap-1">
+                            Очистить корзину
+                            <svg width={16} height={16} fill="currentColor">
+                                <use href={`${iconsUrl}#trash`} />
+                            </svg>
+                        </div>
                     </button>
                 </div>
 
@@ -109,8 +113,12 @@ export default function Cart({ items, cartId }: { items: CartItem[]; cartId: num
                     <div key={item.id} className="flex justify-between items-center mb-2">
                         <div className="flex items-center gap-4">
                             <div className="bg-gray-100 w-18 h-18 rounded-lg overflow-hidden flex items-center justify-center">
-                                {item.image_url && (
+                                {item.image_url ? (
                                     <img src={item.image_url} alt={item.name} width={72} height={72} />
+                                ) : (
+                                    <svg width={32} height={32} style={{ color: "#48C928" }} fill="currentColor">
+                                        <use href={`${iconsUrl}#no-image`} />
+                                    </svg>
                                 )}
                             </div>
                             <div className="">
@@ -130,7 +138,6 @@ export default function Cart({ items, cartId }: { items: CartItem[]; cartId: num
                                 <div className="plus-ico"></div>
                             </button>
                         </div>
-
                     </div>
                 ))}
             </div>
