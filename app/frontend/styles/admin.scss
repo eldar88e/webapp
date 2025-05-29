@@ -100,24 +100,32 @@ body {
                 display: flex;
                 transition: all 0.5s;
 
+                &.active {
+                  @apply bg-gray-100 dark:bg-gray-700;
+
+                  &:hover {
+                    @apply bg-gray-200 dark:bg-gray-600;
+                  }
+                }
+
                 svg {
                   width: 1.5rem;
                   height: 1.5rem;
-                }
-
-                &.active {
-                  @apply bg-gray-100;
-
+                  color: rgb(107 114 128);
                   @media (prefers-color-scheme: dark) {
-                    @apply bg-gray-700;
+                    color: rgb(156 163 175);
                   }
                 }
 
                 &:hover {
-                  @apply bg-gray-300;
+                  @apply bg-gray-100 dark:bg-gray-700;
 
-                  @media (prefers-color-scheme: dark) {
-                    @apply bg-gray-900;
+                  svg {
+                    color: rgb(17 24 39);
+
+                    @media (prefers-color-scheme: dark) {
+                      color: rgb(255 255 255);
+                    }
                   }
                 }
               }
