@@ -31,7 +31,8 @@
         <div class="add-img-ico">
           <%= render IconComponent.new name: 'add-img', size: 24 %>
         </div>
-        <%= form.file_field :photos, accept: 'image/jpeg,image/png,image/webp,image/heic,image/heif', multiple: !@is_android, class: "input-str" %>
+        <%= form.file_field :photos, accept: 'image/jpeg,image/png,image/webp,image/heic,image/heif',
+                            multiple: !@is_android, class: "input-str" %>
       </div>
     </div>
   </div>

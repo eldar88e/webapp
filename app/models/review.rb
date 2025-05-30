@@ -1,5 +1,6 @@
 class Review < ApplicationRecord
   SHIPPED = 4
+  PHOTO_LIMIT_SIZE = 10
 
   belongs_to :user
   belongs_to :product
@@ -81,7 +82,9 @@ class Review < ApplicationRecord
   end
 
   def validate_photo_size(photo)
-    errors.add(:photos, "'#{photo.filename}' должна быть меньше 5 МБ") if photo.byte_size > 5.megabytes
+    return if photo.byte_size <= PHOTO_LIMIT_SIZE.megabytes
+
+    errors.add(:photos, "'#{photo.filename}' должна быть меньше #{PHOTO_LIMIT_SIZE} МБ")
   end
 
   def validate_photo_type(photo)
