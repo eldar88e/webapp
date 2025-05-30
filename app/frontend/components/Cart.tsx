@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react"
 import iconsUrl from '../images/icons.svg?url';
 import NoticePortal from "./NoticePortal";
+import CartItem from "./CartItem";
 
 type CartItem = {
     id: number
@@ -14,6 +15,7 @@ type CartItem = {
 export default function Cart({ items, cartId }: { items: CartItem[]; cartId: number }) {
     const [cart, setCart] = useState(items)
     const [notice, setNotice] = useState<string | null>(null);
+    const [isCartEmpty, setIsCartEmpty] = useState(cart.length === 0);
 
     const updateQuantity = async (id: number, direction: 'up' | 'down') => {
         const params = new URLSearchParams()
@@ -46,6 +48,24 @@ export default function Cart({ items, cartId }: { items: CartItem[]; cartId: num
         }
     }
 
+    async function handleClearCart(cartId: number) {
+        const response = await fetch(`/carts/${cartId}`, {
+            method: "DELETE",
+            headers: {
+                "X-CSRF-Token": (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+                "Accept": "application/json"
+            }
+        });
+
+        if (response.ok) {
+            // window.location.reload();
+            setCart([]);
+            setIsCartEmpty(true);
+        } else {
+            setNotice("Ошибка при очистке корзины");
+        }
+    }
+
     useEffect(() => {
         if (!notice) return;
         const timeout = setTimeout(() => setNotice(null), 5000);
@@ -59,7 +79,8 @@ export default function Cart({ items, cartId }: { items: CartItem[]; cartId: num
 
     useEffect(() => {
         if (totalQuantity === 0) {
-            window.location.reload()
+            setCart([]);
+            setIsCartEmpty(true);
         }
     }, [totalQuantity])
 
@@ -70,7 +91,19 @@ export default function Cart({ items, cartId }: { items: CartItem[]; cartId: num
         window.dispatchEvent(new CustomEvent("cart:updated"))
     }, [cart])
 
-    return (
+    return isCartEmpty ? (
+        <div className="no-items-wrapper">
+            <div className="w-full">
+                <div className="flex justify-center text-gray-no-active w-full mb-1">
+                    <svg className="pointer-events-none" style={{ fill: "currentColor", width: 40, height: 40 }}>
+                        <use href={`${iconsUrl}#cart-empty`} />
+                    </svg>
+                </div>
+                <div className="no-items-title">Корзина пуста</div>
+                <a className="block btn btn-secondary btn-big text-center" href="/">Вернуться в каталог</a>
+            </div>
+        </div>
+    ) : (
         <div className="main-block mb-5">
             {notice && (
                 <NoticePortal
@@ -84,21 +117,7 @@ export default function Cart({ items, cartId }: { items: CartItem[]; cartId: num
                     <div className="font-semibold">Товаров: {totalQuantity}</div>
                     <button
                         className="btn-clear-cart"
-                        onClick={async () => {
-                            const response = await fetch(`/carts/${cartId}`, {
-                                method: "DELETE",
-                                headers: {
-                                    "X-CSRF-Token": (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
-                                    "Accept": "application/json"
-                                }
-                            })
-
-                            if (response.ok) {
-                                window.location.reload()
-                            } else {
-                                console.error("Ошибка при очистке корзины")
-                            }
-                        }}
+                        onClick={() => handleClearCart(cartId)}
                     >
                         <div className="flex items-center gap-1">
                             Очистить корзину
@@ -110,35 +129,11 @@ export default function Cart({ items, cartId }: { items: CartItem[]; cartId: num
                 </div>
 
                 {cart.map(item => (
-                    <div key={item.id} className="flex justify-between items-center mb-2">
-                        <div className="flex items-center gap-4">
-                            <div className="bg-gray-100 w-18 h-18 rounded-lg overflow-hidden flex items-center justify-center">
-                                {item.image_url ? (
-                                    <img src={item.image_url} alt={item.name} width={72} height={72} />
-                                ) : (
-                                    <svg width={32} height={32} style={{ color: "#48C928" }} fill="currentColor">
-                                        <use href={`${iconsUrl}#no-image`} />
-                                    </svg>
-                                )}
-                            </div>
-                            <div className="">
-                                <a href={item.product_path}>{item.name}</a>
-                                <div className="cart-item-price">{item.price}₽/шт</div>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-1 rounded-lg" style={{ backgroundColor: '#F0F0F0' }}>
-                            <button onClick={() => updateQuantity(item.id, 'down')} className="buy-btn">
-                                <div className="minus-ico"></div>
-                            </button>
-                            <div className="text-center min-w-10">
-                                <div className="count">{item.quantity} шт</div>
-                                <div className="price">{item.quantity * item.price}₽</div>
-                            </div>
-                            <button onClick={() => updateQuantity(item.id, 'up')} className="buy-btn">
-                                <div className="plus-ico"></div>
-                            </button>
-                        </div>
-                    </div>
+                    <CartItem
+                        key={item.id}
+                        item={item}
+                        onUpdateQuantity={updateQuantity}
+                    />
                 ))}
             </div>
         </div>

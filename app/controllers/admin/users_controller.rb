@@ -22,6 +22,7 @@ module Admin
 
     def update
       if @user.update(user_params)
+        update_bonus
         render turbo_stream: [
           turbo_stream.replace(@user, partial: '/admin/users/user', locals: { user: @user }),
           success_notice(t('controller.users.update'))
@@ -38,13 +39,20 @@ module Admin
 
     private
 
+    def update_bonus
+      bonus_balance = { source: current_user, bonus_amount: params[:user][:bonus_balance], reason: :admin }
+      return if params[:user][:bonus_balance].blank? || params[:user][:bonus_balance] == '0'
+
+      @user.bonus_logs.create!(bonus_balance)
+    end
+
     def set_user
       @user = User.find(params[:id])
     end
 
     def user_params
       base_params = %i[first_name middle_name last_name phone_number address postal_code street
-                       home apartment build email username account_tier_id bonus_balance]
+                       home apartment build email username account_tier_id]
       base_params += %i[tg_id] if current_user.admin? # :role
       params.require(:user).permit(*base_params)
     end

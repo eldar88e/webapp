@@ -1,0 +1,12 @@
+style
+  |  body { background-color: white; }
+  |  .title-review { display: none; }
+  |  .review-form-submit { margin-bottom: 0 }
+
+h2 Оставить отзыв
+= link_to @review.product.name, product_path(@review.product),
+        data: { turbo: false }, class: 'flex font-medium mt-1 mb-5'
+
+.card-block
+  = turbo_frame_tag :new_review_page do
+    = render partial: '/reviews/form', locals: { method: :post }

@@ -2,7 +2,9 @@
 @import "../styles/notice.scss";
 @import "../styles/preloader.scss";
 
-@source "../../../app/components/**/*.html.slim";
-@source "../../../app/views/**/*.html.erb";
-@source "../../../app/views/**/*.html.slim";
+@source "../../../app/components/admin/**/*.slim";
+@source "../../../app/views/admin/**/*.html.erb";
+@source "../../../app/views/admin/**/*.html.slim";
+@source "../../../app/views/notices/**/*.html.erb";
+@source "../../../app/views/layouts/**/*.html.slim";
 @source "../../../app/helpers/**/*.rb";
