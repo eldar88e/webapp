@@ -6,7 +6,7 @@
       = image_tag current_user.photo_url
     - else
       = render IconComponent.new name: :profile
-  h2 class="!mb-0" Привет, #{current_user.first_name} 👋
+  h2 class="!mb-0" Привет, #{current_user.first_name || current_user.first_name_raw} 👋
 
 .bonus-block
   .p-5
