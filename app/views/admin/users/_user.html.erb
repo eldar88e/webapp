@@ -17,7 +17,14 @@
 
   <td class="px-6 py-4"><%= user.email %></td>
 
-  <td class="px-6 py-4"><%= format_date user.created_at %></td>
+  <td class="px-6 py-4">
+    <time data-controller="timeago"
+          data-timeago-locale-value="ru"
+          title="<%= format_date user.created_at %>"
+          datetime="<%= user.created_at.iso8601 %>">
+      <%= format_date user.created_at %>
+    </time>
+  </td>
 
   <td class="px-6 py-4"><%= t("roles.#{user.role}") %></td>
 
