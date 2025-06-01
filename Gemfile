@@ -33,7 +33,6 @@ gem 'pagy'
 gem 'pundit'
 gem 'ransack'
 gem 'rollbar'
-gem 'ruby-vips'
 gem 'sidekiq', '~> 8.0'
 gem 'telegram-bot-ruby', require: false
 gem 'valid_email2'

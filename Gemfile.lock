@@ -587,7 +587,6 @@ DEPENDENCIES
   rspec-rails
   rubocop-performance
   rubocop-rails
-  ruby-vips
   selenium-webdriver
   shoulda-matchers
   sidekiq (~> 8.0)
