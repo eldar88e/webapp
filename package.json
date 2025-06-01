@@ -6,6 +6,7 @@
     "cover 99.5%"
   ],
   "dependencies": {
+    "esbuild": "^0.25.5",
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.12",
     "@tailwindcss/vite": "^4.1.4",
@@ -20,6 +21,7 @@
     "rollup": "^4.40.0",
     "sass": "^1.86.3",
     "sass-embedded": "^1.86.3",
+    "postcss": "^8.5.4",
     "tailwindcss": "^4.1.4",
     "timeago.js": "^4.0.2",
     "typescript": "^5.8.3",
