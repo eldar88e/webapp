@@ -7,7 +7,7 @@ export default class extends Controller {
                 if (entry.isIntersecting) {
                     setTimeout(() => {
                         this.loadMore();
-                    }, 300);
+                    }, 800);
                 }
             });
         });

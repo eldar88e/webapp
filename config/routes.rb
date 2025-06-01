@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   authenticate :user, ->(user) { user.admin? } do
     mount Sidekiq::Web => '/admin/sidekiq'
     mount Blazer::Engine, at: '/admin/blazer'
+    mount ActiveStorageDashboard::Engine, at: '/admin/active-storage-dashboard'
   end
 
   devise_for :users, controllers: { registrations: 'users/registrations' }
@@ -13,10 +14,14 @@ Rails.application.routes.draw do
   resources :products, only: %i[index show] do
     resources :reviews, only: %i[new create edit update]
     resource :product_subscription, only: %i[create destroy]
+    resource :favorites, only: %i[create destroy]
   end
-  resources :carts, only: [:index]
+  resources :product_subscriptions, only: :index
+  resources :favorites, only: %i[index]
+  resources :carts, only: %i[index destroy]
   resources :cart_items, only: %i[create update]
-  resources :orders, only: %i[index create update]
+  resources :orders, only: %i[index show create update]
+  resources :support, only: :index
   resources :surveys, only: :index
   post :add_answers, to: 'surveys#add_answers'
 
@@ -34,6 +39,7 @@ Rails.application.routes.draw do
   end
 
   draw :admin
+  draw :api_v1
 
   match '*unmatched', to: 'application#redirect_to_telegram', via: :all,
                       constraints: ->(req) { !req.path.start_with?('/rails/active_storage') }

@@ -23,32 +23,46 @@
                   Telegram.WebApp.setHeaderColor('#3396a5');
                   Telegram.WebApp.setBackgroundColor('#3396a5');
                 <% else %>
-                  Telegram.WebApp.setHeaderColor('#000001');
-                  Telegram.WebApp.setBackgroundColor('#000001');
+                  Telegram.WebApp.setHeaderColor('#FFFFFF');
+                  Telegram.WebApp.setBackgroundColor('#FFFFFF');
                 <% end %>
             }
         });
     </script>
 
     <%= vite_client_tag %>
+    <%= vite_react_refresh_tag %>
     <%= vite_stylesheet_tag(ENV.fetch('HOST', '').include?('mirena') ? 'mirena' : 'application') %>
     <%= vite_javascript_tag 'application' %>
   </head>
 
   <body>
+    <%= render '/layouts/partials/notices' %>
+
     <header><%= render partial: '/layouts/partials/header' %></header>
 
     <main>
-      <div class="container mx-auto">
-        <div id="modal" class="modal <%= yield :model_class %>" style="<%= yield :model_style %>">
-          <%= yield :modal %>
-        </div>
-
+      <div class="container mx-auto px-5">
         <%= yield %>
       </div>
     </main>
+    <%= turbo_frame_tag 'cart-summary' do %>
+      <%= render CartComponent.new cart: current_user.cart if current_user %>
+    <% end %>
 
     <%= render partial: '/layouts/partials/footer' %>
-    <%= render partial: '/layouts/partials/yandex_metrika' if Setting.fetch_value(:ym).present? %>
+
+    <%= render partial: '/layouts/partials/fixed_menu' %>
+
+    <div id="modal" class="modal">
+      <div class="bg-white w-full p-5 modal-block">
+        <button class="close" onclick="closeModal()">
+          <%= render IconComponent.new name: :close, size: 24 %>
+        </button>
+        <div id="modal-block"></div>
+      </div>
+    </div>
+
+    <%= render partial: '/layouts/partials/yandex_metrica' if Setting.fetch_value(:ym).present? %>
   </body>
 </html>

@@ -3,11 +3,13 @@
     <div class="container mx-auto">
       <div class="line-footer"></div>
       <div class="text-center">
-        <p><%= Setting.footer_link[:tg_support] %></p>
-        <%= link_to settings[:tg_support], settings[:tg_support], class: 'mb-6 block' %>
-
-        <p><%= Setting.footer_link[:tg_group] %></p>
-        <%= link_to settings[:tg_group], settings[:tg_group], class: 'mb-6' %>
+        <!--
+        <p class="pb-1"><%= Setting.footer_link[:tg_support] %></p>
+        <%= link_to settings[:tg_support], settings[:tg_support] %>
+          <%# TODO: убрать! %>
+        <p class="pb-1 mt-4"><%= Setting.footer_link[:tg_group] %></p>
+        <%= link_to settings[:tg_group], settings[:tg_group] %>
+        -->
       </div>
     </div>
   </div>

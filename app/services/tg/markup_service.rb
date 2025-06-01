@@ -5,7 +5,7 @@ module Tg
     def initialize(markups)
       @markups = markups
       @app_url = "https://t.me/#{settings[:tg_main_bot]}?startapp"
-      form_keyboards if @markups.present?
+      prepare_markups
     end
 
     def self.call(markups)
@@ -20,6 +20,12 @@ module Tg
 
     private
 
+    def prepare_markups
+      return if @markups.blank?
+
+      @markups[:markup] == 'i_paid' ? form_paid_keyboards : form_keyboards
+    end
+
     def settings
       @settings ||= Setting.all_cached
     end
@@ -33,13 +39,21 @@ module Tg
       @keyboards
     end
 
-    def callback_data(callback, text)
+    def form_paid_keyboards
+      @keyboards = []
+      @keyboards << form_callback(@markups[:markup], I18n.t("tg_btn.#{@markups[:markup]}"))
+      @keyboards += form_url_keyboard('carts', 'Изменить заказ')
+      @keyboards << ask_btn
+      @keyboards
+    end
+
+    def form_callback(callback, text)
       [Telegram::Bot::Types::InlineKeyboardButton.new(text: text, callback_data: callback)]
     end
 
-    def form_url_keyboard
-      texts = [@markups[:markup_text]].flatten
-      [@markups[:markup_url]].flatten.map.with_index do |path, idx|
+    def form_url_keyboard(markup_url = nil, markup_text = nil)
+      texts = [markup_text || @markups[:markup_text]].flatten
+      [markup_url || @markups[:markup_url]].flatten.map.with_index do |path, idx|
         url = "#{@app_url}=url=#{path.gsub(%r{\A/|/\z}, '').tr('/', '_')}"
         form_url_btn(texts[idx] || 'Кнопка', url)
       end

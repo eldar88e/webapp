@@ -34,7 +34,13 @@
       </div>
     <% end %>
   </td>
-  <td class="px-6 py-4"><%= review.approved ? 1 : 0 %></td>
+  <td class="px-6 py-4">
+    <% if review.approved %>
+      <%= render Admin::IconComponent.new name: :check, width: 24 %>
+    <% else %>
+      <%= render Admin::IconComponent.new name: :uncheck, width: 28 %>
+    <% end %>
+  </td>
 
   <td class="px-6 py-4"><%= format_date review.created_at %></td>
 

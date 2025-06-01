@@ -1,0 +1,42 @@
+products:
+  id: 1
+  name: "Товары"
+
+electronics:
+  id: 2
+  name: "Электроника"
+  ancestry: 1
+
+smartphone:
+  id: 3
+  name: "Смартфон"
+  price: 30000
+  ancestry: 1/2
+  stock_quantity: 9999
+
+accessory:
+  id: 4
+  name: "Аксессуар"
+  price: 1500
+  old_price: 1700
+  stock_quantity: 9999
+  ancestry: 1/2
+
+charger:
+  id: 5
+  name: "Зарядка"
+  price: 500
+  ancestry: 1/2
+
+foods:
+  id: 6
+  name: "FasFood"
+  ancestry: 1
+
+pizza:
+  id: 7
+  name: "Пицца"
+  price: 1200
+  old_price: 1300
+  stock_quantity: 9999
+  ancestry: 1/6

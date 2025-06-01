@@ -1,10 +1,11 @@
 class CreateOrderService
-  def initialize(user)
-    @user = user
+  def initialize(user, bonus)
+    @user  = user
+    @bonus = bonus.to_i
   end
 
-  def self.call(user)
-    new(user).create_order
+  def self.call(user, bonus)
+    new(user, bonus).create_order
   end
 
   def create_order
@@ -32,11 +33,11 @@ class CreateOrderService
 
   def find_or_create_order
     order = @user.orders.find_by(status: %i[unpaid initialized])
-    return @user.orders.create unless order
+    return @user.orders.create(bonus: @bonus) unless order
 
     cart_product_ids = @cart_items.pluck(:product_id)
     order.order_items.where.not(product_id: cart_product_ids).destroy_all
-    order.update!(total_amount: 0, status: :initialized)
+    order.update!(total_amount: 0, status: :initialized, bonus: @bonus)
     order
   end
 end

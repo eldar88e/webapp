@@ -24,7 +24,7 @@ class TelegramBotWorker
 
   def process_error(error)
     Rails.logger.error "#{self.class} | #{error.message}"
-    # ErrorMailer.send_error(error.message, error.full_message).deliver_later
+    ErrorMailer.send_error(error.message, error.full_message).deliver_later
   end
 
   def tg_token_present?
@@ -40,15 +40,11 @@ class TelegramBotWorker
     when Telegram::Bot::Types::CallbackQuery
       handle_callback(bot, message)
     when Telegram::Bot::Types::Message
+      return input_tracking_number(message) if message.chat.id == settings[:courier_tg_id].to_i
+
       handle_message(bot, message)
       # else bot.api.send_message(chat_id: message.from.id, text: I18n.t('tg_msg.error_data'))
     end
-  end
-
-  def save_preview_video(bot, message)
-    return send_firs_msg(bot, message.chat.id) unless settings[:admin_ids].split(',').include?(message.chat.id.to_s)
-
-    bot.api.send_message(chat_id: message.chat.id, text: "ID Вашего видео:\n#{message.video.file_id}")
   end
 
   def handle_callback(bot, message)
@@ -56,25 +52,51 @@ class TelegramBotWorker
   end
 
   def handle_message(bot, message)
-    return input_tracking_number(message) if message.chat.id == settings[:courier_tg_id].to_i
-
     if message.text.present?
       process_message(message)
+      send_firs_msg(bot, message.chat.id)
     elsif message.video.present?
-      return save_preview_video(bot, message)
+      save_preview_video(bot, message)
+    elsif message.photo.present?
+      save_photo(message)
+    else
+      other_message(bot, message)
     end
+  end
+
+  def other_message(bot, message)
+    TelegramJob.perform_later(msg: "Неизв. тип сообщения от #{message.chat.id}", id: Setting.fetch_value(:test_id))
     send_firs_msg(bot, message.chat.id)
+  end
+
+  def save_preview_video(bot, message)
+    return unless settings[:admin_ids].split(',').include?(message.chat.id.to_s)
+
+    bot.api.send_message(chat_id: message.chat.id, text: "ID видео:\n#{message.video.file_id}")
+  end
+
+  def save_photo(message)
+    tg_id   = message.chat.id
+    file_id = message.photo.last.file_id
+    msg_id  = message.message_id
+    TgFileDownloaderJob.perform_later(tg_id: tg_id, file_id: file_id, msg: message.caption, msg_id: msg_id)
   end
 
   def process_message(message)
     tg_user = message.chat.as_json
     user    = User.find_or_create_by_tg(tg_user, true)
-    TelegramJob.perform_later(msg: "User #{user.id} started bot", id: Setting.fetch_value(:test_id)) unless user.started
-    # TODO: убрать со временем уведомление админа
-    user.update(started: true, is_blocked: false, username: tg_user['username'], photo_url: tg_user['photo_url'])
+    unlock_user(user) unless user.started
     return if message.text == '/start'
 
-    Message.create(tg_id: user.tg_id, text: message.text, tg_msg_id: message.message_id)
+    user.messages.create(text: message.text, tg_msg_id: message.message_id)
+  end
+
+  def unlock_user(user)
+    msg = "User #{user.id} started bot"
+    Rails.logger.info msg
+    TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id))
+    # TODO: убрать со временем уведомление админа
+    user.update(started: true, is_blocked: false)
   end
 
   def input_tracking_number(message)
@@ -95,8 +117,10 @@ class TelegramBotWorker
   end
 
   def i_paid(_bot, message)
-    user  = User.find_by(tg_id: message.from.id)
-    order = user.orders.find_by(msg_id: message.message.message_id)
+    user         = User.find_by(tg_id: message.from.id)
+    order_number = parse_order_number(message.message.text)
+    order        = user.orders.find(order_number)
+    # order = user.orders.find_by(msg_id: message.message.message_id)
     order.update(status: :paid)
   end
 

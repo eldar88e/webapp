@@ -15,6 +15,9 @@ gem 'redis', '~> 5.4'
 gem 'sprockets-rails'
 gem 'vite_rails'
 
+gem 'slim-rails'
+gem 'view_component'
+
 # gem 'aws-sdk-s3'
 gem 'active_link_to'
 gem 'ancestry'
@@ -25,20 +28,23 @@ gem 'googleauth', require: false
 gem 'i18n'
 gem 'image_processing'
 gem 'lograge'
-gem 'logstash-logger'
+# gem 'logstash-logger'
 gem 'pagy'
 gem 'pundit'
 gem 'ransack'
 gem 'rollbar'
-gem 'ruby-vips'
 gem 'sidekiq', '~> 8.0'
 gem 'telegram-bot-ruby', require: false
 gem 'valid_email2'
 
+gem 'active_storage_dashboard'
 gem 'ahoy_matey'
 gem 'blazer'
 gem 'geocoder'
+# gem 'gretel'
 gem 'maxminddb'
+
+gem 'panko_serializer'
 
 group :development, :test do
   gem 'pry'
@@ -57,7 +63,12 @@ group :development do
 end
 
 group :test do
+  gem 'capybara'
+  gem 'selenium-webdriver'
+
   gem 'factory_bot_rails'
+  # gem 'database_cleaner'
+
   gem 'rspec-rails'
   gem 'shoulda-matchers'
 end

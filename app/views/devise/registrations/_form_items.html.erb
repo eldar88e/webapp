@@ -2,73 +2,75 @@
   window.dadata_token = "<%= settings[:dadata_token] %>"
 <% end %>
 
+<h3>Личная информация</h3>
+
 <div class="input-container address-wrapper" data-controller="dadata-name">
+  <%= f.label :middle_name %>
   <%= f.text_field :middle_name, autocomplete: "family-name", placeholder: '', class: "input-str", required: true, minlength: 2,
                    data: { dadata_name_target: "name", action: "input->dadata-name#search focus->dadata-name#search blur->dadata-name#hidden" } %>
-  <%= f.label :middle_name %>
-  <div class="suggestions-wrapper scrollable" data-dadata-name-target="suggestions">
-    <div class="suggestions-suggestions" style="display: none;"></div>
+  <div class="suggestions-wrapper">
+    <div class="suggestions scrollable" data-dadata-name-target="suggestions"></div>
   </div>
 </div>
 
 <div class="input-container address-wrapper" data-controller="dadata-name">
+  <%= f.label :first_name %>
   <%= f.text_field :first_name, autocomplete: "given-name", placeholder: '', class: "input-str", required: true, minlength: 2,
                    data: { dadata_name_target: "name", action: "input->dadata-name#searchName focus->dadata-name#searchName blur->dadata-name#hidden" } %>
-  <%= f.label :first_name %>
-  <div class="suggestions-wrapper scrollable" data-dadata-name-target="suggestions">
-    <div class="suggestions-suggestions" style="display: none;"></div>
+  <div class="suggestions-wrapper">
+    <div class="suggestions scrollable" data-dadata-name-target="suggestions"></div>
   </div>
 </div>
 
 <div class="input-container">
-  <%= f.text_field :last_name, autocomplete: 'additional-name', placeholder: '', class: 'input-str', required: true, minlength: 2 %>
   <%= f.label :last_name %>
+  <%= f.text_field :last_name, autocomplete: 'additional-name', placeholder: '', class: 'input-str', required: true, minlength: 2 %>
 </div>
 
 <div class="input-container">
+  <%= f.label :phone_number %>
   <%= f.text_field :phone_number, autocomplete: 'tel', placeholder: '', class: 'input-str', required: true,
                    data: { controller: 'phone-mask', action: 'focus->phone-mask#startMask keyup->phone-mask#startMask input->phone-mask#mask blur->phone-mask#check' } %>
-  <%= f.label :phone_number %>
 </div>
 
-<div class="input-container" data-controller="dadata-email">
-  <%= f.email_field :email, value: presence_email, autocomplete: "email", placeholder: '', class: "input-str", required: true,
-                    data: { action: '', dadata_email_target: 'email' }%>
+<div class="input-container">
   <%= f.label :email %>
-  <div class="suggestions-wrapper scrollable" data-dadata-email-target="esuggestions">
-    <div class="suggestions-suggestions" style="display: none;"></div>
-  </div>
+  <%= f.email_field :email, value: presence_email, autocomplete: "email", placeholder: '', class: "input-str", required: true %>
 </div>
+
+<div class="line-user"></div>
+
+<h3>Доставка</h3>
 
 <div class="input-container address-wrapper">
+  <%= f.label :address %>
   <%= f.text_field :address, autocomplete: "city-address", placeholder: '', required: true, class: "input-str",
                    data: { dadata_target: "address", action: "input->dadata#search focus->dadata#search blur->dadata#hidden" } %>
-  <%= f.label :address %>
-  <div class="suggestions-wrapper scrollable" data-dadata-target="suggestions">
-    <div class="suggestions-suggestions" style="display: none;"></div>
+  <div class="suggestions-wrapper">
+    <div class="suggestions scrollable" data-dadata-target="suggestions"></div>
   </div>
 </div>
 
 <div class="input-container address-wrapper">
+  <%= f.label :street %>
   <%= f.text_field :street, autocomplete: "street-address", placeholder: '', required: true, class: "input-str",
                    data: { dadata_target: "street", action: "input->dadata#search_street focus->dadata#search_street blur->dadata#hiddenStreet" } %>
-  <%= f.label :street %>
-  <div class="suggestions-wrapper scrollable" data-dadata-target="suggestions_street">
-    <div class="suggestions-suggestions" style="display: none;"></div>
+  <div class="suggestions-wrapper">
+    <div class="suggestions scrollable" data-dadata-target="suggestions_street"></div>
   </div>
 </div>
 
 <div class="flex gap-4">
   <div class="w-1/2">
     <div class="input-container">
-      <%= f.text_field :home, data: { dadata_target: "home" }, placeholder: '', class: "input-str", required: true %>
       <%= f.label :home %>
+      <%= f.text_field :home, data: { dadata_target: "home" }, placeholder: '', class: "input-str", required: true %>
     </div>
   </div>
   <div class="w-1/2">
     <div class="input-container">
-      <%= f.text_field :apartment, data: { dadata_target: "apartment" }, placeholder: '', class: "input-str" %>
       <%= f.label :apartment %>
+      <%= f.text_field :apartment, data: { dadata_target: "apartment" }, placeholder: '', class: "input-str" %>
     </div>
   </div>
 </div>
@@ -76,15 +78,15 @@
 <div class="flex gap-4">
   <div class="w-1/2">
     <div class="input-container">
-      <%= f.text_field :build, data: { dadata_target: "build" }, placeholder: '', class: "input-str" %>
       <%= f.label :build %>
+      <%= f.text_field :build, data: { dadata_target: "build" }, placeholder: '', class: "input-str" %>
     </div>
   </div>
   <div class="w-1/2">
     <div class="input-container">
+      <%= f.label :postal_code %>
       <%= f.number_field :postal_code, autocomplete: "postal-code", data: { dadata_target: "post_code" }, required: true,
                          placeholder: '', class: "input-str", min: 100_000, max: 999_999 %>
-      <%= f.label :postal_code %>
     </div>
   </div>
 </div>

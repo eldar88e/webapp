@@ -18,6 +18,7 @@ Metrics/ClassLength:
   Exclude:
     - 'app/workers/telegram_bot_worker.rb'
     - 'app/models/order.rb'
+    - 'app/models/user.rb'
 
 Metrics/BlockLength:
   Exclude:

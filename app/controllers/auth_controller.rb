@@ -41,13 +41,19 @@ class AuthController < ApplicationController
   def sign_in_with_tg_id(tg_user_object)
     tg_user = JSON.parse tg_user_object
     user    = User.find_or_create_by_tg(tg_user, false)
-    update_tg_username(user, tg_user) # TODO: сделать через job возможно еще добавить атрибутов для обновления
+    update_tg_username(user, tg_user)
     sign_in(user)
   end
 
   def update_tg_username(user, tg_user)
-    user.update(photo_url: tg_user['photo_url'])
-    user.update(username: tg_user['username']) if user.username != tg_user['username']
+    user.update!(
+      photo_url: tg_user['photo_url'],
+      username: tg_user['username'],
+      first_name_raw: tg_user['first_name'],
+      last_name_raw: tg_user['last_name']
+    )
+  rescue StandardError => e
+    Rails.logger.error "Failed to update user #{user.id}: #{e.message}"
   end
 
   def valid_telegram_data?(data, secret_key)

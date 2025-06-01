@@ -1,0 +1,67 @@
+= content_for :title, 'Профиль'
+
+.flex.items-center.gap-3.mb-4
+  .w-7.h-7.rounded-full.overflow-hidden.flex-shrink-0.flex.items-center.justify-center.profile-avatar
+    - if current_user.photo_url.present?
+      = image_tag current_user.photo_url
+    - else
+      = render IconComponent.new name: :profile
+  h2 class="!mb-0" Привет, #{current_user.first_name || current_user.first_name_raw} 👋
+
+.bonus-block
+  .p-5
+    .flex.justify-between data-controller="modal"
+      div
+        div Ваш баланс
+        .bonus-balance #{current_user.bonus_balance}₽
+      .account-tier data-action="click->modal#open"
+        div = current_user.account_tier&.title || 'Гость'
+        = render IconComponent.new name: :info, size: 16
+      .modal-account-tier data-modal-target="modal"
+        .modal-wrapper
+          .modal-title
+            span.font-semibold Уровни программы лояльности
+            .close data-action="click->modal#open"
+              = render IconComponent.new name: :close
+          .modal-body
+            - AccountTier.all.each do |item|
+              .flex.flex-wrap.py-2
+                .w-1/2.pe-1.title = item.title
+                .w-1/2.desc
+                  .mb-2 #{item.bonus_percentage}% кэшбэка
+                  div
+                    - if item.order_threshold == 1
+                      | Присваивается при первом заказе
+                    - else
+                      | Заказов надо сделать – #{item.order_threshold}
+          .mt-1.font-medium class="text-[10px]" Бонусы начисляются при заказах от #{Setting.fetch_value(:bonus_threshold)}₽
+  .bonus-block-footer
+    - left = remaining_to_next_tier
+    - if left.is_a? Integer
+      .flex.justify-between.mb-2.gap-1
+        - total = current_user.next_account_tier&.order_threshold
+        - [*1..total].each do |i|
+          .h-1.bg-white.rounded style="width: #{100 / left}%" class="#{'!bg-white/40' if i > (total - left)}"
+      div = t('orders_to_next_level', count: left)
+    - else
+      div Вы достигли максимального уровня
+
+.main-block.mb-5
+  = link_to product_subscriptions_path, class: "btn btn-big btn-secondary flex justify-between mb-2 items-center" do
+    .flex.justify-center.gap-2.items-center
+      = render IconComponent.new name: :clock
+      span Товары в ожидании
+    = render IconComponent.new name: :right
+  = link_to orders_path, class: 'btn btn-big btn-secondary flex justify-between items-center' do
+    .flex.justify-center.gap-2.items-center
+      = render IconComponent.new name: :cart2
+      span  История заказов
+    = render IconComponent.new name: :right
+  - if current_user.admin_or_moderator_or_manager?
+    a.btn.btn-big.btn-secondary.flex.justify-between.items-center.mt-2 class="!bg-red-100/70 hover:!bg-red-300/50 !text-red-500" href="/admin" data-turbo="false"
+      .flex.justify-center.gap-2.items-center
+        = render IconComponent.new name: :admin
+        span  Админка
+      = render IconComponent.new name: :right
+
+= render '/devise/registrations/edit'

@@ -1,0 +1,11 @@
+.cart id="cart"
+  - if @cart_items.present?
+    #react-cart data-cart-items="#{@cart_items_json}" data-delivery-price="#{Setting.fetch_value(:delivery_price)}" data-cart-id="#{current_user.cart.id}" data-bonus="#{current_user.bonus_balance}" data-percent="#{current_user.account_tier&.bonus_percentage.to_i}" data-bonus-threshold="#{Setting.fetch_value(:bonus_threshold).to_i}"
+    = render 'orders/user'
+  - else
+    .no-items-wrapper
+      .w-full
+        .flex.justify-center.text-gray-no-active.w-full.mb-1
+          = render IconComponent.new name: 'cart-empty', size: 40
+        .no-items-title = t('empty_cart')
+        = link_to 'Вернуться в каталог', root_path, class: "block btn btn-secondary btn-big text-center"

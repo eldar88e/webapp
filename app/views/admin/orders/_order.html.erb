@@ -5,30 +5,27 @@
       <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
     </div>
   </td>
-  <td class="px-6 py-4">
-    <%= order.id %>
-  </td>
+
+  <td class="px-6 py-4"><%= order.id %></td>
+
   <td class="px-6 py-4">
     <span class="<%= order_status_class(order.status) %> text-xs font-medium me-2 px-2.5 py-0.5 rounded">
       <%= I18n.t("order.statuses.#{order.status}") %>
     </span>
   </td>
-  <td class="px-6 py-4">
-    <%= order.total_amount.to_i %>₽
-  </td>
-  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-    <% user = order.user %>
-    <%= link_to user.full_name, admin_user_path(user) %>
+
+  <td class="px-6 py-4"><%= order.total_amount.to_i %>₽</td>
+
+  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+    <%= render partial: 'admin/users/user_name', locals: { user: order.user } %>
   </th>
-  <td class="px-6 py-4">
-    <%= format_date order.created_at %>
-  </td>
-  <td class="px-6 py-4">
-    <%= format_date order.paid_at %>
-  </td>
-  <td class="px-6 py-4">
-    <%= format_date order.shipped_at %>
-  </td>
+
+  <td class="px-6 py-4"><%= format_date order.created_at %></td>
+
+  <td class="px-6 py-4"><%= format_date order.paid_at %></td>
+
+  <td class="px-6 py-4"><%= format_date order.shipped_at %></td>
+
   <td class="flex px-6 py-4">
     <%= link_to edit_admin_order_path(order), data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false },
                 class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' do %>

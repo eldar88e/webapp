@@ -1,9 +1,39 @@
+let handleOutsideClick;
+
 window.closeModal = function() {
-    document.getElementById('modal').style.display = 'none';
+    const modal = document.getElementById('modal');
+    const modalBlock = modal.querySelector('.modal-block');
+
+    modalBlock.classList.toggle("open");
+
+    if (handleOutsideClick) {
+        modal.removeEventListener('click', handleOutsideClick);
+        handleOutsideClick = null;
+    }
+
+    setTimeout(() => {
+        modal.style.display = 'none';
+        document.getElementById('modal-block').innerHTML = '';
+    }, 300);
 };
 
 window.openModal = function() {
-    document.getElementById('modal').style.display = 'block';
+    const modal = document.getElementById('modal');
+    const modalBlock = modal.querySelector('.modal-block');
+
+    modal.style.display = 'flex';
+
+    setTimeout(() => {
+        modalBlock.classList.toggle("open");
+    }, 50);
+
+    handleOutsideClick = function (event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    };
+
+    modal.addEventListener('click', handleOutsideClick);
 };
 
 window.clearModal = function() {

@@ -1,8 +1,14 @@
 class OrdersController < ApplicationController
-  before_action :handle_user_info, only: [:create], if: -> { params[:page].to_i == 1 }
-
   def index
-    @orders = current_user.orders
+    @orders = current_user.orders.order(updated_at: :desc)
+  end
+
+  def show
+    @order = current_user.orders.includes(order_items: { product: :image_attachment }).find(params[:id])
+    render turbo_stream: [
+      turbo_stream.update('modal-block', partial: '/orders/show', locals: { order: @order }),
+      turbo_stream.append(:modal, '<script>openModal();</script>'.html_safe)
+    ]
   end
 
   def create
@@ -16,21 +22,18 @@ class OrdersController < ApplicationController
   private
 
   def process_order
-    service = CreateOrderService.call(current_user)
+    service = CreateOrderService.call(current_user, params[:user][:bonus])
+    return handle_success_notice if service[:success]
 
-    if service[:success]
-      render turbo_stream: [
-        success_notice(t('.success')),
-        turbo_stream.append(:modal, '<script>closeModal();</script>'.html_safe),
-        turbo_stream.append(:modal, '<script>closeMiniApp();</script>'.html_safe)
-      ]
-    else
-      redirect_to products_path, alert: service[:error]
-    end
+    redirect_to products_path, alert: service[:error]
   end
 
-  def handle_user_info
-    render turbo_stream: turbo_stream.update(:modal, partial: '/orders/user')
+  def handle_success_notice
+    render turbo_stream: [
+      success_notice(t('.success')),
+      turbo_stream.append(:modal, '<script>window.location.href = "/";</script>'.html_safe),
+      turbo_stream.append(:modal, '<script>closeMiniApp();</script>'.html_safe)
+    ]
   end
 
   def update_user

@@ -7,17 +7,24 @@
   </td>
   <td class="px-6 py-4"><%= user.id %></td>
 
-  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+  <th scope="row" class="py-4 w-full max-w-44">
     <%= render partial: 'user_name', locals: { user: user } %>
   </th>
 
-  <td class="px-6 py-4"><%= user.phone_number %></td>
+  <td class="px-6 py-4 whitespace-nowrap"><%= user.phone_number %></td>
 
   <td class="px-6 py-4"><%= user.full_address %></td>
 
   <td class="px-6 py-4"><%= user.email %></td>
 
-  <td class="px-6 py-4"><%= format_date user.created_at %></td>
+  <td class="px-6 py-4">
+    <time data-controller="timeago"
+          data-timeago-locale-value="ru"
+          title="<%= format_date user.created_at %>"
+          datetime="<%= user.created_at.iso8601 %>">
+      <%= format_date user.created_at %>
+    </time>
+  </td>
 
   <td class="px-6 py-4"><%= t("roles.#{user.role}") %></td>
 

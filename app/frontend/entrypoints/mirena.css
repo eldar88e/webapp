@@ -3,6 +3,7 @@
 @import "../styles/notice.scss";
 @import "../styles/preloader.scss";
 
+@source "../../../app/components/**/*.html.slim";
 @source "../../../app/views/**/*.html.erb";
-@source "../../../app/views/**/*.rb";
+@source "../../../app/views/**/*.html.slim";
 @source "../../../app/helpers/**/*.rb";

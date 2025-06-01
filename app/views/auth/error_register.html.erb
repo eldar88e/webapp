@@ -1,15 +1,15 @@
-<div class="modal right" style="display: block">
+<div class="main-block">
   <div id="authorisation">
-    <h1 class="title-h">Пожалуйста, подождите, идет авторизация</h1>
+    <h1>Пожалуйста, подождите, идет авторизация</h1>
     <div class="load8">
       <div class="loader">Loading...</div>
     </div>
   </div>
   <div id="redirect-bot" style="display: none;">
-    <h1 class="title-h">Произошла ошибка</h1>
+    <h1>Произошла ошибка</h1>
     <p class="mb-3">Для открытия каталога необходимо сначала активировать бота.</p>
     <ul class="mb-3">
-      <li class="mb-2">1. Откройте <%= link_to "@#{Setting.fetch_value(:tg_main_bot)}", "https://t.me/#{Setting.fetch_value(:tg_main_bot)}", style: "color: rgb(71, 132, 252);" %></li>
+      <li class="mb-2">1. Откройте <%= link_to "@#{Setting.fetch_value(:tg_main_bot)}", "https://t.me/#{Setting.fetch_value(:tg_main_bot)}", style: "color: #48c928;" %></li>
       <li class="mb-2">2. Нажмите на кнопку Start или отправьте команду /start </li>
       <li class="mb-2">3. Перейдите по ссылке, которую пришлёт бот, чтобы открыть каталог</li>
     </ul>

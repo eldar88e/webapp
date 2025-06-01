@@ -1,25 +1,40 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
+    static values = {
+        text: String,
+        timeout: { type: Number, default: 5000 }
+    }
+
     connect() {
         this.startTimer();
     }
 
     startTimer() {
+        const selector = `[data-notices-text-value="${this.textValue}"]`;
+        const notices = document.querySelectorAll(selector);
+        const lastElement = notices[notices.length - 1];
+
+        notices.forEach((element, index) => {
+            if (element !== this.element && element !== lastElement) {
+                this.fadeOutAndRemove(element, 50);
+            }
+        });
+
         this.timer = setInterval(() => {
-            this.fadeOutAndRemove();
-        }, 5000)
+            this.fadeOutAndRemove(this.element);
+        }, this.timeoutValue)
     }
 
-    fadeOutAndRemove() {
-        this.element.classList.add("fade-out");
+    fadeOutAndRemove(element, time = 1000) {
+        element.classList.add("fade-out");
         setTimeout(() => {
-            this.element.remove();
-        }, 1000);
+            element.remove();
+        }, time);
     }
 
     close() {
         clearInterval(this.timer);
-        this.fadeOutAndRemove();
+        this.fadeOutAndRemove(this.element);
     }
 }

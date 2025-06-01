@@ -4,7 +4,7 @@ class Message < ApplicationRecord
   after_create :send_to_telegram, if: -> { !is_incoming? }
   after_create :notify_admin, if: -> { is_incoming? }
 
-  validates :text, presence: true
+  # validates :text, presence: true TODO: add validation text or data
 
   ransacker :user_first_name do
     Arel.sql('users.first_name')

@@ -1,0 +1,45 @@
+h2.mb-5 Заказ №#{order.id}
+
+.main-block.mb-11 style="padding-right: 10px"
+  .font-semibold.mb-3 Товаров: #{order.order_items.sum(&:quantity)}
+  .history-order-items
+    - order.order_items.each do |order_item|
+      .history-order-item
+        .flex.gap-4.items-center
+          .history-img
+            div role="status" class="flex justify-center space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center"
+              .flex.items-center.justify-center.w-full.h-18
+                = render IconComponent.new name: 'no-image', size: 30
+            - if order_item.product.image.attached?
+              .absolute.top-0.left-0.flex.justify-center.items-center.w-full.h-full
+                = image_tag order_item.product.image
+          .mb-3
+            = link_to order_item.product.name, product_path(order_item.product), class: 'brand-color-link'
+            .history-price #{order_item.product.price.to_i}₽/шт
+        .bg-gray-200.text-center.py-1.px-4.rounded-lg
+          .count = "#{order_item.quantity} шт"
+          .price = "#{order_item.price.to_i * order_item.quantity}₽"
+
+- total_product_price = order.order_items.sum { |i| i.price * i.quantity }.to_i
+.mb-5
+  .flex.justify-between
+    .price-title Товары:
+    .font-medium #{total_product_price}₽
+  - unless order.bonus.zero?
+    .flex.justify-between
+      .price-title Скидка:
+      .font-medium.green #{-order.bonus}₽
+  .flex.justify-between
+    .price-title Доставка:
+    .font-medium #{order.has_delivery.present? ? (order.total_amount.to_i - total_product_price) : 0}₽
+  .flex.justify-between
+    div Итоговая стоимость:
+    .end-price #{order.total_amount.to_i}₽
+  - bonus = order.bonus_logs.first&.bonus_amount
+  - if bonus.present? && bonus.positive?
+    .text-center.mt-3
+      .bonus-user-up
+        | Начислено бонусов:
+        span.price #{order.bonus_logs.first.bonus_amount}₽
+
+button.btn.btn-big onclick="closeModal()" Закрыть

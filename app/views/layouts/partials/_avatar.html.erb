@@ -3,7 +3,7 @@
       <%= image_tag user.photo_url %>
   <% else %>
     <div class="w-full h-full bg-<%= %w[red blue green indigo purple].sample %>-800 flex items-center justify-center text-white font-normal">
-      <%= user.first_name&.strip&.first %>
+      <%= user.first_name.present? ? user.first_name.strip.first : (user.first_name_raw&.strip&.first.presence || user.username&.first.presence ) %>
     </div>
   <% end %>
 </div>

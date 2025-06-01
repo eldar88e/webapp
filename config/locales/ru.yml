@@ -24,7 +24,12 @@ ru:
     approve_payment: "Оплата пришла"
     submit_tracking: "Привязать трек"
   mailing_success: "Рассылка успешно запланирована!"
-  empty_cart: "Ваша корзина пуста!"
+  empty_cart: "Корзина пуста"
+  orders_to_next_level:
+    one: "%{count} заказ до следующего уровня"
+    few: "%{count} заказа до следующего уровня"
+    many: "%{count} заказов до следующего уровня"
+    other: "%{count} заказов до следующего уровня"
   order:
     statuses:
       initialized: "Инициализирован"
@@ -117,6 +122,8 @@ ru:
         build: "Корпус"
         postal_code: "Индекс"
         role: "Роль"
+        bonus_balance: "Баланс"
+        order_count: "Счетчик заказов"
       order:
         status: "Статус"
         user: "Клиент"

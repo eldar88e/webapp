@@ -1,0 +1,19 @@
+- content_for :title, 'Поддержка'
+
+h1 = yield(:title)
+
+= link_to 'Задать вопрос', Setting.fetch_value(:tg_support), class: 'mb-6 flex justify-center btn btn-big btn-secondary'
+
+h3.mb-4 Часто задаваемые вопросы
+
+- @questions.each do |question|
+  .main-block.mb-2
+    .question data-controller="faq"
+      .flex.justify-between.items-center
+        .font-semibold.cursor-pointer data-action="click->faq#toggle"
+          = question.question
+        button.open-icon data-action="click->faq#toggle" data-faq-target="arrow"
+          = render IconComponent.new name: :down
+      .answer data-faq-target="answer"
+        .h-4
+        = question.answer

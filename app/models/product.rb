@@ -8,6 +8,8 @@ class Product < ApplicationRecord
   has_many :subscribers, through: :product_subscriptions, source: :user
   has_many :order_items, dependent: :restrict_with_error
   has_many :cart_items, dependent: :restrict_with_error
+  has_many :favorites, dependent: :destroy
+  has_many :favored_by_users, through: :favorites, source: :user
 
   before_validation :normalize_ancestry
 

@@ -64,17 +64,33 @@ body {
         margin-left: 0;
       }
 
-      .wraper-menu {
+      .wrapper-menu {
         border-right-width: 1px;
 
         .main-sidebar {
+          height: 90vh;
 
           .slidebar-menu {
+            .count-main-menu {
+              background-color: white;
+              color: black;
+              border-radius: 8px;
+              display: flex;
+              min-width: 16px;
+              height: 16px;
+              justify-content: center;
+              align-items: center;
+              font-size: 10px;
+              font-weight: 600;
+              margin-top: -12px;
+              margin-left: -5px;
+              padding: 0 2px;
+            }
+
             li {
               padding-top: .5rem;
 
               a {
-                --tw-text-opacity: 1;
                 font-weight: 400;
                 font-size: 1rem;
                 line-height: 1.5rem;
@@ -82,43 +98,33 @@ body {
                 border-radius: .5rem;
                 align-items: center;
                 display: flex;
+                transition: all 0.5s;
 
                 &.active {
-                  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+                  @apply bg-gray-100 dark:bg-gray-700;
 
-                  @media (prefers-color-scheme: dark) {
-                    background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+                  &:hover {
+                    @apply bg-gray-200 dark:bg-gray-600;
                   }
                 }
 
                 svg {
-                  transition-duration: 75ms;
-                  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
-                  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-                  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
-                  transition-timing-function: cubic-bezier(.4,0,.2,1);
-                  --tw-text-opacity: 1;
                   width: 1.5rem;
                   height: 1.5rem;
-                  color: rgb(107 114 128 / var(--tw-text-opacity));
-
+                  color: rgb(107 114 128);
                   @media (prefers-color-scheme: dark) {
-                    color: rgb(156 163 175 / var(--tw-text-opacity));
+                    color: rgb(156 163 175);
                   }
                 }
 
                 &:hover {
-                  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
-
-                  @media (prefers-color-scheme: dark) {
-                    background-color: rgb(55 65 81 / var(--tw-bg-opacity));
-                  }
+                  @apply bg-gray-100 dark:bg-gray-700;
 
                   svg {
-                    color: rgb(17 24 39 / var(--tw-text-opacity));
+                    color: rgb(17 24 39);
 
                     @media (prefers-color-scheme: dark) {
-                      color: rgb(255 255 255 / var(--tw-text-opacity));
+                      color: rgb(255 255 255);
                     }
                   }
                 }
@@ -318,6 +324,21 @@ body.aside-hide {
         padding-left: 4rem;
       }
     }
+
+    .sidebar {
+      .wrapper-menu {
+        .main-sidebar {
+          .slidebar-menu {
+            .count-main-menu {
+              margin-left: -10px;
+              @media (max-width: 1024px) {
+                margin-left: -3px;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 
@@ -359,5 +380,19 @@ body.aside-hide {
     button {
       @apply bottom-1 right-1;
     }
+  }
+}
+
+.admin-form {
+  label {
+    @apply block mb-2 text-sm font-medium text-gray-900 dark:text-white;
+  }
+
+  input[type="number"], input[type="text"], input[type="file"], select, textarea {
+    @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+  }
+
+  input[type="submit"] {
+    @apply text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800
   }
 }
