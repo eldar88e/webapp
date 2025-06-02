@@ -1,5 +1,5 @@
 class CartItemsController < ApplicationController
-  before_action :set_cart, :set_cart_items
+  before_action :set_cart_items
   before_action :set_cart_item, only: :update
   before_action :set_new_quantity, only: :update
 
@@ -65,12 +65,8 @@ class CartItemsController < ApplicationController
     end
   end
 
-  def set_cart
-    @cart = current_user.cart
-  end
-
   def set_cart_items
-    @cart_items = @cart.cart_items.order(:created_at).includes(:product)
+    @cart_items = cart_items.order(:created_at).includes(:product)
   end
 
   def set_cart_item

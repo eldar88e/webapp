@@ -24,6 +24,6 @@ module MainConcerns
   end
 
   def settings
-    Setting.all_cached
+    @settings ||= Setting.all_cached
   end
 end

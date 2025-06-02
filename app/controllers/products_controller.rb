@@ -1,13 +1,11 @@
 class ProductsController < ApplicationController
   skip_before_action :check_authenticate_user!, only: :index
-  before_action :set_btn_link, :login, :available_products, only: :index
+  before_action :set_btn_link, :login, only: :index
 
   def index
     redirect_to "/products/#{Setting.fetch_value(:mirena_id)}" if ENV.fetch('HOST').include?('mirena')
 
-    # @q_products      = @products.ransack(params[:q])
-    # @pagy, @products = pagy(@q_products.result, limit: 5)
-    @products = params[:q].nil? ? @products : @q_products.result
+    @products = params[:q].nil? ? available_products : @q_products.result
     # @pagy, @products = pagy(@products, limit: 10)
     respond_to do |format|
       format.html

@@ -5,12 +5,17 @@ module ApplicationHelper
     current_user.email.match?(/tgapp.online|example.com/) ? '' : current_user.email
   end
 
+  def products_animation
+    product_id = params[:category_id].presence || Setting.fetch_value(:default_product_id)
+    Rails.cache.fetch("parent_#{product_id}") { available_products.pluck(:name) }
+  end
+
   def cart_items_total
-    current_user.cart.cart_items.sum(&:quantity)
+    cart_items.sum(&:quantity)
   end
 
   def quantity_curt_item(id)
-    current_user.cart.cart_items.find_by(product_id: id)&.quantity.to_i
+    cart_items.find_by(product_id: id)&.quantity.to_i
   end
 
   def storage_path(attach, variant = nil)
@@ -27,7 +32,9 @@ module ApplicationHelper
   end
 
   def available_categories
-    Product.available_categories(Setting.fetch_value(:root_product_id))
+    Rails.cache.fetch("categories_#{settings[:root_product_id]}") do
+      Product.available_categories(settings[:root_product_id])
+    end
   end
 
   def minio_storage_path(blob)

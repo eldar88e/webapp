@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   include Pagy::Backend
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   # allow_browser versions: :modern
-  helper_method :available_products
+  helper_method :available_products, :favorite_ids, :cart_items, :current_cart
 
   private
 
@@ -18,23 +18,29 @@ class ApplicationController < ActionController::Base
   end
 
   def product_search
-    @q_products = Product.includes(:image_attachment).available
-                         .order(stock_quantity: :desc, created_at: :desc)
-                         .ransack(params[:q])
+    @q_products = available_products.ransack(params[:q])
+  end
+
+  def cart_items
+    @cart_items ||= current_cart.cart_items
+  end
+
+  def favorite_ids
+    @favorite_ids ||= current_user.favorite_products.pluck(:product_id).to_set
+  end
+
+  def current_cart
+    @current_cart ||= current_user.cart
   end
 
   def available_products
-    return @products if @products.present?
-
     product_id = params[:category_id].presence || Setting.fetch_value(:default_product_id)
     parent     = Product.find_by(id: product_id)
-
-    return @products = Product.none if parent.blank?
-
-    @products = parent.children
-                      .includes(:image_attachment)
-                      .available
-                      .order(stock_quantity: :desc, created_at: :desc)
+    if parent
+      parent.children.available.order(stock_quantity: :desc, created_at: :desc).includes(:image_attachment)
+    else
+      Product.none
+    end
   end
 
   def product_turbo_format

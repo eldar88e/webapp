@@ -2,13 +2,13 @@ class CartsController < ApplicationController
   include ApplicationHelper
 
   def index
-    @cart_items = current_user.cart.cart_items.includes(product: [:image_attachment]).order(:created_at)
+    @cart_items = cart_items.includes(product: [:image_attachment]).order(:created_at)
     # @pagy, @products = pagy(@products, limit: 5)
     form_cart_items_json
   end
 
   def destroy
-    current_user.cart.cart_items.destroy_all
+    cart_items.destroy_all
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.replace(:cart, partial: '/carts/cart') }
       format.json { render json: { success: true }, status: :ok }

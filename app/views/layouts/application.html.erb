@@ -47,7 +47,7 @@
       </div>
     </main>
     <%= turbo_frame_tag 'cart-summary' do %>
-      <%= render CartComponent.new cart: current_user.cart if current_user %>
+      <%= render CartComponent.new cart: current_cart if current_user %>
     <% end %>
 
     <%= render partial: '/layouts/partials/footer' %>

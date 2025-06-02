@@ -1,5 +1,5 @@
 = turbo_frame_tag "favorite-btn-#{product.id}"
-  - if current_user.favorite_products.include?(product)
+  - if favorite_ids.include?(product.id)
     = button_to product_favorites_path(product), method: :delete, class: 'fav-btn favorite' do
       = render IconComponent.new name: :favorite
   - else
