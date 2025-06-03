@@ -43,13 +43,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def product_turbo_format
-    render turbo_stream: [
-      turbo_stream.replace(:pagination, partial: '/products/pagination'),
-      turbo_stream.append(:products, partial: '/products/products')
-    ]
-  end
-
   def check_authenticate_user!
     redirect_to_telegram unless current_user
   end

@@ -9,7 +9,10 @@ class ProductsController < ApplicationController
     # @pagy, @products = pagy(@products, limit: 10)
     respond_to do |format|
       format.html
-      format.turbo_stream { product_turbo_format }
+      format.turbo_stream do
+        render turbo_stream: [turbo_stream.append(:products, partial: '/products/products')]
+        # turbo_stream.replace(:pagination, partial: '/products/pagination')
+      end
     end
   end
 

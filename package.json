@@ -6,7 +6,6 @@
     "cover 99.5%"
   ],
   "dependencies": {
-    "esbuild": "^0.25.5",
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.12",
     "@tailwindcss/vite": "^4.1.4",
@@ -15,13 +14,14 @@
     "@vitejs/plugin-react": "^4.4.1",
     "apexcharts": "^4.2.0",
     "autoprefixer": "^10.4.21",
+    "esbuild": "^0.25.5",
     "i18n-js": "4.5.1",
+    "postcss": "^8.5.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "rollup": "^4.40.0",
     "sass": "^1.86.3",
     "sass-embedded": "^1.86.3",
-    "postcss": "^8.5.4",
     "tailwindcss": "^4.1.4",
     "timeago.js": "^4.0.2",
     "typescript": "^5.8.3",
