@@ -56,16 +56,12 @@ export default function Cart({ items, cartId }: { items: CartItem[]; cartId: num
             }
         });
 
-        if (response.ok) {
-            // window.location.reload();
-            setCart([]);
-        } else {
-            setNotice("Ошибка при очистке корзины");
-        }
+        response.ok ? setCart([]) : setNotice("Ошибка при очистке корзины");
     }
 
     useEffect(() => {
         if (!notice) return;
+
         const timeout = setTimeout(() => setNotice(null), 5000);
         return () => clearTimeout(timeout);
     }, [notice]);
@@ -80,10 +76,7 @@ export default function Cart({ items, cartId }: { items: CartItem[]; cartId: num
         window.sharedCartInfo = { useDelivery, totalPrice }
         if (cart.length === 0) {
             const form = document.getElementById('user-form');
-            console.log(form)
-            if (form) {
-                form.classList.add('hidden');
-            }
+            if (form) form.classList.add('hidden');
         }
         window.dispatchEvent(new CustomEvent("cart:updated"))
     }, [cart])
@@ -103,11 +96,7 @@ export default function Cart({ items, cartId }: { items: CartItem[]; cartId: num
     ) : (
         <div className="main-block mb-5">
             {notice && (
-                <NoticePortal
-                    message={notice}
-                    type="danger"
-                    onClose={() => setNotice(null)}
-                />
+                <NoticePortal message={notice} type="danger" onClose={() => setNotice(null)} />
             )}
             <div className="cart-items" id="cart_items">
                 <div className="flex justify-between items-center mb-3">
@@ -126,11 +115,7 @@ export default function Cart({ items, cartId }: { items: CartItem[]; cartId: num
                 </div>
 
                 {cart.map(item => (
-                    <CartItem
-                        key={item.id}
-                        item={item}
-                        onUpdateQuantity={updateQuantity}
-                    />
+                    <CartItem key={item.id} item={item} onUpdateQuantity={updateQuantity} />
                 ))}
             </div>
         </div>
