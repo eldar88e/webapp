@@ -15,7 +15,6 @@ type CartItem = {
 export default function Cart({ items, cartId }: { items: CartItem[]; cartId: number }) {
     const [cart, setCart] = useState(items)
     const [notice, setNotice] = useState<string | null>(null);
-    const [isCartEmpty, setIsCartEmpty] = useState(cart.length === 0);
 
     const updateQuantity = async (id: number, direction: 'up' | 'down') => {
         const params = new URLSearchParams()
@@ -60,7 +59,6 @@ export default function Cart({ items, cartId }: { items: CartItem[]; cartId: num
         if (response.ok) {
             // window.location.reload();
             setCart([]);
-            setIsCartEmpty(true);
         } else {
             setNotice("Ошибка при очистке корзины");
         }
@@ -72,26 +70,25 @@ export default function Cart({ items, cartId }: { items: CartItem[]; cartId: num
         return () => clearTimeout(timeout);
     }, [notice]);
 
-    const totalQuantity = useMemo(
-        () => cart.reduce((sum, item) => sum + item.quantity, 0),
-        [cart]
-    )
-
-    useEffect(() => {
-        if (totalQuantity === 0) {
-            setCart([]);
-            setIsCartEmpty(true);
-        }
-    }, [totalQuantity])
+    const totalQuantity = useMemo(() => {
+        return cart.reduce((sum, item) => sum + item.quantity, 0);
+    }, [cart]);
 
     useEffect(() => {
         const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
         const useDelivery = cart.length === 1 && cart[0].quantity === 1
         window.sharedCartInfo = { useDelivery, totalPrice }
+        if (cart.length === 0) {
+            const form = document.getElementById('user-form');
+            console.log(form)
+            if (form) {
+                form.classList.add('hidden');
+            }
+        }
         window.dispatchEvent(new CustomEvent("cart:updated"))
     }, [cart])
 
-    return isCartEmpty ? (
+    return cart.length === 0 ? (
         <div className="no-items-wrapper">
             <div className="w-full">
                 <div className="flex justify-center text-gray-no-active w-full mb-1">
@@ -119,7 +116,7 @@ export default function Cart({ items, cartId }: { items: CartItem[]; cartId: num
                         className="btn-clear-cart"
                         onClick={() => handleClearCart(cartId)}
                     >
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1 active:text-red-600">
                             Очистить корзину
                             <svg width={16} height={16} fill="currentColor">
                                 <use href={`${iconsUrl}#trash`} />
