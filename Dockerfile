@@ -29,7 +29,7 @@ ENV BUNDLE_DEPLOYMENT="1" \
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
-RUN gem update --system 3.6.8
+RUN gem update --system 3.6.9
 RUN gem install bundler -v $(tail -n 1 Gemfile.lock)
 RUN bundle check || bundle install
 RUN bundle clean --force
