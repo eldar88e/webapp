@@ -1,0 +1,7 @@
+tr id="#{dom_id bonus_log}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+  th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+    = render partial: 'admin/users/user_name', locals: { user: bonus_log.user }
+  td.px-6.py-4.whitespace-normal = bonus_log.bonus_amount
+  td.px-6.py-4.whitespace-normal = bonus_log.reason
+  td.px-6.py-4.whitespace-normal = format_date bonus_log.created_at
+  td.px-6.py-4.whitespace-normal = "#{bonus_log.source_type} - #{bonus_log.source_id}"

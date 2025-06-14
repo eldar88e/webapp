@@ -15,4 +15,5 @@ namespace :admin do
   resources :bank_cards, only: %i[index new create edit update]
   resources :attachments, only: %i[destroy]
   resources :answers, only: :index
+  resources :bonus_logs, only: :index
 end

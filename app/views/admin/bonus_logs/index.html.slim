@@ -1,0 +1,16 @@
+.pt-6.px-4
+  h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-4" Бонусы
+.pt-6
+  .relative.overflow-x-auto.shadow-md.sm:rounded-lg
+    table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+        tr
+          th.px-6.py-3 scope="col" ФИО
+          th.px-6.py-3 scope="col" Бонус
+          th.px-6.py-3 scope="col" Цель
+          th.px-6.py-3 scope="col" Создание
+          th.px-6.py-3 scope="col" Инициатор
+      tbody
+        = render @bonus_logs
+
+  = render partial: '/layouts/partials/admin/pagy'
