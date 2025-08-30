@@ -1,5 +1,5 @@
 class TelegramJob < ApplicationJob
-  queue_as :default
+  queue_as :telegram_notice
 
   def perform(**args)
     if args[:method] == 'delete_msg'

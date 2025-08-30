@@ -1,5 +1,7 @@
-:concurrency: 4
+:concurrency: 5
 :queues:
-  - default
   - telegram_bot
+  - telegram_notice
+  - default
+  - rollbar
   - ahoy
