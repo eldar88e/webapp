@@ -88,7 +88,7 @@ export default function CartSummary({
       <div className="mb-5">
         <div className="flex justify-between">
           <div className="price-title">Товары:</div>
-          <div className="font-medium">{totalPrice}₽</div>
+          <div className="font-medium" id="cart-total-price">{totalPrice}₽</div>
         </div>
         <div className="flex justify-between">
           <div className="price-title">Скидка:</div>
@@ -96,11 +96,11 @@ export default function CartSummary({
         </div>
         <div className="flex justify-between">
           <div className="price-title">Доставка:</div>
-          <div className="font-medium">{deliveryFee}₽</div>
+          <div className="font-medium" id="cart-delivery-price">{deliveryFee}₽</div>
         </div>
         <div className="flex justify-between">
           <div className="price-title">Итоговая стоимость:</div>
-          <div className="end-price">{final}₽</div>
+          <div className="end-price" id="cart-final-price">{final}₽</div>
         </div>
         <div style={{ height: "20px", width: "100%" }}>
           {appliedBonus === 0 && percent > 0 && totalPrice > bonusThreshold && (
