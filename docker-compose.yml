@@ -29,6 +29,8 @@ services:
     depends_on:
       - pg
       - redis
+    environment:
+      SIDEKIQ_QUEUE: telegram_bot
     command: ['bundle', 'exec', 'sidekiq']
 #    command: >
 #      sh -c "SIDEKIQ_QUEUE=telegram_bot bundle exec sidekiq -q telegram_bot -c 1 &
