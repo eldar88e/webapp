@@ -3,7 +3,7 @@ import ApexCharts from "apexcharts";
 
 export default class extends Controller {
   static targets = ["chart"];
-  static values = { time: { type: Number, default: 200 } }
+  static values = { time: { type: Number, default: 200 } };
 
   connect() {
     setTimeout(() => {
@@ -12,22 +12,22 @@ export default class extends Controller {
   }
 
   last_week() {
-      this.fetchData();
+    this.fetchData();
   }
 
   last_month() {
-      this.fetchData('&period=month');
+    this.fetchData("&period=month");
   }
 
   last_year() {
-      this.fetchData('&period=year');
+    this.fetchData("&period=year");
   }
 
   all() {
-      this.fetchData('&period=all');
+    this.fetchData("&period=all");
   }
 
-  async fetchData(params='') {
+  async fetchData(params = "") {
     const response = await fetch(`/admin/analytics?type=revenue${params}`);
     const data = await response.json();
 
@@ -41,12 +41,12 @@ export default class extends Controller {
         height: 350,
       },
       stroke: {
-        curve: 'smooth',
+        curve: "smooth",
       },
       markers: {
         size: 6,
-        colors: ['#0f80de'],
-        strokeColors: '#eef7ff',
+        colors: ["#0f80de"],
+        strokeColors: "#eef7ff",
         strokeWidth: 2,
         hover: {
           size: 8,
@@ -54,7 +54,7 @@ export default class extends Controller {
       },
       grid: {
         show: true, // Показывать сетку
-        borderColor: '#374151', // Цвет линий сетки
+        borderColor: "#374151", // Цвет линий сетки
         strokeDashArray: 1, // Длина штрихов (пунктир)
       },
       series: [
@@ -68,21 +68,21 @@ export default class extends Controller {
         title: {},
         labels: {
           style: {
-            colors: 'rgb(156, 163, 175);',
-            fontSize: '14px',
+            colors: "rgb(156, 163, 175);",
+            fontSize: "14px",
             fontWeight: 700,
           },
         },
       },
       yaxis: {
-        title: { },
+        title: {},
         labels: {
           formatter: function (value) {
             return `${value} ₽`;
           },
           style: {
-            colors: 'rgb(156, 163, 175);',
-            fontSize: '14px',
+            colors: "rgb(156, 163, 175);",
+            fontSize: "14px",
             fontWeight: 700,
           },
         },
@@ -96,7 +96,7 @@ export default class extends Controller {
       },
     };
 
-    this.chartTarget.textContent = '';
+    this.chartTarget.textContent = "";
     const chart = new ApexCharts(this.chartTarget, options);
     chart.render();
   }

@@ -1,30 +1,30 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static values = { id: { type: Number } }
+  static values = { id: { type: Number } };
 
-  connect () {
-  }
+  connect() {}
 
-  async delete (event) {
-    let del = confirm('Вы уверены, что хотите удалить это вложение?')
+  async delete(event) {
+    let del = confirm("Вы уверены, что хотите удалить это вложение?");
     if (del) {
-      const item = event.target.closest('.edit-image-preview')
-      const url = `/admin/attachments/${this.idValue}`
+      const item = event.target.closest(".edit-image-preview");
+      const url = `/admin/attachments/${this.idValue}`;
       console.log(this.idValue);
       console.log(url);
 
       try {
         await fetch(url, {
-          method: 'DELETE',
+          method: "DELETE",
           headers: {
-            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
-            'Accept': 'application/json'
-          }
-        })
-        item.remove()
+            "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')
+              .content,
+            Accept: "application/json",
+          },
+        });
+        item.remove();
       } catch (error) {
-        console.error('Error deleting attachment:', error)
+        console.error("Error deleting attachment:", error);
       }
     }
   }

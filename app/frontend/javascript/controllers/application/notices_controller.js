@@ -1,40 +1,40 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-    static values = {
-        text: String,
-        timeout: { type: Number, default: 5000 }
-    }
+  static values = {
+    text: String,
+    timeout: { type: Number, default: 5000 },
+  };
 
-    connect() {
-        this.startTimer();
-    }
+  connect() {
+    this.startTimer();
+  }
 
-    startTimer() {
-        const selector = `[data-notices-text-value="${this.textValue}"]`;
-        const notices = document.querySelectorAll(selector);
-        const lastElement = notices[notices.length - 1];
+  startTimer() {
+    const selector = `[data-notices-text-value="${this.textValue}"]`;
+    const notices = document.querySelectorAll(selector);
+    const lastElement = notices[notices.length - 1];
 
-        notices.forEach((element, index) => {
-            if (element !== this.element && element !== lastElement) {
-                this.fadeOutAndRemove(element, 50);
-            }
-        });
+    notices.forEach((element, index) => {
+      if (element !== this.element && element !== lastElement) {
+        this.fadeOutAndRemove(element, 50);
+      }
+    });
 
-        this.timer = setInterval(() => {
-            this.fadeOutAndRemove(this.element);
-        }, this.timeoutValue)
-    }
+    this.timer = setInterval(() => {
+      this.fadeOutAndRemove(this.element);
+    }, this.timeoutValue);
+  }
 
-    fadeOutAndRemove(element, time = 1000) {
-        element.classList.add("fade-out");
-        setTimeout(() => {
-            element.remove();
-        }, time);
-    }
+  fadeOutAndRemove(element, time = 1000) {
+    element.classList.add("fade-out");
+    setTimeout(() => {
+      element.remove();
+    }, time);
+  }
 
-    close() {
-        clearInterval(this.timer);
-        this.fadeOutAndRemove(this.element);
-    }
+  close() {
+    clearInterval(this.timer);
+    this.fadeOutAndRemove(this.element);
+  }
 }

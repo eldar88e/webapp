@@ -1,4 +1,4 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus";
 //import { Turbo } from "@hotwired/turbo-rails"
 
 export default class extends Controller {
@@ -6,6 +6,6 @@ export default class extends Controller {
     setTimeout(() => {
       // Turbo.visit("/carts");
       window.location.href = "/carts";
-    }, 100)
+    }, 100);
   }
 }

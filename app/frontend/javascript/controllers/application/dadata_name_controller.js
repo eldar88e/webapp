@@ -1,4 +1,4 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
   static targets = ["suggestions", "name"];
@@ -10,24 +10,24 @@ export default class extends Controller {
 
   search(event) {
     const query = event.target.value.trim();
-    this.formConnection(query, 'surname');
+    this.formConnection(query, "surname");
   }
 
   searchName(event) {
     const query = event.target.value.trim();
-    this.formConnection(query, 'name');
+    this.formConnection(query, "name");
   }
 
   searchLast(event) {
     const query = event.target.value.trim();
-    this.formConnection(query, 'patronymic');
+    this.formConnection(query, "patronymic");
   }
 
   formConnection(query, type) {
     if (!query) {
       this.suggestionsTarget.style.display = "none";
       this.suggestionsTarget.parentElement.style.display = "none";
-      this.suggestionsTarget.textContent = '';
+      this.suggestionsTarget.textContent = "";
       return;
     }
     if (this.fio[type] === query) {
@@ -37,7 +37,7 @@ export default class extends Controller {
     }
 
     this.fio[type] = query;
-    this.fetchDadata(query, type)
+    this.fetchDadata(query, type);
   }
 
   fetchDadata(query, type) {
@@ -47,25 +47,30 @@ export default class extends Controller {
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json",
-        "Authorization": "Token " + dadata_token
+        Accept: "application/json",
+        Authorization: "Token " + dadata_token,
       },
-      body: JSON.stringify({ query: query })
+      body: JSON.stringify({ query: query }),
     };
 
     fetch(url, options)
-        .then(response => {
-          if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+      .then((response) => {
+        if (!response.ok)
+          throw new Error(`HTTP error! Status: ${response.status}`);
 
-          return response.json();
-        })
-        .then(data => { this.pullData(data.suggestions, type); })
-        .catch(error => { console.error('Error fetching suggestions:', error); });
+        return response.json();
+      })
+      .then((data) => {
+        this.pullData(data.suggestions, type);
+      })
+      .catch((error) => {
+        console.error("Error fetching suggestions:", error);
+      });
   }
 
   pullData(data, type) {
     const suggestions = this.suggestionsTarget;
-    suggestions.textContent = '';
+    suggestions.textContent = "";
 
     if (data.length > 0) {
       const filteredData = this.filterData(data, type);
@@ -89,11 +94,16 @@ export default class extends Controller {
   }
 
   filterData(data, type) {
-    if (type === 'surname') window.gender = null;
+    if (type === "surname") window.gender = null;
 
-    return data.filter(item => {
+    return data.filter((item) => {
       if (!item["data"][type]) return false;
-      if (window.gender && item["data"]["gender"] !== "UNKNOWN" && item["data"]["gender"] !== window.gender) return false;
+      if (
+        window.gender &&
+        item["data"]["gender"] !== "UNKNOWN" &&
+        item["data"]["gender"] !== window.gender
+      )
+        return false;
 
       return true;
     });
@@ -106,26 +116,28 @@ export default class extends Controller {
     suggestions.appendChild(suggestionElement);
   }
 
-  createSuggestionItem(content='') {
+  createSuggestionItem(content = "") {
     let suggestionElement = document.createElement("div");
     suggestionElement.classList.add("suggestion-item");
-    suggestionElement.textContent = content
-    return suggestionElement
+    suggestionElement.textContent = content;
+    return suggestionElement;
   }
 
   setName(event) {
     this.nameTarget.value = event.target.textContent;
     window.gender ??= event.target.dataset.gender;
     const nameValue = this.nameTarget.getAttribute("name");
-    nameValue === "user[middle_name]" ? this.fio.surname = this.nameTarget.value : this.fio.name = this.nameTarget.value;
+    nameValue === "user[middle_name]"
+      ? (this.fio.surname = this.nameTarget.value)
+      : (this.fio.name = this.nameTarget.value);
     this.suggestionsTarget.style.display = "none";
     this.suggestionsTarget.parentElement.style.display = "none";
   }
 
   hidden() {
-    setTimeout( () => {
+    setTimeout(() => {
       this.suggestionsTarget.style.display = "none";
       this.suggestionsTarget.parentElement.style.display = "none";
-    }, 300)
+    }, 300);
   }
 }

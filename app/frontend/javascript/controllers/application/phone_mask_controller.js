@@ -1,4 +1,4 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
   connect() {
@@ -14,7 +14,7 @@ export default class extends Controller {
   startMask() {
     if (this.element.value.trim().length === 0) {
       this.check();
-      this.element.value = "+7 ("
+      this.element.value = "+7 (";
     }
   }
 
@@ -30,7 +30,7 @@ export default class extends Controller {
     const length = rawValue.length;
     let formattedValue = "";
 
-    if (length > 0) formattedValue += "+7"
+    if (length > 0) formattedValue += "+7";
     if (length > 1) formattedValue += " (" + rawValue.slice(1, 4);
     if (length > 4) formattedValue += ") " + rawValue.slice(4, 7);
     if (length > 7) formattedValue += "-" + rawValue.slice(7, 9);

@@ -3,11 +3,11 @@ import ApexCharts from "apexcharts";
 
 export default class extends Controller {
   static targets = ["chart"];
-  static values = { time: { type: Number, default: 1000 } }
+  static values = { time: { type: Number, default: 1000 } };
 
   connect() {
     setTimeout(() => {
-      this.last_week()
+      this.last_week();
     }, this.timeValue);
   }
 
@@ -16,18 +16,18 @@ export default class extends Controller {
   }
 
   last_month() {
-    this.fetchData('&period=month');
+    this.fetchData("&period=month");
   }
 
   last_year() {
-    this.fetchData('&period=year');
+    this.fetchData("&period=year");
   }
 
   all() {
-    this.fetchData('&period=all');
+    this.fetchData("&period=all");
   }
 
-  async fetchData(params='') {
+  async fetchData(params = "") {
     const response = await fetch(`/admin/analytics?type=sold${params}`);
     const data = await response.json();
 
@@ -41,8 +41,8 @@ export default class extends Controller {
         height: 320,
       },
       stroke: {
-        curve: 'smooth',
-        colors: ['#1C64F2'],
+        curve: "smooth",
+        colors: ["#1C64F2"],
       },
       fill: {
         type: "gradient", // Используем градиент для заливки
@@ -72,8 +72,8 @@ export default class extends Controller {
         },
         labels: {
           style: {
-            colors: 'rgb(156, 163, 175);',
-            fontSize: '14px',
+            colors: "rgb(156, 163, 175);",
+            fontSize: "14px",
             fontWeight: 700,
           },
         },
@@ -87,7 +87,7 @@ export default class extends Controller {
       },
     };
 
-    this.chartTarget.textContent = '';
+    this.chartTarget.textContent = "";
     const chart = new ApexCharts(this.chartTarget, options);
     chart.render();
   }

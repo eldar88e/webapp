@@ -4,7 +4,7 @@ import Localization from "./localization";
 
 export default class extends Controller {
   static targets = ["chart"];
-  static values = { time: { type: Number, default: 1400 } }
+  static values = { time: { type: Number, default: 1400 } };
 
   connect() {
     setTimeout(() => {
@@ -18,22 +18,22 @@ export default class extends Controller {
   }
 
   async last_month() {
-    await this.fetchRevenueData('&period=month');
+    await this.fetchRevenueData("&period=month");
   }
 
   async last_year() {
-    await this.fetchRevenueData('&period=year');
+    await this.fetchRevenueData("&period=year");
   }
 
   async all() {
-    await this.fetchRevenueData('&period=all');
+    await this.fetchRevenueData("&period=all");
   }
 
-  async fetchRevenueData(params='') {
+  async fetchRevenueData(params = "") {
     const response = await fetch(`/admin/analytics?type=repeat${params}`);
     const data = await response.json();
 
-    await this.renderChart(data[0], data[1]-data[0]);
+    await this.renderChart(data[0], data[1] - data[0]);
   }
 
   async renderChart(repeat, one) {
@@ -56,8 +56,8 @@ export default class extends Controller {
           },
           size: "100%",
           dataLabels: {
-            offset: -25
-          }
+            offset: -25,
+          },
         },
       },
       labels: ["Повторные", "Единоразовые"],
@@ -85,7 +85,7 @@ export default class extends Controller {
       },
     };
 
-    this.chartTarget.textContent = '';
+    this.chartTarget.textContent = "";
     const chart = new ApexCharts(this.chartTarget, options);
 
     try {

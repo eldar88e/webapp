@@ -15,7 +15,10 @@ export default class extends Controller {
   handleDocumentClick(event) {
     if (!this.element.contains(event.target)) {
       this.menuTarget.classList.add("hidden");
-      document.removeEventListener("click", this.handleDocumentClick.bind(this));
+      document.removeEventListener(
+        "click",
+        this.handleDocumentClick.bind(this),
+      );
     }
   }
 
@@ -28,18 +31,20 @@ export default class extends Controller {
   update(event) {
     event.preventDefault(); // Отменить переход по ссылке
     const selectedText = event.target.textContent.trim(); // Текст выбранного пункта
-    this.element.querySelector('button').textContent = selectedText; // Обновляем текст кнопки
+    this.element.querySelector("button").textContent = selectedText; // Обновляем текст кнопки
     this.menuTarget.classList.add("hidden"); // Скрыть меню
   }
 
   closeOtherMenus() {
-    document.querySelectorAll("[data-controller='dropdown']").forEach((dropdown) => {
-      if (dropdown !== this.element) {
-        const menu = dropdown.querySelector("[data-dropdown-target='menu']");
-        if (menu && !menu.classList.contains("hidden")) {
-          menu.classList.add("hidden");
+    document
+      .querySelectorAll("[data-controller='dropdown']")
+      .forEach((dropdown) => {
+        if (dropdown !== this.element) {
+          const menu = dropdown.querySelector("[data-dropdown-target='menu']");
+          if (menu && !menu.classList.contains("hidden")) {
+            menu.classList.add("hidden");
+          }
         }
-      }
-    });
+      });
   }
 }
