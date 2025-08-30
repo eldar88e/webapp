@@ -1,9 +1,9 @@
 require 'telegram/bot'
 
 class TelegramBotWorker
-  sidekiq_options queue: 'telegram_bot', retry: true
-
   include Sidekiq::Worker
+
+  sidekiq_options queue: 'telegram_bot', retry: true
 
   TRACK_CACHE_PERIOD = 5.minutes
 
