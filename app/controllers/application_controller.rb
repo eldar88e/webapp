@@ -1,8 +1,9 @@
 class ApplicationController < ActionController::Base
   include MainConcerns
+  include Pagy::Backend
+
   before_action :check_authenticate_user!, :product_search
   skip_before_action :check_authenticate_user!, if: :devise_confirmation_controller?
-  include Pagy::Backend
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   # allow_browser versions: :modern
   helper_method :available_products, :favorite_ids, :cart_items, :current_cart

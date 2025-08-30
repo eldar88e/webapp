@@ -102,7 +102,7 @@ class Order < ApplicationRecord
 
   # apply_delivery
   def update_total_amount
-    self.has_delivery = order_items.count == 1 && order_items.first.quantity == 1
+    self.has_delivery = order_items.one? && order_items.first.quantity == 1
     total_price_without_bonus = total_price
     self.total_amount = bonus.zero? ? total_price_without_bonus : total_price_without_bonus - bonus
   end
