@@ -1,4 +1,5 @@
 class PwaController < ApplicationController
+  skip_before_action :check_authenticate_user!
   skip_forgery_protection
   layout false, except: :offline
 
