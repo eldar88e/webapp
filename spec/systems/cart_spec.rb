@@ -22,6 +22,7 @@ RSpec.describe "Cart", type: :system do
     it "without delivery" do
       cart_items = user.cart.cart_items
       find("#cart-item-#{cart_items.first.id} button:has(.minus-ico)", wait: 3).click
+      sleep 0.1
       find("#cart-item-#{cart_items.second.id} button:has(.minus-ico)").click
 
       cart_items.reload
@@ -37,7 +38,9 @@ RSpec.describe "Cart", type: :system do
     it "with delivery" do
       cart_items = user.cart.cart_items
       find("#cart-item-#{cart_items.first.id} button:has(.plus-ico)", wait: 3).click
+      sleep 0.1
       find("#cart-item-#{cart_items.second.id} button:has(.plus-ico)").click
+      sleep 0.1
       find("#cart-item-#{cart_items.first.id} button:has(.minus-ico)").click
 
       cart_items.reload
