@@ -38,6 +38,10 @@ Rails.application.routes.draw do
     patch '/change_email', to: 'users/registrations#change_email', as: :change_email
   end
 
+  get 'service-worker' => 'pwa#service_worker', as: :pwa_service_worker
+  get 'manifest.json' => 'pwa#manifest', as: :pwa_manifest
+  get '/offline.html' => 'pwa#offline'
+
   draw :admin
   draw :api_v1
 
