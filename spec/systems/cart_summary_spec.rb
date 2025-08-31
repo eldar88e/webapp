@@ -6,7 +6,7 @@ RSpec.describe 'CartSummary', type: :system do
   let(:product_two) { Product.find(4) }
 
   before do
-    driven_by(:selenium_chrome) # selenium_chrome rack_test selenium_headless
+    driven_by(:selenium_headless) # selenium_chrome rack_test selenium_headless
     page.driver.browser.manage.window.resize_to(430, 932) # iphone 14 pro max
     login_as users(:customer), scope: :user
     visit root_path
