@@ -421,3 +421,11 @@ body.aside-hide {
     }
   }
 }
+
+.admin-messages {
+  height: calc(100vh - 15rem);
+
+  @media (max-width: 768px) {
+    height: calc(100vh - 8.5rem);
+  }
+}
