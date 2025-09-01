@@ -73,7 +73,7 @@ class TelegramService
                                                                  callback_data: @markup)]
       buttons += [order_btn('Изменить заказ'), ask_btn] if @markup == 'i_paid'
     else
-      text_btn = @markup == 'mailing' ? (settings[:bot_btn_title].presence || 'Новый заказ') : 'Новый заказ'
+      text_btn = @markup == 'mailing' ? (settings[:bot_btn_title].presence || I18n.t('tg_btn.mailing')) : 'Новый заказ'
       buttons += [order_btn(text_btn), ask_btn]
     end
     buttons
