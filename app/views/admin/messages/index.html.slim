@@ -34,9 +34,9 @@
                   time data-controller="timeago" data-timeago-locale-value="ru" title="#{format_date chat.messages.last.created_at}" datetime="#{chat.messages.last.created_at.iso8601}"
                     = format_date chat.messages.last.created_at
           .py-4.px-6.text-gray-500.dark:text-gray-400
-            - if @pages.pages > 1
-              .mb-3 == pagy_nav(@pages)
-            == pagy_info(@pages)
+            - if @chats_page.pages > 1
+              .mb-3 == pagy_nav(@chats_page)
+            == pagy_info(@chats_page)
 
       .flex-1.flex.flex-col data-controller="clear-input"
         .px-4.py-2.border-b.dark:bg-gray-800.dark:border-gray-700.border-gray-200.bg-white.text-gray-900.dark:text-white.flex.items-center.gap-4

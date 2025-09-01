@@ -2,14 +2,14 @@ module Admin
   class MessagesController < Admin::ApplicationController
     # before_action :authorize_message, only: :destroy
     before_action :set_user, :form_message, only: :create
-    before_action :set_chats, only: :index
+    before_action :set_chats, :set_chats_page, only: :index
 
     def index
-      @pages, @chats   = pagy(@chats, limit: 30, page_param: :chats_page)
-      @current_chat    = User.find_by(tg_id: params[:chat_id]) || @chats.first
-      messages         = @current_chat&.messages&.order(created_at: :desc) || Message.none
-      @pagy, @messages = pagy(messages, limit: 50)
-      @messages        = @messages.reverse
+      @chats_page, @chats = pagy(@chats, limit: 30, page_param: :chats_page)
+      @current_chat       = User.find_by(tg_id: params[:chat_id]) || @chats.first
+      messages            = @current_chat&.messages&.order(created_at: :desc) || Message.none
+      @pagy, @messages    = pagy(messages, limit: 50)
+      @messages           = @messages.reverse
     end
 
     def create
@@ -25,6 +25,11 @@ module Admin
     end
 
     private
+
+    def set_chats_page
+      params[:chats_page] ||= session[:chats_page] ||= 1
+      session[:chats_page] = params[:chats_page]
+    end
 
     def form_message
       @message      = Message.new({ text: message_params[:text], tg_id: @user.tg_id, is_incoming: false })
