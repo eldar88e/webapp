@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static targets = ["input", "messages"];
+    static targets = ["input", "messages", "attach"];
 
     connect() {
         this.messagesTarget.scrollTop = this.messagesTarget.scrollHeight;
@@ -9,13 +9,14 @@ export default class extends Controller {
 
     clear(event) {
       // event.preventDefault();
-      // if (this.inputTarget.value.trim() === '') return;
-      //
-      // event.currentTarget.requestSubmit();
-      // this.element.querySelector('form').requestSubmit();
+      // if (this.inputTarget.value.trim() === '' && this.attachTarget.files.length === 0) return;
+
+      // event.target.requestSubmit();
 
       setTimeout(() => {
-        this.inputTarget.value = '';
+        this.inputTarget.value = "";
+        this.attachTarget.value = "";
+        this.attachTarget.files = null;
         setTimeout(() => {
           this.messagesTarget.scrollTop = this.messagesTarget.scrollHeight;
         }, 100);

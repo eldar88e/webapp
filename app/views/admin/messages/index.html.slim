@@ -74,7 +74,7 @@
           = form_with model: Message.new, url: admin_messages_path, class: "flex items-center gap-2 px-4 py-3.5 border-t dark:bg-gray-800 bg-white border-gray-200 dark:border-gray-700", data: { action: 'submit->clear-input#clear' } do |f|
             = f.hidden_field :user_id, value: @current_chat.id
             = f.text_field :text, placeholder: "Введите сообщение...", class: "flex-1 rounded border-none focus:border-none focus:outline-none text-gray-900 dark:text-white", data: { clear_input_target: 'input' }
-            = f.file_field :attachment, accept: 'image/jpeg,image/png,image/webp,video/mp4,video/mpeg,video/quicktime', class: 'hidden' do
+            = f.file_field :attachment, accept: 'image/jpeg,image/png,image/webp,video/mp4,video/mpeg,video/quicktime', class: 'hidden', data: { clear_input_target: 'attach' }
             = f.label :attachment, class: 'text-blue-400 hover:text-blue-500 cursor-pointer transition', onclick: "this.previousElementSibling.click()"
               = render Admin::IconComponent.new name: :clip, width: 24
             = button_tag class: "px-2 py-1 text-blue-600 hover:text-blue-700 transition cursor-pointer"
