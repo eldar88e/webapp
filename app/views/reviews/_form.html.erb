@@ -11,7 +11,7 @@
     <label class="text-center !mb-2">Рейтинг</label>
     <div class="rating-stars">
         <% (1..5).each do |rate| %>
-          <span class="<%= 'filled-star' if rate <= (@review.rating || 0) %>" data-action="click->rating#select" data-rating-target="stars" data-value="<%= rate %>">
+          <span class="<%= 'filled-star' if rate <= 5 %>" data-action="click->rating#select" data-rating-target="stars" data-value="<%= rate %>">
             <%= render IconComponent.new name: :star, size: 32 %>
           </span>
         <% end %>

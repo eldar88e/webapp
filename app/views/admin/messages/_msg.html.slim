@@ -1,0 +1,28 @@
+- incoming   = message.is_incoming
+- align_cls  = incoming ? "justify-start" : "justify-end"
+- bubble_cls = incoming ? "rounded-r-xl rounded-bl-xl" : "rounded-l-xl rounded-br-xl"
+- time_align = incoming ? "text-left" : "text-right"
+
+.mb-6.flex.gap-3 class=align_cls
+  - if incoming
+    = @user ||= render partial: '/layouts/partials/avatar', locals: { user: message.user }
+
+  .flex.flex-col class="max-w-[75%]"
+    .text-xs.text-slate-400.my-1.flex.gap-1
+      = message.is_incoming ? "Входящее" : "Исходящее"
+      div class="#{time_align}"
+        time data-controller="timeago" data-timeago-locale-value="ru" title="#{format_date message.created_at}" datetime="#{message.created_at.iso8601}"
+          = format_date message.created_at
+
+    .px-4.py-2.shadow-sm.bg-gray-100.text-gray-900.dark:text-white.dark:bg-gray-700 class=bubble_cls
+      - if message.data && (message.data['media_id'].present? || message.data['tg_file_id'].present?)
+        .mb-2.pt-2
+          = format_img(message.data)
+      = simple_format(message.text, {}, wrapper_tag: "span")
+      - if message.data&.dig('markup').present?
+        .mt-2.pb-2
+          .inline-block.bg-gray-200.dark:bg-gray-800.rounded-lg.p-2
+            = format_btn message.data['markup']
+
+  - unless incoming
+    = @user_admin ||= render partial: '/layouts/partials/avatar', locals: { user: current_user }

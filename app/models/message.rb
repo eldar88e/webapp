@@ -2,6 +2,7 @@ class Message < ApplicationRecord
   belongs_to :user, primary_key: :tg_id, foreign_key: :tg_id, inverse_of: :messages
 
   after_create :send_to_telegram, if: -> { !is_incoming? }
+  after_create_commit :broadcast_admin_chat
   after_create :notify_admin, if: -> { is_incoming? }
 
   # validates :text, presence: true TODO: add validation text or data
@@ -41,5 +42,12 @@ class Message < ApplicationRecord
 
   def send_to_telegram
     ConsumerSenderTgJob.perform_later(msg_id: id, id: user.tg_id, msg: text, data: parsed_data)
+  end
+
+  def broadcast_admin_chat
+    broadcast_append_later_to(
+      "admin_chat_#{user.id}", partial: '/admin/messages/msg',
+                               locals: { message: self, current_user: user }, target: 'messages'
+    )
   end
 end

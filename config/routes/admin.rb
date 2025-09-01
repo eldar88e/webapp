@@ -7,9 +7,9 @@ namespace :admin do
   resources :users
   resources :mailings
   resources :analytics, only: :index
-  resources :messages, only: %i[index new create destroy]
+  resources :messages, only: %i[index create] # TODO: delete, delete all messages
   resources :supports, only: %i[index new create edit update destroy]
-  resources :new_messages
+  # resources :old_messages
   resources :reviews
   resources :product_subscriptions, only: %i[index destroy]
   resources :bank_cards, only: %i[index new create edit update]

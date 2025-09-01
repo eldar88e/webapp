@@ -1,10 +1,6 @@
 module Api
   module V1
-    class BaseController < ApplicationController
-      protect_from_forgery with: :null_session
-      skip_before_action :check_authenticate_user!, :product_search
-      before_action :authenticate_with_token!
-
+    class BaseController < ActionController::API
       private
 
       def authenticate_with_token!

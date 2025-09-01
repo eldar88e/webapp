@@ -23,6 +23,7 @@ ru:
     i_paid: "Я оплатил"
     approve_payment: "Оплата пришла"
     submit_tracking: "Привязать трек"
+    to_catalog: "Перейти в каталог"
   mailing_success: "Рассылка успешно запланирована!"
   empty_cart: "Корзина пуста"
   orders_to_next_level:

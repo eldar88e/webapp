@@ -3,5 +3,6 @@
   - telegram_bot
   - telegram_notice
   - default
+  - turbo_streams
   - rollbar
   - ahoy
