@@ -40,7 +40,7 @@ module Admin
       @chats = User.joins('INNER JOIN messages ON (messages.tg_id = users.tg_id)')
                    .select('users.*, MAX(messages.created_at)')
                    .group('users.id')
-                   .order('MAX(messages.created_at)').includes(:messages).reverse
+                   .order('MAX(messages.created_at)').includes(:messages).reverse_order
     end
 
     def set_user
