@@ -33,9 +33,9 @@ module Admin
 
     def set_chats
       @chats = User.joins('INNER JOIN messages ON (messages.tg_id = users.tg_id)')
-                   .select('users.*, MAX(messages.created_at)')
+                   .select('users.*, MIN(messages.created_at)')
                    .group('users.id')
-                   .order('MAX(messages.created_at)').includes(:messages)
+                   .order('MIN(messages.created_at)').includes(:messages)
     end
 
     def set_user
