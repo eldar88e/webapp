@@ -19,7 +19,7 @@
               .flex.items-center.gap-2.justify-between
                 div class="flex items-center gap-2"
                   = render partial: '/layouts/partials/avatar', locals: { user: chat }
-                  div
+                  .min-h-10
                     p class="text-sm font-medium text-gray-900 truncate dark:text-white"
                       = chat.full_name.presence || chat.full_name_raw.presence || chat.tg_id
                     p class="text-sm text-gray-500 truncate dark:text-gray-400"

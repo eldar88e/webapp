@@ -1,0 +1,7 @@
+.flex.items-center.gap-2
+  = render partial: '/layouts/partials/avatar', locals: { user: user }
+  .min-h-10
+    p class="text-sm font-medium text-gray-900 truncate dark:text-white"
+      = link_to user.full_name.presence || user.full_name_raw.presence || user.tg_id, admin_user_path(user)
+    p class="text-sm text-gray-500 truncate dark:text-gray-400"
+      = link_to "@#{user.username}", "https://t.me/#{user.username}", target: "_blank" if user.username.present?
