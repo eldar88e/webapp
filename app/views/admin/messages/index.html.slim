@@ -3,7 +3,7 @@
 .pt-6.px-4
   h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-4" = content_for :title
 
-.pt-6
+.pt-0.md:pt-6
   .relative.overflow-x-auto.shadow-md.sm:rounded-lg
     .flex.rounded-lg.shadow-lg.overflow-hidden.relative style="height: calc(100vh - 15rem);" data-controller="chats-list"
       .w-1/3.border-r.flex.flex-col.bg-white.border-gray-200.dark:bg-gray-800.dark:border-gray-700.chats data-chats-list-target="list"
@@ -79,4 +79,4 @@
               = render Admin::IconComponent.new name: :clip, width: 24
             = button_tag class: "px-2 py-1 text-blue-600 hover:text-blue-700 transition cursor-pointer"
               = render Admin::IconComponent.new name: :send
-.p-10
+.py-0.md:py-10

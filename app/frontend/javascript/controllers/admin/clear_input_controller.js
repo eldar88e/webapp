@@ -8,10 +8,11 @@ export default class extends Controller {
     }
 
     clear(event) {
-      // event.preventDefault();
-      // if (this.inputTarget.value.trim() === '' && this.attachTarget.files.length === 0) return;
-
-      // event.target.requestSubmit();
+      if (this.inputTarget.value.trim() === '' && this.attachTarget.files.length === 0) {
+        event.preventDefault();
+        alert('Введите сообщение или прикрепите файл');
+        return;
+      }
 
       setTimeout(() => {
         this.inputTarget.value = "";
