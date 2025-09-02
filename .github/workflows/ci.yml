@@ -37,6 +37,29 @@ jobs:
       - name: Lint code for consistent style
         run: bin/rubocop -f github
 
+  lint_js:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install Yarn packages
+        run: yarn install --prefer-offline
+
+      - name: Lint Javascript code for consistent style
+        run: yarn lint
+
   test:
     runs-on: ubuntu-24.04
     services:

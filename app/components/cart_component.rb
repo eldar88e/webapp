@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CartComponent < ViewComponent::Base
+  include ApplicationHelper
+
   def initialize(cart:)
     super()
     @cart        = cart
