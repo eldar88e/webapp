@@ -62,13 +62,14 @@
             .text-lg.text-gray-400.italic Нет чата для просмотра
 
         = turbo_stream_from "admin_chat_#{@current_chat&.id}"
-        .overflow-y-auto.p-4 style="height: 100vh;" id='messages' data-clear-input-target="messages"
-          - if @messages.present?
-            = render partial: '/layouts/partials/admin/pagy'
-            - @messages.each do |message|
-              = render partial: '/admin/messages/msg', locals: { message: message }
-          - else
-            .text-gray-400.text-center.pt-10 Нет сообщений
+        .overflow-y-auto.p-4 style="height: 100vh;"
+          = turbo_frame_tag 'messages', data: { clear_input_target: 'messages' } do
+            - if @messages.present?
+              = render partial: '/layouts/partials/admin/pagy'
+              - @messages.each do |message|
+                = render partial: '/admin/messages/msg', locals: { message: message }
+            - else
+              .text-gray-400.text-center.pt-10 Нет сообщений
 
         - if @current_chat
           = form_with model: Message.new, url: admin_messages_path, class: "flex items-center gap-2 px-4 py-3.5 border-t dark:bg-gray-800 bg-white border-gray-200 dark:border-gray-700", data: { action: 'submit->clear-input#clear' } do |f|

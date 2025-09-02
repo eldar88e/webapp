@@ -66,7 +66,7 @@ class Product < ApplicationRecord
   end
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[id name stock_quantity price ancestry]
+    %w[id name stock_quantity price ancestry favorites_count]
   end
 
   def self.ransackable_associations(_auth_object = nil)
