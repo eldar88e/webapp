@@ -30,7 +30,7 @@
             = format_btn message.data['markup']
 
   - if incoming
-    = button_to admin_message_path(message), method: :delete, class: 'btn-delete',
+    = button_to admin_message_path(message), method: :delete, class: 'btn-delete -ms-2 mt-6',
             data: { confirm: 'Вы уверены, что хотите удалить данное сообщение?',
                     controller: 'confirm', action: 'click->confirm#call' } do
       = render Admin::IconComponent.new name: :trash
