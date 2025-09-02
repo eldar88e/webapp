@@ -428,4 +428,21 @@ body.aside-hide {
   @media (max-width: 768px) {
     height: calc(100vh - 8.5rem);
   }
+
+  .message {
+    .btn-delete {
+      cursor: pointer;
+      color: white;
+      visibility: hidden;
+      opacity: 0;
+      transition: all 0.5s;
+    }
+
+    &:hover {
+      .btn-delete {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
 }

@@ -3,9 +3,14 @@
 - bubble_cls = incoming ? "rounded-r-xl rounded-bl-xl" : "rounded-l-xl rounded-br-xl"
 - time_align = incoming ? "text-left" : "text-right"
 
-.mb-6.flex.gap-3 class=align_cls
+.mb-6.flex.gap-3 class="#{align_cls} message" id="#{dom_id message}"
   - if incoming
     = @user ||= render partial: '/layouts/partials/avatar', locals: { user: message.user }
+  - else
+    = button_to admin_message_path(message), method: :delete, class: 'btn-delete -me-2 mt-6',
+            data: { confirm: 'Вы уверены, что хотите удалить данное сообщение?',
+                    controller: 'confirm', action: 'click->confirm#call' } do
+      = render Admin::IconComponent.new name: :trash
 
   .flex.flex-col class="max-w-[75%]"
     .text-xs.text-slate-400.my-1.flex.gap-1
@@ -24,5 +29,10 @@
           .inline-block.bg-gray-200.dark:bg-gray-800.rounded-lg.p-2
             = format_btn message.data['markup']
 
-  - unless incoming
+  - if incoming
+    = button_to admin_message_path(message), method: :delete, class: 'btn-delete',
+            data: { confirm: 'Вы уверены, что хотите удалить данное сообщение?',
+                    controller: 'confirm', action: 'click->confirm#call' } do
+      = render Admin::IconComponent.new name: :trash
+  - else
     = @user_admin ||= render partial: '/layouts/partials/avatar', locals: { user: current_user }

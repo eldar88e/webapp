@@ -1,12 +1,12 @@
 module Admin
   class MessagesController < Admin::ApplicationController
-    # before_action :authorize_message, only: :destroy
+    before_action :authorize_message, only: :destroy
     before_action :set_user, :form_message, only: :create
     before_action :set_chats, :set_chats_page, only: :index
 
     def index
       @chats_page, @chats = pagy(@chats, limit: 30, page_param: :chats_page)
-      @current_chat       = User.find_by(tg_id: params[:chat_id]) || @chats.first
+      @current_chat       = params[:chat_id].present? ? User.find_by!(tg_id: params[:chat_id]) : @chats.first
       messages            = @current_chat&.messages&.order(created_at: :desc) || Message.none
       @pagy, @messages    = pagy(messages, limit: 50)
       @messages           = @messages.reverse
@@ -21,7 +21,12 @@ module Admin
     end
 
     def destroy
-      raise 'Not implemented'
+      @message = Message.find(params[:id])
+      if @message.tg_msg_id.present?
+        TelegramJob.perform_later(id: @message.tg_id, msg_id: @message.tg_msg_id, method: 'delete_msg')
+      end
+      @message.destroy!
+      render turbo_stream: [turbo_stream.remove(@message), success_notice('Сообщение было успешно удалено.')]
     end
 
     private
@@ -48,9 +53,9 @@ module Admin
       @user = User.find(params[:user_id] || message_params[:user_id])
     end
 
-    # def authorize_message
-    #   authorize [:admin, Message]
-    # end
+    def authorize_message
+      authorize [:admin, Message]
+    end
 
     def message_params
       params.require(:message).permit(:text, :user_id, :attachment)
