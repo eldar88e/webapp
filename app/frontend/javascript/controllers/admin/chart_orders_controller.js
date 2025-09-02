@@ -84,10 +84,11 @@ export default class extends Controller {
                 show: true,
                 label: "Заказов",
                 fontFamily: "Montserrat, sans-serif",
-                formatter: function (w) {
-                  const sum = w.globals.seriesTotals.reduce((a, b) => {
-                    return a + b;
-                  }, 0);
+                formatter: function () {
+                  // formatter: function (_w) {
+                  // const sum = w.globals.seriesTotals.reduce((a, b) => {
+                  //   return a + b;
+                  // }, 0);
                   return total;
                 },
               },

@@ -2,11 +2,11 @@ import React from "react";
 
 type NoticeProps = {
   message: string;
-  type?: "danger" | "success" | "info";
+  // type?: "danger" | "success" | "info";
   onClose?: () => void;
 };
 
-export default function Notice({ message, type, onClose }: NoticeProps) {
+export default function Notice({ message, onClose }: NoticeProps) {
   return (
     <div
       className={`flex items-center w-full max-w-xs p-2 mb-2 rounded-lg shadow bg-white notices`}

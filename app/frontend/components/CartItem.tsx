@@ -15,7 +15,10 @@ type CartItemProps = {
 
 export default function CartItem({ item, onUpdateQuantity }: CartItemProps) {
   return (
-    <div className="flex justify-between items-center mb-2" id={`cart-item-${item.id}`}>
+    <div
+      className="flex justify-between items-center mb-2"
+      id={`cart-item-${item.id}`}
+    >
       <div className="flex items-center gap-4">
         <div className="bg-gray-100 w-18 h-18 rounded-lg overflow-hidden flex items-center justify-center">
           {item.image_url ? (

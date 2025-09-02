@@ -151,14 +151,14 @@ export default class extends Controller {
       });
   }
 
-  hidden(event) {
+  hidden() {
     setTimeout(() => {
       this.suggestionsTarget.style.display = "none";
       this.suggestionsTarget.parentElement.style.display = "none";
     }, 300);
   }
 
-  hiddenStreet(event) {
+  hiddenStreet() {
     setTimeout(() => {
       this.suggestions_streetTarget.style.display = "none";
       this.suggestions_streetTarget.parentElement.style.display = "none";

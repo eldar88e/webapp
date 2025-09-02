@@ -15,7 +15,7 @@ export default class extends Controller {
     const notices = document.querySelectorAll(selector);
     const lastElement = notices[notices.length - 1];
 
-    notices.forEach((element, index) => {
+    notices.forEach((element) => {
       if (element !== this.element && element !== lastElement) {
         this.fadeOutAndRemove(element, 50);
       }

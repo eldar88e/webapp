@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import ApexCharts from "apexcharts";
-import Localization from "./localization";
+// import Localization from "./localization";
 
 export default class extends Controller {
   static targets = ["chart"];

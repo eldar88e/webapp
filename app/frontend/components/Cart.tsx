@@ -126,7 +126,9 @@ export default function Cart({
       )}
       <div className="cart-items" id="cart_items">
         <div className="flex justify-between items-center mb-3">
-          <div className="font-semibold">Товаров: <span id="cart-items-count">{totalQuantity}</span></div>
+          <div className="font-semibold">
+            Товаров: <span id="cart-items-count">{totalQuantity}</span>
+          </div>
           <button
             className="btn-clear-cart"
             onClick={() => handleClearCart(cartId)}
