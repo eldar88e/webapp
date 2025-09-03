@@ -984,11 +984,15 @@ h3 {
   z-index: 10;
   transition: 0.5s all;
 
+  .right-arrow {
+    transition: 0.5s all;
+  }
+
   &:hover {
     background-color: #3AA120;
 
     .right-arrow {
-      margin-right: -5px;
+      transform: translate(5px);
     }
   }
 
@@ -1006,6 +1010,18 @@ h3 {
     border-radius: 8px;
     display: flex;
     justify-content: center;
+  }
+}
+
+.user-links {
+  .right-arrow {
+    transition: 0.5s all;
+  }
+
+  a:hover {
+    .right-arrow {
+      transform: translate(5px);
+    }
   }
 }
 
