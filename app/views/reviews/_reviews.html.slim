@@ -1,6 +1,6 @@
 = render partial: '/reviews/review', collection: @reviews
 - if @pagy.next
-  #next_reviews data-controller="spinner"
+  = turbo_frame_tag :next_reviews data: { controller: 'spinner' } do
     = link_to 'Смотреть eще отзывы', product_reviews_path(@product, page: @pagy.next), id: 'next_reviews_link',
             data: { turbo_prefetch: false, action: 'click->spinner#show', spinner_target: 'content' }, class: 'flex justify-center mt-5 btn btn-secondary btn-big'
     .spinner.mt-5 style="display: none;" data-spinner-target="spinner"
