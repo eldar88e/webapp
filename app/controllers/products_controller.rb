@@ -19,7 +19,7 @@ class ProductsController < ApplicationController
   def show
     @product = Product.find(params[:id])
     @reviews = @product.reviews.includes(:user, :photos_attachments).approved.order(created_at: :desc)
-    @pagy, @reviews = pagy(@reviews, limit: 1)
+    @pagy, @reviews = pagy(@reviews, limit: 10)
   end
 
   private
