@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   root 'products#index'
 
   resources :products, only: %i[index show] do
-    resources :reviews, only: %i[new create edit update]
+    resources :reviews, only: %i[index new create]
     resource :product_subscription, only: %i[create destroy]
     resource :favorites, only: %i[create destroy]
   end

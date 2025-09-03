@@ -2,6 +2,15 @@ class ReviewsController < ApplicationController
   before_action :set_product
   before_action :detect_device, only: :new
 
+  def index
+    @product = Product.find(params[:product_id])
+    @reviews = @product.reviews.includes(:user, :photos_attachments).approved.order(created_at: :desc)
+    @pagy, @reviews = pagy(@reviews, limit: 10)
+    render turbo_stream: [
+      turbo_stream.replace(:next_reviews, partial: '/reviews/reviews')
+    ]
+  end
+
   def new
     @review = current_user.reviews.new(product: @product)
     return unless turbo_frame_request?

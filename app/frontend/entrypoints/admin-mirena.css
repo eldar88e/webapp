@@ -1,7 +1,6 @@
 @import "../styles/admin.scss";
 @import "../styles/admin-mirena.scss";
 @import "../styles/notice.scss";
-@import "../styles/preloader.scss";
 
 @source "../../../app/components/**/*.html.slim";
 @source "../../../app/views/**/*.html.erb";

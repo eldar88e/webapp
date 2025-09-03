@@ -1,6 +1,5 @@
 @import "../styles/admin.scss";
 @import "../styles/notice.scss";
-@import "../styles/preloader.scss";
 
 @source "../../../app/components/admin/**/*.slim";
 @source "../../../app/views/admin/**/*.html.erb";
