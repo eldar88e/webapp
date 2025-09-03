@@ -4,7 +4,7 @@ export default class extends Controller {
   static targets = ["spinner", "content"];
 
   show() {
-    this.spinnerTarget.classList.remove("hidden");
+    this.spinnerTarget.style.display = "flex";
     this.contentTarget.classList.add("hidden");
   }
 }

@@ -3,5 +3,5 @@
   #next_reviews data-controller="spinner"
     = link_to 'Смотреть все отзывы', product_reviews_path(@product, page: @pagy.next), id: 'next_reviews_link',
             data: { turbo_prefetch: false, action: 'click->spinner#show', spinner_target: 'content' }, class: 'flex justify-center mt-5 btn btn-secondary btn-big'
-    .spinner.mt-5 class="!hidden" data-spinner-target="spinner"
+    .spinner.mt-5 style="display: none;" data-spinner-target="spinner"
       span
