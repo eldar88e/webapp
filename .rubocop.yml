@@ -12,7 +12,12 @@ AllCops:
     - 'app/services/report_service.rb'
     - 'vendor/**/*'
     - 'app/jobs/abandoned_order_reminder_job.rb'
+    - 'config/initializers/filter_parameter_logging.rb'
     - 'config/deploy.rb'
+
+Style/StringLiterals:
+  Exclude:
+    - 'config/**/*.rb'
 
 Metrics/ClassLength:
   Exclude:
@@ -22,6 +27,7 @@ Metrics/ClassLength:
 
 Metrics/BlockLength:
   Exclude:
+    - 'config/environments/development.rb'
     - 'config/environments/production.rb'
     - 'config/routes.rb'
 
