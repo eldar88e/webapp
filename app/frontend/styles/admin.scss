@@ -431,8 +431,8 @@ body.aside-hide {
 
   .message {
     .btn-delete {
+      @apply text-gray-900 dark:text-white;
       cursor: pointer;
-      color: white;
       visibility: hidden;
       opacity: 0;
       transition: all 0.5s;
