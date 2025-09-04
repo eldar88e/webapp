@@ -22,7 +22,7 @@ module ApplicationHelper
     blob = variant ? attach : attach.blob
 
     case attach.blob.service_name
-    when 'minio' then minio_storage_path(blob)
+    when 'beget' then beget_storage_path(blob)
     when 'local' then local_storage_path(blob)
     else url_for(attach)
     end
@@ -37,8 +37,8 @@ module ApplicationHelper
     end
   end
 
-  def minio_storage_path(blob)
-    "#{ENV.fetch('MINIO_HOST')}/#{ENV.fetch('MINIO_BUCKET')}/#{blob.key}"
+  def beget_storage_path(key)
+    "#{ENV.fetch('BEGET_ENDPOINT')}/#{ENV.fetch('BEGET_BUCKET')}/#{key}"
   end
 
   def local_storage_path(blob)

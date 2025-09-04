@@ -1,6 +1,9 @@
 .cart id="cart"
   - if @cart_items.present?
     #react-cart data-cart-items="#{@cart_items_json}" data-delivery-price="#{settings[:delivery_price]}" data-cart-id="#{current_cart.id}" data-bonus="#{current_user.bonus_balance}" data-percent="#{current_user.account_tier&.bonus_percentage.to_i}" data-bonus-threshold="#{settings[:bonus_threshold].to_i}"
+      .main-block.mb-5
+        .spinner.my-10
+          span
     = render 'orders/user'
   - else
     .no-items-wrapper
