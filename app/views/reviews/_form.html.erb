@@ -5,10 +5,10 @@
 
 <%= form_with(model: @review, url: (method == :patch ? product_review_path(@review) : product_reviews_path),
               data: { controller: :rating }, class: 'profile-form') do |form| %>
-  <%= form.hidden_field :rating, data: { rating_target: "hiddenInput" } %>
 
   <div class="input-container mt-4 !mb-4">
-    <label class="text-center !mb-2">Рейтинг</label>
+    <%= form.label :rating, class: 'text-center !mb-2' %>
+    <%= form.hidden_field :rating, value: 5, data: { rating_target: "hiddenInput" } %>
     <div class="rating-stars">
         <% (1..5).each do |rate| %>
           <span class="<%= 'filled-star' if rate <= 5 %>" data-action="click->rating#select" data-rating-target="stars" data-value="<%= rate %>">

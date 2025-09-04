@@ -20,7 +20,7 @@ class ReportService
       )
 
       send_report(order, user_msg: msg, user_tg_id: user.tg_id, user_markup: 'i_paid')
-      AbandonedOrderReminderJob.set(wait: ONE_WAIT).perform_later(order_id: order.id, msg_type: :one)
+      AbandonedOrderReminderJob.set(wait: ONE_WAIT).perform_async({ 'order_id' => order.id, 'msg_type' => 'one' })
     end
 
     def on_paid(order)

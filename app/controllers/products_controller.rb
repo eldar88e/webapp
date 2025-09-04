@@ -17,8 +17,9 @@ class ProductsController < ApplicationController
   end
 
   def show
-    @product = Product.find(params[:id])
-    @reviews = @product.reviews.includes(:user, :photos_attachments).approved.order(created_at: :desc)
+    @product        = Product.find(params[:id])
+    @reviews        = @product.reviews.includes(:user, :photos_attachments).approved.order(created_at: :desc)
+    @reviews_info   = ReviewService.form_info(@product)
     @pagy, @reviews = pagy(@reviews, limit: 10)
   end
 

@@ -1,7 +1,7 @@
 <% if @pagy.next %>
   <div id="pagination" class="-mt-12">
-    <div class="flex justify-center items-center h-14 mt-5">
-      <span class="animate-spin rounded-full h-10 w-10 border-b-2" style="border-color: #48C928;"></span>
+    <div class="spinner mt-5">
+      <span></span>
     </div>
     <div class="-mt-12" data-controller="infinite-scroll" data-infinite-scroll-url="<%= products_path(format: :turbo_stream, page: @pagy.next) if @pagy.next %>"></div>
   </div>

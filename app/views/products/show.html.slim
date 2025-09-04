@@ -62,24 +62,23 @@ style
       = @product.description
 
 .card-block.mb-3
+  .title-card Отзывы
   - if @reviews.present?
     .product-reviews
       .reviews-header
         .average-rating.flex.items-center.gap-1
-          span = @reviews.average(:rating).round(1)
+          span = @reviews_info[:average_rating]
           = render IconComponent.new name: :star, size: 28
-        .counter = t('reviews.count', count: @reviews.size)
+        .counter = t('reviews.count', count: @reviews_info[:count])
         = link_to 'Оставить отзыв', new_product_review_path(@product), class: 'btn-new-review', data: { turbo_prefetch: false, turbo_frame: :new_review }
       .percentages
-        - percentages(@product).each do |percentage|
+        - @reviews_info[:percentages].each do |percentage|
           .percentage-wrap
             .rating = percentage[:rating]
             .percentage
               div style="width: #{percentage[:percentage]}%;"
-    = turbo_frame_tag :new_review do
-  - else
-    .title-card Отзывы
-    = turbo_frame_tag :new_review do
+  = turbo_frame_tag :new_review do
+    - if @reviews.blank?
       = link_to 'Оставить отзыв', new_product_review_path(@product), class: 'btn-new-review', data: { turbo_prefetch: false }
 
   - if @reviews.present?

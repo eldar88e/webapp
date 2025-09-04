@@ -1,11 +1,19 @@
-class AbandonedOrderReminderJob < ApplicationJob
-  queue_as :default
-  STEPS = { one: { wait: 48.hours, msg_type: :two }, two: { wait: 3.hours, msg_type: :overdue } }.freeze
+class AbandonedOrderReminderJob
+  include Sidekiq::Worker
 
-  def perform(**args)
-    return if args[:msg_type].blank?
+  sidekiq_options queue: :default,
+                  lock: :until_executed,
+                  lock_args: ->(args) { [args.first] }
 
-    order = Order.find_by(id: args[:order_id])
+  STEPS = {
+    'one' => { 'wait' => 48.hours, 'msg_type' => 'two' },
+    'two' => { 'wait' => 3.hours, 'msg_type' => 'overdue' }
+  }.freeze
+
+  def perform(args)
+    return if args['msg_type'].blank?
+
+    order = Order.find_by(id: args['order_id'])
     return if order&.status != 'unpaid'
 
     process_remainder(args, order)
@@ -17,15 +25,15 @@ class AbandonedOrderReminderJob < ApplicationJob
     return if handle_overdue_status_if_blocked?(order, args)
 
     # tg не дает боту удалить сообщения старше 48 часов
-    TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if args[:msg_type] != :two
+    TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if args['msg_type'] != :two
     update_bank_card(order)
-    msg = form_msg(args[:msg_type], order)
+    msg = form_msg(args['msg_type'], order)
     order.user.messages.create(**msg)
     schedule_reminders(args)
   end
 
   def handle_overdue_status_if_blocked?(order, args)
-    return false if args[:msg_type].to_s != 'overdue' && !order.user.is_blocked?
+    return false if args['msg_type'].to_s != 'overdue' && !order.user.is_blocked?
 
     order.update(status: :overdue)
     true
@@ -38,11 +46,11 @@ class AbandonedOrderReminderJob < ApplicationJob
   end
 
   def schedule_reminders(args)
-    next_step = STEPS[args[:msg_type]]
+    next_step = STEPS[args['msg_type']]
     return if next_step.blank?
 
-    AbandonedOrderReminderJob.set(wait: next_step[:wait])
-                             .perform_later(order_id: args[:order_id], msg_type: next_step[:msg_type])
+    AbandonedOrderReminderJob.set(wait: next_step['wait'])
+                             .perform_async({ 'order_id' => args['order_id'], "msg_type" => next_step['msg_type'] })
   end
 
   def form_msg(msg_type, order)
