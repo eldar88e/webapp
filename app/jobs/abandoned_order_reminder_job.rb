@@ -3,7 +3,8 @@ class AbandonedOrderReminderJob
 
   sidekiq_options queue: :default,
                   lock: :until_executed,
-                  lock_args: ->(args) { [args.first] }
+                  lock_args: ->(args) { [args.first] },
+                  retry: 3
 
   STEPS = {
     'one' => { 'wait' => 48.hours, 'msg_type' => 'two' },
