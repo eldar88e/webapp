@@ -31,7 +31,7 @@ WORKDIR /app
 COPY Gemfile Gemfile.lock ./
 RUN gem update --system 3.7.1
 RUN gem install bundler -v $(tail -n 1 Gemfile.lock)
-RUN bundle check || bundle install
+RUN bundle check || bundle install --jobs=2 --retry=3
 RUN bundle clean --force
 
 COPY package.json yarn.lock ./

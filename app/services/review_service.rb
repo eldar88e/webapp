@@ -14,7 +14,7 @@ class ReviewService
 
   private
 
-  def form_percentages(reviews)
+  def self.form_percentages(reviews)
     total_reviews = reviews.count
     rating_counts = reviews.group(:rating).count
     (1..5).map { |rating| { rating: rating, percentage: (rating_counts[rating] || 0) * 100.0 / total_reviews } }
