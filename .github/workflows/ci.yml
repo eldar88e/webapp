@@ -83,6 +83,7 @@ jobs:
       BEGET_BUCKET: test
       BEGET_ACCESS: test
       BEGET_SECRET: test
+      EMAIL_FROM: test@test.test
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
