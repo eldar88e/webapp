@@ -4,7 +4,7 @@ import Cart from "./Cart";
 import CartSummary from "./CartSummary";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const el = document.getElementById("react-cart") as HTMLElement | null;
+  const el = document.getElementById("react-cart");
   if (!el) return;
 
   const items = JSON.parse(el.dataset.cartItems || "[]");
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const root = createRoot(el);
   root.render(<Cart items={items} cartId={cartId} />);
 
-  const summaryEl = document.getElementById("react-cart-summary") as HTMLElement | null;
+  const summaryEl = document.getElementById("react-cart-summary");
   if (summaryEl) {
     const root = createRoot(summaryEl);
     root.render(
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         bonus={bonus}
         percent={percent}
         bonusThreshold={bonusThreshold}
-      />
+      />,
     );
   }
 });

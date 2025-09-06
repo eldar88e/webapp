@@ -3,7 +3,7 @@ import iconsUrl from "../images/icons.svg?url";
 import NoticePortal from "./NoticePortal";
 import CartItem from "./CartItem";
 
-type CartItem = {
+type CartLine = {
   id: number;
   name: string;
   price: number;
@@ -16,7 +16,7 @@ export default function Cart({
   items,
   cartId,
 }: {
-  items: CartItem[];
+  items: CartLine[];
   cartId: number;
 }) {
   const [cart, setCart] = useState(items);

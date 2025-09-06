@@ -79,6 +79,10 @@ jobs:
       RAILS_ENV: test
       HOST: localhost
       DB_PASSWORD: admin
+      BEGET_HOST: https://test.test
+      BEGET_BUCKET: test
+      BEGET_ACCESS: test
+      BEGET_SECRET: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
