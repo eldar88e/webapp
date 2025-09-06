@@ -10,7 +10,7 @@ class ApplicationJob < ActiveJob::Base
   def limit_user_privileges(error, user)
     unless error.instance_of?(Telegram::Bot::Exceptions::ResponseError)
       Rails.logger.error("Telegram new sending error: #{error.message}")
-      return ErrorMailer.send_error(error.message, error.full_message).deliver_later
+      return AdminMailer.send_error(error.message, error.full_message).deliver_later
     end
 
     if error.message.include?('chat not found')
@@ -18,5 +18,10 @@ class ApplicationJob < ActiveJob::Base
     elsif error.message.include?('bot was blocked')
       user.update(is_blocked: true)
     end
+  end
+
+  def self.send_email_to_admin(exception)
+    subject = 'Task execution error'
+    AdminMailer.send_error(exception, '', subject).deliver_now
   end
 end

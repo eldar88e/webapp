@@ -1,5 +1,6 @@
 class GenerateImageVariantsJob < ApplicationJob
   queue_as :default
+
   S3_CONFIG = { endpoint: ENV.fetch('BEGET_ENDPOINT'), region: 'us-east-1',
                 access_key_id: ENV.fetch('BEGET_ACCESS'), secret_access_key: ENV.fetch('BEGET_SECRET'),
                 force_path_style: true }.freeze

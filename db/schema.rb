@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_01_232158) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_06_065003) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -276,6 +276,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_01_232158) do
     t.boolean "has_delivery", default: false, null: false
     t.bigint "bank_card_id"
     t.integer "bonus", default: 0, null: false
+    t.decimal "exchange_rate", precision: 10, scale: 2, default: "0.0", null: false
     t.index ["bank_card_id"], name: "index_orders_on_bank_card_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
@@ -308,6 +309,34 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_01_232158) do
     t.integer "favorites_count", default: 0, null: false
     t.index ["ancestry"], name: "index_products_on_ancestry"
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
+  end
+
+  create_table "purchase_items", force: :cascade do |t|
+    t.bigint "purchase_id", null: false
+    t.bigint "product_id", null: false
+    t.integer "quantity"
+    t.decimal "unit_cost", precision: 10, scale: 2, default: "0.0"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_purchase_items_on_product_id"
+    t.index ["purchase_id"], name: "index_purchase_items_on_purchase_id"
+  end
+
+  create_table "purchases", force: :cascade do |t|
+    t.integer "status", default: 0, null: false
+    t.string "currency", default: "TRY", null: false
+    t.decimal "exchange_rate", precision: 10, scale: 2, default: "0.0"
+    t.decimal "subtotal", precision: 10, scale: 2, default: "0.0"
+    t.decimal "shipping_total", precision: 10, scale: 2, default: "0.0"
+    t.decimal "total", precision: 10, scale: 2, default: "0.0"
+    t.datetime "sent_to_supplier_at"
+    t.datetime "acknowledged_at"
+    t.datetime "shipped_at"
+    t.datetime "received_at"
+    t.datetime "stocked_at"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "questions", force: :cascade do |t|
@@ -413,6 +442,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_01_232158) do
   add_foreign_key "orders", "users"
   add_foreign_key "product_subscriptions", "products"
   add_foreign_key "product_subscriptions", "users"
+  add_foreign_key "purchase_items", "products"
+  add_foreign_key "purchase_items", "purchases"
   add_foreign_key "reviews", "products"
   add_foreign_key "reviews", "users"
   add_foreign_key "users", "account_tiers"

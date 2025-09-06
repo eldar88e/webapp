@@ -16,16 +16,18 @@ class Order < ApplicationRecord
   before_save -> { self.shipped_at = Time.current }, if: -> { status == 'shipped' }
 
   before_update :cache_status, if: -> { status_changed? }
+  before_update :apply_delivery, if: -> { status == 'unpaid' }
   before_update :update_total_amount, if: -> { status == 'unpaid' || bonus_changed? }
-  # before_update :apply_delivery, if: -> { status == 'unpaid' }
   before_update :assign_valid_or_random_card, if: -> { status == 'unpaid' }
   before_update :remove_cart, if: -> { status_changed?(from: 'unpaid', to: 'paid') }
   before_update :deduct_stock, if: -> { status_changed?(from: 'paid', to: 'processing') }
-  before_update :export_items_google, if: -> { status_changed?(from: 'paid', to: 'processing') }
-  before_update :restock_stock, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
-  before_update :remove_items_google, if: -> { status_changed?(from: 'processing', to: 'cancelled') }
+  before_update :restock_stock, if: -> { can_restock? }
 
   after_update :provide_bonus, if: :should_provide_bonus?
+
+  after_update :set_exchange_rate, :export_items_google, if: -> { previous_changes['status'] == %w[paid processing] }
+  after_update :remove_items_google, if: -> { previous_changes['status'] == %w[processing cancelled] }
+
   after_update :up_order_count, if: -> { previous_changes['status'] == %w[processing shipped] }
   after_update :deduct_bonus!, if: -> { previous_changes[:status] == %w[processing shipped] && bonus.positive? }
 
@@ -100,9 +102,11 @@ class Order < ApplicationRecord
     UpdateProductStockJob.perform_later(mirena.product_id, Setting.fetch_value(:main_webhook_url), mirena.quantity)
   end
 
-  # apply_delivery
-  def update_total_amount
+  def apply_delivery
     self.has_delivery = order_items.one? && order_items.first.quantity == 1
+  end
+
+  def update_total_amount
     total_price_without_bonus = total_price
     self.total_amount = bonus.zero? ? total_price_without_bonus : total_price_without_bonus - bonus
   end
@@ -178,5 +182,13 @@ class Order < ApplicationRecord
 
   def deduct_bonus!
     user.bonus_logs.create!(bonus_amount: -bonus, reason: :order_deduct, source: self)
+  end
+
+  def set_exchange_rate
+    ExchangeRateSyncJob.perform_later(self.class.to_s, id)
+  end
+
+  def can_restock?
+    status_changed?(from: 'processing', to: 'paid') || status_changed?(from: 'processing', to: 'cancelled')
   end
 end

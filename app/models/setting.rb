@@ -27,6 +27,10 @@ class Setting < ApplicationRecord
     %w[]
   end
 
+  def self.sync_currency_rate(new_rate, currency = 'try')
+    find_or_create_by!(variable: currency).update!(value: new_rate, description: "#{currency.upcase} exchange rate")
+  end
+
   private
 
   def clear_settings_cache

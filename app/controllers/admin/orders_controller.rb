@@ -24,7 +24,7 @@ module Admin
           turbo_stream.replace(@order, partial: '/admin/orders/order', locals: { order: @order })
         ]
       else
-        error_notice(@order.errors.full_messages, :unprocessable_entity)
+        error_notice(@order.errors.full_messages)
       end
     end
 

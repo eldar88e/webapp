@@ -25,7 +25,7 @@ class TelegramBotWorker
 
   def process_error(error)
     Rails.logger.error "#{self.class} | #{error.message}"
-    ErrorMailer.send_error(error.message, error.full_message).deliver_later
+    AdminMailer.send_error(error.message, error.full_message).deliver_later
   end
 
   def tg_token_present?

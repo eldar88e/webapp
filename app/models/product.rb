@@ -15,7 +15,7 @@ class Product < ApplicationRecord
 
   validates :stock_quantity, numericality: { greater_than_or_equal_to: 0 }
   validates :name, presence: true
-  validate :acceptable_image
+  validate :acceptable_image, if: -> { attachment_changes['image'].present? }
 
   scope :available, -> { where(deleted_at: nil) }
   scope :deleted, -> { where.not(deleted_at: nil) }

@@ -4,7 +4,7 @@ class TelegramService
   MESSAGE_LIMIT = 4_090
 
   def initialize(message, id = nil, **args)
-    @bot_token      = settings[:tg_token]
+    @bot_token      = args[:tg_token] || settings[:tg_token]
     @chat_id        = id == :courier ? settings[:courier_tg_id] : (id || settings[:admin_chat_id])
     @message        = message
     @message_id     = nil
