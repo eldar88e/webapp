@@ -27,24 +27,22 @@ RSpec.describe Product, type: :model do
 
       context 'when the attached image is larger than 1MB' do
         it 'adds an error about file size' do
-          fake_image = double('attached_image',
-                              attached?: true,
-                              byte_size: 1.megabyte + 1,
-                              content_type: 'image/png')
-          allow(product).to receive(:image).and_return(fake_image)
-          product.valid?
-          expect(product.errors[:image]).to include('должно быть меньше 1 МБ')
+          product = Product.new(name: "X")
+          io      = StringIO.new("x" * (1.megabyte + 1))
+          product.image.attach(io: io, filename: "big.jpg", content_type: "image/jpeg")
+
+          expect(product).not_to be_valid
+          expect(product.errors[:image]).to include("должно быть меньше 1 МБ")
         end
       end
 
       context 'when the attached image has an invalid format' do
         it 'adds an error about file format' do
-          fake_image = double('attached_image',
-                              attached?: true,
-                              byte_size: 500.kilobytes,
-                              content_type: 'application/pdf')
-          allow(product).to receive(:image).and_return(fake_image)
-          product.valid?
+          product = Product.new(name: 'X')
+          io      = StringIO.new("x" * (0.5.megabyte))
+          product.image.attach(io: io, filename: "doc.pdf", content_type: "pdf")
+
+          expect(product).not_to be_valid
           expect(product.errors[:image]).to include('должно быть JPEG или PNG или WEBP')
         end
       end

@@ -20,8 +20,12 @@ class ApplicationJob < ActiveJob::Base
     end
   end
 
-  def self.send_email_to_admin(exception)
-    subject = 'Task execution error'
-    AdminMailer.send_error(exception, '', subject).deliver_now
+  class << self
+    private
+
+    def send_email_to_admin(exception)
+      subject = 'Task execution error'
+      AdminMailer.send_error(exception, '', subject).deliver_now
+    end
   end
 end

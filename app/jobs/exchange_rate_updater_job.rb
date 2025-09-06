@@ -8,11 +8,4 @@ class ExchangeRateUpdaterJob < ApplicationJob
     Setting.sync_currency_rate(rate)
     rate
   end
-
-  private
-
-  def self.send_email_to_admin(exception)
-    subject = 'Task execution error'
-    AdminMailer.notify_failure(exception, subject).deliver_now
-  end
 end

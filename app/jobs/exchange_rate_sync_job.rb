@@ -5,7 +5,9 @@ class ExchangeRateSyncJob < ApplicationJob
     rate = fetch_exchange_rate(currency)
     Setting.sync_currency_rate(rate)
     model = entity.constantize
+    # rubocop:disable Rails/SkipsModelValidations
     model.find_by(id: id)&.update_columns(exchange_rate: rate)
+    # rubocop:enable Rails/SkipsModelValidations
     nil
   end
 
