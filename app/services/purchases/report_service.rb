@@ -14,6 +14,15 @@ module Purchases
 
     private
 
+    def sent_to_supplier
+      msg = "📦 Закупка ##{@purchase.id}"
+      msg += "\n\n💰 Сумма: #{@purchase.total} ₺"
+      msg += I18n.t('purchases.messages.send_supplier', count: @purchase.purchase_items.count)
+      msg += "\n\n#{purchase_items_str}"
+      Rails.logger.info msg
+      TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id))
+    end
+
     def acknowledged
       msg = "✅ Закупка #️⃣#{@purchase.id} подтверждена"
       TelegramJob.perform_later(msg: msg)
@@ -25,17 +34,8 @@ module Purchases
       msg += I18n.t('purchases.messages.send_supplier', count: @purchase.purchase_items.count)
       msg += "\n\n#{purchase_items_str}"
       Rails.logger.info msg
-      TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_ids))
+      TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id))
       TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:courier_tg_id))
-    end
-
-    def sent_to_supplier
-      msg = "📦 Закупка ##{@purchase.id}"
-      msg += "\n\n💰 Сумма: #{@purchase.total} ₺"
-      msg += I18n.t('purchases.messages.send_supplier', count: @purchase.purchase_items.count)
-      msg += "\n\n#{purchase_items_str}"
-      Rails.logger.info msg
-      TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_ids))
     end
 
     def received
