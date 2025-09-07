@@ -23,8 +23,8 @@ class Purchase < ApplicationRecord
   after_create :sent_to_supplier!, if: -> { send_to_supplier == '1' }
   after_update :set_exchange_rate, if: -> { status == 'sent_to_supplier' }
   after_update :send_notification, unless: -> { status == 'initialized' }
-  after_update :update_product_stock, if: -> { status == 'stocked' }
-  after_update :deduct_product_stock, if: -> { previous_changes['status'] == %w[stocked cancelled] }
+  after_update :update_product_stock, if: -> { can_update_stock? }
+  after_update :deduct_product_stock, if: -> { can_restock? }
 
   def recalc_totals
     self.subtotal = purchase_items.sum(&:line_total)
@@ -32,6 +32,14 @@ class Purchase < ApplicationRecord
   end
 
   private
+
+  def can_restock?
+    [%w[stocked cancelled], %w[stocked shipped]].include?(previous_changes['status'])
+  end
+
+  def can_update_stock?
+    [%w[shipped stocked], %w[cancelled stocked]].include? previous_changes['status']
+  end
 
   def stamp_status_timestamps
     status == 'initialized' ? self.created_at = Time.current : send("#{status}_at=", Time.current)

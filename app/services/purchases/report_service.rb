@@ -35,8 +35,7 @@ module Purchases
 
     def stocked
       msg = "✅ Закупка #️⃣#{@purchase.id} оприходована"
-      msg += I18n.t('purchases.messages.send_supplier', count: @purchase.purchase_items.count)
-      msg += "\n\n#{purchase_items_str}"
+      msg += "\n\nОбновлены остатки #{@purchase.purchase_items.count} товаров:\n\n#{stoked_str}"
       Rails.logger.info msg
       TelegramJob.perform_later(msg: msg, id: :courier)
     end
@@ -53,6 +52,12 @@ module Purchases
         str = "#{idx}. #{item.product.name} – #{item.quantity} шт."
         str += " x #{item.unit_cost}₺ = #{item.line_total}₺" if prices
         str
+      end.join("\n")
+    end
+
+    def stoked_str
+      @purchase.purchase_items.includes(:product).map.with_index(1) do |item, idx|
+        "#{idx}. #{item.product.name} – #{item.product.stock_quantity} шт."
       end.join("\n")
     end
 
