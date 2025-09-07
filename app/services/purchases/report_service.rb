@@ -18,14 +18,10 @@ module Purchases
       msg = "📦 Закупка ##{@purchase.id}"
       msg += "\n\n💰 Сумма: #{@purchase.total} ₺"
       msg += I18n.t('purchases.messages.send_supplier', count: @purchase.purchase_items.count)
-      msg += "\n\n#{purchase_items_str}"
+      msg += "\n\n#{purchase_items_str(true)}"
       Rails.logger.info msg
-      TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id))
-    end
-
-    def acknowledged
-      msg = "✅ Закупка #️⃣#{@purchase.id} подтверждена"
       TelegramJob.perform_later(msg: msg)
+      send_to_supplier(msg)
     end
 
     def shipped
@@ -34,16 +30,7 @@ module Purchases
       msg += I18n.t('purchases.messages.send_supplier', count: @purchase.purchase_items.count)
       msg += "\n\n#{purchase_items_str}"
       Rails.logger.info msg
-      TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id))
-      TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:courier_tg_id))
-    end
-
-    def received
-      msg = "✅ Закупка #️⃣#{@purchase.id} принята на склад"
-      msg += I18n.t('purchases.messages.send_supplier', count: @purchase.purchase_items.count)
-      msg += "\n\n#{purchase_items_str}"
-      Rails.logger.info msg
-      TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:courier_tg_id))
+      TelegramJob.perform_later(msg: msg)
     end
 
     def stocked
@@ -54,12 +41,26 @@ module Purchases
       TelegramJob.perform_later(msg: msg, id: :courier)
     end
 
+    def cancelled
+      msg = "❌ Закупка ##{@purchase.id} отменена"
+      Rails.logger.info msg
+      TelegramJob.perform_later(msg: msg)
+      send_to_supplier(msg)
+    end
+
     def purchase_items_str(prices = nil)
       @purchase.purchase_items.includes(:product).map.with_index(1) do |item, idx|
         str = "#{idx}. #{item.product.name} – #{item.quantity} шт."
         str += " x #{item.unit_cost}₺ = #{item.line_total}₺" if prices
         str
       end.join("\n")
+    end
+
+    def send_to_supplier(msg)
+      supplier_tg_id = Setting.fetch_value(:supplier_tg_id)
+      return if supplier_tg_id.blank? || msg.blank?
+
+      TelegramJob.perform_later(msg: msg, id: supplier_tg_id)
     end
   end
 end

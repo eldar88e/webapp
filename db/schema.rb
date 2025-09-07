@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_06_065003) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_07_205849) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -330,13 +330,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_06_065003) do
     t.decimal "shipping_total", precision: 10, scale: 2, default: "0.0"
     t.decimal "total", precision: 10, scale: 2, default: "0.0"
     t.datetime "sent_to_supplier_at"
-    t.datetime "acknowledged_at"
     t.datetime "shipped_at"
-    t.datetime "received_at"
     t.datetime "stocked_at"
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "cancelled_at"
   end
 
   create_table "questions", force: :cascade do |t|

@@ -8,10 +8,9 @@ class Purchase < ApplicationRecord
   enum :status, {
     initialized: 0,          # создан (черновик)
     sent_to_supplier: 1,     # отправлен поставщику
-    acknowledged: 2,         # поставщик подтвердил
-    shipped: 3,              # отгружено
-    received: 4,             # принято на склад
-    stocked: 5               # оприходовано
+    shipped: 2,              # В пути
+    stocked: 3,              # Оприходован
+    cancelled: 4             # Отменен
   }, default: :initialized
 
   before_validation :set_default_currency
@@ -25,6 +24,7 @@ class Purchase < ApplicationRecord
   after_update :set_exchange_rate, if: -> { status == 'sent_to_supplier' }
   after_update :send_notification, unless: -> { status == 'initialized' }
   after_update :update_product_stock, if: -> { status == 'stocked' }
+  after_update :deduct_product_stock, if: -> { previous_changes['status'] == %w[stocked cancelled] }
 
   def recalc_totals
     self.subtotal = purchase_items.sum(&:line_total)
@@ -58,6 +58,12 @@ class Purchase < ApplicationRecord
   def update_product_stock
     purchase_items.each do |item|
       item.product.update!(stock_quantity: item.product.stock_quantity + item.quantity)
+    end
+  end
+
+  def deduct_product_stock
+    purchase_items.each do |item|
+      item.product.update!(stock_quantity: item.product.stock_quantity - item.quantity)
     end
   end
 end
