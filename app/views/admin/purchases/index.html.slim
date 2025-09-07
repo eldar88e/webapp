@@ -1,0 +1,33 @@
+- content_for :title, 'Закупки'
+
+.pt-6.px-4
+  h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-4" = yield(:title)
+
+  = link_to 'Создать', new_admin_purchase_path, class: 'btn',
+              data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false }
+
+.pt-6
+  .relative.overflow-x-auto.shadow-md.sm:rounded-lg
+    table.w-full.text-sm.text-left.rtl:text-right.text-gray-500.dark:text-gray-400
+      thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+        tr
+          th.px-6.py-3 scope="col" ИД
+          th.px-6.py-3 scope="col" Статус
+          th scope="col" class="px-6 py-3" Курс
+          th scope="col" class="px-6 py-3" Сумма
+          th scope="col" class="px-6 py-3" Стоимость доставки
+          th scope="col" class="px-6 py-3" Итого
+
+          th scope="col" class="px-6 py-3" Создано
+          th scope="col" class="px-6 py-3" Отправлено поставщику
+          th scope="col" class="px-6 py-3" Подтверждено
+          th scope="col" class="px-6 py-3" Отгружено
+          th scope="col" class="px-6 py-3" Прибытие на склад
+          th scope="col" class="px-6 py-3" Оприходовано
+
+          th scope="col" class="px-6 py-3" Примечания
+          th scope="col" class="px-6 py-3" Действия
+      tbody
+        = render partial: '/admin/purchases/purchase', collection: @purchases
+
+  = render partial: '/layouts/partials/admin/pagy'

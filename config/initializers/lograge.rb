@@ -11,9 +11,11 @@ Rails.application.configure do
       timestamp: Time.current,
       level: if payload[:status].nil?
                'UNKNOWN'
+             elsif payload[:status].to_i == 422
+               'WARNING'
              else
                (200..399).cover?(payload[:status].to_i) ? 'INFO' : 'ERROR'
-             end, # payload[:level] || 'unknown',
+             end,
       request_id: payload[:headers] && payload[:headers]['action_dispatch.request_id'],
       user_id: payload[:user_id],
       remote_ip: payload[:request]&.remote_ip

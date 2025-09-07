@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./colors";
 
 @font-face {
   font-family: 'Montserrat';
@@ -38,6 +39,11 @@
   font-weight: 700;
   font-style: normal;
   font-display: swap;
+}
+
+.turbo-progress-bar {
+  background-color: var(--color-green);
+  z-index: 1000;
 }
 
 body {
@@ -1246,5 +1252,15 @@ h3 {
   span {
     @apply animate-spin rounded-full h-10 w-10 border-b-2;
     border-color: #48C928;
+  }
+}
+
+.cart-summary {
+  input[type="range"] {
+    accent-color: var(--color-green);
+
+    &:focus-visible {
+      outline: none;
+    }
   }
 }

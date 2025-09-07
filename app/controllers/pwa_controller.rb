@@ -4,7 +4,7 @@ class PwaController < ApplicationController
   layout false, except: :offline
 
   def service_worker
-    return render js: '' if Rails.env.development?
+    return render js: '<script>console.log("SW for dev mode.");</script>'.html_safe if Rails.env.development?
 
     expires_now
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'

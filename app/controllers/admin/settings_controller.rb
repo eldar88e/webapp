@@ -28,7 +28,7 @@ module Admin
       if @setting.save
         redirect_to admin_settings_path, notice: t('.create')
       else
-        error_notice(@setting.errors.full_messages, :unprocessable_entity)
+        error_notice(@setting.errors.full_messages)
       end
     end
 
@@ -36,7 +36,7 @@ module Admin
       if @setting.update(setting_params)
         redirect_to admin_settings_path, notice: t('.update')
       else
-        error_notice(@setting.errors.full_messages, :unprocessable_entity)
+        error_notice(@setting.errors.full_messages)
       end
     end
 

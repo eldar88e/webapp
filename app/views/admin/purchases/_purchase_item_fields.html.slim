@@ -1,0 +1,22 @@
+.nested-fields.mb-5.border.p-4.rounded.bg-gray-50 data={ nested_form_target: 'item' }
+  .grid.grid-cols-1.md:grid-cols-4.gap-4
+    .col-span-2
+      = f.label :product_id, 'Продукт'
+      = f.select :product_id,
+              options_from_collection_for_select(products, :id, :name, f.object.product_id),
+              { include_blank: 'Выберите продукт' },
+              class: 'form-control'
+
+    .col-span-1
+      = f.label :quantity, 'Кол-во'
+      = f.number_field :quantity, step: 1, min: 1, class: 'form-control'
+
+    .col-span-1
+      = f.label :price, 'Цена'
+      = f.number_field :price, step: :any, min: 0, class: 'form-control'
+
+.flex.justify-between.items-center.mt-2
+  span.text-sm.text-gray-500 = "Сумма: #{(f.object.quantity || 0) * (f.object.price || 0)}"
+  .flex.gap-3
+    = f.hidden_field :_destroy, value: 'false', data: { nested_form_target: 'destroyField' }
+    button.link.text-red-600 type='button' data-action='nested-form#remove' Удалить

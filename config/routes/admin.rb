@@ -16,4 +16,5 @@ namespace :admin do
   resources :attachments, only: %i[destroy]
   resources :answers, only: :index
   resources :bonus_logs, only: :index
+  resources :purchases
 end
