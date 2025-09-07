@@ -17,13 +17,11 @@ tr id=dom_id(purchase) class="bg-white border-b dark:bg-gray-800 dark:border-gra
   td.px-6.py-4
     = format_date purchase.sent_to_supplier_at
   td.px-6.py-4
-    = format_date purchase.acknowledged_at
-  td.px-6.py-4
     = format_date purchase.shipped_at
   td.px-6.py-4
-    = format_date purchase.received_at
-  td.px-6.py-4
     = format_date purchase.stocked_at
+  td.px-6.py-4
+    = format_date purchase.cancelled_at
   td.px-6.py-4
     = purchase.notes
   td.px-6.py-4.flex

@@ -30,7 +30,7 @@ ru:
     statuses:
       initialized: "Инициализирован"
       sent_to_supplier: "Отправлен поставщику"
-      shipped: "Отгружено"
+      shipped: "В пути"
       stocked: "Оприходовано"
       cancelled: "Отменено"
 

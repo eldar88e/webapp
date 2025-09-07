@@ -158,7 +158,7 @@ ru:
         status: "Статус"
         created_at: "Дата создания"
         sent_to_supplier_at: "Отправлен поставщику"
-        shipped_at: "Отгружено"
+        shipped_at: "В пути"
         stocked_at: "Оприходовано"
         cancelled_at: "Отменено"
         total: "Сумма"
