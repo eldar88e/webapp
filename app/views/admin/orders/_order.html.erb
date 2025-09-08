@@ -20,6 +20,14 @@
     <%= render partial: 'admin/users/user_name', locals: { user: order.user } %>
   </th>
 
+  <td class="px-6 py-4">
+    <% if order.tracking_number.present? %>
+      <%= link_to order.tracking_number, target: '_blank' do %>
+        <%= order.tracking_number.sub('https://www.pochta.ru/tracking', '') %>
+      <% end %>
+    <% end %>
+  </td>
+
   <td class="px-6 py-4"><%= format_date order.created_at %></td>
 
   <td class="px-6 py-4"><%= format_date order.paid_at %></td>
