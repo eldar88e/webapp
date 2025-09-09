@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_08_172540) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_09_160021) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -249,6 +249,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_08_172540) do
     t.boolean "is_incoming", default: true, null: false
     t.bigint "tg_msg_id"
     t.jsonb "data"
+    t.index ["tg_id"], name: "index_messages_on_tg_id"
   end
 
   create_table "order_items", force: :cascade do |t|

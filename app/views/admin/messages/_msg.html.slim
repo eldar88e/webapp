@@ -28,6 +28,9 @@
         .mt-2.pb-2
           .inline-block.bg-gray-200.dark:bg-gray-800.rounded-lg.p-2
             = format_btn message.data['markup']
+      - if message.tg_msg_id.present?
+        .flex class="#{message.is_incoming ? 'justify-end' : 'justify-start'}"
+          = render Admin::IconComponent.new name: :check, width: 16
 
   - if incoming
     = button_to admin_message_path(message), method: :delete, class: 'btn-delete -ms-2 mt-6',
