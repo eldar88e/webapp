@@ -37,9 +37,9 @@
           .w-1/3.px-1.5
             = purchase_items_fields.select :product_id, @products.map { |p| [p.name, p.id] }, { include_blank: 'Выберите товар' }, required: true
           .w-1/3.px-1.5
-            = purchase_items_fields.number_field :quantity, min: 1, required: true
+            = purchase_items_fields.number_field :quantity, min: 1, required: true, placeholder: 'Кол-во'
           .w-1/3.px-1.5.flex.items-center.gap-2
-            = purchase_items_fields.number_field :unit_cost, min: 0, required: true
+            = purchase_items_fields.number_field :unit_cost, min: 0, required: true, placeholder: 'Цена'
             = purchase_items_fields.hidden_field :_destroy
             button.btn.btn-outline type="button" data-action="click->purchase-items#removeItem"
               = render IconComponent.new name: :trash
@@ -53,9 +53,9 @@
           .w-1/3.px-1.5
             = new_pf.select :product_id, @products.map { |p| [p.name, p.id] }, { include_blank: 'Выберите товар' }, required: true
           .w-1/3.px-1.5
-            = new_pf.number_field :quantity, min: 1, required: true
+            = new_pf.number_field :quantity, min: 1, required: true, placeholder: 'Кол-во'
           .w-1/3.px-1.5.flex.items-center.gap-2
-            = new_pf.number_field :unit_cost, value: nil, min: 0, required: true
+            = new_pf.number_field :unit_cost, value: nil, min: 0, required: true, placeholder: 'Цена'
             = new_pf.hidden_field :_destroy
             button.btn.btn-outline type="button" data-action="click->purchase-items#removeItem"
               = render IconComponent.new name: :trash
