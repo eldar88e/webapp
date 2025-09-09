@@ -3,7 +3,7 @@
   - data[:controller] += ' open-cart'
   - data[:action] += ' click->open-cart#openCart'
 
-- if cart_item = @cart_item || cart_items.find { |i| i.product_id == product.id }
+- if cart_item = @cart_item&.persisted? ? @cart_item : cart_items.find { |i| i.product_id == product.id }
   / cart_items.exists?(product_id: product.id)
   / - cart_item = cart_items.find_by(product_id: product.id)
   .btn.btn-secondary.flex.justify-between
