@@ -18,7 +18,6 @@ module Tg
       send(@message.data, @bot, @message)
     end
 
-
     private
 
     def i_paid(_bot, message)

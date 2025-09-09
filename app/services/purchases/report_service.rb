@@ -26,7 +26,7 @@ module Purchases
 
     def shipped
       Rails.logger.info "Закупка №#{@purchase.id} отгружена"
-      send_to_supplier("Проверьте платежку за Закупку №#{@purchase.id.to_s}")
+      send_to_supplier("Проверьте платежку за Закупку №#{@purchase.id}")
     end
 
     def stocked
