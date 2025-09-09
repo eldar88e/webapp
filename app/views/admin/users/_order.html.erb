@@ -1,4 +1,4 @@
-<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700" id="<%= dom_id order %>">
+<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
   <td class="w-4 p-4">
     <div class="flex items-center">
       <input id="checkbox-table-search-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
@@ -23,7 +23,14 @@
     <%= format_date order.updated_at %>
   </td>
   <td class="px-6 py-4">
-    <%= order.tracking_number && order.tracking_number.match?(/http/) ? link_to(order.tracking_number, order.tracking_number, target: '_blank') : order.tracking_number %>
+    <% if order.tracking_number && order.tracking_number.match?(/http/) %>
+      <%= link_to order.tracking_number, target: '_blank', class: 'flex items-center gap-1 text-blue-500 no-underline hover:underline' do %>
+        <%= render Admin::IconComponent.new name: :link, width: 16 %>
+        <%= order.tracking_number %>
+      <% end %>
+    <% else %>
+      <%= order.tracking_number %>
+    <% end %>
   </td>
   <td class="flex px-6 py-4">
     <%= link_to edit_admin_order_path(order), data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false },
