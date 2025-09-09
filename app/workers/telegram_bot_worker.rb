@@ -5,8 +5,6 @@ class TelegramBotWorker
 
   sidekiq_options queue: 'telegram_bot', retry: true
 
-  TRACK_CACHE_PERIOD = 5.minutes
-
   def perform
     return unless tg_token_present?
 
@@ -49,7 +47,8 @@ class TelegramBotWorker
   end
 
   def handle_callback(bot, message)
-    send(message.data.to_sym, bot, message) if respond_to?(message.data.to_sym, true)
+    # send(message.data.to_sym, bot, message) if respond_to?(message.data.to_sym, true)
+    Tg::TelegramCallbackService.call(bot, message)
   end
 
   def handle_message(bot, message)
@@ -115,43 +114,6 @@ class TelegramBotWorker
       wait = (index + 1).seconds
       TelegramJob.set(wait: wait).perform_later(method: 'delete_msg', id: message.chat.id, msg_id: id)
     end
-  end
-
-  def i_paid(_bot, message)
-    user         = User.find_by(tg_id: message.from.id)
-    order_number = parse_order_number(message.message.text)
-    order        = user.orders.find(order_number)
-    # order = user.orders.find_by(msg_id: message.message.message_id)
-    order.update(status: :paid)
-  end
-
-  def approve_payment(bot, message)
-    order_number = parse_order_number(message.message.text)
-    order        = Order.find(order_number)
-    order.update(status: :processing)
-    bot.api.delete_message(chat_id: message.message.chat.id, message_id: message.message.message_id)
-  end
-
-  def submit_tracking(bot, message)
-    order_number = parse_order_number(message.message.text)
-    full_name    = parse_full_name(message.message.text)
-    msg          = bot.api.send_message(chat_id: message.message.chat.id,
-                                        text: I18n.t('tg_msg.set_track_num', order: order_number, fio: full_name))
-    save_cache(order_number, message, msg)
-  end
-
-  def save_cache(order_number, message, msg)
-    Rails.cache.write("user_#{message.message.chat.id}_state",
-                      { order_id: order_number, msg_id: message.message.message_id, h_msg: msg.message_id },
-                      expires_in: TRACK_CACHE_PERIOD)
-  end
-
-  def parse_order_number(text)
-    text.match(/№(\d+)/)[1]
-  end
-
-  def parse_full_name(text)
-    text[/ФИО:\s*(.+?)\n\n/, 1]
   end
 
   def send_firs_msg(bot, chat_id)

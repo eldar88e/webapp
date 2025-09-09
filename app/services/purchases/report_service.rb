@@ -15,35 +15,32 @@ module Purchases
     private
 
     def sent_to_supplier
-      msg = "📦 Закупка ##{@purchase.id}"
+      msg = "📦 Закупка №#{@purchase.id}"
       msg += "\n\n💰 Сумма: #{@purchase.total} ₺"
       msg += I18n.t('purchases.messages.send_supplier', count: @purchase.purchase_items.count)
       msg += "\n\n#{purchase_items_str(true)}"
       Rails.logger.info msg
-      TelegramJob.perform_later(msg: msg)
+      TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids), markup: 'purchase_paid')
       send_to_supplier(msg)
     end
 
     def shipped
-      msg = "📦 Закупка ##{@purchase.id} отгружена"
-      msg += "\n\n💰 Сумма: #{@purchase.total} ₺"
-      msg += I18n.t('purchases.messages.send_supplier', count: @purchase.purchase_items.count)
-      msg += "\n\n#{purchase_items_str}"
-      Rails.logger.info msg
-      TelegramJob.perform_later(msg: msg)
+      Rails.logger.info "Закупка №#{@purchase.id} отгружена"
+      send_to_supplier("Проверьте платежку за Закупку №#{@purchase.id.to_s}")
     end
 
     def stocked
-      msg = "✅ Закупка #️⃣#{@purchase.id} оприходована"
+      msg = "✅ Закупка №#{@purchase.id} оприходована"
       msg += "\n\nОбновлены остатки #{@purchase.purchase_items.count} товаров:\n\n#{stoked_str}"
       Rails.logger.info msg
       TelegramJob.perform_later(msg: msg, id: :courier)
+      send_to_supplier "✅ Закупка №#{@purchase.id} принята"
     end
 
     def cancelled
-      msg = "❌ Закупка ##{@purchase.id} отменена"
+      msg = "❌ Закупка №#{@purchase.id} отменена"
       Rails.logger.info msg
-      TelegramJob.perform_later(msg: msg)
+      TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
       send_to_supplier(msg)
     end
 
@@ -65,7 +62,8 @@ module Purchases
       supplier_tg_id = Setting.fetch_value(:supplier_tg_id)
       return if supplier_tg_id.blank? || msg.blank?
 
-      TelegramJob.perform_later(msg: msg, id: supplier_tg_id)
+      tg_token_supplier = Setting.fetch_value(:tg_token_supplier)
+      TelegramJob.perform_later(msg: msg, id: supplier_tg_id, tg_token: tg_token_supplier)
     end
   end
 end

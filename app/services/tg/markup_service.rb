@@ -34,9 +34,16 @@ module Tg
       @keyboards = []
       @keyboards << catalog_btn if @markups[:markup]&.include? 'to_catalog'
       @keyboards << ask_btn if @markups[:markup]&.include? 'ask_btn'
+      form_purchase_paid_btn
       @keyboards += form_ext_url_keyboard if @markups[:markup_ext_url].present?
       @keyboards += form_url_keyboard if @markups[:markup_url].present?
       @keyboards
+    end
+
+    def form_purchase_paid_btn
+      return unless @markups[:markup]&.include? 'purchase_paid'
+
+      @keyboards << form_callback(@markups[:markup], I18n.t("tg_btn.#{@markups[:markup]}"))
     end
 
     def form_paid_keyboards

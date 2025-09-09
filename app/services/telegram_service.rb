@@ -68,6 +68,8 @@ class TelegramService
 
   def form_keyboard
     buttons = []
+    # if @markup == 'purchase_paid'
+    #   buttons = Tg::MarkupService.call({ markup: @markup })
     if @markup != 'new_order' && @markup != 'mailing'
       buttons << [Telegram::Bot::Types::InlineKeyboardButton.new(text: I18n.t("tg_btn.#{@markup}"),
                                                                  callback_data: @markup)]
@@ -97,6 +99,8 @@ class TelegramService
     return if @markup.nil? && @markup_url.nil? && @markup_ext_url.nil?
 
     keyboard = @markup ? form_keyboard : form_url_keyboard
+    # return keyboard if keyboard.is_a?(Telegram::Bot::Types::InlineKeyboardMarkup)
+
     Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
   end
 

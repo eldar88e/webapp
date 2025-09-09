@@ -22,7 +22,8 @@
 
   <td class="px-6 py-4">
     <% if order.tracking_number.present? %>
-      <%= link_to order.tracking_number, target: '_blank' do %>
+      <%= link_to order.tracking_number, target: '_blank', class: 'flex items-center gap-1 text-blue-500 no-underline hover:underline' do %>
+        <%= render Admin::IconComponent.new name: :link, width: 16 %>
         <%= order.tracking_number.sub('https://www.pochta.ru/tracking', '') %>
       <% end %>
     <% end %>
