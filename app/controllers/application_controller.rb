@@ -2,11 +2,11 @@ class ApplicationController < ActionController::Base
   include MainConcerns
   include Pagy::Backend
 
-  before_action :check_authenticate_user!, :product_search
+  before_action :check_authenticate_user!
   skip_before_action :check_authenticate_user!, if: :devise_confirmation_controller?
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   # allow_browser versions: :modern
-  helper_method :available_products, :favorite_ids, :cart_items, :current_cart
+  helper_method :available_products, :favorite_ids, :cart_items, :current_cart, :product_search
 
   private
 
@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
   end
 
   def product_search
-    @q_products = available_products.ransack(params[:q])
+    @product_search ||= available_products.ransack(params[:q])
   end
 
   def cart_items

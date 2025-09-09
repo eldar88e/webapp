@@ -1,4 +1,4 @@
-- if @cart.cart_items.present?
+- if @cart_items.present?
   = link_to carts_path, data: { turbo: false } do
     .cart-mini
       .container.mx-auto.px-5
@@ -6,7 +6,7 @@
           .flex.justify-center.gap-3
             .relative
               = render IconComponent.new name: :cart, size: 40
-              .cart-counter = @cart.cart_items.sum { |i| i.quantity }
+              .cart-counter = @cart_items.sum { |i| i.quantity }
             div
               div Корзина #{@total_price.to_i} ₽
               div Перейти в корзину

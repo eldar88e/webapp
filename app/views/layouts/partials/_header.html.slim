@@ -4,7 +4,7 @@
       marquee behavior="scroll" direction="left" scrollamount="5"
         .py-1.font-semibold Бесплатная доставка почтой РФ по всей России от 2 до 7 дней.
     - else
-      = search_form_for @q_products, url: products_path, method: :get do |f|
+      = search_form_for product_search, url: products_path, method: :get do |f|
         .header-search
           = f.search_field :name_cont, placeholder: '', class: 'block w-full pe-7 focus:border-none outline-none',
                   data: { controller: 'search-animate', search_animate_words_value: products_animation,

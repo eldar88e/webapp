@@ -5,7 +5,7 @@ class ProductsController < ApplicationController
   def index
     redirect_to "/products/#{Setting.fetch_value(:mirena_id)}" if ENV.fetch('HOST').include?('mirena')
 
-    @products = params[:q].nil? ? available_products : @q_products.result
+    @products = params[:q].nil? ? available_products : product_search.result
     # @pagy, @products = pagy(@products, limit: 10)
     respond_to do |format|
       format.html

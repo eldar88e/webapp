@@ -5,7 +5,7 @@ class FavoritesController < ApplicationController
   def index; end
 
   def create
-    current_user.favorites.create(product: @product)
+    @favorite = current_user.favorites.create(product: @product)
     render turbo_stream: [
       turbo_stream.replace("favorite-btn-#{@product.id}", partial: '/favorites/button', locals: { product: @product }),
       success_notice('Добавлено в избранное.')
@@ -13,7 +13,7 @@ class FavoritesController < ApplicationController
   end
 
   def destroy
-    current_user.favorites.find_by(product: @product)&.destroy
+    @favorite = current_user.favorites.find_by(product: @product)&.destroy
     stream = [
       turbo_stream.replace("favorite-btn-#{@product.id}", partial: '/favorites/button', locals: { product: @product }),
       success_notice('Удалено из избранного.')

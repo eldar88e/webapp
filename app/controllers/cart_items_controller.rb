@@ -1,7 +1,6 @@
 class CartItemsController < ApplicationController
-  before_action :set_cart_items
-  before_action :set_cart_item, only: :update
-  before_action :set_new_quantity, only: :update
+  before_action :set_cart_items, only: :create
+  before_action :set_cart_item, :set_new_quantity, only: :update
 
   def create
     @cart_item = @cart_items.new(product_id: cart_item_params[:product_id])
@@ -50,10 +49,10 @@ class CartItemsController < ApplicationController
 
   def render_create_success
     render turbo_stream: [
-      turbo_stream.update('cart-summary', partial: '/carts/cart_summary'),
       turbo_stream.update(
         "cart-btn-#{@cart_item.product.id}", partial: '/products/btn', locals: { product: @cart_item.product }
-      )
+      ),
+      turbo_stream.update('cart-summary', partial: '/carts/cart_summary')
     ]
   end
 
@@ -70,7 +69,7 @@ class CartItemsController < ApplicationController
   end
 
   def set_cart_item
-    @cart_item = @cart_items.find(params[:id])
+    @cart_item = cart_items.find(params[:id])
   end
 
   def cart_item_params
