@@ -1,6 +1,6 @@
 module Tg
   class TelegramCallbackService
-    HANDLERS = %w[i_paid approve_payment submit_tracking purchase_paid].freeze
+    HANDLERS = %w[i_paid approve_payment submit_tracking purchase_paid review].freeze
     TRACK_CACHE_PERIOD = 5.minutes
 
     def initialize(bot, message)
@@ -28,25 +28,33 @@ module Tg
     end
 
     def approve_payment(bot, message)
-      order_number = parse_order_number(message.message.text)
-      order        = Order.find(order_number)
+      order_id = parse_order_number(message.message.text)
+      order    = Order.find(order_id)
       order.update(status: :processing)
       bot.api.delete_message(chat_id: message.message.chat.id, message_id: message.message.message_id)
     end
 
     def submit_tracking(bot, message)
-      order_number = parse_order_number(message.message.text)
-      full_name    = parse_full_name(message.message.text)
-      msg          = bot.api.send_message(chat_id: message.message.chat.id,
-                                          text: I18n.t('tg_msg.set_track_num', order: order_number, fio: full_name))
-      save_cache(order_number, message, msg)
+      order_id  = parse_order_number(message.message.text)
+      full_name = parse_full_name(message.message.text)
+      text      = I18n.t('tg_msg.set_track_num', order: order_id, fio: full_name)
+      msg       = bot.api.send_message(chat_id: message.message.chat.id, text: text)
+      save_cache(order_id, message, msg)
     end
 
     def purchase_paid(bot, message)
-      purchase_number = parse_order_number(message.message.text)
-      purchase        = Purchase.find(purchase_number)
+      purchase_id = parse_order_number(message.message.text)
+      purchase    = Purchase.find(purchase_id)
       purchase.update(status: :shipped)
       new_text = "#{message.message.text}\n\n🚚 В пути"
+      edit_message(bot, message, new_text)
+    end
+
+    def review(bot, message)
+      review_id = parse_order_number(message.message.text)
+      review    = Review.find(review_id)
+      review.update(approved: true)
+      new_text = "#{message.message.text}\n\n✅ Отзыв подтвержден"
       edit_message(bot, message, new_text)
     end
 
