@@ -20,7 +20,7 @@ export default function CartItem({ item, onUpdateQuantity }: CartItemProps) {
       id={`cart-item-${item.id}`}
     >
       <div className="flex items-center gap-4">
-        <div className="bg-gray-100 w-18 h-18 rounded-lg overflow-hidden flex items-center justify-center">
+        <div className="bg-gray-100 w-18 h-18 min-w-18 rounded-lg overflow-hidden flex items-center justify-center">
           {item.image_url ? (
             <img src={item.image_url} alt={item.name} width={72} height={72} />
           ) : (
