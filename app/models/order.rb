@@ -29,7 +29,7 @@ class Order < ApplicationRecord
   after_update :remove_items_google, if: -> { previous_changes['status'] == %w[processing cancelled] }
 
   after_update :up_order_count, if: -> { previous_changes['status'] == %w[processing shipped] }
-  after_update :deduct_bonus!, if: -> { previous_changes[:status] == %w[processing shipped] && bonus.positive? }
+  after_update :deduct_bonus!, if: -> { previous_changes['status'] == %w[processing shipped] && bonus.positive? }
 
   after_commit :notify_status_change, on: :update, unless: -> { status == 'initialized' }
   after_commit :update_main_stock, on: :update, if: -> { ENV.fetch('HOST', '').include?('mirena') }

@@ -176,6 +176,6 @@ class User < ApplicationRecord
   end
 
   def store_bonus_balance_diff
-    self.bonus_balance_diff = bonus_balance - (bonus_balance_before_last_save || 0)
+    self.bonus_balance_diff = bonus_balance - (bonus_balance_was || 0)
   end
 end
