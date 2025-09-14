@@ -18,9 +18,9 @@ gem 'vite_rails'
 gem 'slim-rails'
 gem 'view_component'
 
-# gem 'aws-sdk-s3'
 gem 'active_link_to'
 gem 'ancestry'
+gem 'aws-sdk-s3'
 gem 'devise'
 gem 'dotenv'
 gem 'google-api-client', require: false
