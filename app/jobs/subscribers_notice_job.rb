@@ -29,11 +29,12 @@ class SubscribersNoticeJob < ApplicationJob
 
   def find_or_create_tg_media(product)
     file_hash = Digest::MD5.hexdigest(product.image.download)
-    TgMediaFile.find_or_create_by!(file_hash: file_hash) do |media|
-      media.file_type         = product.image.blob.content_type
-      media.original_filename = product.image.blob.filename
-      media.attachment.attach(product.image.blob)
-    end
+    TgMediaFile.fetch_or_create_by_hash(
+      file_hash: file_hash,
+      file_type: product.image.blob.content_type,
+      original_filename: product.image.blob.filename,
+      attachment: product.image.blob
+    )
   end
 
   def send_message(user, message)

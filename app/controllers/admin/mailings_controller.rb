@@ -1,6 +1,7 @@
 module Admin
   class MailingsController < Admin::ApplicationController
     MARKUP = 'to_catalog'.freeze
+    MARKUP_KEYS = %i[url text].freeze
 
     before_action :form_mailing, only: :create
 
@@ -37,14 +38,13 @@ module Admin
       return if params[:mailing][:markup_buttons].blank?
 
       @mailing.data[:markup] || {}
-      markup_keys = %i[url text]
-      form_custom_markups(markup_keys)
+      form_custom_markups
     end
 
-    def form_custom_markups(markup_keys)
+    def form_custom_markups
       params[:mailing][:markup_buttons].each do |button|
         type = button[:url].start_with?('http') ? 'ext' : nil
-        markup_keys.each { |key| form_markup_key(key, type, button) }
+        MARKUP_KEYS.each { |key| form_markup_key(key, type, button) }
       end
     end
 

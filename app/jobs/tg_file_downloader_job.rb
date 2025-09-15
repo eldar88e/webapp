@@ -29,11 +29,12 @@ class TgFileDownloaderJob < ApplicationJob
   end
 
   def find_or_create_tg_file(file_hash, file_id, file_type, name)
-    TgMediaFile.find_or_create_by!(file_hash: file_hash) do |media|
-      media.file_id   = file_id
-      media.file_type = file_type
-      media.original_filename = name
-    end
+    TgMediaFile.fetch_or_create_by_hash(
+      file_hash: file_hash,
+      file_type: file_type,
+      original_filename: name,
+      file_id: file_id
+    )
   end
 
   def tg_file_id(args)

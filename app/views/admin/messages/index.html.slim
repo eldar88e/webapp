@@ -62,7 +62,7 @@
             .text-lg.text-gray-400.italic Нет чата для просмотра
 
         = turbo_stream_from "admin_chat_#{@current_chat&.id}"
-        .overflow-y-auto.p-4.h-full id='messages' data-clear-input-target="messages"
+        .overflow-y-auto.p-4.h-full id='messages' data-clear-input-target="messages" data-controller="gallery"
           - if @messages.present?
             = render partial: '/layouts/partials/admin/pagy'
             - @messages.each do |message|

@@ -22,15 +22,15 @@ module Admin
 
       return unless file&.attachment&.attached?
 
-      form_tag(file, data)
+      file.attachment
     end
 
-    def form_tag(file, data)
-      if data['type'] == 'video'
-        video_tag(file.attachment, controls: true, width: 200)
-      else
-        image_tag storage_path(file.attachment), class: 'max-w-full h-auto rounded-lg'
-      end
-    end
+    # def form_tag(file, data)
+    #   if data['type'] == 'video'
+    #     video_tag(file.attachment, controls: true, width: 200)
+    #   else
+    #     image_tag storage_path(file.attachment), class: 'max-w-full h-auto rounded-lg'
+    #   end
+    # end
   end
 end
