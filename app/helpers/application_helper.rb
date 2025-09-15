@@ -22,7 +22,7 @@ module ApplicationHelper
     blob = variant ? attach : attach.blob
 
     case attach.blob.service_name
-    when 'beget' then beget_storage_path(blob)
+    when 'beget' then beget_storage_path(blob.key)
     when 'local' then local_storage_path(blob)
     else url_for(attach)
     end
