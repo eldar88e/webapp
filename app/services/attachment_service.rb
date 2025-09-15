@@ -16,6 +16,7 @@ class AttachmentService
 
       file_hash = Digest::MD5.file(attachment).hexdigest # TODO: нужно получить hash содержимого файла
       TgMediaFile.find_or_create_by!(file_hash: file_hash) { |media| form_media_attr(media, attachment) }
+      # TODO: перенести сохранение на attach_file
     end
 
     def form_tg_file(tg_media_file)

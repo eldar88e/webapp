@@ -383,6 +383,11 @@
     "@eslint/core" "^0.15.2"
     levn "^0.4.1"
 
+"@fancyapps/ui@^6.0.31":
+  version "6.0.31"
+  resolved "https://registry.yarnpkg.com/@fancyapps/ui/-/ui-6.0.31.tgz#7aedff9122ca804b66e1440d70b66a9a7b301af0"
+  integrity sha512-nXOFBJmQsxkOTqw6lNCav7kXuc3Bro69WZFcPtHS3ZezAmyvSGlSbG8w71WOcC+B8c5rn/xo3U+mDkaRsR/r+A==
+
 "@hotwired/stimulus@^3.2.2":
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/@hotwired/stimulus/-/stimulus-3.2.2.tgz#071aab59c600fed95b97939e605ff261a4251608"

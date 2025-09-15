@@ -23,8 +23,9 @@ module Admin
     end
 
     def create
-      @product = Product.new(product_params)
+      @product = Product.new(product_params.except(:image))
       if @product.save
+        @product.attach_image(product_params[:image])
         redirect_to admin_products_path, notice: t('controller.products.create')
       else
         error_notice(@product.errors.full_messages, :unprocessable_entity)
@@ -35,7 +36,7 @@ module Admin
       if params[:restore]
         @product.restore
         render turbo_stream: render_turbo_stream('update_restore')
-      elsif @product.update(product_params)
+      elsif update_product_with_image
         render turbo_stream: render_turbo_stream('update')
       else
         error_notice(@product.errors.full_messages, :unprocessable_entity)
@@ -48,6 +49,13 @@ module Admin
     end
 
     private
+
+    def update_product_with_image
+      success = @product.update(product_params.except(:image))
+      @product.attach_image(product_params[:image]) if success
+
+      success
+    end
 
     def form_products
       root_product_id  = Setting.fetch_value(:root_product_id).to_i

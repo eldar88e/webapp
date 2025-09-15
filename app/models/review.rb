@@ -18,8 +18,6 @@ class Review < ApplicationRecord
   scope :approved, -> { where(approved: true) }
   scope :pending, -> { where(approved: false) }
 
-  after_commit :process_photos, on: %i[create update]
-  after_create_commit :send_telegram_notification
   after_commit :clear_reviews_cache, on: %i[create update destroy]
 
   def approve!
@@ -44,20 +42,26 @@ class Review < ApplicationRecord
     %w[]
   end
 
+  def attach_photos(new_photos, notify: false)
+    clean_photos = Array(new_photos).compact_blank
+    return if clean_photos.blank?
+
+    photos.attach(clean_photos)
+    return unless photos.attached? && Rails.env.production?
+
+    blob_ids = photos.last(clean_photos.size).pluck(:blob_id)
+    GenerateImageVariantsJob.perform_later(blob_ids)
+    send_telegram_notification if notify
+  end
+
   private
 
-  def process_photos
-    ProcessReviewPhotosJob.perform_later(id)
-  end
-
   def send_telegram_notification
-    msg = "🎉 Новый отзыв №#{id}\n\n👤: #{user.user_name}\n💊: #{product.name}\n"
-    msg += "⭐: #{star_rating(rating)}\n\n#{content}"
+    msg = "🎉 Новый отзыв №#{id}\n\n👤: #{user.user_name}\n💊: #{product.name}"
+    msg += "\n⭐: #{('★' * rating) + ('☆' * (5 - rating))}"
+    msg += "\n📷: Есть фото" if photos.attached?
+    msg += "\n\n#{content}"
     TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids), markup: 'review')
-  end
-
-  def star_rating(rating)
-    ('★' * rating) + ('☆' * (5 - rating))
   end
 
   def user_must_have_purchased_product

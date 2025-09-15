@@ -32,6 +32,12 @@
   <td class="px-6 py-4"><%= product.favorites.size %></td>
 
   <td class="flex px-6 py-4">
+    <% if product.ancestry.present? %>
+      <%= link_to product_path(product), data: { turbo_prefetch: false }, class: blue_btn_styles, target: '_blank' do %>
+        <%= render Admin::IconComponent.new name: :link, width: 20 %>
+      <% end %>
+    <% end %>
+
     <%= link_to edit_admin_product_path(product), class: 'btn me-2',
                 data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false } do %>
       <%= render Admin::IconComponent.new name: :edit %>

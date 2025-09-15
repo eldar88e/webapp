@@ -1,4 +1,6 @@
 class Product < ApplicationRecord
+  include AttachableImages
+
   IS_NOT_MIRENA = ENV.fetch('HOST', '').exclude?('mirena')
 
   has_ancestry
@@ -71,6 +73,10 @@ class Product < ApplicationRecord
 
   def self.ransackable_associations(_auth_object = nil)
     %w[]
+  end
+
+  def attach_image(new_image)
+    attach_file(image, new_image)
   end
 
   private

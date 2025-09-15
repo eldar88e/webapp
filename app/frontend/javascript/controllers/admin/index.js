@@ -13,3 +13,6 @@ Object.entries(controllers).forEach(([path, module]) => {
 
 import NoticesController from "../application/notices_controller";
 application.register("notices", NoticesController);
+
+import GalleryController from "../application/gallery_controller";
+application.register("gallery", GalleryController);

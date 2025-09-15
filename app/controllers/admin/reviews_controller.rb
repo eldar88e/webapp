@@ -1,7 +1,6 @@
 module Admin
   class ReviewsController < Admin::ApplicationController
     before_action :set_review, only: %i[edit update destroy]
-    before_action :update_photo, only: :update
 
     def index
       @q_reviews = Review.includes(:user, :product, :photos_attachments).order(created_at: :desc).ransack(params[:q])
@@ -24,9 +23,10 @@ module Admin
     end
 
     def create
-      @review = Review.new(review_params)
+      @review = Review.new(review_params.except(:photos))
 
       if @review.save
+        @review.attach_photos(review_params[:photos], notify: true)
         redirect_to admin_reviews_path, notice: t('controller.reviews.create')
       else
         error_notice(@review.errors.full_messages, :unprocessable_entity)
@@ -35,6 +35,7 @@ module Admin
 
     def update
       if @review.update(review_params.except(:photos))
+        @review.attach_photos(review_params[:photos])
         render turbo_stream: [
           turbo_stream.replace(@review, partial: '/admin/reviews/review', locals: { review: @review }),
           success_notice(t('controller.reviews.update'))
@@ -50,10 +51,6 @@ module Admin
     end
 
     private
-
-    def update_photo
-      @review.photos.attach(params[:review][:photos]) if params[:review][:photos].present?
-    end
 
     def set_review
       @review = Review.find(params[:id])

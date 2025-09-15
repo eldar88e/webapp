@@ -26,10 +26,12 @@
 
   <td class="px-6 py-4">
     <% if review.photos.attached? %>
-      <div class="flex gap-1 mt-1">
+      <div class="flex gap-1 mt-1" data-controller="gallery">
         <% review.photos.each do |photo| %>
-          <div style="background-image: url('<%= storage_path(photo.variant(:thumb), true) %>'); background-size: cover; border-radius: 4px;
-            background-repeat: no-repeat; background-position: center; width: 24px; height: 24px"></div>
+          <%= link_to storage_path(photo.variant(:big)), data: { fancybox: "gallery_#{review.id}" } do %>
+            <div style="background-image: url('<%= storage_path(photo.variant(:thumb), true) %>'); background-size: cover; border-radius: 4px;
+              background-repeat: no-repeat; background-position: center; width: 24px; height: 24px"></div>
+          <% end %>
         <% end %>
       </div>
     <% end %>

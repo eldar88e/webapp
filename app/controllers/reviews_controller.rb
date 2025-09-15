@@ -21,13 +21,10 @@ class ReviewsController < ApplicationController
   end
 
   def create
-    @review = @product.reviews.new(review_params.merge(user: current_user))
+    @review = @product.reviews.new(review_params.except(:photos).merge(user: current_user))
     if @review.save
-      render turbo_stream: [
-        turbo_stream.update(:new_review, 'Ваш отзыв на модерации.'),
-        turbo_stream.update(:new_review_page, partial: '/reviews/notice'),
-        success_notice('Отзыв успешно добавлен.')
-      ]
+      @review.attach_photos(review_params[:photos], notify: true)
+      render turbo_stream: render_create
     else
       error_notice @review.errors.full_messages
     end
@@ -35,19 +32,20 @@ class ReviewsController < ApplicationController
 
   private
 
+  def render_create
+    [
+      turbo_stream.update(:new_review, 'Ваш отзыв на модерации.'),
+      turbo_stream.update(:new_review_page, partial: '/reviews/notice'),
+      success_notice('Отзыв успешно добавлен.')
+    ]
+  end
+
   def set_product
     @product = Product.find(params[:product_id])
   end
 
   def review_params
-    permitted_params = params.require(:review).permit(:content, :rating, photos: [])
-    photos_param     = params.require(:review)[:photos]
-    if photos_param.present?
-      permitted_params[:photos] = Array.wrap(photos_param)
-    else
-      permitted_params.delete(:photos)
-    end
-    permitted_params
+    params.require(:review).permit(:content, :rating, photos: [])
   end
 
   def detect_device

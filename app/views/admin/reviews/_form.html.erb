@@ -1,46 +1,47 @@
-<%= form_with(model: @review, url: (method == :patch ? admin_review_path(@review) : admin_reviews_path), data: { action: "submit->modal#close" }) do |form| %>
+<%= form_with model: @review, url: (method == :patch ? admin_review_path(@review) : admin_reviews_path),
+              data: { action: "submit->modal#close" }, class: 'admin-form' do |form| %>
   <div class="flex gap-4">
     <div class="w-1/2">
       <div class="mb-5">
-        <%= form.label :rating, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
-        <%= form.number_field :rating, max: 5, min: 1, required: true, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
+        <%= form.label :rating %>
+        <%= form.number_field :rating, max: 5, min: 1, required: true, value: form.object.rating.zero? ? 5 : form.object.rating %>
       </div>
     </div>
 
     <div class="w-1/2">
       <div class="mb-5">
-        <%= form.label :user_id, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
-        <%= form.number_field :user_id, max: User.last.id, min: 1, required: true,
-                              class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
+        <%= form.label :user_id %>
+        <%= form.number_field :user_id, max: User.last.id, min: 1, required: true %>
       </div>
     </div>
   </div>
 
   <div class="mb-5">
-    <%= form.label :product_id, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
+    <%= form.label :product_id %>
     <% products = (Product.find_by(id: Setting.fetch_value(:root_product_id))&.descendants || Product.all).map { |i| [i.name, i.id] } %>
-    <%= form.select :product_id, products, { selected: form.object.product_id },
-                    { class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' } %>
+    <%= form.select :product_id, products, { selected: form.object.product_id } %>
   </div>
 
   <div class="mb-5">
-    <%= form.label :content, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
-    <%= form.text_area :content, required: true, class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
+    <%= form.label :content %>
+    <%= form.text_area :content, required: true %>
   </div>
 
   <div class="mb-5">
-    <%= form.label :photos, 'Фотографии', class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
-    <%= form.file_field :photos, accept: 'image/jpeg,image/png,image/webp', multiple: true, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %>
+    <%= form.label :photos, 'Фотографии' %>
+    <%= form.file_field :photos, accept: 'image/jpeg,image/png,image/webp', multiple: true %>
   </div>
 
   <% if @review.photos.attached? %>
-    <div class="flex gap-1 mb-5">
+    <div class="flex gap-1 mb-5" data-controller="gallery">
       <% @review.photos.each do |photo| %>
-        <div class="edit-image-preview" id="<%= "attachment_#{photo.id}" %>" data-controller="attachment" data-attachment-id-value="<%= photo.id %>">
-          <div style="background-image: url('<%= storage_path(photo.variant(:big), true) %>'); background-size: cover; border-radius: 4px;
-            background-repeat: no-repeat; background-position: center; width: 100px; height: 100px"></div>
-          <button data-action="click->attachment#delete" class="shadow-sm absolute -bottom-full -right-full text-xs rounded bg-white cursor-pointer px-1">Удалить</button>
-        </div>
+        <%= link_to storage_path(photo.variant(:big)), data: { fancybox: 'gallery' } do %>
+          <div class="edit-image-preview" id="<%= "attachment_#{photo.id}" %>" data-controller="attachment" data-attachment-id-value="<%= photo.id %>">
+            <div style="background-image: url('<%= storage_path(photo.variant(:big), true) %>'); background-size: cover; border-radius: 4px;
+              background-repeat: no-repeat; background-position: center; width: 100px; height: 100px"></div>
+            <button data-action="click->attachment#delete" class="shadow-sm absolute -bottom-full -right-full text-xs rounded bg-white cursor-pointer px-1">Удалить</button>
+          </div>
+        <% end %>
       <% end %>
     </div>
   <% end %>
@@ -53,5 +54,5 @@
     <%= form.label :approved, "Одобрено", class: 'ml-2 text-sm font-medium text-gray-900 dark:text-white' %>
   </div>
 
-  <%= form.submit "Сохранить", class: blue_btn_styles %>
+  <%= form.submit "Сохранить", class: 'btn' %>
 <% end %>
