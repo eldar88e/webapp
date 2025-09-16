@@ -171,6 +171,14 @@ h3 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+
+    a {
+      transition: 0.5s all;
+
+      &:hover {
+        color: var(--color-green);
+      }
+    }
   }
 
   .title-has {
