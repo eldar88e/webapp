@@ -198,6 +198,16 @@ h3 {
     font-weight: 700;
     margin-bottom: 4px;
   }
+
+  .product-footer {
+    .btn {
+      svg {
+        @media (max-width: 346px) {
+          display: none;
+        }
+      }
+    }
+  }
 }
 
 .btn {
