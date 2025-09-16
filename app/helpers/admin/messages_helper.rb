@@ -10,7 +10,7 @@ module Admin
       end
     end
 
-    def prepare_html_tag(data)
+    def form_attachment(data)
       file =
         if data['media_id']
           TgMediaFile.find_by(id: data['media_id'])
@@ -24,13 +24,5 @@ module Admin
 
       file.attachment
     end
-
-    # def form_tag(file, data)
-    #   if data['type'] == 'video'
-    #     video_tag(file.attachment, controls: true, width: 200)
-    #   else
-    #     image_tag storage_path(file.attachment), class: 'max-w-full h-auto rounded-lg'
-    #   end
-    # end
   end
 end

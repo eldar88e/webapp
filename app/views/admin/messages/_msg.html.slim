@@ -22,12 +22,12 @@
     .px-4.py-2.shadow-sm.bg-gray-100.text-gray-900.dark:text-white.dark:bg-gray-700 class=bubble_cls
       - if message.data && (message.data['media_id'].present? || message.data['tg_file_id'].present?)
         .mb-2.pt-2
-          - attachment = prepare_html_tag(message.data)
-          = link_to attachment, data: { fancybox: 'gallery' } do
+          - url = storage_path form_attachment(message.data)
+          = link_to url, data: { fancybox: 'gallery' } do
             - if message.data['type'] == 'video'
-              = video_tag attachment, controls: true, width: 200
+              = video_tag url, controls: true, width: 200
             - else
-              = image_tag storage_path(attachment), class: 'max-w-full h-auto rounded-lg'
+              = image_tag url, class: 'max-w-full h-auto rounded-lg'
       = simple_format(message.text, {}, wrapper_tag: "span")
       - if message.data&.dig('markup').present?
         .mt-2.pb-2
