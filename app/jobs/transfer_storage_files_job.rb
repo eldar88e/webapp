@@ -59,5 +59,6 @@ class TransferStorageFilesJob < ApplicationJob
       filename: item.send(column).filename.to_s,
       content_type: item.send(column).content_type
     )
+    GenerateImageVariantsJob.perform_now(item.send(column).blob.id)
   end
 end
