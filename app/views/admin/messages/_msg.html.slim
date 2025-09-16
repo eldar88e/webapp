@@ -22,7 +22,8 @@
     .px-4.py-2.shadow-sm.bg-gray-100.text-gray-900.dark:text-white.dark:bg-gray-700 class=bubble_cls
       - if message.data && (message.data['media_id'].present? || message.data['tg_file_id'].present?)
         .mb-2.pt-2
-          - url = storage_path form_attachment(message.data)
+          - attachment = form_attachment(message.data)
+          - url = message.data['type'] == 'video' ? attachment : storage_path(attachment)
           = link_to url, data: { fancybox: 'gallery' } do
             - if message.data['type'] == 'video'
               = video_tag url, controls: true, width: 200
