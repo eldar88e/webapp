@@ -1,6 +1,7 @@
 class StatisticsService
   def initialize(products)
     @products = products
+    @default_exchange_rate = Setting.fetch_value(:try).to_f
   end
 
   def self.call(products)
@@ -9,7 +10,8 @@ class StatisticsService
 
   def process
     @products.map do |product|
-      source_price_ru = form_source_price(product) * last_purchase_item(product)&.purchase&.exchange_rate.to_i
+      exchange_rate = last_purchase_item(product)&.purchase&.exchange_rate || @default_exchange_rate
+      source_price_ru = form_source_price(product) * exchange_rate
       quantity_in_way = quantity_in_way(product)
 
       {
@@ -19,6 +21,8 @@ class StatisticsService
         price: form_price(product.price),
         source_price_tl: form_price(form_source_price(product), '₺'),
         source_price: form_price(source_price_ru),
+        expenses_percent: (expenses * 100 / product.price).round,
+        markup_percent: ((product.price - source_price_ru) * 100 / source_price_ru).round,
         stock_quantity: product.stock_quantity,
         quantity_in_way: quantity_in_way,
         money_in_product: form_price((product.stock_quantity + quantity_in_way) * (expenses + source_price_ru)),
@@ -58,6 +62,6 @@ class StatisticsService
   end
 
   def form_source_price(product)
-    last_purchase_item(product)&.unit_cost || 0
+    last_purchase_item(product)&.unit_cost || 1 # TODO: remove hardcoded value
   end
 end
