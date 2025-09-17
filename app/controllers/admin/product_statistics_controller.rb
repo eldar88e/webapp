@@ -4,7 +4,7 @@ module Admin
       root_products = Product.available.where(ancestry: nil).order(:created_at)
       ids = root_products.map { |item| item.descendants.ids }.flatten
       products = Product.available.includes(:image_attachment)
-                        .where(id: ids)
+                        .where(id: ids, price: 0..)
                         .order(:id)
       @product_statistics = StatisticsService.call(products)
     end
