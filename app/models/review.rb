@@ -47,10 +47,12 @@ class Review < ApplicationRecord
     return if clean_photos.blank?
 
     photos.attach(clean_photos)
-    return unless photos.attached? && Rails.env.production?
 
-    blob_ids = photos.last(clean_photos.size).pluck(:blob_id)
-    GenerateImageVariantsJob.perform_later(blob_ids)
+    if photos.attached? && Rails.env.production?
+      blob_ids = photos.last(clean_photos.size).pluck(:blob_id)
+      GenerateImageVariantsJob.perform_later(blob_ids)
+    end
+
     send_telegram_notification if notify
   end
 

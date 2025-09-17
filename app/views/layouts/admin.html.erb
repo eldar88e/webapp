@@ -11,6 +11,21 @@
     <%= vite_client_tag %>
     <%= vite_stylesheet_tag(ENV.fetch('HOST', '').include?('mirena') ? 'admin-mirena' : 'admin') %>
     <%= vite_javascript_tag 'admin' %>
+
+    <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        if (typeof Telegram !== "undefined") {
+          <% if ENV.fetch('HOST', '').include?('mirena') %>
+            Telegram.WebApp.setHeaderColor('#11505a');
+            Telegram.WebApp.setBackgroundColor('#11464f');
+          <% else %>
+            Telegram.WebApp.setHeaderColor('#1e2939');
+            Telegram.WebApp.setBackgroundColor('#101828');
+          <% end %>
+        }
+      });
+    </script>
   </head>
 
   <body class="bg-white dark:bg-gray-900 antialiased" data-controller="menu-btn">
