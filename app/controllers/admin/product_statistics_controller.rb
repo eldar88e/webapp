@@ -1,10 +1,10 @@
 module Admin
   class ProductStatisticsController < Admin::ApplicationController
     def index
-      root_product = Product.find(Setting.fetch_value(:default_product_id))
+      root_products = Product.available.where(ancestry: nil).order(:created_at)
+      ids = root_products.map { |item| item.descendants.ids }.flatten
       products = Product.available.includes(:image_attachment)
-                        .where(id: root_product.descendants.ids)
-                        .where.not(id: root_product.children.ids)
+                        .where(id: ids)
                         .order(:id)
       @product_statistics = StatisticsService.call(products)
     end
