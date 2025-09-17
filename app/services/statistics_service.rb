@@ -17,7 +17,7 @@ class StatisticsService
       {
         id: product.id,
         image: product.image,
-        name: product.name,
+        name: product.name.tr(' ', "\u00A0"),
         price: form_price(product.price),
         source_price_tl: form_price(form_source_price(product), '₺'),
         source_price: form_price(source_price_ru),
@@ -39,8 +39,8 @@ class StatisticsService
 
   def form_price(price, currency = '₽')
     int = price.to_i
-    formatted = int.to_s.reverse.scan(/\d{1,3}/).join(' ').reverse
-    "#{formatted} #{currency}"
+    formatted = int.to_s.reverse.scan(/\d{1,3}/).join("\u00A0").reverse
+    "#{formatted}\u00A0#{currency}"
   end
 
   def expenses
