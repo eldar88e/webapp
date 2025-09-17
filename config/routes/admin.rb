@@ -16,4 +16,5 @@ namespace :admin do
   resources :answers, only: :index
   resources :bonus_logs, only: :index
   resources :purchases
+  resources :product_statistics, only: :index
 end

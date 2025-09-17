@@ -1,0 +1,30 @@
+tr id="product_statistic_#{product_statistic[:id]}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+  td.px-6.py-4
+    = product_statistic[:id]
+  td.px-6.py-1
+    - if product_statistic[:image].attached?
+      = image_tag storage_path(product_statistic[:image]), alt: product_statistic[:name], style: 'width: 50px;'
+    - else
+      div role="status" class="flex space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center"
+        div class="flex items-center w-full h-13"
+          = render IconComponent.new name: 'no-image', size: 48
+  td class="px-6 py-4 whitespace-normal"
+    = product_statistic[:name]
+  td.px-6.py-4
+    = product_statistic[:price]
+  td.px-6.py-4
+    = product_statistic[:source_price_tl]
+  td.px-6.py-4
+    = product_statistic[:source_price]
+  td.px-6.py-4
+    = product_statistic[:stock_quantity]
+  td.px-6.py-4
+    = product_statistic[:quantity_in_way]
+  td.px-6.py-4
+    = product_statistic[:money_in_product]
+  td.px-6.py-4
+    = product_statistic[:expenses]
+  td.px-6.py-1
+    .flex.gap-2
+      = button_to '#', class: 'btn flex gap-1 justify-center align-center' do
+        = render IconComponent.new name: :cart

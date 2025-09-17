@@ -7,7 +7,7 @@
   </td>
   <td class="px-6 py-4"><%= product.id %></td>
 
-  <th scope="row" class="px-6 py-4">
+  <th scope="row" class="px-6 py-1">
     <div class="product-img">
       <% if product.image.attached? %>
         <%= image_tag storage_path(product.image), alt: product.name, style: 'width: 50px;' %>
@@ -31,30 +31,32 @@
 
   <td class="px-6 py-4"><%= product.favorites.size %></td>
 
-  <td class="flex px-6 py-4">
-    <% if product.ancestry.present? %>
-      <%= link_to product_path(product), data: { turbo_prefetch: false }, class: blue_btn_styles, target: '_blank' do %>
-        <%= render Admin::IconComponent.new name: :link, width: 20 %>
+  <td class="px-6 py-1">
+    <div class="flex gap-2">
+      <% if product.ancestry.present? %>
+        <%= link_to product_path(product), data: { turbo_prefetch: false }, class: 'btn', target: '_blank' do %>
+          <%= render Admin::IconComponent.new name: :link, width: 20 %>
+        <% end %>
       <% end %>
-    <% end %>
 
-    <%= link_to edit_admin_product_path(product), class: 'btn me-2',
-                data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false } do %>
-      <%= render Admin::IconComponent.new name: :edit %>
-    <% end %>
+      <%= link_to edit_admin_product_path(product), class: 'btn',
+                  data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false } do %>
+        <%= render Admin::IconComponent.new name: :edit %>
+      <% end %>
 
-    <% if product.deleted? %>
-      <%= button_to admin_product_path(product, restore: true), method: :patch, class: 'btn' do %>
-        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M14.502 7.046h-2.5v-.928a2.122 2.122 0 0 0-1.199-1.954 1.827 1.827 0 0 0-1.984.311L3.71 8.965a2.2 2.2 0 0 0 0 3.24L8.82 16.7a1.829 1.829 0 0 0 1.985.31 2.121 2.121 0 0 0 1.199-1.959v-.928h1a2.025 2.025 0 0 1 1.999 2.047V19a1 1 0 0 0 1.275.961 6.59 6.59 0 0 0 4.662-7.22 6.593 6.593 0 0 0-6.437-5.695Z"/>
-        </svg>
+      <% if product.deleted? %>
+        <%= button_to admin_product_path(product, restore: true), method: :patch, class: 'btn' do %>
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M14.502 7.046h-2.5v-.928a2.122 2.122 0 0 0-1.199-1.954 1.827 1.827 0 0 0-1.984.311L3.71 8.965a2.2 2.2 0 0 0 0 3.24L8.82 16.7a1.829 1.829 0 0 0 1.985.31 2.121 2.121 0 0 0 1.199-1.959v-.928h1a2.025 2.025 0 0 1 1.999 2.047V19a1 1 0 0 0 1.275.961 6.59 6.59 0 0 0 4.662-7.22 6.593 6.593 0 0 0-6.437-5.695Z"/>
+          </svg>
+        <% end %>
+      <% else %>
+        <%= button_to admin_product_path(product), method: :delete, class: 'btn btn-danger',
+                      data: { confirm: 'Вы уверены, что хотите удалить данный товар?',
+                              controller: 'confirm', action: 'click->confirm#call' } do %>
+          <%= render Admin::IconComponent.new name: :trash %>
+        <% end %>
       <% end %>
-    <% else %>
-      <%= button_to admin_product_path(product), method: :delete, class: 'btn btn-danger',
-                    data: { confirm: 'Вы уверены, что хотите удалить данный товар?',
-                            controller: 'confirm', action: 'click->confirm#call' } do %>
-        <%= render Admin::IconComponent.new name: :trash %>
-      <% end %>
-    <% end %>
+    </div>
   </td>
 </tr>

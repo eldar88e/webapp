@@ -1,0 +1,63 @@
+class StatisticsService
+  def initialize(products)
+    @products = products
+  end
+
+  def self.call(products)
+    new(products).process
+  end
+
+  def process
+    @products.map do |product|
+      source_price_ru = form_source_price(product) * last_purchase_item(product)&.purchase&.exchange_rate.to_i
+      quantity_in_way = quantity_in_way(product)
+
+      {
+        id: product.id,
+        image: product.image,
+        name: product.name,
+        price: form_price(product.price),
+        source_price_tl: form_price(form_source_price(product), '₺'),
+        source_price: form_price(source_price_ru),
+        stock_quantity: product.stock_quantity,
+        quantity_in_way: quantity_in_way,
+        money_in_product: form_price((product.stock_quantity + quantity_in_way) * (expenses + source_price_ru)),
+        expenses: expenses
+      }
+    end
+  end
+
+  private
+
+  def quantity_in_way(product)
+    last_purchase_item(product, :shipped)&.quantity || 0
+  end
+
+  def form_price(price, currency = '₽')
+    int = price.to_i
+    formatted = int.to_s.reverse.scan(/\d{1,3}/).join(' ').reverse
+    "#{formatted} #{currency}"
+  end
+
+  def expenses
+    @expenses ||= Setting.fetch_value(:expenses).to_i
+  end
+
+  def last_purchase_item(product, status = nil)
+    status ||= :stocked
+    last_purchase(product, status)&.purchase_items&.find { |item| item.product_id == product.id }
+  end
+
+  def last_purchase(product, status)
+    Rails.cache.fetch("last_purchase_#{product.id}_#{status}", expires_in: 1.hour) do
+      Purchase.includes(:purchase_items).where(status: status)
+              .where(purchase_items: { product_id: product.id })
+              .order(created_at: :desc)
+              .first
+    end
+  end
+
+  def form_source_price(product)
+    last_purchase_item(product)&.unit_cost || 0
+  end
+end
