@@ -30,6 +30,7 @@ module Admin
     end
 
     def format_date(date)
+      return if date.blank?
       return date.strftime('%H:%M') if date.to_date == Time.current.to_date
       return "Вчера,\u00A0#{date.strftime('%H:%M')}" if date.to_date == Time.current.to_date - 1.day
       return date.strftime("%H:%M\u00A0%d.%m") if date.year == Time.current.year
