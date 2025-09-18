@@ -12,14 +12,15 @@
           th.px-1.py-3 scope="col" Картинка
           th.px-6.py-3 scope="col" Название
           th scope="col" class="px-6 py-3" Цена
-          th scope="col" class="px-1 py-3" Закуп. цена в тл
-          th scope="col" class="px-1 py-3" Закуп. цена
-          th scope="col" class="px-1 py-3" % затрат
-          th scope="col" class="px-1 py-3" % наценки
-          th scope="col" class="px-6 py-3" Остаток
-          th scope="col" class="px-6 py-3" В пути
+          th scope="col" class="px-1 py-3" Закуп. цена(₺)
+          th scope="col" class="px-1 py-3" = "Закуп.\u00A0цена"
+          th scope="col" class="px-4 py-3" = "%\u00A0затрат"
+          th scope="col" class="px-1 py-3" = "%\u00A0наценки"
+          th scope="col" class="px-4 py-3" Остаток
+          th scope="col" class="px-6 py-3" = "В\u00A0пути"
           th scope="col" class="px-1 py-3" Деньги в товаре
           th scope="col" class="px-1 py-3" Расходы
+          th scope="col" class="px-1 py-3" = "Потребление\nв сутки"
           th scope="col" class="px-6 py-3" Действия
       tbody
         = render partial: '/admin/product_statistics/product_statistic', collection: @product_statistics

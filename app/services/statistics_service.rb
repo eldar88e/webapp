@@ -13,6 +13,7 @@ class StatisticsService
       exchange_rate = last_purchase_item(product)&.purchase&.exchange_rate || @default_exchange_rate
       source_price_ru = form_source_price(product) * exchange_rate
       quantity_in_way = quantity_in_way(product)
+      planer_statistics = form_planer_statistics(product)
 
       {
         id: product.id,
@@ -27,7 +28,7 @@ class StatisticsService
         quantity_in_way: quantity_in_way,
         money_in_product: form_price((product.stock_quantity + quantity_in_way) * (expenses + source_price_ru)),
         expenses: expenses
-      }
+      }.merge(planer_statistics)
     end
   end
 
@@ -63,5 +64,15 @@ class StatisticsService
 
   def form_source_price(product)
     last_purchase_item(product)&.unit_cost || 1 # TODO: remove hardcoded value
+  end
+
+  def form_planer_statistics(product)
+    planer = PurchasePlannerService.new(product)
+
+    {
+      avg_daily_consumption: planer.avg_daily_consumption.round(2),
+      expected_finish_date: planer.expected_finish_date,
+      purchase_date: planer.purchase_date
+    }
   end
 end
