@@ -21,7 +21,7 @@
                   = render partial: '/layouts/partials/avatar', locals: { user: chat }
                   .min-h-10
                     p class="text-sm font-medium text-gray-900 truncate dark:text-white"
-                      = chat.full_name.presence || chat.full_name_raw.presence || chat.tg_id
+                      = name_user(chat)
                     p class="text-sm text-gray-500 truncate dark:text-gray-400"
                       - if chat.username.present?
                         = "@#{chat.username}"
@@ -32,8 +32,7 @@
                     /   .w-3.h-3.rounded-full.bg-red-500
                 .text-gray-600.dark:text-gray-400.text-xs
                   - last_message_time = chat.messages.max_by { |m| m.created_at }.created_at
-                  time data-controller="timeago" data-timeago-locale-value="ru" title="#{format_date last_message_time}" datetime="#{last_message_time.iso8601}"
-                    = format_date last_message_time
+                  = format_date last_message_time
           .py-4.px-6.text-gray-500.dark:text-gray-400
             - if @chats_page.pages > 1
               .mb-3 == pagy_nav(@chats_page)

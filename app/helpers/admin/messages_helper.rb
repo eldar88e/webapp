@@ -24,5 +24,17 @@ module Admin
 
       file.attachment
     end
+
+    def name_user(user)
+      "#{user.first_name} #{user.middle_name}".presence || user.full_name_raw.presence || user.tg_id
+    end
+
+    def format_date(date)
+      return date.strftime('%H:%M') if date.to_date == Time.current.to_date
+      return "Вчера,\u00A0#{date.strftime('%H:%M')}" if date.to_date == Time.current.to_date - 1.day
+      return date.strftime("%H:%M\u00A0%d.%m") if date.year == Time.current.year
+
+      date.strftime("%H:%M\u00A0%d.%m.%Yг.")
+    end
   end
 end
