@@ -28,7 +28,7 @@
         </button> 
 
         <div data-controller="dropdown" class="relative">
-          <button data-action="click->dropdown#toggle" class="h-8 w-8 ml-3 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" type="button">
+          <button data-action="click->dropdown#toggle" class="h-8 w-8 ml-3 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 overflow-hidden" type="button">
             <% if current_user.photo_url.present? %>
               <%= image_tag current_user.photo_url %>
             <% else %>
