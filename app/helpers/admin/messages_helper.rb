@@ -26,7 +26,8 @@ module Admin
     end
 
     def name_user(user)
-      "#{user.first_name} #{user.middle_name}".presence || user.full_name_raw.presence || user.tg_id
+      name = "#{user.first_name} #{user.middle_name}".presence || user.full_name_raw.presence || user.tg_id
+      "#{name[0...20]}..." if name.size > 23
     end
 
     def format_date(date)

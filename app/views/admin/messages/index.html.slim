@@ -15,7 +15,7 @@
           - @chats.each do |chat|
             - background = chat.id == @current_chat.id ? 'bg-gray-100 dark:bg-gray-700' : ''
             = link_to admin_messages_path(chat_id: chat.tg_id), data: { turbo_prefetch: false },
-                    class: "block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition #{background}" do
+                    class: "block p-2 md:px-4 md:py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition #{background}" do
               .flex.items-center.gap-2.justify-between
                 div class="flex items-center gap-2"
                   = render partial: '/layouts/partials/avatar', locals: { user: chat }
