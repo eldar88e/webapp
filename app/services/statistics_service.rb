@@ -9,10 +9,12 @@ class StatisticsService
   end
 
   def process
-    @products.map do |product|
+    @products.filter_map do |product|
+      quantity_in_way = quantity_in_way(product)
+      next if product.stock_quantity.zero? && quantity_in_way.zero?
+
       exchange_rate = last_purchase_item(product)&.purchase&.exchange_rate || @default_exchange_rate
       source_price_ru = form_source_price(product) * exchange_rate
-      quantity_in_way = quantity_in_way(product)
       planer_statistics = form_planer_statistics(product)
 
       {
