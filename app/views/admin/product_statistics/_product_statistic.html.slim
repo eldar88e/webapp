@@ -27,6 +27,8 @@ tr id="product_statistic_#{product_statistic[:id]}" class="bg-white border-b dar
   td.px-6.py-4
     = product_statistic[:money_in_product]
   td.px-6.py-4
+    = product_statistic[:net_profit]
+  td.px-6.py-4
     = product_statistic[:expenses].to_s + "\u00A0₽"
   td.px-6.py-4
     = product_statistic[:avg_daily_consumption]

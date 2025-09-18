@@ -19,10 +19,11 @@
           th scope="col" class="px-4 py-3" Остаток
           th scope="col" class="px-6 py-3" = "В\u00A0пути"
           th scope="col" class="px-1 py-3" Деньги в товаре
+          th scope="col" class="px-1 py-3" Чистая прибыль
           th scope="col" class="px-1 py-3" Расходы
           th scope="col" class="px-1 py-3" = "Потребление\nв сутки"
           th scope="col" class="px-6 py-3" Действия
       tbody
         = render partial: '/admin/product_statistics/product_statistic', collection: @product_statistics
-
+  .p-4
   / = render partial: '/layouts/partials/admin/pagy'

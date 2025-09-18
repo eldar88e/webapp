@@ -29,6 +29,7 @@ class StatisticsService
         stock_quantity: product.stock_quantity,
         quantity_in_way: quantity_in_way,
         money_in_product: form_price((product.stock_quantity + quantity_in_way) * (expenses + source_price_ru)),
+        net_profit: form_price(product.price - source_price_ru - expenses),
         expenses: expenses
       }.merge(planer_statistics)
     end
