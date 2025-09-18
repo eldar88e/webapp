@@ -1,6 +1,6 @@
 class PurchasePlannerService
   STATISTICS_PERIOD = 1.year
-  LEAD_TIME = 20.days
+  LEAD_TIME = Setting.fetch_value(:lead_time).to_i.days
 
   def initialize(product)
     @product = product
