@@ -26,6 +26,8 @@ class Purchase < ApplicationRecord
   after_update :update_product_stock, if: -> { can_update_stock? }
   after_update :deduct_product_stock, if: -> { can_restock? }
 
+  after_commit :clear_last_purchase_cache
+
   def recalc_totals
     self.subtotal = purchase_items.sum(&:line_total)
     self.total    = subtotal - shipping_total
@@ -73,5 +75,9 @@ class Purchase < ApplicationRecord
     purchase_items.each do |item|
       item.product.update!(stock_quantity: item.product.stock_quantity - item.quantity)
     end
+  end
+
+  def clear_last_purchase_cache
+    Rails.cache.delete_matched('last_purchase_*')
   end
 end
