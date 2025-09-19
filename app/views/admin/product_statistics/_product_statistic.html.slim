@@ -8,7 +8,7 @@ tr id="product_statistic_#{product_statistic[:id]}" class="bg-white border-b dar
       div role="status" class="flex space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center"
         div class="flex items-center w-full h-13"
           = render IconComponent.new name: 'no-image', size: 48
-  td class="pl-4 py-4 whitespace-normal"
+  th scope="row" class="pl-4 py-4 whitespace-normal dark:text-white text-gray-900"
     = product_statistic[:name].slice(0, 16) + "#{'...' if product_statistic[:name].length > 16}"
   - if product_statistic[:price] == product_statistic[:avg_sale_price]
     td.px-6.py-4.text-center colspan="2" = product_statistic[:price]
@@ -46,7 +46,7 @@ tr id="product_statistic_#{product_statistic[:id]}" class="bg-white border-b dar
     = product_statistic[:sales].to_s + "\u00A0шт."
   td.px-6.py-4
     = product_statistic[:strategy_stock]
-  td.px-6.py-4
+  td.px-6.py-4 class="#{product_statistic[:deficit].negative? ? 'text-red-600' : ''}"
     = product_statistic[:deficit]
   td.px-6.py-4
     = product_statistic[:days_of_stock]
