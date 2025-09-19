@@ -1,7 +1,7 @@
 tr id="product_statistic_#{product_statistic[:id]}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
   td.px-6.py-4
     = product_statistic[:id]
-  td.px-6.py-1
+  td.px-4.py-1
     - if product_statistic[:image].attached?
       = image_tag storage_path(product_statistic[:image]), alt: product_statistic[:name], style: 'width: 50px;'
     - else
@@ -9,7 +9,7 @@ tr id="product_statistic_#{product_statistic[:id]}" class="bg-white border-b dar
         div class="flex items-center w-full h-13"
           = render IconComponent.new name: 'no-image', size: 48
   td class="px-6 py-4 whitespace-normal"
-    = product_statistic[:name]
+    = product_statistic[:name].slice(0, 16) + "#{'...' if product_statistic[:name].length > 16}"
   td.px-6.py-4
     = product_statistic[:price]
   td.px-6.py-4
@@ -32,6 +32,8 @@ tr id="product_statistic_#{product_statistic[:id]}" class="bg-white border-b dar
     = product_statistic[:net_profit]
   td.px-6.py-4
     = product_statistic[:expenses].to_s + "\u00A0₽"
+  td.px-6.py-4
+    = product_statistic[:expenses_period]
   td.px-6.py-4
     = product_statistic[:avg_daily_consumption]
   td.px-6.py-4

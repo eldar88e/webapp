@@ -18,6 +18,7 @@ class StatisticsService
       exchange_rate = last_purchase_item(product)&.purchase&.exchange_rate || @default_exchange_rate
       source_price_ru = form_source_price(product) * exchange_rate
       planer_statistics = form_planer_statistics(product)
+      sales = count_sales(product)
 
       {
         id: product.id,
@@ -33,8 +34,9 @@ class StatisticsService
         quantity_in_way: quantity_in_way,
         money_in_product: form_price((product.stock_quantity + quantity_in_way) * (expenses + source_price_ru)),
         net_profit: form_price(product.price - source_price_ru - expenses),
-        sales: count_sales(product),
-        expenses: expenses
+        sales: sales,
+        expenses: expenses,
+        expenses_period: form_price(expenses * sales)
       }.merge(planer_statistics)
     end
   end
