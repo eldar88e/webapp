@@ -7,8 +7,8 @@ class StatisticsService
     @lead_time = Setting.fetch_value(:lead_time).to_i
   end
 
-  def self.call(products)
-    new(products).process
+  def self.call(products, start_date = nil, end_date = nil)
+    new(products, start_date, end_date).process
   end
 
   def process
