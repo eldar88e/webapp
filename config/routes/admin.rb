@@ -16,5 +16,6 @@ namespace :admin do
   resources :answers, only: :index
   resources :bonus_logs, only: :index
   resources :purchases
+  resources :purchase_items, only: %i[create update]
   resources :product_statistics, only: :index
 end

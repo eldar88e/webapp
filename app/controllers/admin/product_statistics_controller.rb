@@ -9,6 +9,7 @@ module Admin
                         .where(id: ids, price: 0..)
                         .order(:name)
       @product_statistics = StatisticsService.call(products, @start_date, @end_date)
+      @purchase_items = Purchase.find_by(status: :initialized)&.purchase_items&.pluck(:product_id) || []
     end
 
     private
