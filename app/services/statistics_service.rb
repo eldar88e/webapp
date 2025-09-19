@@ -41,7 +41,8 @@ class StatisticsService
         sales: sales,
         expenses: expenses,
         expenses_period: form_price(expenses * sales),
-        deficit: deficit
+        deficit: deficit,
+        days_of_stock: ((product.stock_quantity + quantity_in_way) / avg_daily_consumption).round
       }.merge(planer_statistics)
     end
   end
