@@ -20,9 +20,9 @@ tr id="product_statistic_#{product_statistic[:id]}" class="bg-white border-b dar
   td.px-6.py-4
     = product_statistic[:source_price]
   td.px-6.py-4
-    = product_statistic[:expenses_percent]
+    = product_statistic[:expenses_percent].to_s + "\u00A0%"
   td.px-6.py-4
-    = product_statistic[:markup_percent]
+    = product_statistic[:markup_percent].to_s + "\u00A0%"
   td.px-6.py-4
     = product_statistic[:stock_quantity].to_s + "\u00A0шт."
   td.px-6.py-4
