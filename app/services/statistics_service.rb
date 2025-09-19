@@ -42,7 +42,7 @@ class StatisticsService
         expenses: expenses,
         expenses_period: form_price(expenses * sales),
         deficit: deficit,
-        days_of_stock: ((product.stock_quantity + quantity_in_way) / avg_daily_consumption).round
+        days_of_stock: days_of_stock(product, avg_daily_consumption, quantity_in_way)
       }.merge(planer_statistics)
     end
   end
@@ -105,5 +105,11 @@ class StatisticsService
       .where(product_id: product.id, orders: { status: :shipped, shipped_at: @start_date..@end_date })
       .average(:price)
       &.to_f || 0
+  end
+
+  def days_of_stock(product, avg_daily_consumption, quantity_in_way)
+    return 0 if avg_daily_consumption.zero?
+
+    ((product.stock_quantity + quantity_in_way) / avg_daily_consumption).round
   end
 end
