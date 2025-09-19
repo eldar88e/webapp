@@ -20,6 +20,8 @@ class StatisticsService
       source_price_ru = form_source_price(product) * exchange_rate
       planer_statistics = form_planer_statistics(product)
       sales = count_sales(product)
+      avg_daily_consumption = planer_statistics[:avg_daily_consumption]
+      deficit = (product.stock_quantity + quantity_in_way - avg_daily_consumption * @lead_time).round
 
       {
         id: product.id,
@@ -38,7 +40,7 @@ class StatisticsService
         sales: sales,
         expenses: expenses,
         expenses_period: form_price(expenses * sales),
-        deficit: product.stock_quantity + quantity_in_way - planer_statistics[:strategy_stock]
+        deficit: deficit
       }.merge(planer_statistics)
     end
   end
