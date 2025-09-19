@@ -8,7 +8,7 @@ module Admin
       products = Product.available.includes(:image_attachment)
                         .where(id: ids, price: 0..)
                         .order(:name)
-      @product_statistics = StatisticsService.call(products)
+      @product_statistics = StatisticsService.call(products, @start_date, @end_date)
     end
 
     private
