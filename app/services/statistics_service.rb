@@ -4,6 +4,7 @@ class StatisticsService
     @end_date = end_date || Time.current
     @products = products
     @default_exchange_rate = Setting.fetch_value(:try).to_f
+    @lead_time = Setting.fetch_value(:lead_time).to_i
   end
 
   def self.call(products)
@@ -80,6 +81,7 @@ class StatisticsService
 
     {
       avg_daily_consumption: planer.avg_daily_consumption.round(2),
+      strategy_stock: (planer.avg_daily_consumption.round(2) * @lead_time).round,
       expected_finish_date: planer.expected_finish_date,
       purchase_date: planer.purchase_date
     }

@@ -1,4 +1,4 @@
-tr id="product_statistic_#{product_statistic[:id]}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+tr id="product_statistic_#{product_statistic[:id]}" class="bg-white border-b dark:bg-gray-900 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
   td.px-6.py-4
     = product_statistic[:id]
   td.px-4.py-1
@@ -38,6 +38,8 @@ tr id="product_statistic_#{product_statistic[:id]}" class="bg-white border-b dar
     = product_statistic[:avg_daily_consumption]
   td.px-6.py-4
     = product_statistic[:sales].to_s + "\u00A0шт."
+  td.px-6.py-4
+    = product_statistic[:strategy_stock]
   td.px-6.py-1
     .flex.gap-2
       = button_to '#', class: 'btn flex gap-1 justify-center align-center' do
