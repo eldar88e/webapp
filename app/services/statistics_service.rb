@@ -37,6 +37,7 @@ class StatisticsService
         quantity_in_way: quantity_in_way,
         money_in_product: form_price((product.stock_quantity + quantity_in_way) * (expenses + source_price_ru)),
         net_profit: form_price(product.price - source_price_ru - expenses),
+        net_profit_period: form_price((product.price - source_price_ru - expenses) * sales),
         sales: sales,
         expenses: expenses,
         expenses_period: form_price(expenses * sales),
