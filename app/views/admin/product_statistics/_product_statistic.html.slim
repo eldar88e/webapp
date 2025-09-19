@@ -13,6 +13,8 @@ tr id="product_statistic_#{product_statistic[:id]}" class="bg-white border-b dar
   td.px-6.py-4
     = product_statistic[:price]
   td.px-6.py-4
+    = product_statistic[:avg_sale_price]
+  td.px-6.py-4
     = product_statistic[:source_price_tl]
   td.px-6.py-4
     = product_statistic[:source_price]
@@ -32,6 +34,8 @@ tr id="product_statistic_#{product_statistic[:id]}" class="bg-white border-b dar
     = product_statistic[:expenses].to_s + "\u00A0₽"
   td.px-6.py-4
     = product_statistic[:avg_daily_consumption]
+  td.px-6.py-4
+    = product_statistic[:sales].to_s + "\u00A0шт."
   td.px-6.py-1
     .flex.gap-2
       = button_to '#', class: 'btn flex gap-1 justify-center align-center' do
