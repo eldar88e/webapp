@@ -26,7 +26,10 @@ tr id="product_statistic_#{product_statistic[:id]}" class="bg-white border-b dar
   td.px-6.py-4
     = product_statistic[:stock_quantity].to_s + "\u00A0шт."
   td.px-6.py-4
-    = product_statistic[:quantity_in_way].to_s + "\u00A0шт."
+    - if product_statistic[:quantity_in_way].zero?
+      | —
+    - else
+      = product_statistic[:quantity_in_way].to_s + "\u00A0шт."
   td.px-6.py-4
     = product_statistic[:money_in_product]
   td.px-6.py-4
