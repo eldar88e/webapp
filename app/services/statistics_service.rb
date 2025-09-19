@@ -37,7 +37,8 @@ class StatisticsService
         net_profit: form_price(product.price - source_price_ru - expenses),
         sales: sales,
         expenses: expenses,
-        expenses_period: form_price(expenses * sales)
+        expenses_period: form_price(expenses * sales),
+        deficit: product.stock_quantity + quantity_in_way - planer_statistics[:strategy_stock]
       }.merge(planer_statistics)
     end
   end

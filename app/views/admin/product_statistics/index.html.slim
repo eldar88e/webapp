@@ -10,7 +10,7 @@
         tr
           th.px-6.py-3 scope="col" ИД
           th.px-1.py-3 scope="col" Картинка
-          th.px-6.py-3 scope="col" Название
+          th.pl-4.py-3 scope="col" Название
           th scope="col" class="px-6 py-3" Цена
           th scope="col" class="px-6 py-3" Ср.цена
           th scope="col" class="px-1 py-3" Закуп. цена(₺)
@@ -26,6 +26,7 @@
           th scope="col" class="px-1 py-3" = "Потребление\nв\u00A0сутки"
           th scope="col" class="px-1 py-3" = "Продажи\nза\u00A0период"
           th scope="col" class="px-1 py-3" = "Стратег.\nзапас"
+          th scope="col" class="px-1 py-3" = "Дефицит\n(+) / \nПеребор(-)"
           th scope="col" class="px-6 py-3" Действия
       tbody
         = render partial: '/admin/product_statistics/product_statistic', collection: @product_statistics
