@@ -45,13 +45,13 @@ tr id="product_statistic_#{product_statistic[:id]}" class="bg-white border-b dar
   td.p-4
     = product_statistic[:sales].to_s + "\u00A0шт."
   td.px-6.py-4
-    = product_statistic[:strategy_stock]
+    = product_statistic[:strategy_stock].to_s + "\u00A0шт."
   td.px-6.py-4 class="#{product_statistic[:deficit].negative? ? 'text-red-600' : ''}"
-    = product_statistic[:deficit]
+    = product_statistic[:deficit].to_s + "\u00A0шт."
   td.px-6.py-4
     = product_statistic[:days_of_stock]
   td.px-6.py-4
-    = product_statistic[:rop]
+    = product_statistic[:rop].to_s + "\u00A0шт."
   td.px-6.py-1
     .flex.gap-2
       - unless @purchase_items.find { |i| i == product_statistic[:id] }.present?
