@@ -42,7 +42,8 @@ class StatisticsService
         expenses: expenses,
         expenses_period: form_price(expenses * sales),
         deficit: deficit,
-        days_of_stock: days_of_stock(product, avg_daily_consumption, quantity_in_way)
+        days_of_stock: days_of_stock(product, avg_daily_consumption, quantity_in_way),
+        rop: ((avg_daily_consumption * @lead_time) + planer_statistics[:strategy_stock]).round
       }.merge(planer_statistics)
     end
   end
