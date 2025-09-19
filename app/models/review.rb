@@ -44,9 +44,7 @@ class Review < ApplicationRecord
 
   def attach_photos(new_photos, notify: false)
     clean_photos = Array(new_photos).compact_blank
-    return if clean_photos.blank?
-
-    photos.attach(clean_photos)
+    photos.attach(clean_photos) if clean_photos.present?
 
     if photos.attached? && Rails.env.production?
       blob_ids = photos.last(clean_photos.size).pluck(:blob_id)
