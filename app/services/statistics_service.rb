@@ -37,7 +37,7 @@ class StatisticsService
         markup_percent: ((product.price - source_price_ru) * 100 / source_price_ru).round,
         stock_quantity: product.stock_quantity,
         quantity_in_way: quantity_in_way,
-        money_in_product: form_price((product.stock_quantity + quantity_in_way) * (expenses + source_price_ru)),
+        money_in_product: (product.stock_quantity + quantity_in_way) * (expenses + source_price_ru),
         net_profit: form_price(product.price - source_price_ru - expenses),
         margin_period: ((net_profit_period / sales) * 100 / source_price_ru).round,
         net_profit_period: net_profit_period,
