@@ -17,7 +17,8 @@ class StatisticsService
       next if product.stock_quantity.zero? && quantity_in_way.zero?
 
       exchange_rate = last_purchase_item(product)&.purchase&.exchange_rate
-      source_price_ru = form_source_price(product) * exchange_rate
+      source_price_tl = form_source_price(product)
+      source_price_ru = source_price_tl * exchange_rate
       avg_daily_consumption = form_planer_statistics(product)
       sales = count_sales(product)
       strategy_stock = (avg_daily_consumption * @strategy_days).round
@@ -30,7 +31,7 @@ class StatisticsService
         name: product.name.tr(' ', "\u00A0"),
         price: form_price(product.price),
         avg_sale_price: form_price(avg_sale_price(product)),
-        source_price_tl: form_price(form_source_price(product), '₺'),
+        source_price_tl: form_price(source_price_tl, '₺'),
         source_price: form_price(source_price_ru),
         expenses_percent: (expenses * 100 / product.price).round,
         markup_percent: ((product.price - source_price_ru) * 100 / source_price_ru).round,
@@ -83,7 +84,7 @@ class StatisticsService
   end
 
   def form_source_price(product)
-    last_purchase_item(product)&.unit_cost || 1 # TODO: remove hardcoded value
+    last_purchase_item(product)&.unit_cost
   end
 
   def form_planer_statistics(product)

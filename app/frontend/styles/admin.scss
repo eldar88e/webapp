@@ -9,10 +9,7 @@
   position: fixed;
 
   .nav-wrapper {
-    padding-left: .75rem;
-    padding-right: .75rem;
-    padding-bottom: .75rem;
-    padding-top: .75rem;
+    @apply px-3 py-1 md:p-3;
 
     @media (min-width: 1024px) {
       padding-right: 1.25rem;
@@ -42,13 +39,16 @@ body {
   }
 
   .body {
-    padding-top: 4rem;
+    padding-top: 3.5rem;
+    @apply md:pt-18;
 
     .sidebar {
+      padding-top: 3.5rem;
+      @apply md:pt-18;
+
       transition-duration: 75ms;
       transition-property: width;
       transition-timing-function: cubic-bezier(.4,0,.2,1);
-      padding-top: 4rem;
       flex-direction: column;
       flex-shrink: 0;
       height: 100%;
@@ -89,6 +89,9 @@ body {
 
             li {
               padding-top: .5rem;
+              &:first-child {
+                padding-top: 0;
+              }
 
               a {
                 font-weight: 400;
