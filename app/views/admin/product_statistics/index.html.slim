@@ -14,7 +14,7 @@ script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"
 
 .pt-6
   .relative.overflow-x-auto.shadow-md.sm:rounded-lg
-    table.w-full.text-sm.text-left.rtl:text-right.text-gray-500.dark:text-gray-400
+    table.w-full.text-sm.text-left.rtl:text-right.text-gray-500.dark:text-gray-400.admin-table-dark
       thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
         tr
           th.px-6.py-3 scope="col" ИД
@@ -46,6 +46,12 @@ script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"
         - @profit_sum = @product_statistics.sum { |item| item[:net_profit_period].to_i }
         = render partial: '/admin/product_statistics/product_statistic', collection: @product_statistics
   .p-4.flex.justify-end.text-gray-900.dark:text-white.bg-white.dark:bg-gray-800.text-sm
-    = "Общая чистая прибыль за период: #{form_price @profit_sum}"
+    div
+      .mb-3.flex.gap-2
+        .flex-1.truncate Общая чистая прибыль за период:
+        div = form_price @profit_sum
+      .mb-3.flex.gap-2
+        .flex-1.truncate Деньги в товаре:
+        div = form_price @product_statistics.sum { |item| item[:money_in_product].to_i }
   .p-4
   / = render partial: '/layouts/partials/admin/pagy'

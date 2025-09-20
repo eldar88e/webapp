@@ -450,3 +450,15 @@ body.aside-hide {
     }
   }
 }
+
+.admin-table-dark {
+  .item {
+    @apply bg-white border-b dark:bg-gray-900 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800;
+
+    &:hover {
+      th {
+        @apply bg-gray-100 dark:bg-gray-800;
+      }
+    }
+  }
+}
