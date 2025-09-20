@@ -94,16 +94,16 @@
           <th scope="col" class="px-6 py-3">
             <%= sort_link(@q_users, :email, 'Почта', data: { turbo_prefetch: false }) %>
           </th>
-          <th scope="col" class="px-6 py-3">
-            <%= sort_link(@q_users, :created_at, 'Дата регистрации', data: { turbo_prefetch: false }) %>
+          <th scope="col" class="px-2 py-3">
+            <%= sort_link(@q_users, :created_at, 'Зарегистрирован', data: { turbo_prefetch: false }) %>
           </th>
           <th scope="col" class="px-6 py-3">
             <%= sort_link(@q_users, :role, 'Роль', data: { turbo_prefetch: false }) %>
           </th>
-          <th scope="col" class="px-6 py-3">
+          <th scope="col" class="px-4 py-3">
             <%= sort_link(@q_users, :is_blocked, 'Блок', data: { turbo_prefetch: false }) %>
           </th>
-          <th scope="col" class="px-6 py-3">
+          <th scope="col" class="px-2 py-3">
             <%= sort_link(@q_users, :started, 'Старт', data: { turbo_prefetch: false }) %>
           </th>
           <th scope="col" class="px-6 py-3">
