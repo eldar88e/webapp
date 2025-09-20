@@ -28,7 +28,7 @@ module Admin
     end
 
     def purchase_item_params
-      params.permit(:product_id, :quantity)
+      params.permit(:product_id, :quantity, :unit_cost)
     end
   end
 end
