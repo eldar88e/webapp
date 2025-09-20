@@ -109,7 +109,7 @@ class StatisticsService
   end
 
   def count_sales(product)
-    @count_sales ||= order_items(product).sum(:quantity)
+    order_items(product).sum(:quantity)
   end
 
   def days_of_stock(product, avg_daily_consumption, quantity_in_way)
