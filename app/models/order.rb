@@ -33,6 +33,7 @@ class Order < ApplicationRecord
 
   after_commit :notify_status_change, on: :update, unless: -> { status == 'initialized' }
   after_commit :update_main_stock, on: :update, if: -> { ENV.fetch('HOST', '').include?('mirena') }
+  after_commit :clear_cache, on: :update
 
   def order_items_with_product
     order_items.includes(:product)
@@ -57,6 +58,10 @@ class Order < ApplicationRecord
         order_item.update!(quantity: quantity, price: cart_item.product.price)
       end
     end
+  end
+
+  def self.count_paid
+    Rails.cache.fetch(:paid_orders, expires_in: 1.hours) { where(status: :paid).count }
   end
 
   def self.ransackable_attributes(_auth_object = nil)
@@ -190,5 +195,9 @@ class Order < ApplicationRecord
 
   def can_restock?
     status_changed?(from: 'processing', to: 'paid') || status_changed?(from: 'processing', to: 'cancelled')
+  end
+
+  def clear_cache
+    Rails.cache.delete(:paid_orders)
   end
 end
