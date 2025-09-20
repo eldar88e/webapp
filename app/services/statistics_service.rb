@@ -95,7 +95,7 @@ class StatisticsService
       # purchase_date: planer.purchase_date
     }
     total = count_sales(product)
-    total / (@end_date.to_date - @start_date.to_date).to_f
+    (total / (@end_date.to_date - @start_date.to_date).to_f).round(2)
   end
 
   def order_items(product)
