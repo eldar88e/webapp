@@ -5,6 +5,7 @@ class StatisticsService
     @products = products
     @default_exchange_rate = Setting.fetch_value(:try).to_f
     @lead_time = Setting.fetch_value(:lead_time).to_i
+    @strategy_days = Setting.fetch_value(:strategy_days).to_i
   end
 
   def self.call(products, start_date = nil, end_date = nil)
@@ -21,7 +22,8 @@ class StatisticsService
       planer_statistics = form_planer_statistics(product)
       sales = count_sales(product)
       avg_daily_consumption = planer_statistics[:avg_daily_consumption]
-      deficit = (product.stock_quantity + quantity_in_way - avg_daily_consumption * @lead_time).round
+      strategy_stock = avg_daily_consumption * @strategy_days
+      deficit = (product.stock_quantity + quantity_in_way - (avg_daily_consumption * @lead_time) - strategy_stock).round
 
       {
         id: product.id,
@@ -42,8 +44,9 @@ class StatisticsService
         expenses: expenses,
         expenses_period: form_price(expenses * sales),
         deficit: deficit,
+        strategy_stock: strategy_stock,
         days_of_stock: days_of_stock(product, avg_daily_consumption, quantity_in_way),
-        rop: ((avg_daily_consumption * @lead_time) + planer_statistics[:strategy_stock]).round
+        rop: ((avg_daily_consumption * @lead_time) + strategy_stock).round
       }.merge(planer_statistics)
     end
   end
@@ -87,7 +90,6 @@ class StatisticsService
 
     {
       avg_daily_consumption: planer.avg_daily_consumption.round(2),
-      strategy_stock: (planer.avg_daily_consumption.round(2) * @lead_time).round,
       expected_finish_date: planer.expected_finish_date,
       purchase_date: planer.purchase_date
     }
