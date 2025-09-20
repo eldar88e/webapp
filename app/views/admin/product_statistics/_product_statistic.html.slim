@@ -56,7 +56,10 @@ tr id="product_statistic_#{product_statistic[:id]}" class="bg-white border-b dar
   td.px-6.py-4
     = product_statistic[:days_of_stock]
   td.px-6.py-4
-    = product_statistic[:rop].to_s + "\u00A0шт."
+    - if product_statistic[:rop].zero?
+      .text-center —
+    - else
+      = product_statistic[:rop].to_s + "\u00A0шт."
   td.px-6.py-1
     .flex.gap-2
       - unless @purchase_items.include? product_statistic[:id]

@@ -18,9 +18,8 @@ class StatisticsService
 
       exchange_rate = last_purchase_item(product)&.purchase&.exchange_rate
       source_price_ru = form_source_price(product) * exchange_rate
-      planer_statistics = form_planer_statistics(product)
+      avg_daily_consumption = form_planer_statistics(product)
       sales = count_sales(product)
-      avg_daily_consumption = planer_statistics[:avg_daily_consumption]
       strategy_stock = (avg_daily_consumption * @strategy_days).round
       deficit = (product.stock_quantity + quantity_in_way - (avg_daily_consumption * @lead_time) - strategy_stock).round
       net_profit_period = (product.price - source_price_ru - expenses) * sales
@@ -47,8 +46,9 @@ class StatisticsService
         deficit: deficit,
         strategy_stock: strategy_stock,
         days_of_stock: days_of_stock(product, avg_daily_consumption, quantity_in_way),
-        rop: ((avg_daily_consumption * @lead_time) + strategy_stock).round
-      }.merge(planer_statistics)
+        rop: ((avg_daily_consumption * @lead_time) + strategy_stock).round,
+        avg_daily_consumption: avg_daily_consumption
+      }
     end
   end
 
@@ -87,28 +87,29 @@ class StatisticsService
   end
 
   def form_planer_statistics(product)
-    planer = PurchasePlannerService.new(product, @start_date, @end_date)
+    # planer = PurchasePlannerService.new(product, @start_date, @end_date)
 
     {
-      avg_daily_consumption: planer.avg_daily_consumption.round(2),
-      expected_finish_date: planer.expected_finish_date,
-      purchase_date: planer.purchase_date
+      # avg_daily_consumption: planer.avg_daily_consumption.round(2)
+      # expected_finish_date: planer.expected_finish_date,
+      # purchase_date: planer.purchase_date
     }
+    total = count_sales(product)
+    total / (@end_date.to_date - @start_date.to_date).to_f
   end
 
-  def count_sales(product)
+  def order_items(product)
     OrderItem
       .joins(:order)
       .where(product_id: product.id, orders: { status: :shipped, shipped_at: @start_date..@end_date })
-      .sum(:quantity)
   end
 
   def avg_sale_price(product)
-    OrderItem
-      .joins(:order)
-      .where(product_id: product.id, orders: { status: :shipped, shipped_at: @start_date..@end_date })
-      .average(:price)
-      &.to_f || 0
+    order_items(product).average(:price)&.to_f || 0
+  end
+
+  def count_sales(product)
+    @count_sales ||= order_items(product).sum(:quantity)
   end
 
   def days_of_stock(product, avg_daily_consumption, quantity_in_way)
