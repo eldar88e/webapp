@@ -45,7 +45,10 @@ tr id="product_statistic_#{product_statistic[:id]}" class="bg-white border-b dar
   td.p-4
     = product_statistic[:sales].to_s + "\u00A0шт."
   td.px-6.py-4
-    = product_statistic[:strategy_stock].to_s + "\u00A0шт."
+    - if product_statistic[:strategy_stock].zero?
+      .text-center —
+    - else
+      = product_statistic[:strategy_stock].to_s + "\u00A0шт."
   td.px-6.py-4 class="#{product_statistic[:deficit].negative? ? 'text-red-600' : ''}"
     = product_statistic[:deficit].to_s + "\u00A0шт."
   td.px-6.py-4

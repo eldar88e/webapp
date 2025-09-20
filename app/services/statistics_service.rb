@@ -22,7 +22,7 @@ class StatisticsService
       planer_statistics = form_planer_statistics(product)
       sales = count_sales(product)
       avg_daily_consumption = planer_statistics[:avg_daily_consumption]
-      strategy_stock = avg_daily_consumption * @strategy_days
+      strategy_stock = (avg_daily_consumption * @strategy_days).round
       deficit = (product.stock_quantity + quantity_in_way - (avg_daily_consumption * @lead_time) - strategy_stock).round
 
       {
