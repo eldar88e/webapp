@@ -3,7 +3,6 @@ class StatisticsService
     @start_date = start_date || OrderItem.order(created_at: :asc).first.created_at
     @end_date = end_date || Time.current
     @products = products
-    @default_exchange_rate = Setting.fetch_value(:try).to_f
     @lead_time = Setting.fetch_value(:lead_time).to_i
     @strategy_days = Setting.fetch_value(:strategy_days).to_i
   end
@@ -17,13 +16,14 @@ class StatisticsService
       quantity_in_way = quantity_in_way(product)
       next if product.stock_quantity.zero? && quantity_in_way.zero?
 
-      exchange_rate = last_purchase_item(product)&.purchase&.exchange_rate || @default_exchange_rate
+      exchange_rate = last_purchase_item(product)&.purchase&.exchange_rate
       source_price_ru = form_source_price(product) * exchange_rate
       planer_statistics = form_planer_statistics(product)
       sales = count_sales(product)
       avg_daily_consumption = planer_statistics[:avg_daily_consumption]
       strategy_stock = (avg_daily_consumption * @strategy_days).round
       deficit = (product.stock_quantity + quantity_in_way - (avg_daily_consumption * @lead_time) - strategy_stock).round
+      net_profit_period = (product.price - source_price_ru - expenses) * sales
 
       {
         id: product.id,
@@ -39,7 +39,8 @@ class StatisticsService
         quantity_in_way: quantity_in_way,
         money_in_product: form_price((product.stock_quantity + quantity_in_way) * (expenses + source_price_ru)),
         net_profit: form_price(product.price - source_price_ru - expenses),
-        net_profit_period: form_price((product.price - source_price_ru - expenses) * sales),
+        margin_period: ((net_profit_period / sales) * 100 / source_price_ru).round,
+        net_profit_period: form_price(net_profit_period),
         sales: sales,
         expenses: expenses,
         expenses_period: form_price(expenses * sales),
