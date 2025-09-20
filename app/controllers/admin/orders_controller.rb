@@ -13,7 +13,7 @@ module Admin
       render turbo_stream: [
         turbo_stream.update(:modal_title, "Редактировать заказ №#{@order.id}"),
         turbo_stream.update(:modal_body, partial: '/admin/orders/edit'),
-        turbo_stream.update(:modal_price, "Итого: #{@order.total_amount.round} ₽")
+        turbo_stream.update(:modal_price, "Итого: #{@order.total_amount.round}\u00A0₽")
       ]
     end
 

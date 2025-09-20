@@ -1,17 +1,15 @@
 tr id=dom_id(purchase) class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
   td.px-6.py-4
     = purchase.id
-  td class="px-6 py-4 whitespace-normal"
+  td class="px-2 py-4 whitespace-normal"
     span class="#{purchase_status_style(purchase.status)}"
-      = t("purchase.statuses.#{purchase.status}")
+      = t("purchase.statuses.#{purchase.status}").sub(' ', "\u00A0")
   td.px-6.py-4
     = purchase.exchange_rate
   td.px-6.py-4
-    = purchase.subtotal
+    = form_price purchase.total, '₺'
   td.px-6.py-4
-    = purchase.shipping_total
-  td.px-6.py-4
-    = purchase.total
+    = form_price(purchase.total * purchase.exchange_rate)
   td.px-6.py-4
     = format_date purchase.created_at
   td.px-6.py-4
@@ -24,7 +22,7 @@ tr id=dom_id(purchase) class="bg-white border-b dark:bg-gray-800 dark:border-gra
     = format_date purchase.cancelled_at
   td.px-6.py-4
     = purchase.notes
-  td.px-6.py-4.flex
+  td.px-6.py-2.flex
     = link_to edit_admin_purchase_path(purchase), class: 'btn me-2',
             data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false } do
       = render Admin::IconComponent.new name: :edit

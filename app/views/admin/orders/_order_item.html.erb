@@ -15,5 +15,5 @@
   </th>
   <td class="p-2"><%= order_item.quantity %>шт.</td>
 
-  <td class="p-2"><%= order_item.price.to_i %><span style="margin-left: 3px">₽</span></td>
+  <td class="p-2"><%= form_price order_item.price %></td>
 </tr>

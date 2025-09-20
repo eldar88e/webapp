@@ -8,13 +8,13 @@
 
   <td class="px-6 py-4"><%= order.id %></td>
 
-  <td class="px-6 py-4">
-    <span class="<%= order_status_class(order.status) %> text-xs font-medium me-2 px-2.5 py-0.5 rounded">
-      <%= I18n.t("order.statuses.#{order.status}") %>
+  <td class="px-2 py-4">
+    <span class="<%= order_status_class(order.status) %> text-xs font-medium px-2.5 py-0.5 rounded">
+      <%= I18n.t("order.statuses.#{order.status}").sub(' ', "\u00A0") %>
     </span>
   </td>
 
-  <td class="px-6 py-4"><%= order.total_amount.to_i %>₽</td>
+  <td class="px-6 py-4"><%= form_price order.total_amount %></td>
 
   <th scope="row" class="px-6 py-4 whitespace-nowrap">
     <%= render partial: 'admin/users/user_name', locals: { user: order.user } %>

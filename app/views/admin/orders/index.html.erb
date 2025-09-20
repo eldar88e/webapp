@@ -15,8 +15,8 @@
             <label for="checkbox-all-search" class="sr-only">checkbox</label>
           </div>
         </th>
-        <th scope="col" class="px-6 py-3">
-          <%= sort_link(@q_orders, :id, '№ заказа', data: { turbo_prefetch: false }) %>
+        <th scope="col" class="px-4 py-3">
+          <%= sort_link(@q_orders, :id, "№\u00A0заказа", data: { turbo_prefetch: false }) %>
         </th>
         <th scope="col" class="px-6 py-3">
           <%= sort_link(@q_orders, :status, 'Статус', data: { turbo_prefetch: false }) %>

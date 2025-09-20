@@ -26,7 +26,7 @@
             Доставка
           </th>
           <td class="p-2"></td>
-          <td class="p-2"><%= settings[:delivery_price] %><span style="margin-left: 3px">₽</span></td>
+          <td class="p-2"><%= form_price settings[:delivery_price] %></td>
         </tr>
       <% end %>
 
@@ -37,9 +37,7 @@
           Использовано бонусов
         </th>
         <td class="p-2"></td>
-        <td class="p-2">
-          <%= @order.bonus %><span style="margin-left: 3px">₽</span>
-        </td>
+        <td class="p-2"><%= form_price @order.bonus %></td>
       </tr>
     </tbody>
   </table>

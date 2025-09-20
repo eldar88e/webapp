@@ -40,7 +40,7 @@ class StatisticsService
         money_in_product: form_price((product.stock_quantity + quantity_in_way) * (expenses + source_price_ru)),
         net_profit: form_price(product.price - source_price_ru - expenses),
         margin_period: ((net_profit_period / sales) * 100 / source_price_ru).round,
-        net_profit_period: form_price(net_profit_period),
+        net_profit_period: net_profit_period,
         sales: sales,
         expenses: expenses,
         expenses_period: form_price(expenses * sales),

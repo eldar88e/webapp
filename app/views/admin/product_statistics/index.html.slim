@@ -32,6 +32,7 @@ script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"
           th scope="col" class="px-4 py-3" Чистая прибыль
           th scope="col" class="px-4 py-3" = "Маржа\nза\u00A0период"
           th scope="col" class="px-1 py-3" = "Чистая\u00A0прибыль\nза\u00A0период"
+          th scope="col" class="px-3 py-3" = "Процент\nприбыли"
           th scope="col" class="px-2 py-3" Расходы
           th scope="col" class="px-4 py-3" = "Расходы\nза\u00A0период"
           th scope="col" class="px-1 py-3" = "Потребление\nв\u00A0сутки"
@@ -42,6 +43,9 @@ script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"
           th scope="col" class="px-4 py-3" = "Точка\nзаказа"
           th scope="col" class="px-6 py-3" Действия
       tbody
+        - @profit_sum = @product_statistics.sum { |item| item[:net_profit_period].to_i }
         = render partial: '/admin/product_statistics/product_statistic', collection: @product_statistics
+  .p-4.flex.justify-end.text-gray-900.dark:text-white
+    = "Общая чистая прибыль за период: #{@profit_sum}"
   .p-4
   / = render partial: '/layouts/partials/admin/pagy'

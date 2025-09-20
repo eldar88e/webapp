@@ -33,7 +33,7 @@
                 .text-gray-600.dark:text-gray-400.text-xs
                   - last_message_time = chat.messages.max_by { |m| m.created_at }.created_at
                   = format_date last_message_time
-          .py-4.px-6.text-gray-500.dark:text-gray-400
+          .py-4.px-2.text-gray-500.dark:text-gray-400
             - if @chats_page.pages > 1
               .mb-3 == pagy_nav(@chats_page)
             == pagy_info(@chats_page)

@@ -22,10 +22,10 @@
   <td class="px-6 py-4"><%= product.stock_quantity %> шт.</td>
 
   <td class="px-6 py-4">
-    <div class="price"><%= product.old_price.to_i %><span style="margin-left: 3px">₽</span></div>
+    <div class="price"><%= form_price product.old_price %></div>
   </td>
   <td class="px-6 py-4">
-    <div class="price"><%= product.price.to_i %><span style="margin-left: 3px">₽</span></div>
+    <div class="price"><%= form_price product.price %></div>
   </td>
   <td class="px-6 py-4"><%= product.parent&.name || 'Без категории' %></td>
 

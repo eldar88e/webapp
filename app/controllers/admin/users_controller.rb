@@ -8,7 +8,7 @@ module Admin
     end
 
     def show
-      @q_orders      = @user.orders.order(created_at: :desc).ransack(params[:q])
+      @q_orders      = @user.orders.includes(:bank_card).order(created_at: :desc).ransack(params[:q])
       @pagy, @orders = pagy(@q_orders.result)
       # TODO: Добавить отзывы
     end

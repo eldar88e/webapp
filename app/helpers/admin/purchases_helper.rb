@@ -10,7 +10,7 @@ module Admin
 
     def purchase_status_style(status)
       start = STATUS_CLASSES.fetch(status, 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300')
-      "#{start} text-xs font-medium me-2 px-2.5 py-0.5 rounded"
+      "#{start} text-xs font-medium px-2.5 py-0.5 rounded"
     end
   end
 end
