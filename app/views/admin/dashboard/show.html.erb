@@ -65,7 +65,7 @@
     <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between"></div>
 
     <div class="text-base dark:text-white mt-3 flex gap-5">
-      <% sum = @totals_by_card.sum { |_k, v| v rescue 0 } %>
+      <% sum = @totals_by_card.sum { |_k, v| v.to_i } %>
       <span class="text-gray-500 dark:text-gray-400">В общем: <span class="text-base dark:text-white font-bold"><%= form_price sum %></span></span>
       <span class="text-gray-500 dark:text-gray-400">В среднем в день: <span class="text-base dark:text-white font-bold"><%= form_price average_income(sum) %></span></span>
     </div>
