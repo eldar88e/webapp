@@ -24,8 +24,8 @@ script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"
           th scope="col" class="px-6 py-3" Ср.цена
           th scope="col" class="px-4 py-3" Закуп. цена(₺)
           th scope="col" class="px-1 py-3" = "Закуп.\u00A0цена"
-          th scope="col" class="px-4 py-3" = "Расходы"
-          th scope="col" class="px-4 py-3" = "Наценка"
+          th scope="col" class="px-4 py-3" Расходы
+          th scope="col" class="px-4 py-3" Наценка
           th scope="col" class="px-4 py-3" Остаток
           th scope="col" class="px-6 py-3" = "В\u00A0пути"
           th scope="col" class="px-6 py-3" = "Деньги\nв\u00A0товаре"
@@ -45,19 +45,20 @@ script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"
           th scope="col" class="px-6 py-3" Действия
       tbody
         = render partial: '/admin/product_statistics/product_statistic', collection: @product_statistics[:products], locals: { net_profit_sum: @product_statistics[:net_profit_sum] }
-  .p-4.flex.justify-end.text-gray-900.dark:text-white.bg-white.dark:bg-gray-800
-    div
-      .mb-3.flex.gap-2
-        .flex-1.truncate.text-sm Общая чистая прибыль за период:
-        div = form_price @product_statistics[:net_profit_sum] + @product_statistics[:sum_bonus]
-      .mb-3.flex.gap-2
-        .flex-1.truncate.text-sm Общая чистая прибыль за период(test):
-        div = form_price @product_statistics[:test]
+  .p-4.flex.flex-wrap.text-gray-900.dark:text-white.bg-white.dark:bg-gray-800
+    .w-full.md:w-1/3.px-2
+      h3.mb-5 Текущая статистика:
       .mb-3.flex.gap-2
         .flex-1.truncate.text-sm Деньги в товаре:
-        div = form_price@product_statistics[:money_in_product_sum]
+        div = form_price @product_statistics[:money_in_product_sum]
+    .w-full.md:w-1/3.px-2
+    .w-full.md:w-1/3.px-2.justify-end
+      h3.mb-5 Статистика за период:
       .mb-3.flex.gap-2
-        .flex-1.truncate.text-sm Сумма скидок за период:
+        .flex-1.truncate.text-sm Общая чистая прибыль:
+        div = form_price @product_statistics[:net_profit_sum]
+      .mb-3.flex.gap-2
+        .flex-1.truncate.text-sm Сумма скидок:
         div = form_price @product_statistics[:sum_bonus]
   .p-4
   / = render partial: '/layouts/partials/admin/pagy'

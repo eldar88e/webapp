@@ -60,8 +60,7 @@ class StatisticsService
     {
       products: result,
       money_in_product_sum: result.sum { |item| item[:money_in_product] },
-      net_profit_sum: result.sum { |item| item[:net_profit_period].to_i },
-      test: result.sum { |item| item[:net_profit_period].to_i } + sum_bonus,
+      net_profit_sum: result.sum { |item| item[:net_profit_period].to_i } + sum_bonus,
       sum_bonus: sum_bonus
     }
   end
