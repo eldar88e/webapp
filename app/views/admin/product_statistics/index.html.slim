@@ -2,16 +2,8 @@
 
 .pt-6.px-4
   h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-4" = yield(:title)
-
-script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"
 .px-4
-  form action="" method="get" data-controller="datepicker"
-    .relative.max-w-sm
-      div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none"
-        svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"
-          path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
-      input id="default-datepicker" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date"
-
+  = render partial: '/admin/product_statistics/filter'
 .pt-6
   .relative.overflow-x-auto.shadow-md.sm:rounded-lg
     table.w-full.text-sm.text-left.rtl:text-right.text-gray-500.dark:text-gray-400.admin-table-dark

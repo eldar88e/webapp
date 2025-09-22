@@ -41,7 +41,7 @@ class StatisticsService
         quantity_in_way: quantity_in_way,
         money_in_product: (product.stock_quantity + quantity_in_way) * (expenses + source_price_ru),
         net_profit: form_price(product.price - source_price_ru - expenses),
-        margin_period: ((net_profit_period / sales) * 100 / source_price_ru).round,
+        margin_period: sales.zero? ? 0 : ((net_profit_period / sales) * 100 / source_price_ru).round,
         net_profit_period: net_profit_period,
         net_profit_period_expenses: (product.price - source_price_ru) * sales,
         sales: sales,
@@ -98,7 +98,7 @@ class StatisticsService
     Rails.cache.fetch("last_purchase_#{product.id}_#{status}", expires_in: 1.hour) do
       Purchase.includes(:purchase_items).where(status: status)
               .where(purchase_items: { product_id: product.id })
-              .order(created_at: :desc)
+              .order(created_at: :desc) # TODO: Вывести среднюю цену за период
               .first
     end
   end
