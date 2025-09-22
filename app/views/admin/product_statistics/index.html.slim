@@ -51,6 +51,9 @@ script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"
         .flex-1.truncate.text-sm Общая чистая прибыль за период:
         div = form_price @product_statistics[:net_profit_sum]
       .mb-3.flex.gap-2
+        .flex-1.truncate.text-sm Общая чистая прибыль за период(без бонусов):
+        div = form_price @product_statistics[:net_profit_sum] - @product_statistics[:sum_bonus]
+      .mb-3.flex.gap-2
         .flex-1.truncate.text-sm Деньги в товаре:
         div = form_price@product_statistics[:money_in_product_sum]
       .mb-3.flex.gap-2
