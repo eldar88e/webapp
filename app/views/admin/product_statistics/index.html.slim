@@ -31,6 +31,7 @@ script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"
           th scope="col" class="px-6 py-3" = "Деньги\nв\u00A0товаре"
           th scope="col" class="px-4 py-3" Чистая прибыль
           th scope="col" class="px-4 py-3" = "Маржа\nза\u00A0период"
+          th scope="col" class="px-1 py-3" = "Чистая\u00A0прибыль\nза\u00A0период\u00A0–расходы"
           th scope="col" class="px-1 py-3" = "Чистая\u00A0прибыль\nза\u00A0период"
           th scope="col" class="px-3 py-3" = "Процент\nприбыли"
           th scope="col" class="px-2 py-3" Расходы
@@ -43,15 +44,17 @@ script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"
           th scope="col" class="px-4 py-3" = "Точка\nзаказа"
           th scope="col" class="px-6 py-3" Действия
       tbody
-        - @profit_sum = @product_statistics.sum { |item| item[:net_profit_period].to_i }
-        = render partial: '/admin/product_statistics/product_statistic', collection: @product_statistics
-  .p-4.flex.justify-end.text-gray-900.dark:text-white.bg-white.dark:bg-gray-800.text-sm
+        = render partial: '/admin/product_statistics/product_statistic', collection: @product_statistics[:products], locals: { net_profit_sum: @product_statistics[:net_profit_sum] }
+  .p-4.flex.justify-end.text-gray-900.dark:text-white.bg-white.dark:bg-gray-800
     div
       .mb-3.flex.gap-2
-        .flex-1.truncate Общая чистая прибыль за период:
-        div = form_price @profit_sum
+        .flex-1.truncate.text-sm Общая чистая прибыль за период:
+        div = form_price @product_statistics[:net_profit_sum]; binding.pry
       .mb-3.flex.gap-2
-        .flex-1.truncate Деньги в товаре:
-        div = form_price @product_statistics.sum { |item| item[:money_in_product].to_i }
+        .flex-1.truncate.text-sm Деньги в товаре:
+        div = form_price@product_statistics[:money_in_product_sum]
+      .mb-3.flex.gap-2
+        .flex-1.truncate.text-sm Сумма скидок:
+        div = form_price @product_statistics[:sum_bonus]
   .p-4
   / = render partial: '/layouts/partials/admin/pagy'

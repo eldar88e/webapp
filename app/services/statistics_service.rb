@@ -1,4 +1,6 @@
 class StatisticsService
+  ORDER_STATUS_BUY = :shipped
+
   def initialize(products, start_date = nil, end_date = nil)
     @start_date = start_date || OrderItem.order(created_at: :asc).first.created_at
     @end_date = end_date || Time.current
@@ -12,7 +14,7 @@ class StatisticsService
   end
 
   def process
-    @products.filter_map do |product|
+    result = @products.filter_map do |product|
       quantity_in_way = quantity_in_way(product)
       next if product.stock_quantity.zero? && quantity_in_way.zero?
 
@@ -41,6 +43,7 @@ class StatisticsService
         net_profit: form_price(product.price - source_price_ru - expenses),
         margin_period: ((net_profit_period / sales) * 100 / source_price_ru).round,
         net_profit_period: net_profit_period,
+        net_profit_period_expenses: (product.price - source_price_ru) * sales,
         sales: sales,
         expenses: expenses,
         expenses_period: form_price(expenses * sales),
@@ -51,9 +54,26 @@ class StatisticsService
         avg_daily_consumption: avg_daily_consumption
       }
     end
+
+    sum_bonus = form_sum_bonus
+
+    {
+      products: result,
+      money_in_product_sum: result.sum { |item| item[:money_in_product] },
+      net_profit_sum: result.sum { |item| item[:net_profit_period].to_i - sum_bonus },
+      sum_bonus: sum_bonus
+    }
   end
 
   private
+
+  def form_sum_bonus
+    orders_period = Order.includes(:bonus_logs).where(status: ORDER_STATUS_BUY, shipped_at: @start_date..@end_date)
+    orders_period.sum do |order|
+      last_bonus = order.bonus_logs.max_by(&:created_at)&.bonus_amount.to_i
+      last_bonus.negative? ? last_bonus : 0
+    end
+  end
 
   def quantity_in_way(product)
     last_purchase_item(product, :shipped)&.quantity || 0
@@ -88,13 +108,6 @@ class StatisticsService
   end
 
   def form_planer_statistics(product)
-    # planer = PurchasePlannerService.new(product, @start_date, @end_date)
-
-    {
-      # avg_daily_consumption: planer.avg_daily_consumption.round(2)
-      # expected_finish_date: planer.expected_finish_date,
-      # purchase_date: planer.purchase_date
-    }
     total = count_sales(product)
     (total / (@end_date.to_date - @start_date.to_date).to_f).round(2)
   end
