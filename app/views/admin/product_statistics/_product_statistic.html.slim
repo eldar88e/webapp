@@ -8,7 +8,7 @@ tr id="product_statistic_#{product_statistic[:id]}" class="item"
       div role="status" class="flex space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center"
         div class="flex items-center w-full h-13"
           = render IconComponent.new name: 'no-image', size: 48
-  th scope="row" class="pl-1 md:pl-4 py-4 whitespace-normal dark:text-white text-gray-900 sticky left-0 bg-white dark:bg-gray-900 z-10 max-w-30 md:max-w-none overflow-hidden"
+  th scope="row" class="pl-1 md:pl-4 py-4 whitespace-normal dark:text-white text-gray-900 sticky left-0 bg-white dark:bg-gray-900 z-10 max-w-32 md:max-w-none overflow-hidden"
     = product_statistic[:name].slice(0, 16) + "#{'...' if product_statistic[:name].length > 16}"
   - if product_statistic[:price] == product_statistic[:avg_sale_price]
     td.px-6.py-4.text-center colspan="2" = product_statistic[:price]
