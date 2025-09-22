@@ -18,5 +18,13 @@ module Admin
       formatted = int.to_s.reverse.scan(/\d{1,3}/).join("\u00A0").reverse
       "#{formatted}\u00A0#{currency}"
     end
+
+    def stat_value(value, suffix: nil, zero_text: '—')
+      if value.to_i.zero?
+        content_tag :div, zero_text, class: 'text-center'
+      else
+        safe_join [value.to_s, suffix].compact, "\u00A0"
+      end
+    end
   end
 end

@@ -119,7 +119,7 @@ class StatisticsService
   end
 
   def avg_sale_price(product)
-    order_items(product).average(:price)&.to_f || 0
+    order_items(product).average(:price)&.to_f || product.price
   end
 
   def count_sales(product)
