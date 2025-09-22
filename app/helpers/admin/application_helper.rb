@@ -20,7 +20,7 @@ module Admin
     end
 
     def stat_value(value, suffix: nil, zero_text: '—')
-      if value.to_i.zero?
+      if value&.zero?
         content_tag :div, zero_text, class: 'text-center'
       else
         safe_join [value.to_s, suffix].compact, "\u00A0"
