@@ -20,9 +20,9 @@ tr id="product_statistic_#{product_statistic[:id]}" class="item"
   td.px-6.py-4
     = product_statistic[:source_price]
   td.px-6.py-4
-    = product_statistic[:expenses_percent].to_s + "\u00A0%"
+    = stat_value product_statistic[:expenses_percent], suffix: '%'
   td.px-6.py-4
-    = product_statistic[:markup_percent].to_s + "\u00A0%"
+    = stat_value product_statistic[:markup_percent], suffix: '%'
   td.px-6.py-4
     = product_statistic[:stock_quantity].to_s + "\u00A0шт."
   td.px-6.py-4
@@ -32,13 +32,13 @@ tr id="product_statistic_#{product_statistic[:id]}" class="item"
   td.px-6.py-4
     = product_statistic[:net_profit]
   td.px-6.py-4
-    = product_statistic[:margin_period].to_s + "\u00A0%"
+    = stat_value product_statistic[:margin_period], suffix: '%'
   td.px-6.py-4
     = form_price product_statistic[:net_profit_period]
   td.px-6.py-4
     = form_price product_statistic[:net_profit_period_expenses]
   td.px-6.py-4
-    - if product_statistic[:net_profit_period].zero? || net_profit_sum.zero?
+    - if product_statistic[:net_profit_period].zero?
       .text-center —
     - else
       = "#{(product_statistic[:net_profit_period] / net_profit_sum * 100).round}\u00A0%"
