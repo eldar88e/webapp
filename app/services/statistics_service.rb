@@ -16,11 +16,11 @@ class StatisticsService
   def process
     result = @products.filter_map do |product|
       quantity_in_way = quantity_in_way(product)
-      next if product.stock_quantity.zero? && quantity_in_way.zero?
+      # next if product.stock_quantity.zero? && quantity_in_way.zero?
 
       exchange_rate = last_purchase_item(product)&.purchase&.exchange_rate
       source_price_tl = form_source_price(product)
-      source_price_ru = source_price_tl * exchange_rate
+      source_price_ru = source_price_tl.nil? ? 0 : source_price_tl * exchange_rate
       avg_daily_consumption = form_planer_statistics(product)
       sales = count_sales(product)
       strategy_stock = (avg_daily_consumption * @strategy_days).round
@@ -36,7 +36,7 @@ class StatisticsService
         source_price_tl: form_price(source_price_tl, '₺'),
         source_price: form_price(source_price_ru),
         expenses_percent: (expenses * 100 / product.price).round,
-        markup_percent: ((product.price - source_price_ru) * 100 / source_price_ru).round,
+        markup_percent: source_price_ru.zero? ? 0 : ((product.price - source_price_ru) * 100 / source_price_ru).round,
         stock_quantity: product.stock_quantity,
         quantity_in_way: quantity_in_way,
         money_in_product: (product.stock_quantity + quantity_in_way) * (expenses + source_price_ru),
