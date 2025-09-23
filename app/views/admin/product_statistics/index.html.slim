@@ -6,34 +6,34 @@
   = render partial: '/admin/product_statistics/filter'
 .pt-6
   .relative.overflow-x-auto.shadow-md.sm:rounded-lg
-    table.w-full.text-sm.text-left.rtl:text-right.text-gray-500.dark:text-gray-400.admin-table-dark
+    table.w-full.text-sm.text-left.rtl:text-right.text-gray-500.dark:text-gray-400.admin-table-dark data-controller="sort" data-sort-target="table"
       thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
         tr
-          th.px-6.py-3 scope="col" ИД
+          th.px-6.py-3 scope="col" data-action="click->sort#sort" ИД
           th.px-1.py-3 scope="col" Картинка
-          th.pl-4.py-3 scope="col" Название
-          th scope="col" class="px-6 py-3" Цена
-          th scope="col" class="px-6 py-3" Ср.цена
-          th scope="col" class="px-4 py-3" Закуп. цена(₺)
-          th scope="col" class="px-1 py-3" = "Закуп.\u00A0цена"
-          th scope="col" class="px-4 py-3" Расходы
-          th scope="col" class="px-4 py-3" Наценка
-          th scope="col" class="px-4 py-3" Остаток
+          th.pl-4.py-3 scope="col" data-action="click->sort#sort" Название
+          th scope="col" class="px-6 py-3" data-action="click->sort#sort" Цена
+          th scope="col" class="px-6 py-3" data-action="click->sort#sort" Ср.цена
+          th scope="col" class="px-4 py-3" data-action="click->sort#sort" Закуп. цена(₺)
+          th scope="col" class="px-1 py-3" data-action="click->sort#sort" = "Закуп.\u00A0цена"
+          th scope="col" class="px-4 py-3" data-action="click->sort#sort" Расходы
+          th scope="col" class="px-4 py-3" data-action="click->sort#sort" Наценка
+          th scope="col" class="px-4 py-3" data-action="click->sort#sort" Остаток
           th scope="col" class="px-6 py-3" = "В\u00A0пути"
-          th scope="col" class="px-6 py-3" = "Деньги\nв\u00A0товаре"
-          th scope="col" class="px-4 py-3" Чистая прибыль
-          th scope="col" class="px-4 py-3" = "Маржа\nза\u00A0период"
-          th scope="col" class="px-1 py-3" = "Чистая\u00A0прибыль\nза\u00A0период\u00A0–расходы"
-          th scope="col" class="px-1 py-3" = "Чистая\u00A0прибыль\nза\u00A0период"
-          th scope="col" class="px-3 py-3" = "Процент\nприбыли"
-          th scope="col" class="px-2 py-3" Расходы
-          th scope="col" class="px-4 py-3" = "Расходы\nза\u00A0период"
-          th scope="col" class="px-1 py-3" = "Потребление\nв\u00A0сутки"
-          th scope="col" class="px-1 py-3" = "Продажи\nза\u00A0период"
-          th scope="col" class="px-2 py-3" = "Стратег.\nзапас"
-          th scope="col" class="px-1 py-3" = "Перебор/\nДефицит(-)"
-          th scope="col" class="px-1 py-3" = "Дней\nв\u00A0запасе"
-          th scope="col" class="px-4 py-3" = "Точка\nзаказа"
+          th scope="col" class="px-6 py-3" data-action="click->sort#sort" = "Деньги\nв\u00A0товаре"
+          th scope="col" class="px-4 py-3" data-action="click->sort#sort" Чистая прибыль
+          th scope="col" class="px-4 py-3" data-action="click->sort#sort" = "Маржа\nза\u00A0период"
+          th scope="col" class="px-1 py-3" data-action="click->sort#sort" = "Чистая\u00A0прибыль\nза\u00A0период\u00A0–расходы"
+          th scope="col" class="px-1 py-3" data-action="click->sort#sort" = "Чистая\u00A0прибыль\nза\u00A0период"
+          th scope="col" class="px-3 py-3" data-action="click->sort#sort" = "Процент\nприбыли"
+          th scope="col" class="px-2 py-3" data-action="click->sort#sort" Расходы
+          th scope="col" class="px-4 py-3" data-action="click->sort#sort" = "Расходы\nза\u00A0период"
+          th scope="col" class="px-1 py-3" data-action="click->sort#sort" = "Потребление\nв\u00A0сутки"
+          th scope="col" class="px-1 py-3" data-action="click->sort#sort" = "Продажи\nза\u00A0период"
+          th scope="col" class="px-2 py-3" data-action="click->sort#sort" = "Стратег.\nзапас"
+          th scope="col" class="px-1 py-3" data-action="click->sort#sort" = "Перебор/\nДефицит(-)"
+          th scope="col" class="px-1 py-3" data-action="click->sort#sort" = "Дней\nв\u00A0запасе"
+          th scope="col" class="px-4 py-3" data-action="click->sort#sort" = "Точка\nзаказа"
           th scope="col" class="px-6 py-3" Действия
       tbody
         = render partial: '/admin/product_statistics/product_statistic', collection: @product_statistics[:products], locals: { net_profit_sum: @product_statistics[:net_profit_sum] }
