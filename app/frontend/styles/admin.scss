@@ -473,7 +473,7 @@ body.aside-hide {
     @apply w-64;
 
     & .datepicker-cell {
-      @apply hover:bg-gray-100 dark:hover:bg-gray-600 block flex-1 leading-9 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-semibold text-sm day prev text-gray-500;
+      @apply hover:bg-gray-100 dark:hover:bg-gray-600 block flex-1 leading-9 border-0 rounded-lg cursor-pointer text-center text-gray-900 dark:text-white font-semibold text-sm text-gray-500;
     }
   }
 }
