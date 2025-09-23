@@ -5,7 +5,7 @@ gem 'rails', '~> 7.2'
 
 gem 'bootsnap', require: false
 gem 'jbuilder'
-gem 'puma', '~> 6.6'
+gem 'puma', '~> 7.0'
 gem 'stimulus-rails'
 gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[windows jruby]
@@ -46,6 +46,8 @@ gem 'geocoder'
 gem 'maxminddb'
 
 gem 'panko_serializer'
+
+gem 'pghero'
 
 group :development, :test do
   gem 'pry'
