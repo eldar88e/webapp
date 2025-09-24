@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   authenticate :user, ->(user) { user.admin? } do
     mount Sidekiq::Web => '/admin/sidekiq'
     mount Blazer::Engine, at: '/admin/blazer'
+    mount PgHero::Engine, at: '/admin/pghero'
     mount ActiveStorageDashboard::Engine, at: '/admin/active-storage-dashboard'
   end
 
