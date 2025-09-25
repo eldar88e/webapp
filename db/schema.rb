@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_25_114227) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_25_115246) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -217,7 +217,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_25_114227) do
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_favorites_on_product_id"
     t.index ["user_id", "product_id"], name: "index_favorites_on_user_id_and_product_id", unique: true
-    t.index ["user_id"], name: "index_favorites_on_user_id"
   end
 
   create_table "mailings", force: :cascade do |t|
@@ -251,7 +250,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_25_114227) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["order_id", "product_id"], name: "index_order_items_on_order_id_and_product_id", unique: true
-    t.index ["order_id"], name: "index_order_items_on_order_id"
     t.index ["product_id"], name: "index_order_items_on_product_id"
   end
 
@@ -280,7 +278,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_25_114227) do
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_product_subscriptions_on_product_id"
     t.index ["user_id", "product_id"], name: "index_product_subscriptions_on_user_id_and_product_id", unique: true
-    t.index ["user_id"], name: "index_product_subscriptions_on_user_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -312,7 +309,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_25_114227) do
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_purchase_items_on_product_id"
     t.index ["purchase_id", "product_id"], name: "index_purchase_items_on_purchase_id_and_product_id", unique: true
-    t.index ["purchase_id"], name: "index_purchase_items_on_purchase_id"
   end
 
   create_table "purchases", force: :cascade do |t|
