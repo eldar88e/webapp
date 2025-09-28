@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_25_115246) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_28_132608) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,6 +22,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_25_115246) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["title"], name: "index_account_tiers_on_title", unique: true
+  end
+
+  create_table "action_text_rich_texts", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "body"
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -361,6 +371,24 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_25_115246) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tasks", force: :cascade do |t|
+    t.string "title"
+    t.integer "priority"
+    t.bigint "user_id", null: false
+    t.bigint "assignee_id", null: false
+    t.date "start_date"
+    t.date "due_date"
+    t.integer "stage"
+    t.integer "category"
+    t.integer "task_type"
+    t.integer "deadline_notification_days"
+    t.integer "position", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assignee_id"], name: "index_tasks_on_assignee_id"
+    t.index ["user_id"], name: "index_tasks_on_user_id"
+  end
+
   create_table "tg_media_files", force: :cascade do |t|
     t.string "file_id"
     t.string "file_hash", null: false
@@ -433,5 +461,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_25_115246) do
   add_foreign_key "purchase_items", "purchases"
   add_foreign_key "reviews", "products"
   add_foreign_key "reviews", "users"
+  add_foreign_key "tasks", "users"
+  add_foreign_key "tasks", "users", column: "assignee_id"
   add_foreign_key "users", "account_tiers"
 end

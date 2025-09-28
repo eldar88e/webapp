@@ -29,6 +29,9 @@ ru:
     purchase_items:
       create: "Товар успешно добавлен в закупку."
       update: "Количество товара успешно обновлено в закупке."
+    tasks:
+      create: "Задача успешно создана."
+      update: "Задача успешно обновлена."
   purchase:
     statuses:
       initialized: "Инициализирован"
@@ -36,3 +39,35 @@ ru:
       shipped: "В пути"
       stocked: "Оприходовано"
       cancelled: "Отменено"
+  task_types:
+    bugfix: "Ошибка"
+    feature: "Новая фича"
+    sprint: "Спринт"
+  priority:
+    lowest: "Низкий"
+    low: "Ниже среднего"
+    medium: "Средний"
+    high: "Высокий"
+  categories:
+    design: "Дизайн"
+    dev: "Разработка"
+    marketing: "Маркетинг"
+  stage:
+    todo: "Назначена"
+    in_progress: "В работе"
+    done: "Выполнена"
+  activerecord:
+    models:
+      task: "Задача"
+    attributes:
+      task:
+        title: "Заголовок"
+        priority: "Приоритет"
+        assignee: "Исполнитель"
+        assignee_id: "Исполнитель"
+        start_date: "Дата начала"
+        due_date: "Дата окончания"
+        stage: "Стадия"
+        category: "Категория"
+        task_type: "Тип задачи"
+        deadline_notification_days: "Уведомление о дедлайне"

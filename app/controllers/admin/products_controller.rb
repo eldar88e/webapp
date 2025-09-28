@@ -28,7 +28,7 @@ module Admin
         @product.attach_image(product_params[:image])
         redirect_to admin_products_path, notice: t('controller.products.create')
       else
-        error_notice(@product.errors.full_messages, :unprocessable_entity)
+        error_notice @product.errors.full_messages
       end
     end
 
@@ -39,7 +39,7 @@ module Admin
       elsif update_product_with_image
         render turbo_stream: render_turbo_stream('update')
       else
-        error_notice(@product.errors.full_messages, :unprocessable_entity)
+        error_notice @product.errors.full_messages
       end
     end
 

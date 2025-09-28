@@ -1,0 +1,49 @@
+= form_with model: task, url: (method == :patch ? admin_task_path(task) : admin_tasks_path), class: 'admin-form',
+        data: { action: 'submit->modal#close' } do |form|
+  .mb-5
+    = form.label :title
+    = form.text_field :title
+
+  .mb-5.flex.flex-wrap class="-mx-1.5"
+    .w-1/2.px-1.5
+      = form.label :assignee_id
+      = form.select :assignee_id, User.all.map { |u| [u.full_name, u.id] }, {}
+    .w-1/2.px-1.5
+
+  .mb-5.flex.flex-wrap class="-mx-1.5" data-controller="datepicker" data-datepicker-max-value="#{2.months.from_now.to_date}"
+    .w-1/2.px-1.5
+      = form.label :start_date
+      .relative.max-w-sm
+        div class="absolute inset-y-0 start-0 flex items-center ps-2.5 md:ps-3.5 pointer-events-none"
+          svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"
+            path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
+        = form.text_field :start_date, data: { datepicker_target: 'startDate', datepicker_min: '2024-12-01' }, value: task.start_date, inputmode: 'none', class: '!ps-9'
+    .w-1/2.px-1.5
+      = form.label :due_date
+      .relative.max-w-sm
+        div class="absolute inset-y-0 start-0 flex items-center ps-2.5 md:ps-3.5 pointer-events-none"
+          svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"
+            path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
+        = form.text_field :due_date, data: { datepicker_target: 'endDate', datepicker_min: '2024-12-01' }, value: task.due_date, inputmode: 'none', class: '!ps-9'
+
+  .mb-5.flex.flex-wrap class="-mx-1.5"
+    .w-1/2.px-1.5
+      = form.label :stage
+      = form.select :stage, Task.stages.keys.map { |key| [I18n.t("stage.#{key}"), key] }, {}
+    .w-1/2.px-1.5
+      = form.label :priority
+      = form.select :priority, Task.priorities.keys.map { |key| [I18n.t("priority.#{key}"), key] }, {}
+
+  .mb-5.flex.flex-wrap class="-mx-1.5"
+    .w-1/2.px-1.5
+      = form.label :task_type
+      = form.select :task_type, Task.task_types.keys.map { |key| [I18n.t("task_types.#{key}"), key] }, {}
+    .w-1/2.px-1.5
+      = form.label :category
+      = form.select :category, Task.categories.keys.map { |key| [I18n.t("categories.#{key}"), key] }, {}
+
+  .mb-5
+    = form.label :description
+    = form.rich_text_area :description
+
+  = form.submit "Сохранить", class: 'btn'

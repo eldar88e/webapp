@@ -1,0 +1,21 @@
+- content_for :title, 'Задачи'
+
+.pt-6.px-4
+  h1.text-xl.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 = yield(:title)
+
+  = link_to 'Создать', new_admin_task_path, class: 'btn inline-flex mb-5',
+          data: { controller: 'modal-btn', action: 'click->modal-btn#open', modal_btn_name_value: 'modal-task', turbo_prefetch: false }
+
+.pe-4.mb-6.flex.justify-start.items-start.relative
+  - Task.stages.keys.each do |stage|
+    - tasks = @tasks[stage] || []
+    .ps-4 class="min-w-[28rem]"
+      .flex.justify-between.items-center
+        h2.text-lg.font-bold.text-gray-900.dark:text-white = t("stage.#{stage}")
+        button.text-gray-400.text-sm.p-1.5.rounded-md.cursor-pointer
+          svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            path stroke="currentColor" stroke-linecap="round" stroke-width="3" d="M12 6h0m0 6h0m0 6h0"
+      .mt-4 data-controller="sortable" data-stage=stage
+        = render partial: '/admin/tasks/task', collection: tasks
+
+= render partial: '/admin/tasks/modal'

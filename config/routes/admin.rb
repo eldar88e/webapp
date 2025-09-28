@@ -18,4 +18,5 @@ namespace :admin do
   resources :purchases
   resources :purchase_items, only: %i[create update]
   resources :product_statistics, only: :index
+  resources :tasks, only: %i[index new create edit update]
 end
