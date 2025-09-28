@@ -27,6 +27,8 @@ class CreateOrderService
       order.update!(status: :unpaid)
       { success: true }
     else
+      order.destroy!
+      Rails.logger.error("Order #{order.id} is empty and was deleted.")
       { success: false, error: 'Заказ пуст, возможно товары которые вы заказали закончились на складе.' }
     end
   end

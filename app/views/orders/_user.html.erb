@@ -1,5 +1,5 @@
-<%= form_with(model: current_user, url: orders_path, method: :post,
-              data: { controller: 'dadata', turbo: false }, class: 'profile-form', id: 'user-form') do |form| %>
+<%= form_with model: current_user, url: orders_path, method: :post, class: 'profile-form', id: 'user-form',
+              data: { controller: 'dadata miniapp', action: 'submit->miniapp#close', turbo: false } do |form| %>
   <div class="main-block mb-5">
     <%= render partial: 'devise/registrations/form_items', locals: { f: form } %>
 

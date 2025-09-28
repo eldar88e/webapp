@@ -25,15 +25,16 @@ class OrdersController < ApplicationController
     service = CreateOrderService.call(current_user, params[:user][:bonus])
     return handle_success_notice if service[:success]
 
-    redirect_to products_path, alert: service[:error]
+    redirect_to root_path, alert: service[:error]
   end
 
   def handle_success_notice
-    render turbo_stream: [
-      success_notice(t('.success')),
-      turbo_stream.append(:modal, '<script>window.location.href = "/";</script>'.html_safe),
-      turbo_stream.append(:modal, '<script>closeMiniApp();</script>'.html_safe)
-    ]
+    # render turbo_stream: [
+    #   success_notice(t('.success')),
+    #   turbo_stream.append(:modal, '<script>window.location.href = "/";</script>'.html_safe),
+    #   turbo_stream.append(:modal, '<script>closeMiniApp();</script>'.html_safe)
+    # ]
+    redirect_to root_path, notice: t('.success')
   end
 
   def update_user
