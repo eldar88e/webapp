@@ -1,0 +1,62 @@
+- content_for :title, @task.title
+
+.pt-6.px-4
+  h1.text-xl.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 = yield(:title)
+
+
+.flex.flex-wrap.px-2
+  .w-full.md:w-1/2.px-2
+    .p-4.bg-white.dark:bg-gray-800.mb-4.rounded-md
+      h2.text-xl.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 Основная информация
+      .text-gray-900.dark:text-white
+        .mb-2
+          | Исполнитель:
+          = @task.assignee&.full_name
+        .mb-2
+          | Автор:
+          = @task.user.full_name
+        .mb-2
+          | Стадия:
+          = t("stage.#{@task.stage}")
+        .mb-2
+          | Приоритет:
+          = t("priority.#{@task.priority}")
+        .mb-2
+          | Категория:
+          = t("categories.#{@task.category}")
+        .mb-2
+          | Тип задачи:
+          = t("task_types.#{@task.task_type}")
+        .mb-2
+          | Дата начала:
+          = @task.start_date
+        .mb-2
+          | Дата окончания:
+          = @task.due_date
+        .mb-2
+          | Стоимость:
+          = @task.price
+  .w-full.md:w-1/2.px-2
+    .p-4.bg-white.dark:bg-gray-800.mb-4.rounded-md
+      h2.text-xl.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 Картинки
+      .flex.gap-2.flex-wrap
+        - @task.images.each do |image|
+          = image_tag storage_path(image), class: 'h-50 rounded-sm'
+
+.p-4.pt-0
+  .p-4.bg-white.dark:bg-gray-800.mb-4.rounded-md
+    = @task.description
+
+  .p-4.bg-white.dark:bg-gray-800.rounded-md
+    h2.text-xl.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 Комментарии
+
+    .flex.gap-2.my-5
+      = render partial: '/layouts/partials/avatar', locals: { user: current_user }
+      = form_with model: Comment.new, url: admin_task_comments_path(@task), class: "w-full flex-1" do |f|
+        = f.text_area :body, class: "w-full h-32 p-2 text-gray-900 dark:text-white border rounded border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 focus:!outline-none focus:!shadow-none focus:!ring-0 focus:!border-transparent", placeholder: "Написать комментарий..."
+        = f.submit "Отправить", class: "btn mt-3"
+
+    = turbo_frame_tag :comments
+      = render @comments
+      div class="-mx-6"
+        = render partial: '/layouts/partials/admin/pagy'

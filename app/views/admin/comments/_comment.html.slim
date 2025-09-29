@@ -1,0 +1,7 @@
+.mb-4 id="#{dom_id comment}"
+  .flex.items-center.gap-2.mb-2
+    = render partial: '/layouts/partials/avatar', locals: { user: comment.user }
+    small
+      span.text-gray-800.dark:text-white = comment.user.full_name
+      span.text-gray-500.dark:text-gray-400 = " •  #{l(comment.created_at, format: :short)}"
+  p class="text-gray-800 dark:text-white" = comment.body

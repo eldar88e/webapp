@@ -4,6 +4,8 @@ class Task < ApplicationRecord
   has_many_attached :images
   has_many_attached :files
 
+  has_many :comments, dependent: :destroy
+
   belongs_to :assignee, class_name: 'User', optional: true
   belongs_to :user
 

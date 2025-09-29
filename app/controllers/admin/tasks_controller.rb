@@ -1,9 +1,14 @@
 module Admin
   class TasksController < ApplicationController
-    before_action :set_task, only: %i[edit update move]
+    before_action :set_task, only: %i[show edit update move]
 
     def index
-      @tasks = Task.includes(:assignee, :user, :rich_text_description, :images_attachments).order(:position).group_by(&:stage)
+      @tasks = Task.includes(:assignee, :user, :rich_text_description, :images_attachments)
+                   .order(:position).group_by(&:stage)
+    end
+
+    def show
+      @pagy, @comments = pagy @task.comments.includes(:user).order(created_at: :desc)
     end
 
     def new
