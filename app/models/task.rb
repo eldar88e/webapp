@@ -30,8 +30,8 @@ class Task < ApplicationRecord
   def send_to_telegram(create = nil)
     msg = create ? "Новая задача: #{title}" : "Задача ’’#{title}’’ обновлена"
     msg += "\n\nСтатус: #{I18n.t("stage.#{stage}")}"
-    assignee.messages.create(text: msg)
-    user.messages.create(text: msg) if assignee.id != user.id
+    assignee.messages.create(text: msg, is_incoming: false)
+    user.messages.create(text: msg, is_incoming: false) if assignee.id != user.id
     # TelegramJob.perform_later(msg: msg, id: assignee.tg_id)
     # TelegramJob.perform_later(msg: msg, id: user.tg_id)
   end
