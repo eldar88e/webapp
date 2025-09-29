@@ -58,9 +58,9 @@ module Admin
     end
 
     def generate_images_variants
-      return unless @task.images.attached?
+      image_count = task_params[:images]&.compact_blank&.size.to_i
+      return if !@task.images.attached? || image_count.zero?
 
-      image_count  = task_params[:images].compact_blank.size.to_i
       new_blob_ids = @task.images.attachments.last(image_count).pluck(:blob_id)
       GenerateImageVariantsJob.perform_later(new_blob_ids) if new_blob_ids.any?
     end
