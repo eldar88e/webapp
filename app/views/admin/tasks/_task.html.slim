@@ -8,7 +8,7 @@
     .w-full
       - if task.images.attached?
         .flex.justify-center
-          = image_tag task.images.first, class: 'h-50 rounded-sm'
+          = image_tag storage_path(task.images.first), class: 'h-50 rounded-sm'
       .w-full
         = task.description
   .flex.justify-between.items-center
