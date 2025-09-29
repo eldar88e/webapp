@@ -24,6 +24,7 @@ module Admin
     def create
       @task = Task.new({ user: current_user }.merge(task_params))
       if @task.save
+        generate_images_variants
         redirect_to admin_tasks_path, notice: t('.create')
       else
         error_notice @task.errors.full_messages
@@ -67,7 +68,7 @@ module Admin
 
     def update_task_with_images
       new_task_params = task_params
-      new_images      = new_task_params.delete(:images).compact_blank
+      new_images      = task_params[:images].present? ? new_task_params.delete(:images).compact_blank : []
       success         = @task.update(new_task_params)
       if success && new_images.any?
         @task.images.attach(new_images)
