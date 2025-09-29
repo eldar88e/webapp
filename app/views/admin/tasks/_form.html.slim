@@ -7,7 +7,7 @@
   .mb-5.flex.flex-wrap class="-mx-1.5"
     .w-1/2.px-1.5
       = form.label :assignee_id
-      = form.select :assignee_id, User.all.map { |u| [u.full_name, u.id] }, {}
+      = form.select :assignee_id, User.where(role: %i[admin manager moderator]).map { |u| [u.full_name, u.id] }, {}
     .w-1/2.px-1.5
 
   .mb-5.flex.flex-wrap class="-mx-1.5" data-controller="datepicker" data-datepicker-max-value="#{2.months.from_now.to_date}"
@@ -41,6 +41,20 @@
     .w-1/2.px-1.5
       = form.label :category
       = form.select :category, Task.categories.keys.map { |key| [I18n.t("categories.#{key}"), key] }, {}
+
+  .review-photos data-controller="photo-preview"
+    = form.label :images
+    .flex.gap-1.flex-wrap
+      div id="preview-images" class="flex gap-1 flex-wrap" data-controller="photo-sort" data-product-id="#{task.id}" data-photo-preview-target="preview"
+        - if task.images.attached?
+          - task.images.each do |image|
+            div class="form-photo" data-id="#{image.id}"
+              img class="w-18 h-18 object-cover" src="#{storage_path(image, true)}"
+              button class="form-photo_delete" data-action="click->photo-sort#delete" type="button" Удалить
+      .wrapper-ico
+        .add-img-ico
+          = render IconComponent.new name: 'add-img', size: 24
+        = form.file_field :images, accept: 'image/jpeg,image/png,image/webp,image/heic,image/heif', multiple: true, data: { photo_preview_target: 'input' }
 
   .mb-5
     = form.label :description

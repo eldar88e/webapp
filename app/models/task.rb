@@ -1,5 +1,9 @@
 class Task < ApplicationRecord
   has_rich_text :description
+
+  has_many_attached :images
+  has_many_attached :files
+
   belongs_to :assignee, class_name: 'User', optional: true
   belongs_to :user
 
@@ -23,10 +27,12 @@ class Task < ApplicationRecord
     send_to_telegram
   end
 
-  def send_to_telegram(create = false)
+  def send_to_telegram(create = nil)
     msg = create ? "Новая задача: #{title}" : "Задача ’’#{title}’’ обновлена"
     msg += "\n\nСтатус: #{I18n.t("stage.#{stage}")}"
-    TelegramJob.perform_later(msg: msg, id: assignee.tg_id)
-    TelegramJob.perform_later(msg: msg, id: user.tg_id) if assignee.id != user.id
+    assignee.messages.create(text: msg)
+    user.messages.create(text: msg) if assignee.id != user.id
+    # TelegramJob.perform_later(msg: msg, id: assignee.tg_id)
+    # TelegramJob.perform_later(msg: msg, id: user.tg_id)
   end
 end

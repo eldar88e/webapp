@@ -71,3 +71,6 @@ ru:
         category: "Категория"
         task_type: "Тип задачи"
         deadline_notification_days: "Уведомление о дедлайне"
+        description: "Описание"
+        images: "Изображения"
+        files: "Файлы"

@@ -3,7 +3,7 @@ module Admin
     before_action :set_task, only: %i[edit update]
 
     def index
-      @tasks = Task.includes(:assignee, :user, :rich_text_description).order(:position).group_by(&:stage)
+      @tasks = Task.includes(:assignee, :user, :rich_text_description, :images_attachments).order(:position).group_by(&:stage)
     end
 
     def new
@@ -31,7 +31,7 @@ module Admin
     end
 
     def update
-      if @task.update(task_params)
+      if update_task_with_images
         respond_to do |format|
           format.turbo_stream { render turbo_stream: success_notice(t('.update')) }
           format.json { render json: { success: true } }
@@ -53,8 +53,28 @@ module Admin
     def task_params
       params.require(:task).permit(
         :title, :priority, :user_id, :assignee_id, :start_date, :due_date, :stage, :category, :task_type,
-        :deadline_notification_days, :position, :description
+        :deadline_notification_days, :position, :description, images: [], files: []
       )
+    end
+
+    def generate_images_variants
+      return unless @task.images.attached?
+
+      image_count  = task_params[:images].compact_blank.size.to_i
+      new_blob_ids = @task.images.attachments.last(image_count).pluck(:blob_id)
+      GenerateImageVariantsJob.perform_later(new_blob_ids) if new_blob_ids.any?
+    end
+
+    def update_task_with_images
+      new_task_params = task_params
+      new_images      = new_task_params.delete(:images).compact_blank
+      success         = @task.update(new_task_params)
+      if success && new_images.any?
+        @task.images.attach(new_images)
+        generate_images_variants
+      end
+
+      success
     end
   end
 end

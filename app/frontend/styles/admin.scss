@@ -398,6 +398,57 @@ body.aside-hide {
   input[type="submit"] {
     @apply text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800
   }
+
+  .review-photos {
+    margin-bottom: 20px;
+
+    input[type="file"] {
+      width: 72px;
+      height: 72px;
+      color: transparent;
+      background-color: transparent;
+      z-index: 1;
+      cursor: pointer;
+      border: none;
+
+      &:focus {
+        background-color: transparent;
+        border: none;
+      }
+    }
+
+    .wrapper-ico {
+      @apply relative flex overflow-hidden rounded-xl bg-gray-100;
+
+      &:hover {
+        @apply bg-gray-400;
+      }
+
+      .add-img-ico {
+        @apply absolute top-0 left-0 flex justify-center items-center w-full h-full text-blue-700;
+
+        &:hover {
+          @apply text-blue-800;
+        }
+      }
+    }
+
+    .form-photo {
+      @apply w-18 h-18 rounded-xl overflow-hidden relative;
+
+      &:hover {
+        .form-photo_delete {
+          transform: translate(-10%, -30%);
+        }
+      }
+
+      .form-photo_delete {
+        @apply absolute bottom-0 right-0 text-red-600 bg-white rounded border text-xs px-1 py-0.5 leading-none cursor-pointer;
+        transition: 0.1s;
+        transform: translate(100%, 100%);
+      }
+    }
+  }
 }
 
 .btn {

@@ -4,7 +4,7 @@ import Sortable from "sortablejs"
 export default class extends Controller {
   connect() {
     this.sortable = new Sortable(this.element, {
-      group: "kanban",          // позволяет таскать между колонками
+      group: "kanban",
       animation: 150,
       onEnd: this.end.bind(this)
     })
