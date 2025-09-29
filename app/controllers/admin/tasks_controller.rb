@@ -1,6 +1,6 @@
 module Admin
   class TasksController < ApplicationController
-    before_action :set_task, only: %i[edit update]
+    before_action :set_task, only: %i[edit update move]
 
     def index
       @tasks = Task.includes(:assignee, :user, :rich_text_description, :images_attachments).order(:position).group_by(&:stage)
@@ -33,15 +33,22 @@ module Admin
 
     def update
       if update_task_with_images
-        respond_to do |format|
-          format.turbo_stream { render turbo_stream: success_notice(t('.update')) }
-          format.json { render json: { success: true } }
-        end
+        render turbo_stream: [
+          turbo_stream.replace(@task, partial: '/admin/tasks/task', locals: { task: @task }),
+          success_notice(t('.update'))
+        ]
       else
-        respond_to do |format|
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity }
-        end
+        error_notice @task.errors.full_messages
+      end
+    end
+
+    def move
+      return head :ok if task_params[:position] == @task.position && task_params[:stage] == @task.stage
+
+      if @task.update(task_params)
+        render json: { success: true }
+      else
+        render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
       end
     end
 
@@ -54,13 +61,13 @@ module Admin
     def task_params
       params.require(:task).permit(
         :title, :priority, :user_id, :assignee_id, :start_date, :due_date, :stage, :category, :task_type,
-        :deadline_notification_days, :position, :description, images: [], files: []
+        :deadline_notification_days, :position, :description, :price, images: [], files: []
       )
     end
 
     def generate_images_variants
       image_count = task_params[:images]&.compact_blank&.size.to_i
-      return if !@task.images.attached? || image_count.zero?
+      return if image_count.zero? || !@task.images.attached?
 
       new_blob_ids = @task.images.attachments.last(image_count).pluck(:blob_id)
       GenerateImageVariantsJob.perform_later(new_blob_ids) if new_blob_ids.any?

@@ -2,13 +2,15 @@
         data: { action: 'submit->modal#close' } do |form|
   .mb-5
     = form.label :title
-    = form.text_field :title
+    = form.text_field :title, required: true
 
   .mb-5.flex.flex-wrap class="-mx-1.5"
     .w-1/2.px-1.5
       = form.label :assignee_id
       = form.select :assignee_id, User.where(role: %i[admin manager moderator]).map { |u| [u.full_name, u.id] }, {}
     .w-1/2.px-1.5
+      = form.label :price
+      = form.number_field :price, min: 0
 
   .mb-5.flex.flex-wrap class="-mx-1.5" data-controller="datepicker" data-datepicker-max-value="#{2.months.from_now.to_date}"
     .w-1/2.px-1.5

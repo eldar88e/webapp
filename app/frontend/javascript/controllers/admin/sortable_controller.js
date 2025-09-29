@@ -15,9 +15,7 @@ export default class extends Controller {
     const newStage = event.to.dataset.stage
     const newPosition = event.newIndex
 
-    console.log(newPosition);
-
-    fetch(`/admin/tasks/${taskId}`, {
+    fetch(`/admin/tasks/${taskId}/move`, {
       method: "PATCH",
       headers: {
         "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,

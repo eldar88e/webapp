@@ -19,4 +19,5 @@ namespace :admin do
   resources :purchase_items, only: %i[create update]
   resources :product_statistics, only: :index
   resources :tasks, only: %i[index new create edit update]
+  patch '/tasks/:id/move', to: 'tasks#move'
 end
