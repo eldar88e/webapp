@@ -6,7 +6,7 @@ export default class extends Controller {
   static values = {
     min: { type: String, default: "2024-12-01" },
     max: { type: String, default: null },
-  }
+  };
 
   connect() {
     const minDate = this.minValue ? new Date(this.minValue) : null;

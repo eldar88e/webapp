@@ -61,7 +61,7 @@ class Order < ApplicationRecord
   end
 
   def self.count_paid
-    Rails.cache.fetch(:paid_orders, expires_in: 1.hours) { where(status: :paid).count }
+    Rails.cache.fetch(:paid_orders, expires_in: 1.hour) { where(status: :paid).count }
   end
 
   def self.ransackable_attributes(_auth_object = nil)

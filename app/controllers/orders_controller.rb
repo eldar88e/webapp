@@ -28,7 +28,7 @@ class OrdersController < ApplicationController
     # redirect_to root_path, alert: service[:error]
     render turbo_stream: [
       send_notice(service[:error], 'danger'),
-      turbo_stream.append(:modal, '<script>window.location.href = "/";</script>'.html_safe),
+      turbo_stream.append(:modal, '<script>window.location.href = "/";</script>'.html_safe)
     ], status: :unprocessable_entity
   end
 
