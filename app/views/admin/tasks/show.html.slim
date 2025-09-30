@@ -36,15 +36,17 @@
         .mb-2
           | Стоимость:
           = @task.price
-  .w-full.md:w-1/2.px-2
-    .p-4.bg-white.dark:bg-gray-800.mb-4.rounded-md
-      h2.text-xl.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 Картинки
-      .flex.gap-2.flex-wrap
-        - @task.images.each do |image|
-          = image_tag storage_path(image), class: 'h-50 rounded-sm'
+  - if @task.images.attached?
+    .w-full.md:w-1/2.px-2
+      .p-4.bg-white.dark:bg-gray-800.mb-4.rounded-md
+        h2.text-xl.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 Картинки
+        .flex.gap-2.flex-wrap
+          - @task.images.each do |image|
+            = image_tag storage_path(image), class: 'h-50 rounded-sm'
 
 .p-4.pt-0
   .p-4.bg-white.dark:bg-gray-800.mb-4.rounded-md
+    h2.text-xl.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 Описание
     = @task.description
 
   .p-4.bg-white.dark:bg-gray-800.rounded-md
