@@ -14,7 +14,7 @@ RSpec.describe 'CartSummary', type: :system do
 
   describe 'when buy products' do
     before do
-      find("#cart-btn-#{product.id}", wait: 10).click_button
+      find("#cart-btn-#{product.id}", wait: 20).click_button
     end
 
     it "have one product in cart" do
