@@ -35,7 +35,7 @@ module Admin
     def format_date(date)
       return if date.blank?
 
-      new_date = prefix_date(date)
+      new_date = prefix_date(date)[date.to_date]
       return new_date if new_date.present?
       return date.strftime("%H:%M\u00A0%d.%m") if date.year == Time.current.year
 
