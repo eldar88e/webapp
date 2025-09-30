@@ -34,11 +34,19 @@ module Admin
 
     def format_date(date)
       return if date.blank?
-      return date.strftime('%H:%M') if date.to_date == Time.current.to_date
-      return "Вчера,\u00A0#{date.strftime('%H:%M')}" if date.to_date == Time.current.to_date - 1.day
+
+      new_date = prefix_date(date)
+      return new_date if new_date.present?
       return date.strftime("%H:%M\u00A0%d.%m") if date.year == Time.current.year
 
       date.strftime("%H:%M\u00A0%d.%m.%Yг.")
+    end
+
+    def prefix_date(date)
+      {
+        Time.current.to_date => date.strftime('%H:%M'),
+        (Time.current.to_date - 1.day) => "Вчера,\u00A0#{date.strftime('%H:%M')}"
+      } # TODO: add this week days
     end
   end
 end

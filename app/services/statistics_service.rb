@@ -14,25 +14,26 @@ class StatisticsService
   end
 
   def process
+    sales_all = preload_sales
     result = @products.filter_map do |product|
       quantity_in_way = quantity_in_way(product)
       # next if product.stock_quantity.zero? && quantity_in_way.zero?
 
-      exchange_rate = last_purchase_item(product)&.purchase&.exchange_rate
-      source_price_tl = form_source_price(product)
-      source_price_ru = source_price_tl.nil? ? 0 : source_price_tl * exchange_rate
-      avg_daily_consumption = form_planer_statistics(product)
-      sales = count_sales(product)
-      strategy_stock = (avg_daily_consumption * @strategy_days).round
+      exchange_rate         = last_purchase_item(product)&.purchase&.exchange_rate
+      source_price_tl       = form_source_price(product)
+      source_price_ru       = source_price_tl.nil? ? 0 : source_price_tl * exchange_rate
+      sales                 = sales_all.dig(product.id, :sales) || 0
+      avg_daily_consumption = form_planer_statistics(sales)
+      strategy_stock        = (avg_daily_consumption * @strategy_days).round
+      net_profit_period     = (product.price - source_price_ru - expenses) * sales
       deficit = (product.stock_quantity + quantity_in_way - (avg_daily_consumption * @lead_time) - strategy_stock).round
-      net_profit_period = (product.price - source_price_ru - expenses) * sales
 
       {
         id: product.id,
         image: product.image,
         name: product.name.tr(' ', "\u00A0"),
         price: form_price(product.price),
-        avg_sale_price: form_price(avg_sale_price(product)),
+        avg_sale_price: form_price(sales_all.dig(product.id, :avg_price) || product.price),
         source_price_tl: form_price(source_price_tl, '₺'),
         source_price: form_price(source_price_ru),
         expenses_percent: (expenses * 100 / product.price).round,
@@ -76,7 +77,7 @@ class StatisticsService
   end
 
   def quantity_in_way(product)
-    last_purchase_item(product, :shipped)&.quantity || 0
+    last_purchase_item(product, ORDER_STATUS_BUY)&.quantity || 0
   end
 
   def form_price(price, currency = '₽')
@@ -107,28 +108,22 @@ class StatisticsService
     last_purchase_item(product)&.unit_cost
   end
 
-  def form_planer_statistics(product)
-    total = count_sales(product)
-    (total / (@end_date.to_date - @start_date.to_date).to_f).round(2)
-  end
-
-  def order_items(product)
-    OrderItem
-      .joins(:order)
-      .where(product_id: product.id, orders: { status: :shipped, shipped_at: @start_date..@end_date })
-  end
-
-  def avg_sale_price(product)
-    order_items(product).average(:price)&.to_f || product.price
-  end
-
-  def count_sales(product)
-    order_items(product).sum(:quantity)
+  def form_planer_statistics(total_sales)
+    (total_sales / (@end_date.to_date - @start_date.to_date).to_f).round(2)
   end
 
   def days_of_stock(product, avg_daily_consumption, quantity_in_way)
     return 0 if avg_daily_consumption.zero?
 
     ((product.stock_quantity + quantity_in_way) / avg_daily_consumption).round
+  end
+
+  def preload_sales
+    OrderItem
+      .joins(:order)
+      .where(product_id: @products.ids, orders: { status: ORDER_STATUS_BUY, shipped_at: @start_date..@end_date })
+      .group(:product_id)
+      .pluck(:product_id, Arel.sql('SUM(quantity)'), Arel.sql('AVG(price)'))
+      .each_with_object({}) { |(id, qty, price), h| h[id] = { sales: qty.to_i, avg_price: price&.to_f } }
   end
 end

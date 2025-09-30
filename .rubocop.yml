@@ -14,6 +14,7 @@ AllCops:
     - 'app/jobs/abandoned_order_reminder_job.rb'
     - 'config/initializers/filter_parameter_logging.rb'
     - 'config/deploy.rb'
+    - 'app/services/statistics_service.rb'
 
 Style/StringLiterals:
   Exclude:
