@@ -20,9 +20,12 @@ class ReportService
       )
 
       # send_report(order, user_msg: msg, user_tg_id: user.tg_id, user_markup: 'i_paid', delete_msg: true)
-      user.messages.find_by(id: order.msg_id)&.destroy! if order.msg_id.present?
+      if order.msg_id.present?
+        user.messages.find_by(id: order.msg_id)&.destroy! if order.tg_msg.blank?
+        TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if order.tg_msg.present?
+      end
       msg = user.messages.create(text: msg, is_incoming: false, data: { markup: { markup: 'i_paid' } })
-      order.update_columns(msg_id: msg.id) if msg.present?
+      order.update_columns(msg_id: msg.id, tg_msg: false) if msg.present?
       AbandonedOrderReminderJob.set(wait: ONE_WAIT).perform_async({ 'order_id' => order.id, 'msg_type' => 'one' })
     end
 
@@ -42,6 +45,7 @@ class ReportService
       )
 
       user_msg = I18n.t('tg_msg.paid_client')
+      TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if order.msg_id.present? && order.tg_msg.present?
       send_report(order, admin_msg: msg, admin_markup: 'approve_payment', user_msg: user_msg, user_tg_id: user.tg_id)
     end
 
@@ -61,7 +65,7 @@ class ReportService
 
       user_msg = I18n.t('tg_msg.on_processing_client', order: order.id)
       send_report(order, admin_msg: msg, admin_tg_id: :courier, admin_markup: 'submit_tracking',
-                         user_msg: user_msg, user_tg_id: user.tg_id, user_markup: 'new_order')
+                         user_msg: user_msg, user_tg_id: user.tg_id, user_markup: 'new_order', delete_msg: true)
     end
 
     def on_shipped(order)
@@ -81,7 +85,7 @@ class ReportService
 
       msg_courier = I18n.t('tg_msg.track_num_save', order: order.id, fio: user.full_name, num: order.tracking_number)
       send_report(order, admin_msg: msg_courier, admin_tg_id: :courier,
-                         user_msg: msg, user_tg_id: user.tg_id, user_markup: 'new_order')
+                         user_msg: msg, user_tg_id: user.tg_id, user_markup: 'new_order', delete_msg: true)
       schedule_review_requests(order, user)
     end
 
@@ -91,7 +95,7 @@ class ReportService
       admin_msg = "❌ Заказ №#{order.id} был отменен!"
       user_msg  = I18n.t('tg_msg.cancel', order: order.id)
       send_report(order, admin_msg: admin_msg, user_msg: user_msg, user_tg_id: order.user.tg_id,
-                         user_markup: 'new_order')
+                         user_markup: 'new_order', delete_msg: true)
     end
 
     def on_refunded(order)
@@ -103,7 +107,7 @@ class ReportService
     def on_overdue(order)
       Rails.logger.info "Order #{order.id} has been overdue"
       user_msg = I18n.t('tg_msg.unpaid.reminder.overdue', order: order.id)
-      send_report(order, user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order')
+      send_report(order, user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order', delete_msg: true)
     end
 
     private
@@ -120,9 +124,9 @@ class ReportService
 
     def send_report(order, **args)
       TelegramService.call(args[:admin_msg], args[:admin_tg_id], markup: args[:admin_markup]) if args[:admin_msg]
-      TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if order.msg_id.present?
+      TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if order.msg_id.present? && args[:delete_msg]
       msg_id = TelegramService.call(args[:user_msg], args[:user_tg_id], markup: args[:user_markup])
-      return order.update_columns(msg_id: msg_id) if msg_id.instance_of?(Integer)
+      return order.update_columns(msg_id: msg_id, tg_msg: true) if msg_id.instance_of?(Integer)
 
       notify_admin(msg_id, order.id)
     end

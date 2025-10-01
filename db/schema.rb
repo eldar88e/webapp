@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_29_152452) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_01_215139) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -287,6 +287,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_29_152452) do
     t.bigint "bank_card_id"
     t.integer "bonus", default: 0, null: false
     t.decimal "exchange_rate", precision: 10, scale: 2, default: "0.0", null: false
+    t.boolean "tg_msg", default: true, null: false
     t.index ["bank_card_id"], name: "index_orders_on_bank_card_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
