@@ -40,8 +40,8 @@ class Task < ApplicationRecord
 
   def send_to_admin(msg)
     assignee.messages.create(text: msg, is_incoming: false)
-    return if assignee.id == ADMIN_ID && %w[approved reviewing done].exclude?(stage)
+    return if assignee.id == ADMIN_ID
 
-    User.find(ADMIN_ID).messages.create(text: msg, is_incoming: false)
+    User.find(ADMIN_ID).messages.create(text: msg, is_incoming: false) if %w[approved reviewing done].include?(stage)
   end
 end
