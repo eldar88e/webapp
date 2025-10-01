@@ -20,10 +20,7 @@ class ReportService
       )
 
       # send_report(order, user_msg: msg, user_tg_id: user.tg_id, user_markup: 'i_paid', delete_msg: true)
-      if order.msg_id.present?
-        user.messages.find_by(id: order.msg_id)&.destroy! if order.tg_msg.blank?
-        TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if order.tg_msg.present?
-      end
+      delete_old_msg(order)
       msg = user.messages.create(text: msg, is_incoming: false, data: { markup: { markup: 'i_paid' } })
       order.update_columns(msg_id: msg.id, tg_msg: false) if msg.present?
       AbandonedOrderReminderJob.set(wait: ONE_WAIT).perform_async({ 'order_id' => order.id, 'msg_type' => 'one' })
@@ -107,10 +104,18 @@ class ReportService
     def on_overdue(order)
       Rails.logger.info "Order #{order.id} has been overdue"
       user_msg = I18n.t('tg_msg.unpaid.reminder.overdue', order: order.id)
-      send_report(order, user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order', delete_msg: true)
+      delete_old_msg(order)
+      send_report(order, user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order')
     end
 
     private
+
+    def delete_old_msg(order)
+      if order.msg_id.present?
+        order.user.messages.find_by(id: order.msg_id)&.destroy! if order.tg_msg.blank?
+        TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if order.tg_msg.present?
+      end
+    end
 
     def schedule_review_requests(order, user)
       order.order_items_with_product.each_with_index do |order_item, hours|

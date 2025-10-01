@@ -26,11 +26,22 @@ class AbandonedOrderReminderJob
     return if handle_overdue_status_if_blocked?(order, args)
 
     # tg не дает боту удалить сообщения старше 48 часов
-    TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if args['msg_type'] != 'two'
+    remove_old_msg(order) # if args['msg_type'] != 'two'
     update_bank_card(order)
     msg = form_msg(args['msg_type'], order)
-    order.user.messages.create(**msg)
+    message = order.user.messages.create(**msg)
+    order.update_columns(msg_id: message.id, tg_msg: false)
     schedule_reminders(args)
+  end
+
+  def remove_old_msg(order)
+    return if order.msg_id.blank?
+
+    if order.tg_msg.present?
+      TelegramMsgDelService.remove(order.user.tg_id, order.msg_id)
+    else
+      order.user.messages.find_by(id: order.msg_id)&.destroy!
+    end
   end
 
   def handle_overdue_status_if_blocked?(order, args)
