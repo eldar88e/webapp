@@ -34,12 +34,14 @@ class Task < ApplicationRecord
   def send_to_telegram(create = nil)
     msg = create ? "📋 Новая задача: #{title}" : "📋 Задача ’’#{title}’’ обновлена"
     msg += "\n\nСтатус: #{I18n.t("stage.#{stage}")}"
-    assignee.messages.create(text: msg, is_incoming: false)
-    send_to_admin(msg) if assignee.id != ADMIN_ID && %w[approved reviewing done].include?(stage)
+    send_to_admin(msg)
     user.messages.create(text: msg, is_incoming: false) if assignee.id != user.id
   end
 
   def send_to_admin(msg)
+    assignee.messages.create(text: msg, is_incoming: false)
+    return if assignee.id == ADMIN_ID && %w[approved reviewing done].exclude?(stage)
+
     User.find(ADMIN_ID).messages.create(text: msg, is_incoming: false)
   end
 end

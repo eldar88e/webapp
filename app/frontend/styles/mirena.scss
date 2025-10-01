@@ -3,7 +3,6 @@
 .header {
   .header-search {
     input:focus + button {
-      //color: #48C928;
       color: #1b8190;
     }
 
@@ -44,7 +43,6 @@
       }
 
       &.active:hover {
-        //background-color: #3AA120;
         background-color: #125f6b;
       }
     }
