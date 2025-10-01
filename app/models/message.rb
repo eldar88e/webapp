@@ -4,6 +4,7 @@ class Message < ApplicationRecord
   after_create_commit :send_to_telegram, if: -> { !is_incoming? }
   after_create_commit :broadcast_admin_chat
   after_create_commit :notify_admin, if: -> { is_incoming? }
+  after_destroy :delete_from_telegram, if: -> { tg_msg_id.present? }
 
   # validates :text, presence: true TODO: add validation text or data
 
@@ -49,5 +50,9 @@ class Message < ApplicationRecord
       "admin_chat_#{user.id}", partial: '/admin/messages/msg',
                                locals: { message: self, current_user: user }, target: 'messages'
     )
+  end
+
+  def delete_from_telegram
+    TelegramJob.perform_later(id: tg_id, msg_id: tg_msg_id, method: 'delete_msg')
   end
 end

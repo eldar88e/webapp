@@ -22,9 +22,6 @@ module Admin
 
     def destroy
       @message = Message.find(params[:id])
-      if @message.tg_msg_id.present?
-        TelegramJob.perform_later(id: @message.tg_id, msg_id: @message.tg_msg_id, method: 'delete_msg')
-      end
       @message.destroy!
       render turbo_stream: [turbo_stream.remove(@message), success_notice('Сообщение было успешно удалено.')]
     end

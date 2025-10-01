@@ -20,11 +20,13 @@ module Tg
 
     private
 
-    def i_paid(_bot, message)
+    def i_paid(bot, message)
       user         = User.find_by(tg_id: message.from.id)
       order_number = parse_order_number(message.message.text)
       order        = user.orders.find(order_number)
       order.update(status: :paid)
+      new_text = "#{message.message.text}\n\n✅ Оплачено"
+      edit_message(bot, message, new_text)
     end
 
     def approve_payment(bot, message)
