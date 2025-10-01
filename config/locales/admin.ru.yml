@@ -53,8 +53,10 @@ ru:
     dev: "Разработка"
     marketing: "Маркетинг"
   stage:
-    todo: "Назначена"
+    idea: "Идея"
+    approved: "Одобрена"
     in_progress: "В работе"
+    reviewing: "На проверке"
     done: "Выполнена"
   activerecord:
     models:
