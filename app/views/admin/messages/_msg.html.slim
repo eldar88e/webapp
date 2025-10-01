@@ -29,7 +29,7 @@
               = video_tag url, controls: true, width: 200
             - else
               = image_tag url, class: 'max-w-full h-auto rounded-lg'
-      = simple_format(message.text.gsub("\n", '<br>'), {}, wrapper_tag: "span")
+      = simple_format(message.text&.gsub("\n", '<br>'), {}, wrapper_tag: "span")
       - if message.data&.dig('markup').present?
         .mt-2.pb-2
           .inline-block.bg-gray-200.dark:bg-gray-800.rounded-lg.p-2
