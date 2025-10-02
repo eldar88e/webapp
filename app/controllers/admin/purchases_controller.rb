@@ -3,9 +3,21 @@ module Admin
     before_action :set_purchase, only: %i[edit update destroy]
     before_action :set_products, only: %i[new edit]
 
+    FIRST_PURCHASE_ID = 2
+
     def index
-      @q_purchases = Purchase.includes(purchase_items: :product).order(:created_at).ransack(params[:q])
+      purchases         = Purchase.includes(purchase_items: :product).order(:created_at)
+      purchases         = purchases.where.not(id: FIRST_PURCHASE_ID) if params[:page].nil? || params[:page] == '1'
+      @q_purchases      = purchases.ransack(params[:q])
       @pagy, @purchases = pagy(@q_purchases.result)
+    end
+
+    def show
+      @purchase = Purchase.find(params[:id])
+      render turbo_stream: [
+        turbo_stream.update(:modal_title, "Закупка №#{@purchase.id}"),
+        turbo_stream.update(:modal_body, partial: '/admin/purchases/show')
+      ]
     end
 
     def new

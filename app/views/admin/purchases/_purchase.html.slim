@@ -4,12 +4,13 @@ tr id=dom_id(purchase) class="bg-white border-b dark:bg-gray-800 dark:border-gra
   td class="px-2 py-4 whitespace-normal"
     span class="#{purchase_status_style(purchase.status)}"
       = t("purchase.statuses.#{purchase.status}").sub(' ', "\u00A0")
-  td.px-6.py-4
+  td.px-2.py-4
     - purchase.purchase_items[0..4].each_with_index do |item, idx|
-      = "#{idx + 1}.\u00A0#{item.product.name.gsub(/\s+/, "\u00A0")}\n"
+      = "#{idx + 1}.\u00A0#{item.product.name.gsub(/\s+/, "\u00A0")}\u00A0—\u00A0#{item.quantity}шт.\n"
     - if purchase.purchase_items.size > 5
       span.font-bold
-        = "и еще #{purchase.purchase_items.size - 5} товаров".gsub(' ', "\u00A0")
+        = link_to admin_purchase_path(purchase), data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false } do
+          = "и еще #{purchase.purchase_items.size - 5} товаров".gsub(' ', "\u00A0")
   td.px-6.py-4
     = purchase.exchange_rate
   td.px-6.py-4

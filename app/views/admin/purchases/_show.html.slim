@@ -1,0 +1,30 @@
+table.w-full.text-sm.text-left.rtl:text-right.text-gray-500.dark:text-gray-400
+  thead class="text-xs text-gray-700 uppercase dark:text-gray-400 border-b border-gray-900 dark:border-gray-500"
+    tr
+      th.px-2.py-3 scope="col" ИД
+      th.px-2.py-3 scope="col" Фото
+      th scope="col" class="px-6 py-3" Название
+      th scope="col" class="px-6 py-3" Кол-во
+      th scope="col" class="px-6 py-3" Цена
+      th scope="col" class="px-6 py-3" Сумма
+  tbody
+    - @purchase.purchase_items.includes(:product).each do |purchase_item|
+      tr id=dom_id(purchase_item) class="border-b border-gray-900 dark:border-gray-500"
+        td.px-2.py-4 = purchase_item.id
+        td.px-2.py-4
+          - if purchase_item.product.image&.attached?
+            = image_tag storage_path(purchase_item.product.image), class: 'w-12 h-12 rounded-lg'
+          - else
+            .rounded-lg.text-white.w-12.h-12.flex.justify-center.items-center style="background-color: #48C928"
+              div role="status" class="space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse"
+                = render IconComponent.new name: 'no-image', size: 30
+        td.px-2.py-4 = purchase_item.product.name
+        td.px-6.py-4 = purchase_item.quantity
+        td.px-6.py-4 = form_price purchase_item.unit_cost, '₺'
+        td.px-6.py-4 = form_price purchase_item.line_total, '₺'
+
+.flex.gap-3.justify-end.text-gray-900.dark:text-white
+  div Итого:
+  .font-bold = form_price @purchase.total, '₺'
+.flex.justify-end
+  button.btn type="button" data-action="click->modal#close" Закрыть
