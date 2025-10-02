@@ -9,7 +9,7 @@
     = link_to edit_admin_task_path(task), data: { controller: 'modal-btn', action: 'click->modal-btn#open', modal_btn_name_value: 'modal-task', turbo_prefetch: false }, class: "dark:text-gray-400 text-gray-500 text-sm p-1.5 rounded-md cursor-pointer dark:hover:bg-gray-700 hover:bg-gray-100"
       = render Admin::IconComponent.new name: :edit
   .flex.direction-column.gap-3.mb-3
-    .w-full
+    .w-full.overflow-hidden
       - if task.images.attached?
         .flex.justify-center
           = image_tag storage_path(task.images.first), class: 'h-50 rounded-sm'
