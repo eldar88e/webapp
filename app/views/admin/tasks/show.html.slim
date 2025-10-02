@@ -6,38 +6,42 @@
 .flex.flex-wrap.px-2
   .w-full.md:w-1/2.px-2
     .p-4.bg-white.dark:bg-gray-800.mb-4.rounded-md
-      h2.text-xl.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 Основная информация
+      .flex.justify-between.items-start
+        h2.text-xl.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 Основная информация
+        = link_to edit_admin_task_path(@task), data: { controller: 'modal-btn', action: 'click->modal-btn#open', modal_btn_name_value: 'modal-task', turbo_prefetch: false },
+                class: "dark:text-gray-400 text-gray-500 text-sm p-1.5 rounded-md cursor-pointer dark:hover:bg-gray-700 hover:bg-gray-100" do
+          = render Admin::IconComponent.new name: :edit
       .text-gray-900.dark:text-white
         .mb-2.flex.items-center.gap-2
           span Задача №:
           .font-bold = @task.id
-        .mb-2
-          | Исполнитель:
-          = @task.assignee&.full_name
-        .mb-2
-          | Автор:
-          = @task.user.full_name
-        .mb-2
-          | Стадия:
-          = t("stage.#{@task.stage}")
-        .mb-2
-          | Приоритет:
-          = t("priority.#{@task.priority}")
-        .mb-2
-          | Категория:
-          = t("categories.#{@task.category}")
-        .mb-2
-          | Тип задачи:
-          = t("task_types.#{@task.task_type}")
-        .mb-2
-          | Дата начала:
-          = @task.start_date
-        .mb-2
-          | Дата окончания:
-          = @task.due_date
-        .mb-2
-          | Стоимость:
-          = @task.price
+        .mb-2.flex.items-center.gap-2
+          span Автор:
+          .font-bold = @task.user.full_name
+        .mb-2.flex.items-center.gap-2
+          span Исполнитель:
+          .font-bold = @task.assignee&.full_name
+        .mb-2.flex.items-center.gap-2
+          span Стадия:
+          .font-bold = t("stage.#{@task.stage}")
+        .mb-2.flex.items-center.gap-2
+          span Приоритет:
+          .font-bold = t("priority.#{@task.priority}")
+        .mb-2.flex.items-center.gap-2
+          span Категория:
+          .font-bold = t("categories.#{@task.category}")
+        .mb-2.flex.items-center.gap-2
+          span Тип задачи:
+          .font-bold = t("task_types.#{@task.task_type}")
+        .mb-2.flex.items-center.gap-2
+          span Дата начала:
+          .font-bold = @task.start_date
+        .mb-2.flex.items-center.gap-2
+          span Дата окончания:
+          .font-bold = @task.due_date
+        .mb-2.flex.items-center.gap-2
+          span Стоимость:
+          .font-bold = form_price @task.price
   - if @task.images.attached?
     .w-full.md:w-1/2.px-2
       .p-4.bg-white.dark:bg-gray-800.mb-4.rounded-md
@@ -60,3 +64,5 @@
       = render @comments
       div class="-mx-6"
         = render partial: '/layouts/partials/admin/pagy'
+
+= render partial: '/admin/tasks/modal'
