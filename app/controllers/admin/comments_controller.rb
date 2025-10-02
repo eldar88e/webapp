@@ -3,9 +3,7 @@ module Admin
     before_action :set_task
 
     def create
-      @comment = @task.comments.build(comment_params)
-      @comment.user = current_user
-
+      @comment = @task.comments.build(comment_params.merge(user: current_user))
       if @comment.save
         render turbo_stream: [
           turbo_stream.prepend(:comments, partial: '/admin/comments/comment', locals: { comment: @comment }),
