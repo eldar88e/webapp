@@ -9,6 +9,7 @@ module Admin
       if @comment.save
         render turbo_stream: [
           turbo_stream.prepend(:comments, partial: '/admin/comments/comment', locals: { comment: @comment }),
+          turbo_stream.replace('comments-form', partial: '/admin/comments/form'),
           success_notice('Комментарий успешно добавлен.')
         ]
       else

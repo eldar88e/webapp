@@ -1,0 +1,5 @@
+.flex.gap-2.my-5 id='comments-form'
+  = render partial: '/layouts/partials/avatar', locals: { user: current_user }
+  = form_with model: Comment.new, url: admin_task_comments_path(@task), class: "w-full flex-1" do |f|
+    = f.text_area :body, placeholder: "Написать комментарий...", class: "w-full h-32 p-2 text-gray-900 dark:text-white border rounded border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 focus:!outline-none focus:!shadow-none focus:!ring-0 focus:!border-transparent"
+    = f.submit "Отправить", class: "btn mt-3"
