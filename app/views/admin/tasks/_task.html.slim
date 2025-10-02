@@ -1,7 +1,11 @@
 .flex.bg-gray-50.dark:bg-gray-800.shadow.p-4.bg-white.rounded-md.flex-col.cursor-move.mb-4 class="max-w-[28rem]" data-id=task.id id=dom_id(task)
   .pb-4.flex.justify-between.items-center
-    .dark:text-white.text-gray-900.font-semibold.text-base
-      = link_to task.title, admin_task_path(task)
+    div
+      = link_to admin_task_path(task)
+        .text-gray-500.dark:text-gray-400.font-normal.text-sm
+          = "# #{task.id}"
+        .dark:text-white.text-gray-900.font-semibold.text-base
+          = task.title
     = link_to edit_admin_task_path(task), data: { controller: 'modal-btn', action: 'click->modal-btn#open', modal_btn_name_value: 'modal-task', turbo_prefetch: false }, class: "dark:text-gray-400 text-gray-500 text-sm p-1.5 rounded-md cursor-pointer dark:hover:bg-gray-700 hover:bg-gray-100"
       = render Admin::IconComponent.new name: :edit
   .flex.direction-column.gap-3.mb-3
@@ -9,21 +13,21 @@
       - if task.images.attached?
         .flex.justify-center
           = image_tag storage_path(task.images.first), class: 'h-50 rounded-sm'
-      .w-full.text-gray-500.dark:text-gray-400.font-normal.text-sm
+      .w-full.text-gray-500.dark:text-gray-400.text-sm
         = task.description&.to_plain_text.truncate(200)
   .w-full.text-gray-900.dark:text-white.mb-3.text-sm
     span Стоимость работы:
     span.font-bold.ml-1 = form_price task.price
   .flex.justify-between.items-center
     .flex.gap-2
-      = link_to admin_user_path(task.user), class: 'flex' do
+      = link_to admin_user_path(task.user), class: 'flex', title: task.user.full_name do
         - if task.user.photo_url.present?
           = image_tag task.user.photo_url, class: 'w-8 h-8 rounded-full'
         - else
           .w-8.h-8.rounded-full.bg-red-300.flex.items-center.justify-center
             = task.user.first_name&.at(0)
 
-      = link_to admin_user_path(task.assignee), class: 'flex' do
+      = link_to admin_user_path(task.assignee), class: 'flex', title: task.assignee.full_name do
         - if task.assignee.photo_url.present?
           = image_tag task.assignee.photo_url, class: 'w-8 h-8 rounded-full'
         - else
