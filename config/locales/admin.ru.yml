@@ -58,9 +58,15 @@ ru:
     in_progress: "В работе"
     reviewing: "На проверке"
     done: "Выполнена"
+  expense:
+    categories:
+      advertising: "Реклама"
+      logistics: "Логистика"
+      other: "Другое"
   activerecord:
     models:
       task: "Задача"
+      expense: "Расход"
     attributes:
       task:
         title: "Заголовок"
@@ -77,3 +83,8 @@ ru:
         images: "Изображения"
         files: "Файлы"
         price: "Стоимость ₽"
+      expense:
+        category: "Категория"
+        amount: "Стоимость ₽"
+        description: "Описание"
+        created_at: "Дата создания"

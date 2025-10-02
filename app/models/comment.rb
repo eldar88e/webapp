@@ -1,4 +1,6 @@
 class Comment < ApplicationRecord
+  ADMIN_ID = 12
+
   belongs_to :task
   belongs_to :user
 
@@ -11,7 +13,16 @@ class Comment < ApplicationRecord
   def notify
     msg = "#{user.full_name} добавил(а) комментарий к задаче «#{task.title}»"
     notify_user(task.assignee, msg)
-    notify_user(task.user, msg)
+    notify_worker(msg)
+    notify_admin(msg)
+  end
+
+  def notify_worker(msg)
+    notify_user(task.user, msg) if task.user.id != task.assignee.id
+  end
+
+  def notify_admin(msg)
+    notify_user(User.find(ADMIN_ID), msg) if task.assignee.id != ADMIN_ID
   end
 
   def notify_user(recipient, msg)

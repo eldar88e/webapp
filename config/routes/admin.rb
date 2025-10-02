@@ -22,4 +22,5 @@ namespace :admin do
     resources :comments, only: %i[create]
   end
   patch '/tasks/:id/move', to: 'tasks#move'
+  resources :expenses, only: %i[index new create edit update destroy]
 end

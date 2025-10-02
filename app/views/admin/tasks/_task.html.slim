@@ -9,8 +9,11 @@
       - if task.images.attached?
         .flex.justify-center
           = image_tag storage_path(task.images.first), class: 'h-50 rounded-sm'
-      .w-full
-        = task.description
+      .w-full.text-gray-500.dark:text-gray-400.font-normal.text-sm
+        = task.description&.to_plain_text.truncate(200)
+  .w-full.text-gray-900.dark:text-white.mb-3.text-sm
+    span Стоимость работы:
+    span.font-bold.ml-1 = form_price task.price
   .flex.justify-between.items-center
     .flex.gap-2
       = link_to admin_user_path(task.user), class: 'flex' do

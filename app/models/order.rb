@@ -1,4 +1,6 @@
 class Order < ApplicationRecord
+  include ExchangeRate
+
   belongs_to :user
   belongs_to :bank_card, optional: true
   has_many :order_items, dependent: :destroy
@@ -187,10 +189,6 @@ class Order < ApplicationRecord
 
   def deduct_bonus!
     user.bonus_logs.create!(bonus_amount: -bonus, reason: :order_deduct, source: self)
-  end
-
-  def set_exchange_rate
-    ExchangeRateSyncJob.perform_later(self.class.to_s, id)
   end
 
   def can_restock?

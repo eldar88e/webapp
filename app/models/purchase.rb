@@ -1,4 +1,6 @@
 class Purchase < ApplicationRecord
+  include ExchangeRate
+
   attr_accessor :send_to_supplier
 
   has_many :purchase_items, dependent: :destroy
@@ -49,10 +51,6 @@ class Purchase < ApplicationRecord
 
   def set_default_currency
     self.currency ||= 'TRY'
-  end
-
-  def set_exchange_rate
-    ExchangeRateSyncJob.perform_later(self.class.to_s, id)
   end
 
   def sent_to_supplier!

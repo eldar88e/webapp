@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_01_215139) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_02_122719) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -228,6 +228,18 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_01_215139) do
     t.datetime "updated_at", null: false
     t.index ["task_id"], name: "index_comments_on_task_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "expenses", force: :cascade do |t|
+    t.integer "category", default: 0, null: false
+    t.string "description"
+    t.integer "amount", default: 0, null: false
+    t.decimal "exchange_rate", precision: 12, scale: 2, null: false
+    t.string "expenseable_type"
+    t.bigint "expenseable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expenseable_type", "expenseable_id"], name: "index_expenses_on_expenseable"
   end
 
   create_table "favorites", force: :cascade do |t|
