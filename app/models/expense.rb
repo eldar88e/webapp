@@ -15,9 +15,7 @@ class Expense < ApplicationRecord
   private
 
   def set_category
-    return if category.present? || expenseable_type != 'Purchase'
-
-    self.category = :logistics
+    self.category = :logistics if expenseable_type == 'Purchase'
   end
 
   def set_first_exchange_rate
