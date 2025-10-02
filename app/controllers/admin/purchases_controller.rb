@@ -4,7 +4,7 @@ module Admin
     before_action :set_products, only: %i[new edit]
 
     def index
-      @q_purchases = Purchase.order(:created_at).ransack(params[:q])
+      @q_purchases = Purchase.includes(purchase_items: :product).order(:created_at).ransack(params[:q])
       @pagy, @purchases = pagy(@q_purchases.result)
     end
 
