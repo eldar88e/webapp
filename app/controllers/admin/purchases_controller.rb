@@ -3,7 +3,7 @@ module Admin
     before_action :set_purchase, only: %i[edit update destroy]
     before_action :set_products, only: %i[new edit]
 
-    FIRST_PURCHASE_ID = 2
+    FIRST_PURCHASE_ID = 1
 
     def index
       purchases         = Purchase.includes(purchase_items: :product).order(:created_at)
