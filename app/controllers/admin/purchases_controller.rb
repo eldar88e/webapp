@@ -34,7 +34,7 @@ module Admin
       @purchase.purchase_items.build if @purchase.purchase_items.empty?
       @purchase.build_expense if @purchase.expense.blank?
       render turbo_stream: [
-        turbo_stream.update(:modal_title, 'Редактировать настройку'),
+        turbo_stream.update(:modal_title, 'Редактировать закупку'),
         turbo_stream.update(:modal_body, partial: '/admin/purchases/form', locals: { method: :patch })
       ]
     end
