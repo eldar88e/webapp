@@ -111,9 +111,12 @@ class ReportService
     private
 
     def delete_old_msg(order)
-      if order.msg_id.present?
-        order.user.messages.find_by(id: order.msg_id)&.destroy! if order.tg_msg.blank?
-        TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if order.tg_msg.present?
+      return if order.msg_id.blank?
+
+      if order.tg_msg.blank?
+        order.user.messages.find_by(id: order.msg_id)&.destroy!
+      else
+        TelegramMsgDelService.remove(order.user.tg_id, order.msg_id)
       end
     end
 
