@@ -17,14 +17,15 @@ class SubscribersNoticeJob < ApplicationJob
   end
 
   def form_message(product)
-    text = "📢 Товар '#{product.name}' снова в наличии! Успейте заказать."
-    data = { markup: { markup_url: "products_#{product.id}", markup_text: "Заказать #{product.name}" } }
-    return { text: text, is_incoming: false, data: data } unless product.image.attached?
+    text   = "📢 Товар '#{product.name}' снова в наличии! Успейте заказать."
+    markup = { markup_url: "products_#{product.id}", markup_text: "Заказать #{product.name}" }
+    msg    = { text: text, is_incoming: false, data: { markup: markup } }
+    return msg unless product.image.attached?
 
-    tg_media    = find_or_create_tg_media(product)
-    data[:type] = 'image'
-    tg_media.file_id ? data[:tg_file_id] = tg_media.file_id : data[:media_id] = tg_media.id
-    { text: text, is_incoming: false, data: data }
+    tg_media = find_or_create_tg_media(product)
+    msg[:data][:type] = 'image'
+    tg_media.file_id ? msg[:data][:tg_file_id] = tg_media.file_id : msg[:data][:media_id] = tg_media.id
+    msg
   end
 
   def find_or_create_tg_media(product)
@@ -38,8 +39,8 @@ class SubscribersNoticeJob < ApplicationJob
   end
 
   def send_message(user, message)
-    user.messages.create(**message)
-    Tg::FileService.update_file_id(message)
+    msg = user.messages.create(**message)
+    Tg::FileService.update_file_id(msg)
     sleep 0.3
   end
 end
