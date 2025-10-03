@@ -60,4 +60,15 @@
             button.btn.btn-outline type="button" data-action="click->purchase-items#removeItem"
               = render IconComponent.new name: :trash
 
+
+  = form.fields_for :expense do |expense_fields|
+    h2.text-xl.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 Расходы на логистику
+    .mb-5
+      label(for="expense_description") Описание расхода
+      = expense_fields.text_area :description
+    .mb-5.flex
+      .w-1/2
+        label(for="expense_amount") Сумма расхода
+        = expense_fields.number_field :amount
+
   = form.submit 'Сохранить', class: 'btn'

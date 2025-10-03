@@ -5,6 +5,8 @@ class Purchase < ApplicationRecord
 
   has_many :purchase_items, dependent: :destroy
   accepts_nested_attributes_for :purchase_items, allow_destroy: true, reject_if: :all_blank
+  has_one :expense, as: :expenseable, dependent: :destroy
+  accepts_nested_attributes_for :expense, allow_destroy: true, reject_if: :all_blank
   has_many :products, through: :purchase_items
 
   enum :status, {
@@ -23,12 +25,12 @@ class Purchase < ApplicationRecord
 
   after_create :set_exchange_rate
   after_create :sent_to_supplier!, if: -> { send_to_supplier == '1' }
-  after_update :set_exchange_rate, if: -> { status == 'sent_to_supplier' }
-  after_update :send_notification, unless: -> { status == 'initialized' }
   after_update :update_product_stock, if: -> { can_update_stock? }
   after_update :deduct_product_stock, if: -> { can_restock? }
 
+  after_commit :set_exchange_rate, on: :update, if: -> { status == 'sent_to_supplier' }
   after_commit :clear_last_purchase_cache
+  after_commit :send_notification, on: :update, if: -> { status != 'initialized' }
 
   def recalc_totals
     self.subtotal = purchase_items.sum(&:line_total)
