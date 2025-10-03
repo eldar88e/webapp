@@ -24,9 +24,14 @@ module Tg
       user         = User.find_by(tg_id: message.from.id)
       order_number = parse_order_number(message.message.text)
       order        = user.orders.find(order_number)
-      order.update(status: :paid)
-      new_text = "#{message.message.text}\n\n✅ Оплачено"
-      edit_message(bot, message, new_text)
+      if order.status == 'unpaid'
+        order.update(status: :paid)
+        new_text = '✅ Оплачено'
+      else
+        Rails.logger.info "Order #{order.id} is already paid or other problem"
+        new_text = '❌ Ошибка'
+      end
+      edit_message(bot, message, "#{message.message.text}\n\n#{new_text}")
     end
 
     def approve_payment(bot, message)
