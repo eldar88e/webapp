@@ -2,14 +2,14 @@
         class: 'admin-form', data: { action: 'submit->modal#close' } do |form|
   .mb-5
     = form.label :category
-    = form.select :status, Expense.categories.keys.map { |key| [I18n.t("expense.categories.#{key}"), key] }, {}
+    = form.select :category, Expense.categories.keys.map { |key| [I18n.t("expense.categories.#{key}"), key] }, {}
 
   .mb-5
     = form.label :description
-    = form.text_field :description
+    = form.text_field :description, required: true
 
   .mb-5
     = form.label :amount
-    = form.number_field :amount, min: 0
+    = form.number_field :amount, min: 1, required: true
 
   = form.submit 'Сохранить', class: 'btn'
