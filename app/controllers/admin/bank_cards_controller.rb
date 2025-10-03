@@ -3,7 +3,12 @@ module Admin
     before_action :set_bank_card, only: %i[edit update]
 
     def index
-      @q_bank_cards = params[:q].present? ? BankCard.ransack(params[:q]) : BankCard.order(active: :desc, name: :asc).ransack(params[:q])
+      @q_bank_cards =
+        if params[:q].present?
+          BankCard.ransack(params[:q])
+        else
+          BankCard.order(active: :desc, name: :asc).ransack(params[:q])
+        end
       @pagy, @bank_cards = pagy @q_bank_cards.result
     end
 
