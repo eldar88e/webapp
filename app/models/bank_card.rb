@@ -24,6 +24,14 @@ class BankCard < ApplicationRecord
     cached_available_ids.sample
   end
 
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[id name fio active created_at]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    %w[]
+  end
+
   private
 
   def clear_cache

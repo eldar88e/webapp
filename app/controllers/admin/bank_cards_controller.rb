@@ -3,7 +3,8 @@ module Admin
     before_action :set_bank_card, only: %i[edit update]
 
     def index
-      @bank_cards = BankCard.order(:created_at)
+      @q_bank_cards = params[:q].present? ? BankCard.ransack(params[:q]) : BankCard.order(active: :desc, name: :asc).ransack(params[:q])
+      @pagy, @bank_cards = pagy @q_bank_cards.result
     end
 
     def new
@@ -38,7 +39,7 @@ module Admin
           success_notice(t('controller.bank_cards.update'))
         ]
       else
-        error_notice(@bank_card.errors.full_messages, :unprocessable_entity)
+        error_notice @bank_card.errors.full_messages
       end
     end
 
