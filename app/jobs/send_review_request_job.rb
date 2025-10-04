@@ -6,34 +6,31 @@ class SendReviewRequestJob < ApplicationJob
     product = Product.find(args[:product_id])
     user    = User.find(args[:user_id])
     order   = user.orders.find_by(id: args[:order_id])
-    return if order&.status != 'shipped'
+    return if order&.status != 'shipped' || user.reviews.exists?(product_id: product.id)
 
-    # if ENV.fetch('HOST', '').include?('mirena')
-    #   send_review_request_mirena(user)
-    # else
-    send_review_request(user, product)
-    # end
+    # return send_review_request_mirena(user) if ENV.fetch('HOST', '').include?('mirena')
+
+    message = build_tg_message(product)
+    send_review_request(user, message)
   end
 
   private
 
-  def send_review_request(user, product)
-    text = I18n.t('tg_msg.review', product: product.name)
-    url  = "products_#{product.id}_reviews_new"
-    data = { markup: { markup_url: url, markup_text: BTN_TITLE } }
-    create_msg(user, text, data)
+  def build_tg_message(product)
+    text   = I18n.t('tg_msg.review', product: product.name)
+    markup = { markup_url: "products_#{product.id}_reviews_new", markup_text: BTN_TITLE }
+    Tg::MessageService.build_tg_message(product, text, markup)
   end
 
-  def send_review_request_mirena(user)
-    text = I18n.t('tg_msg.review_mirena')
-    url  = Setting.fetch_value(:reviews_group)
-    data = { markup: { markup_ext_url: url, markup_ext_text: BTN_TITLE } }
-    create_msg(user, text, data)
+  def send_review_request(user, message)
+    msg = user.messages.create(**message)
+    Tg::MessageService.update_file_id(msg)
   end
 
-  def create_msg(user, text, data)
-    message = { text: text, is_incoming: false, data: data }
-    user.messages.create(**message)
-    # Tg::FileService.update_file_id(message) если добавить img то убрать комментарий
-  end
+  # def send_review_request_mirena(user)
+  #   text = I18n.t('tg_msg.review_mirena')
+  #   url  = Setting.fetch_value(:reviews_group)
+  #   data = { markup: { markup_ext_url: url, markup_ext_text: BTN_TITLE } }
+  #   user.messages.create(text: text, is_incoming: false, data: data)
+  # end
 end
