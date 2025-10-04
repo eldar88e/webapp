@@ -154,7 +154,7 @@ export default function Cart({
       </div>
       {cart.length === 1 && cart[0].quantity === 1 && (
         <div className="relative overflow-hidden mb-5 p-5" style={{ backgroundColor: "#48C928", borderRadius: "20px" }}>
-          <div className="text-white">
+          <div className="text-white font-semibold">
             Добавьте еще 1 позицию и<br/>доставка станет 0₽ вместо 500₽
           </div>
           <div className="absolute top-0 right-1 w-20 h-20 flex items-center justify-center">
