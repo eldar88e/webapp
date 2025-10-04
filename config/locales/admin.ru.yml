@@ -63,6 +63,7 @@ ru:
       advertising: "Реклама"
       logistics: "Логистика"
       other: "Другое"
+      development: "Разработка"
   activerecord:
     models:
       task: "Задача"

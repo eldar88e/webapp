@@ -7,6 +7,7 @@ class Task < ApplicationRecord
   has_many_attached :files
 
   has_many :comments, dependent: :destroy
+  has_one :expense, as: :expenseable, dependent: :destroy
 
   belongs_to :assignee, class_name: 'User', optional: true
   belongs_to :user
@@ -17,6 +18,8 @@ class Task < ApplicationRecord
   enum :task_type, { sprint: 0, bugfix: 1, feature: 2 }
 
   validates :title, presence: true
+
+  after_update :update_expense, if: -> { stage == 'done' && price.present? }
 
   after_commit :send_create_to_telegram, on: :create
   after_commit :send_update_to_telegram, on: :update
@@ -40,8 +43,13 @@ class Task < ApplicationRecord
   end
 
   def send_to_admin(msg)
-    return if [assignee.id, user.id].include? ADMIN_ID
+    return if [assignee.id, user.id].include?(ADMIN_ID) || Rails.env.local?
 
     User.find(ADMIN_ID).messages.create(text: msg, is_incoming: false) if %w[approved reviewing done].include?(stage)
+  end
+
+  def update_expense
+    exp = expense || build_expense
+    exp.update(category: :development, description: title, amount: price)
   end
 end

@@ -4,7 +4,12 @@ tr id=dom_id(expense) class="bg-white border-b dark:bg-gray-800 dark:border-gray
   td.px-6.py-4
     = t("expense.categories.#{expense.category}")
   td.px-6.py-4
-    = expense.description
+    - if expense.expenseable_type == 'Task'
+      = link_to admin_task_path(expense.expenseable), class: 'flex items-center gap-1 text-blue-500 no-underline hover:underline' do
+        = render Admin::IconComponent.new name: :link, width: 16
+        span = expense.description
+    - else
+      = expense.description
   td.px-6.py-4
     = form_price expense.amount
   td.px-6.py-4

@@ -4,7 +4,7 @@ class Message < ApplicationRecord
   after_create_commit :send_to_telegram, if: -> { !is_incoming? }
   after_create_commit :broadcast_admin_chat
   after_create_commit :notify_admin, if: -> { is_incoming? }
-  after_destroy :delete_from_telegram, if: -> { tg_msg_id.present? }
+  after_destroy_commit :delete_from_telegram, if: -> { tg_msg_id.present? }
 
   # validates :text, presence: true TODO: add validation text or data
 
