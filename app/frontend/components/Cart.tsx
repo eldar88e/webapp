@@ -157,7 +157,7 @@ export default function Cart({
           <div className="text-white">
             Добавьте еще 1 позицию и<br/>доставка станет 0₽ вместо 500₽
           </div>
-          <div className="absolute top-0 right-2 w-20 h-20 flex items-center justify-center">
+          <div className="absolute top-0 right-1 w-20 h-20 flex items-center justify-center">
             <div className="pulse-wrapper">
               <span className="pulse-ring"></span>
               <span className="pulse-ring"></span>
