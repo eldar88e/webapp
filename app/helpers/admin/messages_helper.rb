@@ -22,7 +22,7 @@ module Admin
 
       return unless file&.attachment&.attached?
 
-      file.attachment
+      data['type'] == 'video' ? file.attachment : storage_path(file.attachment)
     end
 
     def name_user(user)
