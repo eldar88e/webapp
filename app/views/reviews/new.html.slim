@@ -3,9 +3,21 @@ style
   |  .title-review { display: none; }
   |  .review-form-submit { margin-bottom: 0 }
 
+.card-main-block
+  ul.breadcrumb
+    li = link_to 'Каталог', root_path, data: { turbo_prefetch: false }
+    li = link_to @product.name, product_path(@product), data: { turbo_prefetch: false }
+    li Оставить отзыв
+
+  .product-img
+    div role="status" class="flex justify-center space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center"
+      .flex.items-center.justify-center.w-full.h-58
+        = render IconComponent.new name: 'no-image', size: 40
+    - if @product.image.attached?
+      .img.absolute.left-0.top-0 style="background-image: url('#{storage_path(@product.image)}'); background-size: contain; background-repeat: no-repeat; background-position: center;"
+
 h2 Оставить отзыв
-= link_to @review.product.name, product_path(@review.product),
-        data: { turbo: false }, class: 'flex font-medium mt-1 mb-5'
+= link_to @review.product.name, product_path(@review.product), data: { turbo_prefetch: false }, class: 'review-product-name'
 
 .card-block
   = turbo_frame_tag :new_review_page do

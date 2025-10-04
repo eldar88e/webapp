@@ -7,14 +7,15 @@ h2.mb-5 Заказ №#{order.id}
       .history-order-item
         .flex.gap-4.items-center
           .history-img
-            div role="status" class="flex justify-center space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center"
-              .flex.items-center.justify-center.w-full.h-18
-                = render IconComponent.new name: 'no-image', size: 30
-            - if order_item.product.image.attached?
-              .absolute.top-0.left-0.flex.justify-center.items-center.w-full.h-full
-                = image_tag order_item.product.image
+            = link_to product_path(order_item.product), data: { turbo_prefetch: false } do
+              div role="status" class="flex justify-center space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center"
+                .flex.items-center.justify-center.w-full.h-18
+                  = render IconComponent.new name: 'no-image', size: 30
+              - if order_item.product.image.attached?
+                .absolute.top-0.left-0.flex.justify-center.items-center.w-full.h-full
+                  = image_tag order_item.product.image
           .mb-3
-            = link_to order_item.product.name, product_path(order_item.product), class: 'brand-color-link'
+            = link_to order_item.product.name, product_path(order_item.product), class: 'brand-color-link', data: { turbo_prefetch: false }
             .history-price #{order_item.product.price.to_i}₽/шт
         .bg-gray-200.text-center.py-1.px-4.rounded-lg
           .count = "#{order_item.quantity} шт"

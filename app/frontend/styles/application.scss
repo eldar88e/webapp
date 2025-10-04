@@ -1281,3 +1281,13 @@ h3 {
     }
   }
 }
+
+.review-product-name {
+  @apply font-medium mt-1 mb-5;
+  display: inline-block;
+  transition: 0.5s all;
+
+  &:hover {
+    color: var(--color-green);
+  }
+}

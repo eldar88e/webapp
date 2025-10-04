@@ -49,7 +49,6 @@ RUN addgroup -g 1000 deploy && adduser -u 1000 -G deploy -D -s /bin/sh deploy
 
 RUN chown -R deploy:deploy /usr/local/bundle
 
-
 USER deploy:deploy
 
 EXPOSE 3000

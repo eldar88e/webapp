@@ -47,13 +47,13 @@
       div Вы достигли максимального уровня
 
 .main-block.mb-5.user-links
-  = link_to product_subscriptions_path, class: "btn btn-big btn-secondary flex justify-between mb-2 items-center" do
+  = link_to product_subscriptions_path, class: "btn btn-big btn-secondary flex justify-between mb-2 items-center", data: { turbo_prefetch: false } do
     .flex.justify-center.gap-2.items-center
       = render IconComponent.new name: :clock
       span Товары в ожидании
     .right-arrow
       = render IconComponent.new name: :right
-  = link_to orders_path, class: 'btn btn-big btn-secondary flex justify-between items-center' do
+  = link_to orders_path, class: 'btn btn-big btn-secondary flex justify-between items-center', data: { turbo_prefetch: false } do
     .flex.justify-center.gap-2.items-center
       = render IconComponent.new name: :cart2
       span  История заказов
