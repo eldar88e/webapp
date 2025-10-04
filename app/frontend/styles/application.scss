@@ -1291,3 +1291,60 @@ h3 {
     color: var(--color-green);
   }
 }
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.pulse-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pulse-ring {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.25);
+  animation: pulse-ring 2.5s infinite;
+}
+
+.pulse-ring:nth-child(1) {
+  background-color: rgba(255, 255, 255, 0.35);
+  animation-delay: 0s;
+}
+.pulse-ring:nth-child(2) {
+  background-color: rgba(255, 255, 255, 0.30);
+  animation-delay: 1s;
+}
+.pulse-ring:nth-child(3) {
+  animation-delay: 2s;
+}
+
+@keyframes pulse-core {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.pulse-core {
+  position: relative;
+  z-index: 1;
+  animation: pulse-core 2s infinite ease-in-out;
+}
