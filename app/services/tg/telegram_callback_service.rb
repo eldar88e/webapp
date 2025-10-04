@@ -21,16 +21,11 @@ module Tg
     private
 
     def i_paid(bot, message)
-      user         = User.find_by(tg_id: message.from.id)
-      order_number = parse_order_number(message.message.text)
-      order        = user.orders.find(order_number)
-      if order.status == 'unpaid'
-        order.update(status: :paid)
-        new_text = '✅ Оплачено'
-      else
-        Rails.logger.info "Order #{order.id} is already paid or other problem"
-        new_text = '❌ Ошибка'
-      end
+      user     = User.find_by(tg_id: message.from.id)
+      order_id = parse_order_number(message.message.text)
+      order    = user.orders.find(order_id)
+      mark_as_paid(order)
+      new_text = order.status == 'unpaid' ? '✅ Оплачено' : '❌ Ошибка'
       edit_message(bot, message, "#{message.message.text}\n\n#{new_text}")
     end
 
@@ -87,6 +82,14 @@ module Tg
         parse_mode: 'HTML',
         reply_markup: markup
       )
+    end
+
+    def mark_as_paid(order)
+      if order.status == 'unpaid'
+        order.update(status: :paid)
+      else
+        Rails.logger.info "Order #{order.id} is already paid or other problem"
+      end
     end
   end
 end
