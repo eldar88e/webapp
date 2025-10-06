@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_02_122719) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_06_175618) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -239,6 +239,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_02_122719) do
     t.bigint "expenseable_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "expense_date", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["expense_date"], name: "index_expenses_on_expense_date"
     t.index ["expenseable_type", "expenseable_id"], name: "index_expenses_on_expenseable"
   end
 

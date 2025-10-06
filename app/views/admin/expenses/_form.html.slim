@@ -8,8 +8,17 @@
     = form.label :description
     = form.text_field :description, required: true
 
-  .mb-5
-    = form.label :amount
-    = form.number_field :amount, min: 1, required: true
+  .flex.flex-wrap class="-mx-1.5"
+    .w-1/2.px-1.5.mb-5 data-controller="datepicker"
+      = form.label :expense_date
+      .relative.max-w-sm
+        .text-gray-500.dark:text-gray-400 class="absolute inset-y-0 start-0 flex items-center ps-2.5 md:ps-3.5 pointer-events-none"
+          = render Admin::IconComponent.new name: :calendar, width: 16
+        = form.text_field :expense_date, data: { datepicker_target: 'endDate' }, placeholder: 'Выберите дату',
+                inputmode: 'none', class: '!ps-9'
+
+    .w-1/2.px-1.5.mb-5
+      = form.label :amount
+      = form.number_field :amount, min: 1, required: true
 
   = form.submit 'Сохранить', class: 'btn'

@@ -1,16 +1,14 @@
 = form_with url: admin_product_statistics_path, method: :get, data: { controller: 'datepicker' } do |form|
   .flex.gap-4
     .relative.max-w-sm
-      div class="absolute inset-y-0 start-0 flex items-center ps-2.5 md:ps-3.5 pointer-events-none"
-        svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"
-          path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
+      .text-gray-500.dark:text-gray-400 class="absolute inset-y-0 start-0 flex items-center ps-2.5 md:ps-3.5 pointer-events-none"
+        = render Admin::IconComponent.new name: :calendar, width: 16
       = form.text_field :start_date, data: { datepicker_target: 'startDate' }, placeholder: 'Выберите дату',
               value: @start_date.to_date, inputmode: 'none',
               class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-8 md:ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
     .relative.max-w-sm
-      div class="absolute inset-y-0 start-0 flex items-center ps-2.5 md:ps-3.5 pointer-events-none"
-        svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"
-          path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
+      .text-gray-500.dark:text-gray-400 class="absolute inset-y-0 start-0 flex items-center ps-2.5 md:ps-3.5 pointer-events-none"
+        = render Admin::IconComponent.new name: :calendar, width: 16
       = form.text_field :end_date, data: { datepicker_target: 'endDate' }, placeholder: 'Выберите дату',
               value: @end_date.to_date, inputmode: 'none',
               class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-8 md:ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"

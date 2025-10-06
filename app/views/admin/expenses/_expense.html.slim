@@ -15,7 +15,7 @@ tr id=dom_id(expense) class="bg-white border-b dark:bg-gray-800 dark:border-gray
   td.px-6.py-4
     = expense.exchange_rate
   td.px-6.py-4
-    = format_date expense.created_at
+    = format_date expense.expense_date
   td.px-6.py-4.flex.gap-2
     = link_to edit_admin_expense_path(expense), class: 'btn',
             data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false } do

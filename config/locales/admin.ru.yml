@@ -89,3 +89,4 @@ ru:
         amount: "Стоимость ₽"
         description: "Описание"
         created_at: "Дата создания"
+        expense_date: "Дата расхода"
