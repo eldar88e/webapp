@@ -24,7 +24,8 @@ class TgFileDownloaderJob < ApplicationJob
   end
 
   def save_message(user, args, tg_file)
-    data = { tg_file_id: tg_file.file_id, media_id: tg_file.id }
+    # data = { tg_file_id: tg_file.file_id, media_id: tg_file.id }
+    data = Tg::MessageService.build_data(tg_file)
     user.messages.create(text: args[:msg], tg_msg_id: args[:msg_id], data: data)
   end
 

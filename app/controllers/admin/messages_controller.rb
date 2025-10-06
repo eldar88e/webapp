@@ -1,7 +1,7 @@
 module Admin
   class MessagesController < Admin::ApplicationController
     before_action :authorize_message, only: :destroy
-    before_action :set_user, :form_message, only: :create
+    before_action :set_user, :build_message, only: :create
     before_action :set_chats, :set_chats_page, only: :index
 
     def index
@@ -33,8 +33,8 @@ module Admin
       session[:chats_page] = params[:chats_page]
     end
 
-    def form_message
-      @message      = Message.new({ text: message_params[:text], tg_id: @user.tg_id, is_incoming: false })
+    def build_message
+      @message      = @user.messages.build(text: message_params[:text], is_incoming: false)
       @message.data = AttachmentService.call(params[:message][:attachment])
     end
 

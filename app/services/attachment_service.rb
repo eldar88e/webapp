@@ -4,9 +4,10 @@ class AttachmentService
       return {} if attachment.blank?
 
       tg_media_file = find_or_create_tg_media_file(attachment)
-      data          = form_tg_file(tg_media_file)
-      data[:type]   = tg_media_file.file_type.split('/').at(0) if tg_media_file.present?
-      data
+      # data          = form_tg_file(tg_media_file)
+      # data[:type]   = tg_media_file.file_type.split('/').at(0) if tg_media_file.present?
+      # data
+      Tg::MessageService.build_data(tg_media_file)
     end
 
     private
@@ -21,8 +22,8 @@ class AttachmentService
       )
     end
 
-    def form_tg_file(tg_media_file)
-      tg_media_file.file_id.present? ? { tg_file_id: tg_media_file.file_id } : { media_id: tg_media_file.id }
-    end
+    # def form_tg_file(tg_media_file)
+    #   tg_media_file.file_id.present? ? { tg_file_id: tg_media_file.file_id } : { media_id: tg_media_file.id }
+    # end
   end
 end

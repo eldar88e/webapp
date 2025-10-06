@@ -1,13 +1,23 @@
 module Tg
   class MessageService
     class << self
+      def build_data(tg_media)
+        data = {}
+        return data if tg_media.blank?
+
+        data[:type]       = tg_media.file_type.split('/').at(0)
+        data[:tg_file_id] = tg_media.file_id if tg_media.file_id.present?
+        data[:media_id]   = tg_media.id
+        data
+      end
+
       def build_tg_message(product, text, markup)
         msg = { text: text, is_incoming: false, data: { markup: markup } }
         return msg unless product.image.attached?
 
-        tg_media = find_or_create_tg_media(product)
-        msg[:data][:type] = 'image'
-        tg_media.file_id ? msg[:data][:tg_file_id] = tg_media.file_id : msg[:data][:media_id] = tg_media.id
+        tg_media   = find_or_create_tg_media(product)
+        msg[:data] = build_data(tg_media)
+        # tg_media.file_id ? msg[:data][:tg_file_id] = tg_media.file_id : msg[:data][:media_id] = tg_media.id
         msg
       end
 
