@@ -5,8 +5,8 @@ class Purchase < ApplicationRecord
 
   has_many :purchase_items, dependent: :destroy
   accepts_nested_attributes_for :purchase_items, allow_destroy: true, reject_if: :all_blank
-  has_one :expense, as: :expenseable, dependent: :destroy
-  accepts_nested_attributes_for :expense, allow_destroy: true, reject_if: :all_blank
+  has_many :expenses, as: :expenseable, dependent: :destroy
+  accepts_nested_attributes_for :expenses, allow_destroy: true, reject_if: :all_blank
   has_many :products, through: :purchase_items
 
   enum :status, {

@@ -5,13 +5,17 @@ tr id=dom_id(resource) class="bg-white border-b dark:bg-gray-800 dark:border-gra
     = t("expense.categories.#{resource.category}")
   td.px-6.py-4
     - if resource.expenseable_type == 'Task'
-      = link_to admin_task_path(resource.expenseable), data: { turbo_prefetch: false }, class: 'flex items-center gap-1 text-blue-500 no-underline hover:underline' do
-        = render Admin::IconComponent.new name: :link, width: 16
-        span = resource.description
+      = link_to admin_task_path(resource.expenseable), data: { turbo_prefetch: false }, class: 'text-blue-500 no-underline hover:underline' do
+        .flex.items-center.gap-1
+          = render Admin::IconComponent.new name: :link, width: 16
+          span = "Задача №#{resource.expenseable_id}"
+        div = resource.description if resource.description.present?
     - elsif resource.expenseable_type == 'Purchase' && resource.expenseable_id.present?
-      = link_to admin_purchase_path(resource.expenseable_id), data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false }, class: 'flex items-center gap-1 text-blue-500 no-underline hover:underline' do
-        = render Admin::IconComponent.new name: :link, width: 16
-        span = "Закупка №#{resource.expenseable_id}"
+      = link_to admin_purchase_path(resource.expenseable_id), data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false }, class: 'text-blue-500 no-underline hover:underline' do
+        .flex.items-center.gap-1
+          = render Admin::IconComponent.new name: :link, width: 16
+          span = "Закупка №#{resource.expenseable_id}"
+        div = resource.description if resource.description.present?
     - else
       = resource.description
   td.px-6.py-4

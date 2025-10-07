@@ -26,7 +26,7 @@
         span class="ms-0 md:ms-3 text-sm font-medium text-gray-900 dark:text-gray-300" Отправить поставщику
 
   div data-controller="purchase-items"
-    p.text-gray-900.dark:text-white.mb-2.mt-7 Содержимое
+    h2.leading-8.font-semibold.text-gray-900.dark:text-white.mb-2.mt-7 Содержимое
     .flex.flex-wrap.mb-1.text-gray-900.dark:text-white
       .w-1/3.px-1.5 Товар
       .w-1/3.px-1.5 Кол-во
@@ -61,15 +61,31 @@
               = render IconComponent.new name: :trash
 
 
-  - if %w[initialized sent_to_supplier cancelled].exclude? @purchase.status
-    = form.fields_for :expense do |expense_fields|
-      h2.text-xl.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 Расходы на логистику
-      .mb-5
-        label(for="expense_description") Описание расхода
-        = expense_fields.text_area :description
-      .mb-5.flex
-        .w-1/2
-          label(for="expense_amount") Сумма расхода
-          = expense_fields.number_field :amount
+  / - if %w[initialized sent_to_supplier cancelled].exclude? @purchase.status
+  div data-controller="purchase-expenses"
+    h2.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 Расходы
+    div data-purchase-expenses-target="items"
+      = form.fields_for :expenses do |expense_fields|
+        .flex.flex-wrap.mb-5 data-purchase-expenses-target="item"
+          .w-2/3.px-1.5
+            = expense_fields.text_field :description, placeholder: "Описание расхода"
+          .w-1/3.px-1.5.flex.items-center.gap-2
+            = expense_fields.number_field :amount, placeholder: "Сумма", min: 0
+            = expense_fields.hidden_field :_destroy
+            button.btn.btn-outline type="button" data-action="click->purchase-expenses#remove"
+              = render IconComponent.new(name: :trash)
+
+    button.btn.mt-2.mb-5 type="button" data-action="click->purchase-expenses#add" Добавить расход
+
+    template data-purchase-expenses-target="template"
+      .flex.flex-wrap.mb-5 data-new="true"
+        = form.fields_for :expenses, Expense.new, child_index: "NEW_RECORD" do |new_expense_fields|
+          .w-2/3.px-1.5
+            = new_expense_fields.text_field :description, placeholder: "Описание расхода"
+          .w-1/3.px-1.5.flex.items-center.gap-2
+            = new_expense_fields.number_field :amount, placeholder: "Сумма", min: 0
+            = new_expense_fields.hidden_field :_destroy
+            button.btn.btn-outline type="button" data-action="click->purchase-expenses#remove"
+              = render IconComponent.new(name: :trash)
 
   = form.submit 'Сохранить', class: 'btn'

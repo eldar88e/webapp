@@ -23,7 +23,7 @@ module Admin
     def new
       @purchase = Purchase.new
       @purchase.purchase_items.build
-      @purchase.build_expense
+      # @purchase.build_expense
       render turbo_stream: [
         turbo_stream.update(:modal_title, 'Добавить закупку'),
         turbo_stream.update(:modal_body, partial: '/admin/purchases/form', locals: { method: :post })
@@ -32,9 +32,9 @@ module Admin
 
     def edit
       @purchase.purchase_items.build if @purchase.purchase_items.empty?
-      @purchase.build_expense if @purchase.expense.blank?
+      # @purchase.build_expense if @purchase.expense.blank?
       render turbo_stream: [
-        turbo_stream.update(:modal_title, 'Редактировать закупку'),
+        turbo_stream.update(:modal_title, "Редактировать закупку №#{@purchase.id}"),
         turbo_stream.update(:modal_body, partial: '/admin/purchases/form', locals: { method: :patch })
       ]
     end
@@ -72,7 +72,7 @@ module Admin
       params.require(:purchase).permit(
         :notes, :status, :send_to_supplier,
         purchase_items_attributes: %i[id product_id quantity unit_cost _destroy],
-        expense_attributes: %i[id amount description _destroy]
+        expenses_attributes: %i[id amount description _destroy]
       )
     end
 
