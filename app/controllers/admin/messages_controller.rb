@@ -2,14 +2,12 @@ module Admin
   class MessagesController < Admin::ApplicationController
     before_action :authorize_message, only: :destroy
     before_action :set_user, :build_message, only: :create
-    before_action :set_chats, :set_chats_page, only: :index
+    before_action :set_chats, :set_chats_page, :render_msg, only: :index
 
     def index
       @chats_page, @chats = pagy(@chats, limit: 30, page_param: :chats_page)
       @current_chat       = params[:chat_id].present? ? User.find_by!(tg_id: params[:chat_id]) : @chats.first
-      messages            = @current_chat&.messages&.order(created_at: :desc) || Message.none
-      @pagy, @messages    = pagy(messages, limit: 50)
-      @messages           = @messages.reverse
+      fetch_messages(@current_chat)
     end
 
     def create
@@ -28,6 +26,14 @@ module Admin
 
     private
 
+    def render_msg
+      return if params[:chat_open].blank? || params[:chat_id].blank?
+
+      user = User.find_by!(tg_id: params[:chat_id])
+      fetch_messages(user)
+      render turbo_stream: turbo_stream.update('messages', partial: '/admin/messages/messages')
+    end
+
     def set_chats_page
       params[:chats_page] ||= session[:chats_page] || 1
       session[:chats_page] = params[:chats_page]
@@ -36,6 +42,12 @@ module Admin
     def build_message
       @message      = @user.messages.build(text: message_params[:text], is_incoming: false)
       @message.data = AttachmentService.call(params[:message][:attachment])
+    end
+
+    def fetch_messages(user)
+      messages         = user&.messages&.order(created_at: :desc) || Message.none
+      @pagy, @messages = pagy(messages, limit: 50)
+      @messages        = @messages.reverse
     end
 
     def set_chats
