@@ -1,0 +1,24 @@
+- content_for :title, 'Настройки'
+
+.pt-6.px-4
+  h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-4" = yield(:title)
+
+  = link_to 'Создать', new_admin_setting_path, class: 'btn',
+              data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false }
+
+.pt-6
+  div class="relative overflow-x-auto shadow-md sm:rounded-lg"
+    table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+        tr
+          th scope="col" class="px-6 py-3"
+            = sort_link(@q_settings, :id, 'ИД', data: { turbo_prefetch: false })
+          th scope="col" class="px-6 py-3"
+            = sort_link(@q_settings, :variable, 'Переменная', data: { turbo_prefetch: false })
+          th scope="col" class="px-6 py-3" Значение
+          th scope="col" class="px-6 py-3" Описание
+          th scope="col" class="px-6 py-3" Действия
+      tbody id="resources"
+        = render partial: '/admin/settings/setting', collection: @settings, as: :resource
+
+  = render partial: '/layouts/partials/admin/pagy'

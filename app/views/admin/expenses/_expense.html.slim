@@ -17,7 +17,7 @@ tr id=dom_id(resource) class="bg-white border-b dark:bg-gray-800 dark:border-gra
           span = "Закупка №#{resource.expenseable_id}"
         div = resource.description if resource.description.present?
     - else
-      = resource.description
+      = resource.description.truncate(90).html_safe if resource.description.present?
   td.px-6.py-4
     = form_price resource.amount
   td.px-6.py-4

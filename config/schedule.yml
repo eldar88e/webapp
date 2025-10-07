@@ -1,0 +1,4 @@
+courier_salary_calculator:
+  cron: "* 8 * * *"
+  class: "CourierSalaryJob"
+  queue: default

@@ -75,6 +75,7 @@ ru:
       logistics: "Логистика"
       other: "Другое"
       development: "Разработка"
+      salary: "Зарплата"
   activerecord:
     models:
       task: "Задача"

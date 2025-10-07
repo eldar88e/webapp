@@ -1,4 +1,5 @@
 require 'sidekiq_unique_jobs/web'
+require 'sidekiq/cron/web'
 
 Rails.application.routes.draw do
   authenticate :user, ->(user) { user.admin? } do

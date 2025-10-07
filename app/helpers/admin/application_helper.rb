@@ -9,9 +9,7 @@ module Admin
     end
 
     def form_price(price, currency = '₽')
-      int = price.to_i
-      formatted = int.to_s.reverse.scan(/\d{1,3}/).join("\u00A0").reverse
-      "#{formatted}\u00A0#{currency}"
+      MoneyService.price_to_s(price, currency)
     end
 
     def stat_value(value, suffix: nil, zero_text: '—')

@@ -3,7 +3,7 @@ class Expense < ApplicationRecord
 
   belongs_to :expenseable, polymorphic: true, optional: true
 
-  enum :category, { advertising: 0, logistics: 1, other: 2, development: 3 }
+  enum :category, { advertising: 0, logistics: 1, other: 2, development: 3, salary: 4 }
 
   validates :category, :amount, presence: true
   validates :amount, numericality: { greater_than: 0 }

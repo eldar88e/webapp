@@ -6,7 +6,7 @@
 
   .mb-5
     = form.label :description
-    = form.text_field :description, required: true
+    = form.rich_text_area :description, required: true
 
   .flex.flex-wrap class="-mx-1.5"
     .w-1/2.px-1.5.mb-5 data-controller="datepicker"
