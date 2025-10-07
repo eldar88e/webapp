@@ -2,6 +2,6 @@ class CourierSalaryJob
   include Sidekiq::Job
 
   def perform
-    CourierSalaryCalculatorService.perform_async
+    CourierSalaryCalculatorService.call
   end
 end
