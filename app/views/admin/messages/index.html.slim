@@ -25,10 +25,10 @@
                       = name_user(chat)
                     .text-gray-600.dark:text-gray-400.text-xs
                       = format_date last_message.created_at
-                  .flex.gap-2.min-h-4 class="truncate max-w-[25ch] lg:max-w-[35ch] 2xl:max-w-[56ch]"
+                  .flex.gap-2.min-h-4
                     - if last_message.data&.dig('media_id').present?
                       = image_tag storage_path(TgMediaFile.find_by(id: last_message.data['media_id']).attachment), class: 'w-5 h-5'
-                    .text-sm.text-gray-500.dark:text-gray-400
+                    .text-sm.text-gray-500.dark:text-gray-400.truncate class="max-w-[25ch] lg:max-w-[35ch] 2xl:max-w-[56ch]"
                       = last_message.text&.truncate(56)
                 .flex.items-center.space-x-2
                   / - if chat.online?
