@@ -1,0 +1,15 @@
+= form_with model: @resource, url: (method == :patch ? admin_bank_card_path(@resource) : admin_bank_cards_path),
+        class: 'admin-form', data: { action: 'submit->modal#close' } do |form|
+  .mb-5
+    = form.label :name
+    = form.text_field :name
+  .mb-5
+    = form.label :number
+    = form.text_field :number
+  .mb-5
+    = form.label :fio
+    = form.text_field :fio
+  .mb-5.flex.items-center.gap-1
+    = form.check_box :active
+    = form.label :active, class: '!mb-0'
+  = form.submit 'Сохранить', class: 'btn'

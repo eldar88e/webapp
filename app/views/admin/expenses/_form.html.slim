@@ -1,4 +1,4 @@
-= form_with model: @expense, url: (method == :patch ? admin_expense_path(@expense) : admin_expenses_path),
+= form_with model: @resource, url: (method == :patch ? admin_expense_path(@resource) : admin_expenses_path),
         class: 'admin-form', data: { action: 'submit->modal#close' } do |form|
   .mb-5
     = form.label :category

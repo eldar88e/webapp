@@ -1,27 +1,31 @@
-tr id=dom_id(expense) class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+tr id=dom_id(resource) class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
   td.px-6.py-4
-    = expense.id
+    = resource.id
   td.px-6.py-4
-    = t("expense.categories.#{expense.category}")
+    = t("expense.categories.#{resource.category}")
   td.px-6.py-4
-    - if expense.expenseable_type == 'Task'
-      = link_to admin_task_path(expense.expenseable), class: 'flex items-center gap-1 text-blue-500 no-underline hover:underline' do
+    - if resource.expenseable_type == 'Task'
+      = link_to admin_task_path(resource.expenseable), data: { turbo_prefetch: false }, class: 'flex items-center gap-1 text-blue-500 no-underline hover:underline' do
         = render Admin::IconComponent.new name: :link, width: 16
-        span = expense.description
+        span = resource.description
+    - elsif resource.expenseable_type == 'Purchase' && resource.expenseable_id.present?
+      = link_to admin_purchase_path(resource.expenseable_id), data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false }, class: 'flex items-center gap-1 text-blue-500 no-underline hover:underline' do
+        = render Admin::IconComponent.new name: :link, width: 16
+        span = "Закупка №#{resource.expenseable_id}"
     - else
-      = expense.description
+      = resource.description
   td.px-6.py-4
-    = form_price expense.amount
+    = form_price resource.amount
   td.px-6.py-4
-    = expense.exchange_rate
+    = resource.exchange_rate
   td.px-6.py-4
-    = format_date expense.expense_date
+    = format_date resource.expense_date
   td.px-6.py-4.flex.gap-2
-    = link_to edit_admin_expense_path(expense), class: 'btn',
+    = link_to edit_admin_expense_path(resource), class: 'btn',
             data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false } do
       = render Admin::IconComponent.new name: :edit
 
-    = button_to admin_expense_path(expense), method: :delete, class: 'btn btn-danger',
+    = button_to admin_expense_path(resource), method: :delete, class: 'btn btn-danger',
             data: { confirm: 'Вы уверены, что хотите удалить данную статью расходов?',
                     controller: 'confirm', action: 'click->confirm#call' } do
       = render Admin::IconComponent.new name: :trash

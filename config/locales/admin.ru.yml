@@ -32,6 +32,13 @@ ru:
     tasks:
       create: "Задача успешно создана."
       update: "Задача успешно обновлена."
+    expenses:
+      create: "Расход успешно создан."
+      update: "Расход успешно обновлен."
+      destroy: "Расход успешно удален."
+    bank_cards:
+      create: "Банковская карта успешно создана."
+      update: "Банковская карта успешно обновлена."
   purchase:
     statuses:
       initialized: "Инициализирован"
@@ -68,6 +75,7 @@ ru:
     models:
       task: "Задача"
       expense: "Расход"
+      bank_card: "Банковская карта"
     attributes:
       task:
         title: "Заголовок"
