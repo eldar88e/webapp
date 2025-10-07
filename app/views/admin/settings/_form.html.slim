@@ -1,0 +1,12 @@
+= form_with model: @setting, url: (method == :patch ? admin_setting_path(@setting) : admin_settings_path),
+        class: 'admin-form', data: { action: 'submit->modal#close' } do |form|
+  .mb-5
+    = form.label :variable
+    = form.text_field :variable
+  .mb-5
+    = form.label :value
+    = form.text_field :value
+  .mb-5
+    = form.label :description
+    = form.text_field :description
+  = form.submit 'Сохранить', class: 'btn'

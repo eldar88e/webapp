@@ -81,6 +81,7 @@ ru:
       expense: "Расход"
       bank_card: "Банковская карта"
       support_entry: "Вопрос-ответ"
+      setting: "Настройка"
     attributes:
       task:
         title: "Заголовок"

@@ -36,9 +36,9 @@
   </script>
 </div>
 
-<div id="products" class="pt-6">
-  <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <%= turbo_frame_tag 'products_table' do %>
+<div class="pt-6">
+  <%= turbo_frame_tag 'products_table' do %>
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
@@ -79,10 +79,10 @@
           </tr>
         </thead>
 
-        <tbody><%= render @products %></tbody>
+        <tbody id="products"><%= render @products %></tbody>
       </table>
-    <% end %>
-  </div>
+    </div>
 
-  <%= render partial: '/layouts/partials/admin/pagy' %>
+    <%= render partial: '/layouts/partials/admin/pagy' %>
+  <% end %>
 </div>

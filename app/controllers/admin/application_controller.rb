@@ -14,8 +14,14 @@ module Admin
     private
 
     def set_search_params
+      set_session_params
+      return unless session["#{controller_name}_q"].present? && params[:q].blank? && params[:page].present?
+
+      params[:q] = session["#{controller_name}_q"]
+    end
+
+    def set_session_params
       session["#{controller_name}_q"] = params[:q] if params[:q].present?
-      params[:q] = session["#{controller_name}_q"] if params[:q].blank?
     end
 
     def authorize_admin_access!
