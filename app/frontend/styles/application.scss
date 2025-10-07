@@ -897,6 +897,14 @@ h3 {
     font-size: 12px;
     line-height: 16px;
   }
+
+  .cart-item-name {
+    transition: 0.5s all;
+
+    &:hover {
+      color: var(--color-green);
+    }
+  }
 }
 
 .scrollable {

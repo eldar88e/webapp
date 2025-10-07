@@ -110,7 +110,8 @@ export default function CartSummary({
         </div>
         <div className="min-h-5 w-full">
           {totalPrice > bonusThreshold ? (
-            appliedBonus === 0 && percent > 0 && (
+            appliedBonus === 0 &&
+            percent > 0 && (
               <div className="bonus-user-up">
                 Начислим кэшбек после оплаты:
                 <span className="price">{upBonus}₽</span>
@@ -118,12 +119,21 @@ export default function CartSummary({
             )
           ) : (
             <>
-              <div className="w-full rounded-lg h-1 mb-2" style={{ backgroundColor: "#F0F0F0" }}>
-                <div className="h-full rounded-lg" style={{ width: `${(totalPrice / bonusThreshold) * 100}%`, backgroundColor: "#48C928" }}>
-                </div>
+              <div
+                className="w-full rounded-lg h-1 mb-2"
+                style={{ backgroundColor: "#F0F0F0" }}
+              >
+                <div
+                  className="h-full rounded-lg"
+                  style={{
+                    width: `${(totalPrice / bonusThreshold) * 100}%`,
+                    backgroundColor: "#48C928",
+                  }}
+                ></div>
               </div>
               <div className="bonus-notice-text">
-                Добавьте товаров еще на {bonusThreshold - totalPrice}₽, чтобы получить бонусы
+                Добавьте товаров еще на {bonusThreshold - totalPrice}₽, чтобы
+                получить бонусы
               </div>
             </>
           )}

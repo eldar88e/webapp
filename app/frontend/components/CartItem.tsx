@@ -1,5 +1,5 @@
 import React from "react";
-import iconsUrl from "../images/icons.svg?url";
+import SvgIcon from "./ui/SvgIcon";
 
 type CartItemProps = {
   item: {
@@ -24,18 +24,13 @@ export default function CartItem({ item, onUpdateQuantity }: CartItemProps) {
           {item.image_url ? (
             <img src={item.image_url} alt={item.name} width={72} height={72} />
           ) : (
-            <svg
-              width={32}
-              height={32}
-              style={{ color: "#48C928" }}
-              fill="currentColor"
-            >
-              <use href={`${iconsUrl}#no-image`} />
-            </svg>
+            <SvgIcon name="no-image" width={42} className="text-[#48C928]" />
           )}
         </div>
         <div>
-          <a href={item.product_path}>{item.name}</a>
+          <a href={item.product_path} className="cart-item-name">
+            {item.name}
+          </a>
           <div className="cart-item-price">{item.price}₽/шт</div>
         </div>
       </div>
