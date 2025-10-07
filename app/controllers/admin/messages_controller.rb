@@ -29,7 +29,7 @@ module Admin
     private
 
     def set_chats_page
-      params[:chats_page] ||= session[:chats_page] ||= 1
+      params[:chats_page] ||= session[:chats_page] || 1
       session[:chats_page] = params[:chats_page]
     end
 
@@ -39,10 +39,20 @@ module Admin
     end
 
     def set_chats
-      @chats = User.joins('INNER JOIN messages ON (messages.tg_id = users.tg_id)')
-                   .select('users.*, MAX(messages.created_at)')
-                   .group('users.id')
-                   .order('MAX(messages.created_at) DESC')
+      # @chats = User.joins('INNER JOIN messages ON (messages.tg_id = users.tg_id)')
+      #              .select('users.*, MAX(messages.created_at)')
+      #              .group('users.id')
+      #              .order('MAX(messages.created_at) DESC')
+      #              .includes(:messages)
+      @chats = User.joins('INNER JOIN (
+                      SELECT DISTINCT ON (tg_id)
+                        tg_id,
+                        created_at AS last_message_at
+                      FROM messages
+                      ORDER BY tg_id, created_at DESC
+                    ) AS last_messages ON last_messages.tg_id = users.tg_id')
+                   .select('users.*, last_messages.last_message_at')
+                   .order('last_messages.last_message_at DESC')
                    .includes(:messages)
     end
 
