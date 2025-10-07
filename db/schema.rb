@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_07_120250) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_07_171805) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -274,7 +274,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_07_120250) do
     t.bigint "tg_msg_id"
     t.jsonb "data"
     t.index ["tg_id", "created_at"], name: "index_messages_on_tg_id_created_at_desc", order: { created_at: :desc }
-    t.index ["tg_id"], name: "index_messages_on_tg_id"
   end
 
   create_table "order_items", force: :cascade do |t|
