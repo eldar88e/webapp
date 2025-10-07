@@ -1,0 +1,9 @@
+= form_with model: @resource, url: (method == :patch ? admin_support_entry_path(@resource) : admin_support_entries_path),
+        class: 'admin-form', data: { action: 'submit->modal#close' } do |form|
+  .mb-5
+    = form.label :question
+    = form.text_field :question
+  .mb-5
+    = form.label :answer
+    = form.text_area :answer
+  = form.submit 'Сохранить', class: 'btn'

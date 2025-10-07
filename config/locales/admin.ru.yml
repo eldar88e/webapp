@@ -39,6 +39,10 @@ ru:
     bank_cards:
       create: "Банковская карта успешно создана."
       update: "Банковская карта успешно обновлена."
+    support_entries:
+      create: "Вопрос-ответ успешно создан."
+      update: "Вопрос-ответ успешно обновлен."
+      destroy: "Вопрос-ответ успешно удален."
   purchase:
     statuses:
       initialized: "Инициализирован"
@@ -76,6 +80,7 @@ ru:
       task: "Задача"
       expense: "Расход"
       bank_card: "Банковская карта"
+      support_entry: "Вопрос-ответ"
     attributes:
       task:
         title: "Заголовок"
@@ -98,3 +103,6 @@ ru:
         description: "Описание"
         created_at: "Дата создания"
         expense_date: "Дата расхода"
+      support_entry:
+        question: "Вопрос"
+        answer: "Ответ"

@@ -1,7 +1,7 @@
 .pt-6.px-4
   h1.text-xl.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 Вопросы ответы
 
-  = link_to 'Создать', new_admin_support_path, class: blue_btn_styles,
+  = link_to 'Создать', new_admin_support_entry_path, class: 'btn',
     data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false }
 
 .pt-6
@@ -13,8 +13,8 @@
           th.px-6.py-3 scope="col" Вопрос
           th scope="col" class="px-6 py-3" Ответ
           th scope="col" class="px-6 py-3" Действия
-      tbody
-        - @questions.each do |question|
-          = render partial: '/admin/supports/question', locals: { question: question }
+      tbody id="resources"
+        - @resources.each do |question|
+          = render partial: '/admin/support_entries/support_entry', collection: @resources, as: :resource
 
   = render partial: '/layouts/partials/admin/pagy'
