@@ -17,9 +17,9 @@ class CourierSalaryCalculatorService
     private
 
     def build_list_purchase(order_items)
-      order_items.map do |name, total_quantity|
-        price = name.downcase.match?(SPECIAL_PRODUCTS) ? atominex_price : other_price
-        "#{name}: #{total_quantity} шт. x #{price}₽ = #{price_to_s(total_quantity * price)}"
+      order_items.map do |name, quantity|
+        price = build_price(name)
+        "#{name}: #{quantity} шт. x #{price}₽ = #{price_to_s(quantity * price)}"
       end
     end
 
@@ -45,18 +45,13 @@ class CourierSalaryCalculatorService
     end
 
     def count_salary(order_items)
-      order_items.sum do |name, total_quantity|
-        rate = name.downcase.match?(SPECIAL_PRODUCTS) ? atominex_price : other_price
-        total_quantity * rate
-      end
+      order_items.sum { |name, quantity| quantity * build_price(name) }
     end
 
-    def atominex_price
-      Setting.fetch_value(:atominex_courier_price).to_i
-    end
-
-    def other_price
-      Setting.fetch_value(:products_courier_price).to_i
+    def build_price(name)
+      atominex_price = Setting.fetch_value(:atominex_courier_price).to_i
+      other_price    = Setting.fetch_value(:products_courier_price).to_i
+      name.downcase.match?(SPECIAL_PRODUCTS) ? atominex_price : other_price
     end
 
     def notify(list_purchase, salary)
