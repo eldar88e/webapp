@@ -1,5 +1,5 @@
 class CourierSalaryCalculatorService
-  SPECIAL_PRODUCTS = %w[atominex attex].freeze
+  SPECIAL_PRODUCTS = /atominex|attex/
 
   class << self
     def call(range = yesterday.all_day)
@@ -48,7 +48,7 @@ class CourierSalaryCalculatorService
       atominex_price = Setting.fetch_value(:atominex_courier_price).to_i
       other_price    = Setting.fetch_value(:products_courier_price).to_i
       order_items.sum do |name, total_quantity|
-        rate = SPECIAL_PRODUCTS.include?(name.downcase) ? atominex_price : other_price
+        rate = name.downcase.match?(SPECIAL_PRODUCTS) ? atominex_price : other_price
         total_quantity * rate
       end
     end
