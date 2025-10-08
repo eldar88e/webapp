@@ -66,7 +66,7 @@ class TelegramBotWorker
 
   def other_message(bot, message)
     TelegramJob.perform_later(msg: "Неизв. тип сообщения от #{message.chat.id}", id: Setting.fetch_value(:test_id))
-    TelegramJob.perform_later(msg: message, id: Setting.fetch_value(:test_id))
+    TelegramJob.perform_later(msg: message.to_json, id: Setting.fetch_value(:test_id))
     send_firs_msg(bot, message.chat.id)
   end
 
