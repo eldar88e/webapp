@@ -57,6 +57,8 @@ class TelegramBotWorker
       send_firs_msg(bot, message.chat.id)
     elsif message.video.present?
       save_preview_video(bot, message)
+    elsif message.sticker.present?
+      save_sticker(bot, message)
     elsif message.photo.present?
       save_photo(message)
     else
@@ -76,6 +78,12 @@ class TelegramBotWorker
     bot.api.send_message(chat_id: message.chat.id, text: "ID видео:\n#{message.video.file_id}")
   end
 
+  def save_sticker(_bot, message)
+    user = find_user(message)
+    msg  = message.sticker.emoji
+    user.messages.create(text: msg, tg_msg_id: message.message_id)
+  end
+
   def save_photo(message)
     tg_id   = message.chat.id
     file_id = message.photo.last.file_id
@@ -84,12 +92,17 @@ class TelegramBotWorker
   end
 
   def process_message(message)
-    tg_user = message.chat.as_json
-    user    = User.find_or_create_by_tg(tg_user, true)
-    unlock_user(user) unless user.started
+    user = find_user(message)
     return if message.text == '/start'
 
     user.messages.create(text: message.text, tg_msg_id: message.message_id)
+  end
+
+  def find_user(msg)
+    tg_user = msg.chat.as_json
+    user    = User.find_or_create_by_tg(tg_user, true)
+    unlock_user(user) unless user.started
+    user
   end
 
   def unlock_user(user)
