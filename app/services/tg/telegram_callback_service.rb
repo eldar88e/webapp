@@ -1,6 +1,6 @@
 module Tg
   class TelegramCallbackService
-    HANDLERS = %w[i_paid approve_payment submit_tracking purchase_paid review].freeze
+    HANDLERS = %w[i_paid approve_payment submit_tracking purchase_paid review].freeze # TODO: убрать дублирование
     TRACK_CACHE_PERIOD = 5.minutes
 
     def initialize(bot, message)
