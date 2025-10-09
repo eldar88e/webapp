@@ -8,7 +8,7 @@ class TelegramService
     @chat_id    = id == :courier ? settings[:courier_tg_id] : (id || settings[:admin_chat_id])
     @message    = message
     @message_id = nil
-    @markups    = markup_params(args[:markup])
+    @markups    = markup_params(args)
   end
 
   def self.call(msg, id = nil, **args)
