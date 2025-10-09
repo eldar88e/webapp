@@ -56,7 +56,7 @@ class TelegramBotWorker
       process_message(message)
       send_firs_msg(bot, message.chat.id)
     elsif message.video.present?
-      save_preview_video(bot, message)
+      save_video(bot, message)
     elsif message.sticker.present?
       save_sticker(bot, message)
     elsif message.photo.present?
@@ -72,7 +72,15 @@ class TelegramBotWorker
     send_firs_msg(bot, message.chat.id)
   end
 
-  def save_preview_video(bot, message)
+  def save_video(bot, message)
+    tg_id   = message.chat.id
+    file_id = message.video.file_id
+    msg_id  = message.message_id
+    TgFileDownloaderJob.perform_later(tg_id: tg_id, file_id: file_id, msg: message.caption, msg_id: msg_id)
+    send_admin_video_id(bot, message)
+  end
+
+  def send_admin_video_id(bot, message)
     return unless settings[:admin_ids].split(',').include?(message.chat.id.to_s)
 
     bot.api.send_message(chat_id: message.chat.id, text: "ID видео:\n#{message.video.file_id}")
