@@ -27,16 +27,16 @@ class Task < ApplicationRecord
   private
 
   def send_create_to_telegram
-    send_to_telegram(true)
+    send_to_telegram "📋 Новая задача: #{title}"
   end
 
   def send_update_to_telegram
-    send_to_telegram
+    send_to_telegram "📋 Задача ’’#{title}’’ обновлена"
   end
 
-  def send_to_telegram(create = nil)
-    msg = create ? "📋 Новая задача: #{title}" : "📋 Задача ’’#{title}’’ обновлена"
+  def send_to_telegram(msg)
     msg += "\n\nСтатус: #{I18n.t("stage.#{stage}")}"
+    msg += "\nПриоритет: #{I18n.t("priority.#{priority}")}"
     assignee.messages.create(text: msg, is_incoming: false)
     user.messages.create(text: msg, is_incoming: false) if assignee.id != user.id
     send_to_admin(msg)
