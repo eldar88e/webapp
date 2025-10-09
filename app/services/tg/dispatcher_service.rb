@@ -5,7 +5,6 @@ module Tg
     class << self
       def call(bot, message)
         MESSAGE_TYPES.each { |type| return send("save_#{type}", bot, message) if message.public_send(type).present? }
-        # handle_method.each { |type, action| return action.call if message.public_send(type).present? }
         other_message(bot, message)
       end
 
