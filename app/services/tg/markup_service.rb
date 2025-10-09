@@ -15,6 +15,8 @@ module Tg
     end
 
     def form_markup
+      return if @markups.blank?
+
       prepare_markups
       return if @keyboards.blank?
 
@@ -24,10 +26,8 @@ module Tg
     private
 
     def prepare_markups
-      return if @markups.blank?
-
       return first_msg_buttons if @markups[:markup] == 'first_msg'
-      return catalog_ask_btn if @markup[:markup] == 'new_order'
+      return catalog_ask_btn if @markups[:markup] == 'new_order'
       return form_order_keyboards if ORDER_BUTTONS.include? @markups[:markup]
 
       other_form_keyboards
