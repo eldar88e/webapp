@@ -43,7 +43,8 @@ class ReportService
 
       user_msg = I18n.t('tg_msg.paid_client')
       TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if order.msg_id.present? && order.tg_msg.present?
-      send_report(order, admin_msg: msg, admin_markup: 'approve_payment', user_msg: user_msg, user_tg_id: user.tg_id)
+      send_report(order, admin_msg: msg, admin_markup: 'approve_payment',
+                  user_msg: user_msg, user_tg_id: user.tg_id, user_markup: 'new_order')
     end
 
     def on_processing(order)
