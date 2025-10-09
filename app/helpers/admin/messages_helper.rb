@@ -17,12 +17,12 @@ module Admin
         elsif data['tg_file_id']
           TgMediaFile.find_by(file_id: data['tg_file_id'])
         else
-          raise 'No file data'
+          return
         end
 
       return unless file&.attachment&.attached?
 
-      data['type'] == 'video' ? file.attachment : storage_path(file.attachment)
+      storage_path(file.attachment)
     end
 
     def name_user(user)
@@ -47,6 +47,19 @@ module Admin
         Time.current.to_date => date.strftime('%H:%M'),
         (Time.current.to_date - 1.day) => "Вчера,\u00A0#{date.strftime('%H:%M')}"
       } # TODO: add this week days
+    end
+
+    def preview_media(data)
+      return if data.blank?
+
+      attachment_path = form_attachment(data)
+      return if attachment_path.blank?
+
+      if data['type'] == 'video'
+        video_tag attachment_path, class: 'w-5 h-5'
+      else
+        image_tag attachment_path, class: 'w-5 h-5'
+      end
     end
   end
 end
