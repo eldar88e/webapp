@@ -68,8 +68,8 @@ class TelegramBotWorker
   end
 
   def delete_old_msg(user_state, message)
-    [user_state[:msg_id], user_state[:h_msg], message.message_id].each_with_index do |id, index|
-      wait = ((index || 0.5) * TG_MESSAGE_DELAY).seconds
+    [user_state[:msg_id], user_state[:h_msg], message.message_id].each.with_index(1) do |id, idx|
+      wait = (idx * TG_MESSAGE_DELAY).seconds
       TelegramJob.set(wait: wait).perform_later(method: 'delete_msg', id: message.chat.id, msg_id: id)
     end
   end
