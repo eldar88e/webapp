@@ -1,5 +1,5 @@
 module Tg
-  class Dispatcher
+  class DispatcherService
     MESSAGE_TYPES = %w[text photo sticker video].freeze
 
     class << self
