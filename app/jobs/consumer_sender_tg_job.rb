@@ -3,7 +3,7 @@ class ConsumerSenderTgJob < ApplicationJob
 
   def perform(**args)
     args[:data][:file] = TgMediaFile.find_by(id: args[:data][:media_id])&.attachment unless args[:data][:tg_file_id]
-    result = Tg::MediaSenderService.call(args[:msg], args[:id], args[:data])
+    result             = Tg::MediaSenderService.call(args[:msg], args[:id], args[:data])
     update_entities(args, result)
   end
 

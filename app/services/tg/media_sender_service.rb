@@ -5,9 +5,10 @@ module Tg
     MESSAGE_LIMIT = 4_090
 
     def initialize(message, id, data)
-      @chat_id = id
-      @message = message.present? ? escape(message) : nil
-      @data    = data
+      @chat_id   = id
+      @message   = message.present? ? escape(message) : nil
+      @data      = data
+      @bot_token = Setting.fetch_value(:tg_token)
     end
 
     def self.call(msg, id, data)
@@ -17,7 +18,7 @@ module Tg
     def send_message
       return unless bot_ready?
 
-      Telegram::Bot::Client.run(Setting.fetch_value(:tg_token)) do |bot|
+      Telegram::Bot::Client.run(@bot_token) do |bot|
         return send_attachment(bot) if @data[:tg_file_id].present? || @data[:file].present?
 
         send_text(bot) if @message.present?
@@ -31,7 +32,7 @@ module Tg
     private
 
     def bot_ready?
-      if Setting.fetch_value(:tg_token).present? && @chat_id.present? && (@message.present? || @data.values.any?)
+      if @bot_token.present? && @chat_id.present? && (@message.present? || @data.values.any?)
         true
       else
         Rails.logger.error 'Telegram chat ID or bot token not set or empty message or data!'
@@ -88,8 +89,6 @@ module Tg
     end
 
     def form_markup
-      return if @data[:markup].blank?
-
       Tg::MarkupService.call(@data[:markup])
     end
 
