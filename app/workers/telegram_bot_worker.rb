@@ -44,7 +44,6 @@ class TelegramBotWorker
       handle_message(bot, message)
     else
       TelegramJob.perform_later(msg: message.to_json, id: settings[:test_id])
-      # bot.api.send_message(chat_id: message.from.id, text: I18n.t('tg_msg.error_data'))
     end
   end
 
@@ -68,8 +67,8 @@ class TelegramBotWorker
 
   def delete_old_msg(user_state, message)
     [user_state[:msg_id], user_state[:h_msg], message.message_id].each_with_index do |id, index|
-      wait = (index + 1).seconds
-      TelegramJob.set(wait: wait).perform_later(method: 'delete_msg', id: message.chat.id, msg_id: id)
+      # wait = (index + 1).seconds
+      TelegramJob.set(wait: index.seconds).perform_later(method: 'delete_msg', id: message.chat.id, msg_id: id)
     end
   end
 

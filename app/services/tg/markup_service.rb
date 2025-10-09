@@ -2,9 +2,12 @@ require 'telegram/bot'
 
 module Tg
   class MarkupService
+    ORDER_BUTTONS = %w[i_paid approve_payment submit_tracking purchase_paid review].freeze
+
     def initialize(markups)
-      @markups = markups
-      @app_url = "https://t.me/#{settings[:tg_main_bot]}?startapp"
+      @markups   = markups
+      @app_url   = "https://t.me/#{settings[:tg_main_bot]}?startapp"
+      @keyboards = []
     end
 
     def self.call(markups)
@@ -22,37 +25,36 @@ module Tg
 
     def prepare_markups
       return if @markups.blank?
-      return first_msg_buttons if @markups['first_msg']
 
-      @markups[:markup] == 'i_paid' ? form_paid_keyboards : form_keyboards
+      return first_msg_buttons if @markups[:markup] == 'first_msg'
+      return catalog_ask_btn if @markup[:markup] == 'new_order'
+      return form_order_keyboards if ORDER_BUTTONS.include? @markups[:markup]
+
+      other_form_keyboards
     end
 
     def settings
       @settings ||= Setting.all_cached
     end
 
-    def form_keyboards
-      @keyboards = []
+    def other_form_keyboards
       @keyboards << catalog_btn if @markups[:markup]&.include? 'to_catalog'
       @keyboards << ask_btn if @markups[:markup]&.include? 'ask_btn'
-      form_purchase_paid_btn
       @keyboards += form_ext_url_keyboard if @markups[:markup_ext_url].present?
       @keyboards += form_url_keyboard if @markups[:markup_url].present?
-      @keyboards
     end
 
-    def form_purchase_paid_btn
-      return unless @markups[:markup]&.include? 'purchase_paid'
-
+    def form_order_keyboards
       @keyboards << form_callback(@markups[:markup], I18n.t("tg_btn.#{@markups[:markup]}"))
-    end
+      return @keyboards if @markups[:markup] != 'i_paid'
 
-    def form_paid_keyboards
-      @keyboards = []
-      @keyboards << form_callback(@markups[:markup], I18n.t("tg_btn.#{@markups[:markup]}"))
       @keyboards += form_url_keyboard('carts', 'Изменить заказ')
       @keyboards << ask_btn
-      @keyboards
+    end
+
+    def catalog_ask_btn
+      @keyboards << catalog_btn('Новый заказ')
+      @keyboards << ask_btn
     end
 
     def form_callback(callback, text)
@@ -72,8 +74,8 @@ module Tg
       [@markups[:markup_ext_url]].flatten.map.with_index { |url, idx| form_url_btn(texts[idx] || 'Кнопка', url) }
     end
 
-    def catalog_btn
-      btn_text = ENV.fetch('HOST').include?('mirena') ? 'Заказать' : 'Перейти в каталог'
+    def catalog_btn(btn_text = nil)
+      btn_text ||= ENV.fetch('HOST').include?('mirena') ? 'Заказать' : 'Перейти в каталог'
       form_url_btn(btn_text, @app_url)
     end
 
@@ -86,11 +88,9 @@ module Tg
     end
 
     def first_msg_buttons
-      @keyboards = []
       @keyboards << catalog_btn
       @keyboards << group_btn
       @keyboards << ask_btn
-      @keyboards
     end
 
     def form_url_btn(text, url)
