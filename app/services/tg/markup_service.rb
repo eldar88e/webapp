@@ -5,7 +5,6 @@ module Tg
     def initialize(markups)
       @markups = markups
       @app_url = "https://t.me/#{settings[:tg_main_bot]}?startapp"
-      prepare_markups
     end
 
     def self.call(markups)
@@ -13,6 +12,7 @@ module Tg
     end
 
     def form_markup
+      prepare_markups
       return if @keyboards.blank?
 
       Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: @keyboards)
@@ -22,6 +22,7 @@ module Tg
 
     def prepare_markups
       return if @markups.blank?
+      return first_msg_buttons if @markups['first_msg']
 
       @markups[:markup] == 'i_paid' ? form_paid_keyboards : form_keyboards
     end
@@ -78,6 +79,18 @@ module Tg
 
     def ask_btn
       form_url_btn('Задать вопрос', settings[:tg_support].to_s)
+    end
+
+    def group_btn
+      form_url_btn(settings[:group_btn_title], settings[:tg_group])
+    end
+
+    def first_msg_buttons
+      @keyboards = []
+      @keyboards << catalog_btn
+      @keyboards << group_btn
+      @keyboards << ask_btn
+      @keyboards
     end
 
     def form_url_btn(text, url)
