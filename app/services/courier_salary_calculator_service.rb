@@ -41,7 +41,7 @@ class CourierSalaryCalculatorService
       expense = Expense.find_by(expense_date: Time.current.all_day, category: :salary)
       return expense.update!(data.except(:expense_date)) if expense
 
-      Expense.create!(data)
+      Expense.create!(data) if salary.positive?
     end
 
     def count_salary(order_items)

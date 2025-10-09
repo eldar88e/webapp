@@ -5,13 +5,14 @@ services:
     env_file: ./.env
     volumes:
       - gems:/usr/local/bundle
-      - ./app/frontend:/app/app/frontend
-      - ./db:/app/db
-      - ./log:/app/log
-      - ./node_modules:/app/node_modules
-      - ./storage:/app/storage
-      - ./tmp/cache:/app/tmp/cache
-      - ./public/vite:/app/public/vite
+      - .:/app
+#      - ./app/frontend:/app/app/frontend
+#      - ./db:/app/db
+#      - ./log:/app/log
+#      - ./node_modules:/app/node_modules
+#      - ./storage:/app/storage
+#      - ./tmp/cache:/app/tmp/cache
+#      - ./public/vite:/app/public/vite
 
   s-miniapp:
     <<: *base
