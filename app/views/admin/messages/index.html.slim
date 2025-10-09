@@ -26,6 +26,8 @@
                     .text-gray-600.dark:text-gray-400.text-xs
                       = format_date last_message.created_at
                   .flex.gap-2.min-h-4
+                    - if last_message.data&.dig('type').present? && last_message.data['type'] == 'video'
+                      = video_tag storage_path(TgMediaFile.find_by(id: last_message.data['media_id']).attachment), class: 'w-5 h-5'
                     - if last_message.data&.dig('media_id').present?
                       = image_tag storage_path(TgMediaFile.find_by(id: last_message.data['media_id']).attachment), class: 'w-5 h-5'
                     .text-sm.text-gray-500.dark:text-gray-400.truncate class="max-w-[25ch] lg:max-w-[35ch] 2xl:max-w-[56ch]"
