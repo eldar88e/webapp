@@ -5,6 +5,8 @@ class TelegramBotWorker
 
   sidekiq_options queue: 'telegram_bot', retry: true
 
+  TG_MESSAGE_DELAY = 0.3
+
   def perform
     return unless tg_token_present?
 
@@ -67,8 +69,8 @@ class TelegramBotWorker
 
   def delete_old_msg(user_state, message)
     [user_state[:msg_id], user_state[:h_msg], message.message_id].each_with_index do |id, index|
-      # wait = (index + 1).seconds
-      TelegramJob.set(wait: index.seconds).perform_later(method: 'delete_msg', id: message.chat.id, msg_id: id)
+      wait = (index + TG_MESSAGE_DELAY).seconds
+      TelegramJob.set(wait: wait).perform_later(method: 'delete_msg', id: message.chat.id, msg_id: id)
     end
   end
 
