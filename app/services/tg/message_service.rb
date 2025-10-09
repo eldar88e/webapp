@@ -1,8 +1,7 @@
 module Tg
   class MessageService
     class << self
-      def build_data(tg_media)
-        data = {}
+      def build_data(tg_media, data = {})
         return data if tg_media.blank?
 
         data[:type]       = tg_media.file_type.split('/').at(0)
@@ -16,7 +15,7 @@ module Tg
         return msg unless product.image.attached?
 
         tg_media   = find_or_create_tg_media(product)
-        msg[:data] = build_data(tg_media)
+        build_data(tg_media, msg[:data])
         # tg_media.file_id ? msg[:data][:tg_file_id] = tg_media.file_id : msg[:data][:media_id] = tg_media.id
         msg
       end
