@@ -47,7 +47,7 @@ export default class extends Controller {
     const options = {
       chart: {
         type: "line",
-        height: 350,
+        height: 320,
       },
       stroke: {
         curve: "smooth",
