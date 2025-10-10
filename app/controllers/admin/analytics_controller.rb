@@ -1,6 +1,7 @@
 module Admin
   class AnalyticsController < Admin::ApplicationController
     ALLOWED_TYPES = %w[users orders revenue sold repeat].freeze
+    ANALYTICS_CACHE_TIME = 10.minutes
 
     def index
       type = params[:type]
@@ -15,7 +16,7 @@ module Admin
 
     def process_cache(type)
       cache_key   = "#{type}_#{params[:period]}"
-      cached_data = Rails.cache.fetch(cache_key, expires_in: 10.minutes) do
+      cached_data = Rails.cache.fetch(cache_key, expires_in: ANALYTICS_CACHE_TIME) do
         ChartsService.new(params[:period]).send(type.to_sym)
       end
       Rails.cache.delete(cache_key) if cached_data.nil?
