@@ -22,7 +22,7 @@ class OrderStatisticsQuery
 
     def order_statuses(start_date, end_date)
       orders       = Order.where(updated_at: start_date..end_date)
-      all_statuses = Order.statuses.except('initialized').keys
+      all_statuses = Order.statuses.except('initialized', 'refunded').keys
       date_range   = (start_date.to_date..end_date.to_date).to_a
       grouped      = build_grouped_orders(orders, all_statuses)
       date_range.index_with { |date| grouped[date] || all_statuses.index_with { 0 } }
