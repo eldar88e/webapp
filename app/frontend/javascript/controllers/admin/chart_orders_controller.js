@@ -34,14 +34,35 @@ export default class extends Controller {
   }
 
   renderChart(data) {
+    const label_translate = {
+      initialized: "Инициализирован",
+      unpaid: "Ожидание платежа",
+      paid: "Ожидание подтверждения платежа",
+      processing: "В процессе отправки",
+      shipped: "Отправлен",
+      cancelled: "Отменен",
+      overdue: "Просрочен",
+    };
+
+    const statusColors = {
+      initialized: "#16BDCA",
+      unpaid: "#1C64F2",
+      paid: "#775dd0",
+      processing: "#ff8b4d",
+      shipped: "#0e9f6e",
+      cancelled: "#E74694",
+      overdue: "#831843",
+    };
+
     const statuses = Object.keys(Object.values(data)[0] || {});
 
     const series = statuses.map((status) => ({
-      name: status,
+      name: label_translate[status] || status,
       data: Object.entries(data).map(([date, counts]) => ({
         x: date,
         y: counts[status] || 0,
       })),
+      color: statusColors[status] || "#999999"
     }));
 
     const options = {
