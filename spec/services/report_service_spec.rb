@@ -37,7 +37,7 @@ RSpec.describe ReportService do
       )
 
       expect(TelegramService).to have_received(:call)
-                                   .with(I18n.t('tg_msg.paid_client'), user.tg_id, markup: nil)
+                                   .with(I18n.t('tg_msg.paid_client'), user.tg_id, markup: 'new_order')
     end
   end
 

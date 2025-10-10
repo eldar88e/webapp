@@ -1,9 +1,7 @@
 return if Rails.env.test?
 
 Rails.application.config.after_initialize do
-  if defined?(Sidekiq::CLI) &&
-     (Rails.env.production? || Rails.env.development?) &&
-     (ENV['SIDEKIQ_QUEUE'] == 'telegram_bot')
+  if defined?(Sidekiq::CLI) && (ENV['SIDEKIQ_QUEUE'] == 'telegram_bot')
 
     Rails.logger.info 'Run TelegramBotWorker after initialize...'
     TelegramBotWorker.perform_async # if Rails.env.production?
