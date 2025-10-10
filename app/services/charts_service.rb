@@ -14,18 +14,18 @@ class ChartsService
     @end_date   = Time.zone.today.end_of_day # TODO: переписать для диапазона с точным указанием даты через DatePicker
   end
 
-  def orders
-    orders = OrderStatisticsQuery.count_orders_with_status(@start_date, @end_date)
-
-    { dates: orders[0].keys, orders: orders[0].values, total: orders[1] }
-  end
-
   def revenue
     group_by = form_group_by('paid_at')
     payments = OrderStatisticsQuery.revenue_by_date(@start_date, @end_date, group_by).sort.to_h
     payments = prepare_date_key(payments)
 
     { dates: payments.keys, revenues: payments.values }
+  end
+
+  def orders
+    # orders = OrderStatisticsQuery.count_orders_with_status(@start_date, @end_date)
+    # { dates: orders[0].keys, orders: orders[0].values, total: orders[1] }
+    OrderStatisticsQuery.order_statuses(@start_date, @end_date)
   end
 
   def sold
