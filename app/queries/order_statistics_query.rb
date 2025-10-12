@@ -33,7 +33,7 @@ class OrderStatisticsQuery
 
     def build_grouped_orders(orders, group_by)
       group_method = GroupDatesService.group_by_period(group_by)
-      orders.group_by { |o| o.updated_at.public_send(group_method) }.transform_values do |period_orders|
+      orders.group_by { |o| o.updated_at.public_send(group_method).to_date }.transform_values do |period_orders|
         status_counts = period_orders.group_by(&:status).transform_values(&:count) # .tally_by(&:status)
         STATUSES.index_with { |s| status_counts[s] || 0 }
       end
