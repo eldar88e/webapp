@@ -70,12 +70,13 @@ export default class extends Controller {
       xaxis: {
         type: "category",
       },
-      tooltip: {
-        shared: true,
-        intersect: false,
-      },
       legend: {
         position: "top",
+      },
+      grid: {
+        show: true,
+        borderColor: "#374151",
+        strokeDashArray: 1,
       },
       series: series,
     };
