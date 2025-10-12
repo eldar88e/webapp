@@ -38,8 +38,8 @@ module Tg
     end
 
     def other_form_keyboards
-      @keyboards << catalog_btn if @markups[:markup]&.include? 'to_catalog'
-      @keyboards << ask_btn if @markups[:markup]&.include? 'ask_btn'
+      @keyboards << catalog_btn if @markups[:markup] == 'to_catalog'
+      @keyboards << ask_btn if @markups[:markup] == 'ask_btn'
       @keyboards += form_ext_url_keyboard if @markups[:markup_ext_url].present?
       @keyboards += form_url_keyboard if @markups[:markup_url].present?
     end
@@ -75,7 +75,7 @@ module Tg
     end
 
     def catalog_btn(btn_text = nil)
-      btn_text ||= ENV.fetch('HOST').include?('mirena') ? 'Заказать' : 'Перейти в каталог'
+      btn_text ||= ENV.fetch('HOST').include?('mirena') ? 'Заказать' : I18n.t('tg_btn.to_catalog')
       form_url_btn(btn_text, @app_url)
     end
 

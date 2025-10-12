@@ -6,6 +6,8 @@ class ChartsService
     'year' => ->(key) { I18n.t('date.abbr_month_names')[key.month] + " #{key.year} года" },
     'all' => ->(key) { "#{key.year} год" }
   }.freeze
+  VALID_PER = { 'month' => %w[day week], 'year' => %w[month week], 'all' => %w[year month] }.freeze
+  DEFAULT_PER = { 'month' => 'day', 'year' => 'month', 'all' => 'year' }.freeze
 
   def initialize(period, per = nil)
     @period     = period || 'last_week'
@@ -25,7 +27,8 @@ class ChartsService
   def orders
     # orders = OrderStatisticsQuery.count_orders_with_status(@start_date, @end_date)
     # { dates: orders[0].keys, orders: orders[0].values, total: orders[1] }
-    OrderStatisticsQuery.order_statuses(@start_date, @end_date)
+    result = OrderStatisticsQuery.order_statuses(@start_date, @end_date, @per)
+    prepare_date_key(result)
   end
 
   def sold
@@ -61,16 +64,7 @@ class ChartsService
   end
 
   def form_per(per)
-    case @period
-    when 'month'
-      %w[day week].include?(per) ? per : 'day'
-    when 'year'
-      %w[month week].include?(per) ? per : 'month'
-    when 'all'
-      %w[year month].include?(per) ? per : 'year'
-    else
-      'day'
-    end
+    VALID_PER[@period]&.include?(per) ? per : (DEFAULT_PER[@period] || 'day')
   end
 
   def populate_missing_dates(range)

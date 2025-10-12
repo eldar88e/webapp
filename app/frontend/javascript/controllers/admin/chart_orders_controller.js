@@ -35,23 +35,17 @@ export default class extends Controller {
 
   renderChart(data) {
     const label_translate = {
-      initialized: "Инициализирован",
-      unpaid: "Ожидание платежа",
-      paid: "Ожидание подтверждения платежа",
-      processing: "В процессе отправки",
       shipped: "Отправлен",
-      cancelled: "Отменен",
       overdue: "Просрочен",
+      cancelled: "Отменен",
+      refunded: "Возвращен"
     };
 
     const statusColors = {
-      initialized: "#16BDCA",
-      unpaid: "#1C64F2",
-      paid: "#775dd0",
-      processing: "#ff8b4d",
       shipped: "#0e9f6e",
-      cancelled: "#E74694",
       overdue: "#831843",
+      cancelled: "#E74694",
+      refunded: "#000000"
     };
 
     const statuses = Object.keys(Object.values(data)[0] || {});

@@ -1,4 +1,6 @@
 class OrderStatisticsQuery
+  STATUSES = %w[shipped overdue cancelled refunded].freeze
+
   class << self
     def revenue_by_date(start_date, end_date, group_by)
       Order.where(paid_at: start_date..end_date)
@@ -20,18 +22,20 @@ class OrderStatisticsQuery
       [result, total_orders]
     end
 
-    def order_statuses(start_date, end_date)
-      orders       = Order.where(updated_at: start_date..end_date)
-      all_statuses = Order.statuses.except('initialized', 'refunded').keys
-      date_range   = (start_date.to_date..end_date.to_date).to_a
-      grouped      = build_grouped_orders(orders, all_statuses)
-      date_range.index_with { |date| grouped[date] || all_statuses.index_with { 0 } }
+    def order_statuses(start_date, end_date, group_by)
+      orders  = Order.where(updated_at: start_date..end_date, status: STATUSES)
+      dates   = GroupDatesService.build_date_range(start_date, end_date, group_by)
+      grouped = build_grouped_orders(orders, group_by)
+      dates.index_with { |date| grouped[date] || STATUSES.index_with { 0 } }
     end
 
-    def build_grouped_orders(orders, all_statuses)
-      orders.group_by { |o| o.updated_at.to_date }.transform_values do |day_orders|
-        counts = day_orders.group_by(&:status).transform_values(&:count)
-        all_statuses.index_with { |s| counts[s] || 0 }
+    private
+
+    def build_grouped_orders(orders, group_by)
+      group_method = GroupDatesService.group_by_period(group_by)
+      orders.group_by { |o| o.updated_at.public_send(group_method) }.transform_values do |period_orders|
+        status_counts = period_orders.group_by(&:status).transform_values(&:count) # .tally_by(&:status)
+        STATUSES.index_with { |s| status_counts[s] || 0 }
       end
     end
   end
