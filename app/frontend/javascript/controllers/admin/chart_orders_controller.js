@@ -33,7 +33,7 @@ export default class extends Controller {
     this.renderChart(orders);
   }
 
-  renderChart(data) {
+  renderChart(orders) {
     const label_translate = {
       shipped: "Отправлен",
       overdue: "Просрочен",
@@ -45,14 +45,14 @@ export default class extends Controller {
       shipped: "#0e9f6e",
       overdue: "#831843",
       cancelled: "#E74694",
-      refunded: "#000000"
+      refunded: "#1C64F2"
     };
 
-    const statuses = Object.keys(Object.values(data)[0] || {});
+    const statuses = Object.keys(Object.values(orders)[0] || {});
 
     const series = statuses.map((status) => ({
       name: label_translate[status] || status,
-      data: Object.entries(data).map(([date, counts]) => ({
+      data: Object.entries(orders).map(([date, counts]) => ({
         x: date,
         y: counts[status] || 0,
       })),
@@ -68,7 +68,7 @@ export default class extends Controller {
         curve: "smooth",
       },
       xaxis: {
-        type: "datetime",
+        type: "category",
       },
       tooltip: {
         shared: true,
