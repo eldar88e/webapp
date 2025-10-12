@@ -36,6 +36,7 @@ class Order < ApplicationRecord
   after_commit :notify_status_change, on: :update, unless: -> { status == 'initialized' }
   after_commit :update_main_stock, on: :update, if: -> { ENV.fetch('HOST', '').include?('mirena') }
   after_commit :clear_cache, on: :update
+  after_commit :notify_not_approved_email, if: -> { status == 'shipped' }
 
   def order_items_with_product
     order_items.includes(:product)
@@ -193,6 +194,10 @@ class Order < ApplicationRecord
 
   def can_restock?
     status_changed?(from: 'processing', to: 'paid') || status_changed?(from: 'processing', to: 'cancelled')
+  end
+
+  def notify_not_approved_email
+    NotApprovedEmailNoticeJob.set(wait: 1.second).perform_later(id)
   end
 
   def clear_cache
