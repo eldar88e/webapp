@@ -38,14 +38,14 @@ export default class extends Controller {
       shipped: "Отправлен",
       overdue: "Просрочен",
       cancelled: "Отменен",
-      refunded: "Возвращен"
+      refunded: "Возвращен",
     };
 
     const statusColors = {
       shipped: "#0e9f6e",
       overdue: "#831843",
       cancelled: "#E74694",
-      refunded: "#1C64F2"
+      refunded: "#1C64F2",
     };
 
     const statuses = Object.keys(Object.values(orders)[0] || {});
@@ -56,7 +56,7 @@ export default class extends Controller {
         x: date,
         y: counts[status] || 0,
       })),
-      color: statusColors[status] || "#999999"
+      color: statusColors[status] || "#999999",
     }));
 
     const options = {

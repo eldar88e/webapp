@@ -134,8 +134,10 @@ export default function CartSummary({
                 ></div>
               </div>
               <div className="bonus-notice-text">
-                Добавьте товаров еще на {bonusThreshold - totalPrice}₽, чтобы
-                получить бонусы
+                Добавьте товаров еще на {bonusThreshold - totalPrice}₽, чтобы{" "}
+                {percent > 0
+                  ? `получить бонусы в размере ${percent}% от стоимости заказа`
+                  : "участвовать в бонусной программе"}
               </div>
             </>
           )}
