@@ -17,7 +17,7 @@ class NotApprovedEmailNoticeJob < ApplicationJob
   def perform(order_id)
     order = Order.find(order_id)
     user  = order.user
-    return if user.confirmed_at.present? || user.orders.where(status: %w[shipped, processing]).count < 2
+    return if user.orders.where(status: %w[shipped processing]).count < 2
 
     Devise::Mailer.confirmation_instructions(user, user.confirmation_token).deliver_now
     msg = "Уважаемый(ая) #{user.first_name},\n" + MSG
