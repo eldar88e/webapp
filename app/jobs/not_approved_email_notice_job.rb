@@ -2,9 +2,10 @@ class NotApprovedEmailNoticeJob < ApplicationJob
   queue_as :telegram_notice
 
   MSG = <<~TEXT.squeeze(' ').chomp
-    Подтвердите свой адрес электронной почты Мы заметили, что вы ещё не подтвердили свой e-mail.
+    мы заметили, что Вы ещё не подтвердили свой e-mail.
+    Вам было отправлено письмо с инструкциями по подтверждению.
 
-    Пожалуйста, сделайте это — это поможет:
+    Пожалуйста, подтвердите почту — так Вы сможете:
 
     ✅ получать уведомления о заказах и акциях,
 
@@ -18,7 +19,8 @@ class NotApprovedEmailNoticeJob < ApplicationJob
     user  = order.user
     return if user.confirmed_at.present? || user.orders.where(status: 'shipped').count < 2
 
-    msg = "Уважаемый(ая) #{user.first_name}, " + MSG
+    Devise::Mailer.confirmation_instructions(user, user.confirmation_token).deliver_now
+    msg = "Уважаемый(ая) #{user.first_name},\n" + MSG
     user.messages.create(text: msg, is_incoming: false, data: { markup: { markup: 'to_catalog' } })
   end
 end

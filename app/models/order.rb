@@ -36,7 +36,7 @@ class Order < ApplicationRecord
   after_commit :notify_status_change, on: :update, unless: -> { status == 'initialized' }
   after_commit :update_main_stock, on: :update, if: -> { ENV.fetch('HOST', '').include?('mirena') }
   after_commit :clear_cache, on: :update
-  after_commit :notify_not_approved_email, if: -> { status == 'shipped' }
+  after_commit :notify_not_approved_email, if: -> { status == 'processing' }
 
   def order_items_with_product
     order_items.includes(:product)

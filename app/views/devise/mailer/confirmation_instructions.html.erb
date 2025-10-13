@@ -4,34 +4,34 @@
     <meta charset="UTF-8">
     <title>Подтверждение email</title>
   </head>
-  <body style="margin: 0; padding: 0; background-color: #0a0a0a; font-family: Arial, sans-serif; color: #ffffff;">
+  <body style="margin: 0; padding: 0; background-color: #ffffff; font-family: Arial, sans-serif;">
     <table align="center" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: auto;">
       <tr>
-        <td style="padding: 30px; text-align: center; background: linear-gradient(90deg, #5f60ff, #9a40f5);">
+        <td style="padding: 30px; text-align: center; background-color: #48C928; color: #ffffff;">
           <img src="https://<%= ENV.fetch('HOST') %>/strattera_logo.svg" alt="S" width="100" height="100" style="width: 36px; height: 36px;">
           <h1 style="margin: 0; font-size: 22px; letter-spacing: 1px;"><%= Setting.fetch_value(:app_name) %></h1>
         </td>
       </tr>
       <tr>
-        <td style="background-color: #1a1a1a; padding: 40px 30px;">
-          <p style="color: #cccccc; font-size: 16px; line-height: 1.5;">
-            Уважаемая(ый) <%= @resource.full_name %>,<br>
-            Благодарим за ваш заказ в нашем мини-приложении. Чтобы завершить оформление, подтвердите вашу электронную почту, нажав на кнопку ниже:
+        <td style="background-color: #f9f9f9; padding: 40px 30px;">
+          <p style="color: #1a1a1a; font-size: 16px; line-height: 1.5;">
+            <%= @resource.full_name %>, добро пожаловать на <%= Setting.fetch_value(:app_name) %>! 🎉<br>
+            Остался один шаг — подтвердите свой e-mail, нажав на кнопку ниже, чтобы мы могли держать вас в курсе и защитить ваш аккаунт.
           </p>
 
-          <div style="text-align: center; margin: 30px 0;">
+          <div style="text-align: center; margin: 40px 0;">
             <%= link_to 'Подтвердить Email', confirmation_url(@resource, confirmation_token: @token),
-                        style: 'display: inline-block; padding: 14px 28px; background: linear-gradient(90deg, #5f60ff, #9a40f5); color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;' %>
+                        style: 'display: inline-block; padding: 14px 28px; background-color: #48C928; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;' %>
           </div>
 
           <p style="color: #777; font-size: 14px;">
-            Если вы не оформляли заказ — просто проигнорируйте это письмо.
+            Если вы не регистрировались и не меняли e-mail,<br>просто проигнорируйте это письмо.
           </p>
         </td>
       </tr>
       <tr>
-        <td style="background-color: #0a0a0a; text-align: center; padding: 20px; color: #444; font-size: 12px;">
-          <%= Setting.fetch_value(:app_name) %> | <a href="https://t.me/<%= Setting.fetch_value(:tg_main_bot) %>">https://t.me/<%= Setting.fetch_value(:tg_main_bot) %></a>
+        <td style="background-color: #f9f9f9; text-align: center; border-top: 1px solid #f0f0f0; padding: 20px; color: #48C928; font-size: 12px;">
+          <%= Setting.fetch_value(:app_name) %> | <a href="https://t.me/<%= Setting.fetch_value(:tg_main_bot) %>" style="color: #48C928;">https://t.me/<%= Setting.fetch_value(:tg_main_bot) %></a>
         </td>
       </tr>
     </table>

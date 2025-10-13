@@ -156,7 +156,6 @@ class User < ApplicationRecord
 
   def resend_confirmation_email
     Devise::Mailer.confirmation_instructions(self, confirmation_token).deliver_later
-    # TODO: tg notice
   end
 
   def check_and_upgrade_account_tier
