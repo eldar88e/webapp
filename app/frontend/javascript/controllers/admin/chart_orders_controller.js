@@ -35,6 +35,7 @@ export default class extends Controller {
 
   renderChart(orders) {
     const label_translate = {
+      processing: "В процессе",
       shipped: "Отправлен",
       overdue: "Просрочен",
       cancelled: "Отменен",
@@ -42,6 +43,7 @@ export default class extends Controller {
     };
 
     const statusColors = {
+      processing: "#ff8b4d",
       shipped: "#0e9f6e",
       overdue: "#831843",
       cancelled: "#E74694",
