@@ -22,7 +22,7 @@ class Task < ApplicationRecord
   after_update :update_expense, if: -> { stage == 'done' && price.present? }
 
   after_commit :send_create_to_telegram, on: :create
-  after_commit :send_update_to_telegram, on: :update
+  after_commit :send_update_to_telegram, on: :update, if: -> { previous_changes.except('updated_at', 'position').any? }
 
   private
 
@@ -37,15 +37,17 @@ class Task < ApplicationRecord
   def send_to_telegram(msg)
     msg += "\n\nСтатус: #{I18n.t("stage.#{stage}")}"
     msg += "\nПриоритет: #{I18n.t("priority.#{priority}")}"
-    assignee.messages.create(text: msg, is_incoming: false)
-    user.messages.create(text: msg, is_incoming: false) if assignee.id != user.id
+    data = { markup: { markup_url: "admin/tasks/#{id}", markup_text: '📋 Перейти к задаче' } }
+    assignee.messages.create(text: msg, is_incoming: false, data: data)
+    user.messages.create(text: msg, is_incoming: false, data: data) if assignee.id != user.id
     send_to_admin(msg)
   end
 
   def send_to_admin(msg)
     return if [assignee.id, user.id].include?(ADMIN_ID) || Rails.env.local?
 
-    User.find(ADMIN_ID).messages.create(text: msg, is_incoming: false) if %w[approved reviewing done].include?(stage)
+    data = { markup: { markup_url: "admin/tasks/#{id}", markup_text: '📋 Перейти к задаче' } }
+    User.find(ADMIN_ID).messages.create(text: msg, is_incoming: false, data: data) if %w[approved reviewing done].include?(stage)
   end
 
   def update_expense

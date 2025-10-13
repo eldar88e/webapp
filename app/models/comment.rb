@@ -1,7 +1,7 @@
 class Comment < ApplicationRecord
   ADMIN_ID = 12
 
-  belongs_to :task
+  belongs_to :task, counter_cache: :comments_count
   belongs_to :user
 
   validates :body, presence: true

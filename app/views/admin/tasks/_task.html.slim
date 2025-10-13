@@ -3,7 +3,7 @@
     div
       = link_to admin_task_path(task), data: { turbo_prefetch: false } do
         .text-gray-500.dark:text-gray-400.font-normal.text-sm
-          = "# #{task.id}"
+          = "Задача ##{task.id}"
         .dark:text-white.text-gray-900.font-semibold.text-base
           = task.title.truncate(40)
     = link_to edit_admin_task_path(task), data: { controller: 'modal-btn', action: 'click->modal-btn#open', modal_btn_name_value: 'modal-task', turbo_prefetch: false }, class: "dark:text-gray-400 text-gray-500 text-sm p-1.5 rounded-md cursor-pointer dark:hover:bg-gray-700 hover:bg-gray-100"
@@ -21,7 +21,7 @@
       span.font-bold.ml-1 = form_price task.price
     div
       span Комментариев:
-      span.font-bold.ml-1 = t("stage.#{task.comments.size}")
+      span.font-bold.ml-1 = task.comments_count
   .flex.justify-between.items-center
     .flex.items-center.justify-between
       .flex.items-center.gap-2
