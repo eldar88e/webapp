@@ -1,7 +1,11 @@
 .py-50
-  h1.text-center.my-4.text-xl.font-bold 🎉 Ваш email подтвержден!
+  h1.text-center.my-5.text-xl.font-bold 🎉 Ваш email подтвержден!
+  p.text-center.text-sm.text-gray-500
+    | Теперь вы можете заказывать товары и получать выгодные предложения.
+  .my-5
+    = link_to 'Вернуться в каталог', root_path, class: "block btn btn-secondary btn-big text-center my-4"
 
 script
   | setTimeout(() => {
   |   window.location.href = '/';
-  | }, 3000);
+  | }, 5000);
