@@ -38,7 +38,7 @@ h3 {
 
 .header {
   background-color: white;
-  box-shadow: 0px 4px 4px 0px #0000000D;
+  box-shadow: 0 4px 4px 0 #0000000D;
   margin-bottom: 20px;
 
   .header-search {
@@ -112,7 +112,7 @@ h3 {
   background-color: white;
   border-radius: 20px;
   margin: 8px;
-  box-shadow: 0px 0px 8px 0px #3d44531c;
+  box-shadow: 0 0 8px 0 #3d44531c;
   padding: 12px;
   position: relative;
 
@@ -340,7 +340,7 @@ h3 {
   padding: 20px;
   border-radius: 20px;
   background-color: white;
-  box-shadow: 0px 0px 8px 0px #3d44531c;
+  box-shadow: 0 0 8px 0 #3d44531c;
 }
 
 .card-block {
@@ -348,7 +348,7 @@ h3 {
   margin-right: -20px;
   padding: 20px;
   background-color: white;
-  box-shadow: 0px 0px 12px 0px #3d44532e;
+  box-shadow: 0 0 12px 0 #3d44532e;
 }
 
 .card-main-block {
@@ -370,7 +370,7 @@ h3 {
 .bonus-block {
   border-radius: 20px;
   background-color: white;
-  box-shadow: 0px 0px 8px 0px #3d44531c;
+  box-shadow: 0 0 8px 0 #3d44531c;
   margin-bottom: 20px;
   overflow: hidden;
 
@@ -995,7 +995,7 @@ h3 {
     padding: 3px;
     font-size: 10px;
     line-height: 10px;
-    font-weight: 700;
+    font-weight: 600;
     right: -7px;
     top: 9px;
     min-width: 16px;
