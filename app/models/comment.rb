@@ -26,6 +26,7 @@ class Comment < ApplicationRecord
   end
 
   def notify_user(recipient, msg)
-    recipient.messages.create(text: msg, is_incoming: false) if user.id != recipient.id
+    data = { markup: { markup_url: "admin/tasks/#{task.id}", markup_text: '📋 Перейти к задаче' } }
+    recipient.messages.create(text: msg, is_incoming: false, data: data) if user.id != recipient.id
   end
 end

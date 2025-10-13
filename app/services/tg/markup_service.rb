@@ -65,26 +65,26 @@ module Tg
       texts = [markup_text || @markups[:markup_text]].flatten
       [markup_url || @markups[:markup_url]].flatten.map.with_index do |path, idx|
         url = "#{@app_url}=url=#{path.gsub(%r{\A/|/\z}, '').tr('/', '_')}"
-        form_url_btn(texts[idx] || 'Кнопка', url)
+        form_url_btn(url, texts[idx])
       end
     end
 
     def form_ext_url_keyboard
       texts = [@markups[:markup_ext_text]].flatten
-      [@markups[:markup_ext_url]].flatten.map.with_index { |url, idx| form_url_btn(texts[idx] || 'Кнопка', url) }
+      [@markups[:markup_ext_url]].flatten.map.with_index { |url, idx| form_url_btn(url, texts[idx]) }
     end
 
     def catalog_btn(btn_text = nil)
       btn_text ||= ENV.fetch('HOST').include?('mirena') ? 'Заказать' : I18n.t('tg_btn.to_catalog')
-      form_url_btn(btn_text, @app_url)
+      form_url_btn(@app_url, btn_text)
     end
 
     def ask_btn
-      form_url_btn('Задать вопрос', settings[:tg_support].to_s)
+      form_url_btn(settings[:tg_support].to_s, 'Задать вопрос')
     end
 
     def group_btn
-      form_url_btn(settings[:group_btn_title], settings[:tg_group])
+      form_url_btn(settings[:tg_group], settings[:group_btn_title])
     end
 
     def first_msg_buttons
@@ -93,7 +93,7 @@ module Tg
       @keyboards << ask_btn
     end
 
-    def form_url_btn(text, url)
+    def form_url_btn(url, text = 'Кнопка')
       [Telegram::Bot::Types::InlineKeyboardButton.new(text: text, url: url)]
     end
   end
