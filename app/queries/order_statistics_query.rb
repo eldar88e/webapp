@@ -1,5 +1,5 @@
 class OrderStatisticsQuery
-  STATUSES = %w[shipped overdue cancelled].freeze # refunded
+  STATUSES = %w[processing shipped overdue cancelled].freeze # refunded
 
   class << self
     def revenue_by_date(start_date, end_date, group_by)
