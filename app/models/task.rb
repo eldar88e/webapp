@@ -45,9 +45,10 @@ class Task < ApplicationRecord
 
   def send_to_admin(msg)
     return if [assignee.id, user.id].include?(ADMIN_ID) || Rails.env.local?
+    return if %w[approved reviewing done].exclude?(stage)
 
     data = { markup: { markup_url: "admin/tasks/#{id}", markup_text: '📋 Перейти к задаче' } }
-    User.find(ADMIN_ID).messages.create(text: msg, is_incoming: false, data: data) if %w[approved reviewing done].include?(stage)
+    User.find(ADMIN_ID).messages.create(text: msg, is_incoming: false, data: data)
   end
 
   def update_expense
