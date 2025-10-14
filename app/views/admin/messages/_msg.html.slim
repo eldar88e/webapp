@@ -25,10 +25,14 @@
           - url = form_attachment(message.data)
           - if url.present?
             = link_to url, data: { fancybox: 'gallery' } do
-              - if message.data['type'] == 'video'
-                = video_tag url, controls: true, width: 200
-              - else
+              - if message.data['type'].start_with?('image')
                 = image_tag url, class: 'max-w-full h-auto rounded-lg'
+              - elsif message.data['type'].start_with?('video')
+                = video_tag url, controls: true, width: 200
+              - elsif message.data['type'] == 'application/pdf'
+                = render Admin::IconComponent.new name: :pdf, width: 32
+              - else
+                = "Unknown file type(#{message.data['type']})"
       = simple_format(message.text&.gsub("\n", '<br>'), {}, wrapper_tag: "span")
       - if message.data&.dig('markup').present?
         .mt-2.pb-2

@@ -37,8 +37,9 @@ class Message < ApplicationRecord
   def notify_admin
     msg = "✉️ Входящее сообщение\n️\n👤: #{user.full_name.presence || "User #{user.id}"}"
     msg += "\n       @#{user.username}" if user.username.present?
-    msg += "\n\n#{text}"
-    TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
+    msg += "\n\n#{text}" if text.present?
+    msg += "\n\nТип: #{data['type']}" if data.present?
+    TelegramJob.set(wait: 3.second).perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
   end
 
   def send_to_telegram

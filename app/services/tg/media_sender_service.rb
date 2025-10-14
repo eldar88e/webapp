@@ -77,13 +77,17 @@ module Tg
     end
 
     def send_data(bot, data)
-      if @data[:type] == 'image'
+      if @data[:type].start_with?('image')
         bot.api.send_photo(
           chat_id: @chat_id, photo: data, caption: @message, parse_mode: 'MarkdownV2', reply_markup: form_markup
         )
-      elsif @data[:type] == 'video'
+      elsif @data[:type].start_with?('video')
         bot.api.send_video(
           chat_id: @chat_id, video: data, caption: @message, parse_mode: 'MarkdownV2', reply_markup: form_markup
+        )
+      elsif @data[:type].start_with?('application')
+        bot.api.send_document(
+          chat_id: @chat_id, document: data, caption: @message, parse_mode: 'MarkdownV2', reply_markup: form_markup
         )
       end
     end

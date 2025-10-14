@@ -4,7 +4,7 @@ module Tg
       def build_data(tg_media, data = {})
         return data if tg_media.blank?
 
-        data[:type]       = tg_media.file_type.split('/').at(0)
+        data[:type]       = tg_media.file_type # .split('/').at(0)
         data[:tg_file_id] = tg_media.file_id if tg_media.file_id.present?
         data[:media_id]   = tg_media.id
         data

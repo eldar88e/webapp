@@ -55,10 +55,14 @@ module Admin
       attachment_path = form_attachment(data)
       return if attachment_path.blank?
 
-      if data['type'] == 'video'
-        video_tag attachment_path, class: 'w-5 h-5'
-      else
+      if data['type'].start_with?('image')
         image_tag attachment_path, class: 'w-5 h-5'
+      elsif data['type'].start_with?('video')
+        video_tag attachment_path, class: 'w-5 h-5'
+      elsif data['type'] == 'application/pdf'
+        render Admin::IconComponent.new name: :pdf
+      else
+        '???'
       end
     end
   end

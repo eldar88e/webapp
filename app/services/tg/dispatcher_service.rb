@@ -1,10 +1,12 @@
 module Tg
   class DispatcherService
-    MESSAGE_TYPES = %w[text photo sticker video].freeze
+    MESSAGE_TYPES = %w[text photo sticker video document].freeze
 
     class << self
       def call(bot, message)
-        MESSAGE_TYPES.each { |type| return send("save_#{type}", bot, message) if message.public_send(type).present? }
+        type = MESSAGE_TYPES.find { |t| message.public_send(t).present? }
+        return send("save_#{type}", bot, message) if type
+
         other_message(bot, message)
       end
 
@@ -34,6 +36,13 @@ module Tg
         msg_id  = message.message_id
         TgFileDownloaderJob.perform_later(tg_id: tg_id, file_id: file_id, msg: message.caption, msg_id: msg_id)
         send_admin_video_id(bot, message)
+      end
+
+      def save_document(_bot, message)
+        tg_id   = message.chat.id
+        file_id = message.document.file_id
+        msg_id  = message.message_id
+        TgFileDownloaderJob.perform_later(tg_id: tg_id, file_id: file_id, msg: message.caption, msg_id: msg_id)
       end
 
       def send_firs_msg(bot, chat_id)
