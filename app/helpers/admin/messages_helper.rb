@@ -22,7 +22,7 @@ module Admin
 
       return unless file&.attachment&.attached?
 
-      file.attachment.content_type.start_with?('application') ? storage_path(file.attachment) : url_for(file.attachment)
+      file.attachment.content_type.start_with?('application') ? url_for(file.attachment) : storage_path(file.attachment)
     end
 
     def name_user(user)
