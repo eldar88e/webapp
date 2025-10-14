@@ -1,5 +1,6 @@
 - if @messages.present?
-  = render partial: '/layouts/partials/admin/pagy'
+  div class="-mx-6 -mt-4"
+    = render partial: '/layouts/partials/admin/pagy'
   = render partial: '/admin/messages/msg', collection: @messages, as: :message
 - else
   .text-gray-400.text-center.pt-10 Нет сообщений

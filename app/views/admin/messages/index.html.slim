@@ -62,7 +62,7 @@
             .text-lg.text-gray-400.italic Нет чата для просмотра
 
         = turbo_stream_from "admin_chat_#{@current_chat&.id}"
-        .overflow-y-auto.p-4.h-full id='messages' data-clear-input-target="messages" data-controller="gallery"
+        .overflow-y-auto.px-2.py-4.md:p-4.h-full id='messages' data-clear-input-target="messages" data-controller="gallery"
           = render partial: '/admin/messages/messages'
 
         - if @current_chat
