@@ -72,7 +72,7 @@
             .relative.w-6.h-6.text-blue-400.hover:text-blue-500.transition.cursor-pointer
               .absolute.left-0.top-0
                 = render Admin::IconComponent.new name: :clip, width: 24
-              = f.file_field :attachment, accept: 'image/jpeg,image/png,image/webp,video/mp4,video/mpeg,video/quicktime', class: 'absolute left-0 top-0 z-10 w-6 h-6 bg-transparent text-transparent', data: { clear_input_target: 'attach' }
+              = f.file_field :attachment, accept: 'image/jpeg,image/png,image/webp,video/mp4,video/mpeg,video/quicktime,application/pdf', class: 'absolute left-0 top-0 z-10 w-6 h-6 bg-transparent text-transparent', data: { clear_input_target: 'attach' }
             = button_tag class: "px-2 py-1 text-blue-600 hover:text-blue-700 transition cursor-pointer"
               = render Admin::IconComponent.new name: :send
 .py-0.md:py-10
