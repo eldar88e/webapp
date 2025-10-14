@@ -22,7 +22,7 @@ module Admin
 
       return unless file&.attachment&.attached?
 
-      storage_path(file.attachment)
+      file.attachment.content_type.start_with?('application') ? storage_path(file.attachment) : url_for(file.attachment)
     end
 
     def name_user(user)
@@ -54,12 +54,10 @@ module Admin
 
       attachment_path = form_attachment(data)
       return if attachment_path.blank?
+      return image_tag attachment_path, class: 'w-5 h-5' if data['type'].start_with?('image')
+      return video_tag attachment_path, class: 'w-5 h-5' if data['type'].start_with?('video')
 
-      if data['type'].start_with?('image')
-        image_tag attachment_path, class: 'w-5 h-5'
-      elsif data['type'].start_with?('video')
-        video_tag attachment_path, class: 'w-5 h-5'
-      elsif data['type'] == 'application/pdf'
+      if data['type'] == 'application/pdf'
         render Admin::IconComponent.new name: :pdf
       else
         '???'

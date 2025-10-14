@@ -85,11 +85,8 @@ module Tg
         bot.api.send_video(
           chat_id: @chat_id, video: data, caption: @message, parse_mode: 'MarkdownV2', reply_markup: form_markup
         )
-      elsif @data[:type].start_with?('application')
-        bot.api.send_document(
-          chat_id: @chat_id, document: data, caption: @message, parse_mode: 'MarkdownV2', reply_markup: form_markup
-        )
       end
+      # TODO: Добавить для отправки pdf и др. типов файлов: elsif @data[:type].start_with?('application')
     end
 
     def form_markup

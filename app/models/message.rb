@@ -39,7 +39,7 @@ class Message < ApplicationRecord
     msg += "\n       @#{user.username}" if user.username.present?
     msg += "\n\n#{text}" if text.present?
     msg += "\n\nТип: #{data['type']}" if data.present?
-    TelegramJob.set(wait: 3.second).perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
+    TelegramJob.set(wait: 3.seconds).perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
   end
 
   def send_to_telegram
