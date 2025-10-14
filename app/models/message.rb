@@ -35,12 +35,19 @@ class Message < ApplicationRecord
   private
 
   def notify_admin
-    msg = "✉️ Входящее сообщение\n️\n👤: #{user.full_name.presence || "User #{user.id}"}"
-    msg += "\n       @#{user.username}" if user.username.present?
-    msg += "\n\n#{text}" if text.present?
-    msg += "\n\nТип: #{data['type']}" if data.present?
-    TelegramJob.set(wait: 3.seconds).perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
+    TelegramJob.set(wait: 3.seconds).perform_later(msg: build_notice_msg, id: Setting.fetch_value(:admin_ids))
   end
+
+  # rubocop:disable Metrics/AbcSize
+  def build_notice_msg
+    msg = "✉️ Входящее сообщение\n\n️🆔  #{user.id}"
+    msg += "\n👤  #{user.full_name.presence || user.first_name_raw.presence || user.tg_id}"
+    msg += "\n🔗  @#{user.username}" if user.username.present?
+    msg += "\n\n💬  #{text}" if text.present?
+    msg += "\n\n📎️  #{data['type']}" if data.present?
+    msg
+  end
+  # rubocop:enable Metrics/AbcSize
 
   def send_to_telegram
     ConsumerSenderTgJob.perform_later(msg_id: id, id: user.tg_id, msg: text, data: parsed_data)
