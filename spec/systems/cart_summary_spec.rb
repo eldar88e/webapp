@@ -14,7 +14,10 @@ RSpec.describe 'CartSummary', type: :system do
 
   describe 'when buy products' do
     before do
-      find("#cart-btn-#{product.id}", wait: 20).click_button
+      # find("#cart-btn-#{product.id}", wait: 20).click_button
+      expect(page).to have_css("#cart-btn-#{product.id}", visible: true, wait: 20)
+      find("#cart-btn-#{product.id}", visible: true).click_button
+      expect(page).to have_css('#cart-summary', wait: 10)
     end
 
     it "have one product in cart" do
