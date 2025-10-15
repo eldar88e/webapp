@@ -73,6 +73,7 @@ module Admin
       attachment = media_file&.attachment
       url        = build_full_path(attachment)
       return if url.blank?
+      return build_icon(attachment.content_type, url, params) if params == :thumb
 
       link_to build_icon(attachment.content_type, url, params), url, data: { fancybox: 'gallery' }
     end
