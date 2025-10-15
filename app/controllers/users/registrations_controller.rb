@@ -2,7 +2,6 @@
 
 module Users
   class RegistrationsController < Devise::RegistrationsController
-
     # TODO: поменять на редактирование password
     def edit_email; end
 
