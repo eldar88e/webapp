@@ -33,11 +33,10 @@ Rails.application.routes.draw do
   get '/user-checker', to: 'auth#user_checker'
 
   post 'webhook/update-product-stock', to: 'webhook#update_product_stock'
-  get '/proxy/clean_email', to: 'proxy#clean_email'
 
   devise_scope :user do
-    get '/edit_email', to: 'devise/registrations#edit_email', as: :edit_email
-    patch '/change_email', to: 'users/registrations#change_email', as: :change_email
+    get 'users/edit_email', to: 'devise/registrations#edit_email'
+    patch 'users/change_email', to: 'users/registrations#change_email'
   end
 
   get 'service-worker' => 'pwa#service_worker', as: :pwa_service_worker

@@ -1,0 +1,19 @@
+= content_for :title, 'Вы забыли пароль?'
+
+.flex.items-center.gap-3.mb-4
+  h2 class="!mb-0" = yield(:title)
+.main-block.mb-5.user-parts
+  = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: 'profile-form' }) do |f|
+    = render "devise/shared/error_messages", resource: resource
+
+    .input-container
+      = f.label :email
+      = f.email_field :email, autofocus: true, autocomplete: "email"
+
+    = button_tag type: 'submit', class: 'btn btn-big btn-secondary flex justify-between items-center mb-3' do
+      .flex.justify-center.gap-2.items-center
+        = render IconComponent.new name: :profile
+        span Отправить код
+        = render IconComponent.new name: :right
+
+  = render "devise/shared/links"

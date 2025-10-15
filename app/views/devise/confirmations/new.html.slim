@@ -9,3 +9,12 @@ script
   | setTimeout(() => {
   |   window.location.href = '/';
   | }, 5000);
+
+/ = form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post, class: 'profile-form' }) do |f|
+/   = render "devise/shared/error_messages", resource: resource
+/
+/   .input-container
+/     = f.label :email
+/     = f.email_field :email, autofocus: true, autocomplete: "email", required: true
+/
+/   = f.submit "Отправить повторно", class: "btn btn-big btn-secondary w-full"

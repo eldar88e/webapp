@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  STRONG_USER_PARAMS = %i[first_name middle_name last_name phone_number email address street home postal_code].freeze
+
   include MainConcerns
   include Pagy::Backend
 
@@ -15,7 +17,7 @@ class ApplicationController < ActionController::Base
   # end
 
   def devise_confirmation_controller?
-    is_a?(Devise::ConfirmationsController)
+    is_a?(DeviseController) && %w[sessions confirmations passwords registrations].include?(controller_name)
   end
 
   def product_search
@@ -49,7 +51,7 @@ class ApplicationController < ActionController::Base
   end
 
   def user_params
-    keys = %i[first_name middle_name last_name phone_number email address street home apartment postal_code build]
+    keys = STRONG_USER_PARAMS + %i[apartment build]
     params.require(:user).permit(keys)
   end
 
@@ -58,6 +60,6 @@ class ApplicationController < ActionController::Base
   end
 
   def required_fields_filled?
-    filtered_params.except(:apartment, :build).values.size >= 8
+    STRONG_USER_PARAMS.all? { |key| filtered_params[key].present? }
   end
 end

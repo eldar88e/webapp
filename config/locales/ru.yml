@@ -190,6 +190,7 @@ ru:
       success: "Ваш заказ успешно оформлен."
   users:
     registrations:
+      required_fields: "Пожалуйста, заполните все обязательные поля."
       change_email:
         success: "Email обновлён. Подтвердите новый адрес по ссылке из письма."
         failure: "Ошибка обновления email."

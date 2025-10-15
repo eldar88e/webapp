@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 module Users
-  class RegistrationsController < ApplicationController
+  class RegistrationsController < Devise::RegistrationsController
+
+    # TODO: поменять на редактирование password
     def edit_email; end
 
     def change_email
@@ -12,25 +14,20 @@ module Users
         error_notice t('.failure')
       end
     end
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    # def new
-    #   super
-    # end
-
-    def edit
-      # render turbo_stream: turbo_stream.update(:modal, partial: '/devise/registrations/edit')
+    def new
+      # TODO: убрать в дальнейшем и исследовать работает ли регистрация через post-запрос
+      redirect_to root_path
     end
 
     def update
-      return error_notice(t('required_fields')) unless required_fields_filled?
+      return error_notice(t('.required_fields')) unless required_fields_filled?
 
       if current_user.update(user_params)
-        render turbo_stream: [
-          turbo_stream.append(:modal, '<script>closeModal();</script>'.html_safe),
-          success_notice('Ваша учетная запись изменена.')
-        ]
+        render turbo_stream: success_notice('Ваша учетная запись изменена.')
       else
-        error_notice(current_user.errors.full_messages)
+        error_notice current_user.errors.full_messages
       end
     end
 

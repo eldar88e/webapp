@@ -1,0 +1,54 @@
+= content_for :title, 'Вход'
+
+.flex.items-center.gap-3.mb-4
+  .w-7.h-7.rounded-full.overflow-hidden.flex-shrink-0.flex.items-center.justify-center.profile-avatar
+    - if current_user&.photo_url.present?
+      = image_tag current_user.photo_url
+    - else
+      = render IconComponent.new name: :profile
+  h2 class="!mb-0" Привет, #{current_user&.first_name || current_user&.first_name_raw || 'Гость'} 👋
+
+.main-block.mb-5.user-parts.max-w-md.mx-auto
+  h2.text-center.mb-3 class="!text-xl" Войдите в профиль
+  #mail-form
+    = form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'profile-form', data: { turbo: false } }) do |f|
+      .input-container
+        = f.label :email
+        = f.email_field :email, autofocus: true, autocomplete: "email", required: true
+
+      .input-container
+        = f.label :password
+        = f.password_field :password, autocomplete: "current-password", required: true
+
+      - if devise_mapping.rememberable?
+        = f.label :remember_me, class: 'checkbox-label mb-3'
+          = f.check_box :remember_me, class: 'form-check-input'
+          .custom-checkbox
+          div Запомнить
+
+      = button_tag type: 'submit', class: 'btn btn-big btn-secondary flex !w-full justify-between items-center mb-3' do
+        .flex.justify-center.gap-2.items-center
+          = render IconComponent.new name: :profile
+          span  Вход
+          = render IconComponent.new name: :right
+    - if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations'
+      = link_to 'Забыли пароль?', new_password_path(resource_name), class: 'mb-3 block shared-links', data: { turbo_prefetch: false }
+
+  - if false
+    button class="btn btn-big btn-secondary !w-full justify-between items-center mb-3" onclick="document.getElementById('mail-form').classList.remove('hidden'); document.getElementById('user_email').focus(); this.classList.add('!hidden')"
+      .flex.justify-center.gap-2.items-center
+        = render IconComponent.new name: :envelope
+        span  Войти через Почту
+        = render IconComponent.new name: :right
+
+  - if false # devise_mapping.omniauthable?
+    - resource_class.omniauth_providers.each do |provider|
+      - service = provider.to_s.split('_').first.capitalize
+      = button_to omniauth_authorize_path(resource_name, provider), data: { turbo: false }, class: 'btn btn-big btn-secondary flex justify-between items-center mb-3' do
+        .flex.justify-center.gap-2.items-center
+          = render IconComponent.new name: service.downcase.to_sym
+          span  Войти через #{service}
+          = render IconComponent.new name: :right
+
+  / - if devise_mapping.registerable? && controller_name != 'registrations'
+    / = render "devise/shared/links"

@@ -3,7 +3,8 @@ module Admin
     skip_before_action :authenticate_user!, :authorize_admin_access!, only: :index
 
     def index
-      return render 'admin/dashboard/login', layout: 'admin_authorize' unless user_signed_in?
+      # return render 'admin/dashboard/login', layout: 'admin_authorize' unless user_signed_in?
+      return redirect_to new_user_session_path unless user_signed_in?
 
       redirect_to_telegram unless current_user.admin_or_moderator_or_manager?
     end
