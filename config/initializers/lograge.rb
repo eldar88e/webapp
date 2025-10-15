@@ -4,7 +4,8 @@ Rails.application.configure do
   config.lograge.enabled   = true
   config.lograge.formatter = Lograge::Formatters::Json.new
   config.lograge.logger    = lograge_logger
-  config.lograge.custom_payload { |controller| { user_id: controller.current_user&.id } }
+  # config.lograge.custom_payload { |controller| { user_id: controller.current_user&.id } }
+  config.lograge.custom_payload { |controller| { user_id: controller.request.env['lograge.user_id'] } }
   config.lograge.custom_options = lambda do |event|
     payload = event.payload || {}
     result  = {

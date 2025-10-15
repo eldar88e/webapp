@@ -2,6 +2,8 @@ module MainConcerns
   extend ActiveSupport::Concern
 
   included do
+    before_action :append_user_to_lograge
+
     helper_method :settings
   end
 
@@ -28,4 +30,8 @@ module MainConcerns
     @settings_ ||= Setting.all_cached
   end
   # rubocop:enable Naming/MemoizedInstanceVariableName
+
+  def append_user_to_lograge
+    request.env['lograge.user_id'] = current_user&.id
+  end
 end
