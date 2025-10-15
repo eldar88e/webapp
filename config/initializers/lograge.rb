@@ -5,7 +5,7 @@ Rails.application.configure do
   config.lograge.formatter = Lograge::Formatters::Json.new
   config.lograge.logger    = lograge_logger
   # config.lograge.custom_payload { |controller| { user_id: controller.current_user&.id } }
-  config.lograge.custom_payload { |controller| { user_id: controller.request.env['lograge.user_id'] } }
+  config.lograge.custom_payload { |i| { user_id: i.request.env['lograge.user_id'] || i.current_user&.id } }
   config.lograge.custom_options = lambda do |event|
     payload = event.payload || {}
     result  = {

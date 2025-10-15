@@ -1,5 +1,10 @@
 module Admin
   module MessagesHelper
+    ICONS_PARAMS = {
+      big: { image: 'w-full max-w-150 rounded-lg', video: 'w-full max-w-150 rounded-lg', pdf: '32' },
+      thumb: { image: 'w-5 h-5', video: 'w-5 h-5', pdf: '20' }
+    }.freeze
+
     def format_btn(markup)
       if markup['markup'].present?
         I18n.t("tg_btn.#{markup['markup']}")
@@ -10,19 +15,18 @@ module Admin
       end
     end
 
-    def form_attachment(data)
-      file =
-        if data['media_id']
-          TgMediaFile.find_by(id: data['media_id'])
-        elsif data['tg_file_id']
-          TgMediaFile.find_by(file_id: data['tg_file_id'])
-        else
-          return
-        end
+    def find_tg_media_file(data)
+      if data['media_id']
+        TgMediaFile.find_by(id: data['media_id'])
+      elsif data['tg_file_id']
+        TgMediaFile.find_by(file_id: data['tg_file_id'])
+      end
+    end
 
-      return unless file&.attachment&.attached?
+    def build_full_path(attachment)
+      return unless attachment&.attached?
 
-      file.attachment.content_type.start_with?('application') ? url_for(file.attachment) : storage_path(file.attachment)
+      attachment.content_type.start_with?('application') ? url_for(attachment) : storage_path(attachment)
     end
 
     def name_user(user)
@@ -49,18 +53,39 @@ module Admin
       } # TODO: add this week days
     end
 
-    def preview_media(data)
-      return if data.blank?
+    # def preview_media(data)
+    #   return if data.blank?
+    #
+    #   media_file = find_tg_media_file(data)
+    #   attachment = media_file&.attachment
+    #   url        = build_full_path(attachment)
+    #   return if url.blank?
+    #
+    #   return image_tag url, class: 'w-5 h-5' if attachment.content_type.start_with?('image')
+    #   return video_tag url, class: 'w-5 h-5' if attachment.content_type.start_with?('video')
+    #   return render Admin::IconComponent.new name: :pdf if attachment.content_type == 'application/pdf'
+    #
+    #   '???'
+    # end
 
-      attachment_path = form_attachment(data)
-      return if attachment_path.blank?
-      return image_tag attachment_path, class: 'w-5 h-5' if data['type'].start_with?('image')
-      return video_tag attachment_path, class: 'w-5 h-5' if data['type'].start_with?('video')
+    def preview_media(data, params = :thumb)
+      media_file = find_tg_media_file(data)
+      attachment = media_file&.attachment
+      url        = build_full_path(attachment)
+      return if url.blank?
 
-      if data['type'] == 'application/pdf'
-        render Admin::IconComponent.new name: :pdf
+      link_to build_icon(attachment.content_type, url, params), url, data: { fancybox: 'gallery' }
+    end
+
+    def build_icon(content_type, url, params)
+      if content_type.start_with?('image')
+        image_tag url, class: ICONS_PARAMS[params][:image]
+      elsif content_type.start_with?('video')
+        video_tag url, controls: true, class: ICONS_PARAMS[params][:video]
+      elsif content_type == 'application/pdf'
+        render Admin::IconComponent.new name: :pdf, width: ICONS_PARAMS[params][:pdf]
       else
-        '???'
+        params == :thumb ? '???' : "Unknown file type(#{content_type})"
       end
     end
   end
