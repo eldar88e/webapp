@@ -26,7 +26,7 @@
                     .text-gray-600.dark:text-gray-400.text-xs
                       = format_date last_message.created_at
                   .flex.gap-2.min-h-4.text-gray-500.dark:text-gray-400
-                    = preview_media(last_message.data)
+                    = preview_media(last_message.data) if last_message.data.present?
                     .text-sm.truncate class="max-w-[25ch] lg:max-w-[35ch] 2xl:max-w-[56ch]"
                       = last_message.text&.truncate(56)
                 .flex.items-center.space-x-2
