@@ -8,7 +8,7 @@
     .input-container
       = f.label :password, 'Новый пароль'
       - if @minimum_password_length
-        em ( characters minimum)
+        em.text-xs.text-gray-500 = "(#{@minimum_password_length} символов минимум)"
       = f.password_field :password, autofocus: true, autocomplete: "new-password"
     .input-container
       = f.label :password_confirmation, 'Повторите пароль'
