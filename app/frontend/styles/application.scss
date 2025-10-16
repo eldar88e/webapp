@@ -12,7 +12,7 @@ body {
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
-  color: #3D4453;
+  color: var(--color-gray);
   background-color: #f9f9f9;
 }
 
@@ -202,10 +202,11 @@ h3 {
 
 .btn-secondary {
   background: #48C9281A;
-  color: #48C928;
+  color: var(--color-green);
 
   &:hover, &:active, &:focus {
     background: #48C92833;
+    color: var(--color-green-dark);
   }
 }
 
@@ -233,11 +234,11 @@ h3 {
       opacity: 60%;
 
       &:hover {
-        color: #3AA120;
+        color: var(--color-green);
         opacity: 100%;
 
         &:after {
-          color: #3D4453;
+          color: var(--color-gray);
           opacity: 60%;
         }
       }
@@ -375,7 +376,7 @@ h3 {
   overflow: hidden;
 
   .bonus-balance {
-    color: #48C928;
+    color: var(--color-green);
     font-weight: 700;
     font-size: 32px;
     line-height: 32px;
@@ -384,7 +385,7 @@ h3 {
 
   .account-tier {
     font-weight: 600;
-    color: #48C928;
+    color: var(--color-green);
     cursor: pointer;
     display: flex;
     gap: 4px;
@@ -396,7 +397,7 @@ h3 {
   }
 
   .bonus-block-footer {
-    background-color: #48C928;
+    background-color: var(--color-green);
     padding: 20px;
     color: white;
   }
@@ -435,7 +436,7 @@ h3 {
   text-align: center;
 
   .price {
-    background-color: #48C928;
+    background-color: var(--color-green);
     font-weight: 600;
     font-size: 14px;
     line-height: 20px;
@@ -539,7 +540,7 @@ h3 {
 }
 
 .btn-new-review {
-  color: #48C928;
+  color: var(--color-green);
   font-weight: 600;
   margin-top: 8px;
   display: flex;
@@ -566,7 +567,7 @@ h3 {
   }
 
   .filled-star {
-    color: #48C928;
+    color: var(--color-green);
   }
 
   .img-block {
@@ -591,7 +592,7 @@ h3 {
 
 .profile-avatar {
   color: white;
-  background-color: #48C928;
+  background-color: var(--color-green);
 }
 
 .profile-form {
@@ -618,7 +619,7 @@ h3 {
       &:focus {
         outline: none;
         background-color: white;
-        border: 1px solid #48C928;
+        border: 1px solid var(--color-green);
       }
     }
   }
@@ -682,7 +683,7 @@ h3 {
     line-height: 16px;
 
     .agreement {
-      color: #48C928;
+      color: var(--color-green);
 
       &:hover {
         color: #3AA120;
@@ -711,8 +712,8 @@ h3 {
     }
 
     input[type="checkbox"]:checked + .custom-checkbox {
-      background-color: #48C928;
-      border-color: #48C928;
+      background-color: var(--color-green);
+      border-color: var(--color-green);
       background-image: url('../images/checked.svg');
     }
 
@@ -751,7 +752,7 @@ h3 {
     .add-img-ico {
       @apply absolute top-0 left-0 flex justify-center items-center w-full h-full;
       background-color: #f0f0f0;
-      color: #48C928;
+      color: var(--color-green);
 
       &:hover {
         color: #3AA120;
@@ -835,7 +836,7 @@ h3 {
     .plus-ico, .minus-ico, .plus-ico::after {
       width: 12px;
       height: 2px;
-      background-color: #3D4453;
+      background-color: var(--color-gray);
       border-radius: 2px;
       transition: 0.5s all;
     }
@@ -848,7 +849,7 @@ h3 {
 
     &:hover {
       .plus-ico, .minus-ico, .plus-ico::after {
-        background-color: #48C928;
+        background-color: var(--color-green);
       }
     }
   }
@@ -884,7 +885,7 @@ h3 {
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: #48C928; /* цвет ползунка */
+    background-color: var(--color-gray); /* цвет ползунка */
     border-radius: 8px; /* округлые края */
     border: 4px solid #f6f6f6;
   }
@@ -895,7 +896,7 @@ h3 {
 }
 
 .green {
-  color: #48C928;
+  color: var(--color-green);
 }
 
 .btn {
@@ -909,7 +910,7 @@ h3 {
     text-align: center;
 
     .count {
-      color: #3D4453;
+      color: var(--color-gray);
       font-weight: 600;
       font-size: 12px;
       line-height: 16px;
@@ -1327,12 +1328,13 @@ h3 {
 }
 
 .shared-links {
-  color: #48C928;
+  color: var(--color-green);
   font-weight: 600;
   cursor: pointer;
+  transition: 0.5s all;
 
   &:hover {
-    color: #3AA120;
+    color: var(--color-green-dark);
     transform: none !important;
   }
 }
