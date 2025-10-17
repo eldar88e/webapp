@@ -4,5 +4,6 @@
   - telegram_notice
   - default
   - turbo_streams
+  - mailers
   - rollbar
   - ahoy

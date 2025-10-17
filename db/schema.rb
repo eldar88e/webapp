@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_13_220241) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_17_111832) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -459,6 +459,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_13_220241) do
     t.integer "order_count", default: 0, null: false
     t.string "first_name_raw"
     t.string "last_name_raw"
+    t.boolean "password_sent", default: false, null: false
     t.index ["account_tier_id"], name: "index_users_on_account_tier_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true

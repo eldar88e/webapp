@@ -1,5 +1,5 @@
 class AdminMailer < ApplicationMailer
-  default from: ENV.fetch('EMAIL_FROM')
+  # default from: ENV.fetch('EMAIL_FROM')
 
   def send_error(error, full_message = nil, subject = nil)
     @error   = error

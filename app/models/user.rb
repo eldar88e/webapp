@@ -35,10 +35,11 @@ class User < ApplicationRecord
 
   before_update :reset_confirmation_if_email_changed, if: :will_save_change_to_email?
   before_update :store_bonus_balance_diff, if: -> { bonus_balance_changed? }
-  after_update :resend_confirmation_email, if: :saved_change_to_email?
+  # after_update :resend_confirmation_email, if: :saved_change_to_email?
   after_update :check_and_upgrade_account_tier
   after_commit :notify_update_account_tier, if: -> { previous_changes[:account_tier_id].present? }
   after_commit :notify_bonus_user, on: :update, if: -> { bonus_balance_diff.present? && bonus_balance_diff.positive? }
+  after_commit :resend_confirmation_email, on: :update, if: -> { previous_changes[:email].present? }
 
   def admin?
     role == 'admin'
