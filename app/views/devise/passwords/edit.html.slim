@@ -2,16 +2,16 @@
 
 .main-block.mb-5.user-parts.max-w-md.mx-auto.mt-20
   h2.text-center.mb-3 class="!text-xl" = yield(:title)
-  = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: 'profile-form' }) do |f|
-    = render "devise/shared/error_messages", resource: resource
+  = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: 'profile-form', data: { turbo: false } }) do |f|
+    = render 'devise/shared/error_messages', resource: resource
     = f.hidden_field :reset_password_token
     .input-container
       = f.label :password, 'Новый пароль'
       - if @minimum_password_length
         em.text-xs.text-gray-500 = "(#{@minimum_password_length} символов минимум)"
-      = f.password_field :password, autofocus: true, autocomplete: "new-password"
+      = f.password_field :password, autofocus: true, autocomplete: 'new-password'
     .input-container
       = f.label :password_confirmation, 'Повторите пароль'
-      = f.password_field :password_confirmation, autocomplete: "new-password"
-    = f.submit "Изменить пароль", class: "btn btn-big btn-secondary w-full mb-3"
-  = render "devise/shared/links"
+      = f.password_field :password_confirmation, autocomplete: 'new-password'
+    = f.submit 'Изменить пароль', class: 'btn btn-big btn-secondary w-full mb-3'
+  = render 'devise/shared/links'
