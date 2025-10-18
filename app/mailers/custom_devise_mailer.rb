@@ -1,6 +1,7 @@
 class CustomDeviseMailer < Devise::Mailer
   helper :application
   include Devise::Controllers::UrlHelpers
+
   layout 'mailer'
 
   default template_path: 'devise/mailer'
