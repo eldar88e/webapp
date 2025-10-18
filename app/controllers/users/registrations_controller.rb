@@ -8,7 +8,7 @@ module Users
     end
 
     def update
-      # TODO: добавить редактирование password
+      # TODO: добавить редактирование password и отправку письма о смене пароля
       return error_notice(t('.required_fields')) unless required_fields_filled?
 
       if current_user.update(user_params)
