@@ -30,7 +30,7 @@ class NotApprovedEmailNoticeJob < ApplicationJob
   end
 
   def send_to_telegram(user, password)
-    enter_url = Rails.application.routes.url_helpers.new_user_session_url(host: ENV.fetch('HOST'))
+    enter_url = "https://#{ENV.fetch('HOST')}/users/sign_in"
     markup    = { markup: 'to_catalog' }
     site_link = { markup_ext_url: enter_url, markup_ext_text: 'Войти через сайт' }
     markup.merge!(site_link) if Rails.env.production?
