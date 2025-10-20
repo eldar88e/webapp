@@ -75,7 +75,7 @@ class TelegramService
       markup_url: args[:markup_url],
       markup_text: args[:markup_text],
       markup_ext_url: args[:markup_ext_url],
-      markup_ext_text: args[:markup_text]
+      markup_ext_text: args[:markup_ext_text] || args[:markup_text]
     }
   end
 
