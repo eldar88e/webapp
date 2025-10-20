@@ -1,10 +1,10 @@
 class AuthController < ApplicationController
-  skip_before_action :check_authenticate_user!, only: %i[login telegram]
-  layout 'login'
+  skip_before_action :check_authenticate_user!, only: %i[telegram] # login
+  # layout 'login'
 
-  def login
-    @btn_link = params[:btn_link]
-  end
+  # def login
+  #   @btn_link = params[:btn_link]
+  # end
 
   def telegram
     data      = params.to_unsafe_h.except(:controller, :action)
@@ -15,13 +15,13 @@ class AuthController < ApplicationController
     render json: { success: true } # user: current_user, params: init_data['start_param'] head :ok
   end
 
-  def error_register
-    UserCheckerJob.perform_later(current_user.id)
-    render :error_register, layout: 'application'
-  end
+  # def error_register
+  #   UserCheckerJob.perform_later(current_user.id)
+  #   render :error_register, layout: 'application'
+  # end
 
   def user_checker
-    if current_user.blank? || current_user.started.blank? || current_user.is_blocked.present?
+    if current_user.started.blank? || current_user.is_blocked.present?
       msg = "User #{current_user.id} not started or banned bot!"
       Rails.logger.warn msg
       render json: { error: msg }

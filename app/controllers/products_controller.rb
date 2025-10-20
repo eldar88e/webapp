@@ -1,19 +1,19 @@
 class ProductsController < ApplicationController
   skip_before_action :check_authenticate_user!, only: :index
-  before_action :set_btn_link, :login, only: :index
+  before_action :login, only: :index
 
   def index
     redirect_to "/products/#{Setting.fetch_value(:mirena_id)}" if ENV.fetch('HOST').include?('mirena')
 
     @products = params[:q].nil? ? available_products : product_search.result
     # @pagy, @products = pagy(@products, limit: 10)
-    respond_to do |format|
-      format.html
-      format.turbo_stream do
-        render turbo_stream: [turbo_stream.append(:products, partial: '/products/products')]
-        # turbo_stream.replace(:pagination, partial: '/products/pagination')
-      end
-    end
+    # respond_to do |format|
+    #   format.html
+    #   format.turbo_stream do
+    #     render turbo_stream: [turbo_stream.append(:products, partial: '/products/products')]
+    #     # turbo_stream.replace(:pagination, partial: '/products/pagination')
+    #   end
+    # end
   end
 
   def show
@@ -26,8 +26,10 @@ class ProductsController < ApplicationController
   private
 
   def login
-    return redirect_to login_path(btn_link: @btn_link) unless current_user
-    return redirect_to '/error-register' if current_user.started.blank? || current_user.is_blocked.present?
+    set_btn_link
+    check_authenticate_user!
+    # return redirect_to login_path(btn_link: @btn_link) unless current_user
+    # return redirect_to '/error-register' if current_user.started.blank? || current_user.is_blocked.present?
 
     redirect_to "/#{@btn_link}" if @btn_link.present?
   end

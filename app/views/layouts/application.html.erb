@@ -63,6 +63,6 @@
       </div>
     </div>
 
-    <%= render partial: '/layouts/partials/yandex_metrica' if Setting.fetch_value(:ym).present? %>
+    <%= render partial: '/layouts/partials/yandex_metrica' if settings[:ym].present? %>
   </body>
 </html>

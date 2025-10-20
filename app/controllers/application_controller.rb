@@ -51,7 +51,11 @@ class ApplicationController < ActionController::Base
   end
 
   def check_authenticate_user!
-    redirect_to_telegram unless current_user
+    if current_user
+      error_register if !current_user.started? || current_user.is_blocked?
+    else
+      render 'auth/login', layout: 'login'
+    end
   end
 
   def user_params
@@ -65,5 +69,10 @@ class ApplicationController < ActionController::Base
 
   def required_fields_filled?
     STRONG_USER_PARAMS.all? { |key| filtered_params[key].present? }
+  end
+
+  def error_register
+    UserCheckerJob.perform_later(current_user.id)
+    render 'auth/error_register'
   end
 end

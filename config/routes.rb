@@ -28,9 +28,9 @@ Rails.application.routes.draw do
   post :add_answers, to: 'surveys#add_answers'
 
   post '/auth/telegram', to: 'auth#telegram'
-  get '/login', to: 'auth#login'
-  get '/error-register', to: 'auth#error_register'
   get '/user-checker', to: 'auth#user_checker'
+  # get '/login', to: 'auth#login'
+  # get '/error-register', to: 'auth#error_register'
 
   post 'webhook/update-product-stock', to: 'webhook#update_product_stock'
 
