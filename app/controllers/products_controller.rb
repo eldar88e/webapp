@@ -1,6 +1,6 @@
 class ProductsController < ApplicationController
   skip_before_action :check_authenticate_user!, only: :index
-  before_action :login, only: :index
+  before_action :set_btn_link, :check_authenticate_user!, :redirect_to_btn_link, only: :index
 
   def index
     redirect_to "/products/#{Setting.fetch_value(:mirena_id)}" if ENV.fetch('HOST').include?('mirena')
@@ -25,9 +25,7 @@ class ProductsController < ApplicationController
 
   private
 
-  def login
-    set_btn_link
-    check_authenticate_user!
+  def redirect_to_btn_link
     # return redirect_to login_path(btn_link: @btn_link) unless current_user
     # return redirect_to '/error-register' if current_user.started.blank? || current_user.is_blocked.present?
 
