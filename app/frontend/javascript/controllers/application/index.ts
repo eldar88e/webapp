@@ -11,3 +11,6 @@ Object.entries(controllers).forEach(([path, module]) => {
 
   application.register(controllerName, module.default);
 });
+
+import ReactController from "./react_controller";
+application.register("react", ReactController);
