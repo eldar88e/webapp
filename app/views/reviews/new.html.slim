@@ -3,6 +3,8 @@ style
   |  .title-review { display: none; }
   |  .review-form-submit { margin-bottom: 0 }
 
+- content_for :title, 'Оставить отзыв'
+
 .card-main-block
   ul.breadcrumb
     li = link_to 'Каталог', root_path, data: { turbo_prefetch: false }
