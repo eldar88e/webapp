@@ -1,7 +1,8 @@
 class Product < ApplicationRecord
   include AttachableImages
 
-  IS_NOT_MIRENA = ENV.fetch('HOST', '').exclude?('mirena')
+  IS_NOT_MIRENA      = ENV.fetch('HOST', '').exclude?('mirena')
+  MIN_STOCK_QUANTITY = 15
 
   has_ancestry
   has_one_attached :image, dependent: :purge
@@ -99,7 +100,7 @@ class Product < ApplicationRecord
   end
 
   def notify_if_low_stock
-    if stock_quantity < 15 && stock_quantity_was >= 15
+    if stock_quantity < MIN_STOCK_QUANTITY && stock_quantity_was >= MIN_STOCK_QUANTITY
       msg = "⚠️ Внимание! Осталось всего #{stock_quantity} единиц товара '#{name}'!"
       TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
     end

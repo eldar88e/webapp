@@ -22,10 +22,10 @@ style
       .font-semibold.text-base.leading-tight.mb-1
         = @product.name
       - if @product.stock_quantity.positive?
-        .flex.items-center class="gap-1.5"
+        .flex.items-center class="#{'small ' if @product.stock_quantity < Product::MIN_STOCK_QUANTITY}gap-1.5"
           .have-product-ico
             = render IconComponent.new name: :checked, size: 10
-          .have-product В наличии
+          .have-product = "#{@product.stock_quantity >= Product::MIN_STOCK_QUANTITY ? 'В наличии' : 'Осталось мало'}"
       - else
         .no-have-product Нет в наличии
     .card-favorite
