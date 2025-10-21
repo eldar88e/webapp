@@ -40,7 +40,11 @@
     <%= render '/layouts/partials/notices' %>
 
     <header>
-      <div data-controller="react" data-react-name-value="Ad" data-react-props-value="<%= { item: settings[:ad] }.to_json %>"></div>
+      <div
+        data-controller="react"
+        data-react-name-value="Ad"
+        data-react-props-value="<%= { item: settings[:ad], url: settings[:ad_url] }.to_json %>"
+      ></div>
       <%= render partial: '/layouts/partials/header' %>
     </header>
 
