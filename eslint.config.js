@@ -25,6 +25,7 @@ export default [
               localStorage: "readonly",
               sessionStorage: "readonly",
               HTMLMetaElement: "readonly",
+              HTMLDivElement: "readonly",
               URLSearchParams: "readonly",
               FileReader: "readonly",
               IntersectionObserver: "readonly",
