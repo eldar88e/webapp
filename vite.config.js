@@ -25,6 +25,13 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 800,
     sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("apexcharts")) return "charts";
+        }
+      }
+    },
   },
   server: {
     host: 'localhost',
