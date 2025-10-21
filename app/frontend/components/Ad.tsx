@@ -4,6 +4,8 @@ export default function Ad({ item }: { item: String }) {
   const [visible, setVisible] = useState(false);
   const adRef = useRef<HTMLDivElement | null>(null);
 
+  if (!item) return null;
+
   useEffect(() => {
     const handleScroll = () => {
       if (!adRef.current) return;
