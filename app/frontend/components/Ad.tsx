@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 
-export default function Ad({ item, url }: { item: string, url: string }) {
+export default function Ad({ item, url }: { item: string; url: string }) {
   const [visible, setVisible] = useState(false);
   const adRef = useRef<HTMLDivElement | null>(null);
 
@@ -41,7 +41,9 @@ export default function Ad({ item, url }: { item: string, url: string }) {
         <div
           className="text-xs container mx-auto px-3 py-2"
           style={{ lineHeight: "1.2" }}
-        >{item}</div>
+        >
+          {item}
+        </div>
       </div>
     </a>
   );
