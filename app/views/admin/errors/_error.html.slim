@@ -1,0 +1,17 @@
+tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+  td.px-4.py-2 title="#{error['level']}" = render IconComponent.new name: error['level'], size: 20
+  td.px-6.py-2.text-gray-900.dark:text-white = link_to "##{error['counter']} #{error['title']}", admin_error_path(error['id']), class: 'hover:text-blue-500 hover:underline line-clamp-2'
+  td.px-2 = render Admin::IconComponent.new name: error['framework']
+  / sparkline-диаграмма
+  / td.py-2.px-2
+    /= render 'shared/sparkline', counts: error[:counts]
+  td.px-2 = error['occurrences_count']
+  td.px-2 = error['unique_occurrences']
+  / TODO: добавить ссылку на последнее вхождение
+  td.px-2 class="min-w-[120px]"
+    - created_at = Time.at(error['last_occurrence_timestamp']).strftime('%H:%M %d.%m.%Yг.')
+    time data-controller="timeago" data-timeago-locale-value="ru" title="#{created_at}" datetime="#{Time.at(error['last_occurrence_timestamp'])}" data-timeago-hours-value="480"
+      = created_at.gsub(' ', '&nbsp;').html_safe
+  td.px-2.py-2
+    .max-w-fit.truncate.rounded-sm.border.border-gray-100.px-1 = error['environment']
+  td.pr-6.pl-2.py-2 = error['status']

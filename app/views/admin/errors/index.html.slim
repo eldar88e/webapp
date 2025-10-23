@@ -1,0 +1,20 @@
+.pt-6.px-4
+  h1.text-xl.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 Exceptions
+
+.pt-6
+  .relative.overflow-x-auto.shadow-md.sm:rounded-lg
+    table.w-full.text-sm.text-left.rtl:text-right.text-gray-500.dark:text-gray-400
+      thead.text-xs.text-gray-700.uppercase.bg-gray-50.dark:bg-gray-700.dark:text-gray-400
+        tr
+          th.pl-3.py-3 scope="col" Level
+          th.px-6.py-3 scope="col" Item Title
+          th scope="col"
+          / th.px-6.py-3 scope="col" 24hr Trend
+          th.px-2.py-3 scope="col" Total
+          th.px-2.py-3 scope="col" IPs
+          th.px-2.py-3 scope="col" Last
+          th.px-2.py-3 scope="col" Environment
+          th.px-2.py-3 scope="col" Status
+      tbody
+        - @items.each do |error|
+          = render partial: '/admin/errors/error', locals: { error: error }

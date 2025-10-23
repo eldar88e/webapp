@@ -23,4 +23,5 @@ namespace :admin do
   end
   patch '/tasks/:id/move', to: 'tasks#move'
   resources :expenses, only: %i[index new create edit update destroy]
+  resources :errors, only: %i[index show]
 end

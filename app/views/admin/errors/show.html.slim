@@ -1,0 +1,69 @@
+.pt-6.px-4
+  h1.text-xl.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 = "##{@item['counter']} #{@item['title']}"
+
+.pt-6.px-4.text-gray-900.dark:text-white
+  .mb-3.flex.gap-5.mb-5
+    div First: #{Time.at(@item['first_occurrence_timestamp']).strftime("%Y-%m-%d %I:%M %P GMT%:z")}
+    div Latest: #{Time.at(@item['last_occurrence_timestamp']).strftime("%Y-%m-%d %I:%M %P GMT%:z")}
+    div Total: #{@item['occurrences_count']}
+    div IPs: #{@item['unique_occurrences']}
+  .flex.justify-between.mb-5
+    h2.text-xl = "##{@error['id']}"
+    .flex.gap-2
+      - if @item['occurrences_count'].to_i > 1
+        - item_index = @errors.index { |i| i['id'] == @error['id'] }
+        - if @item['occurrences_count'].to_i > item_index + 1
+          - prev_item = @errors[item_index + 1]['id']
+          = link_to 'Previous', admin_error_path(@item['id'], item: prev_item), class: 'cursor-pointer inline-flex items-center justify-center box-border rounded-sm transition duration-200 button-ease px-3 py-2 h-8 text-gray-500 bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300 active:border-gray-200 active:bg-gray-100 hover:no-underline text-xs font-medium focus:outline-hidden focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:z-1 group border-[1.5px] !px-2 sm:!px-3'
+          - if item_index > 0
+            - prev_item = @errors[item_index - 1]['id']
+            = link_to 'Next', admin_error_path(@item['id'], item: prev_item), class: 'cursor-pointer inline-flex items-center justify-center box-border rounded-sm transition duration-200 button-ease px-3 py-2 h-8 text-gray-500 bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300 active:border-gray-200 active:bg-gray-100 hover:no-underline text-xs font-medium focus:outline-hidden focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:z-1 group border-[1.5px] !px-2 sm:!px-3'
+        - else
+          - prev_item = @errors[item_index - 1]['id']
+          = link_to 'Next', admin_error_path(@item['id'], item: prev_item), class: 'cursor-pointer inline-flex items-center justify-center box-border rounded-sm transition duration-200 button-ease px-3 py-2 h-8 text-gray-500 bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300 active:border-gray-200 active:bg-gray-100 hover:no-underline text-xs font-medium focus:outline-hidden focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:z-1 group border-[1.5px] !px-2 sm:!px-3'
+        - if @item['occurrences_count'].to_i > item_index
+          - next_item = @errors[item_index - 1]['id']
+  .mb-3.flex.gap-5.mb-5
+    div Received on: #{Time.at(@error['timestamp']).strftime("%Y-%m-%d %I:%M %P GMT%:z")}
+    div IP: #{@error['data']['request']['user_ip']}
+    div User Agent: #{@error.dig('data', 'request', 'headers', 'User-Agent') || "unknown"}
+
+  section class="rounded-lg px-2 py-2 border-2 border-gray-200 mb-5"
+    h3.text-2xl.font-semibold.mb-1 Stack Trace
+    - trace = @error['data']['body']['trace'] || @error['data']['body']['trace_chain']&.first
+    -if trace.present?
+      .whitespace-pre-wrap.font-code.text-gray-500.mb-3
+        span.text-red-500.mr-2 = trace['exception']['class']
+        span = trace['exception']['message']
+      - trace['frames'].reverse.each do |item|
+        .border-gray-200.bg-white.dark:bg-gray-800.dark:border-gray-700.hover:bg-gray-50.dark:hover:bg-gray-600 class="last:border-x-rounded-sm flex select-text items-center border-x border-t py-2 pl-5 pr-2 text-xs leading-5 last:rounded-b-lg last:border-b"
+          = "<span class='font-semibold'>at&nbsp;</span>#{item['method']}(#{item['filename']}:#{item['lineno']})".html_safe
+
+  section class="rounded-lg px-2 py-2 border-2 border-gray-200 mb-5"
+    h3.text-2xl.font-semibold.mb-3 Params
+    ul
+      - @error['data'].each do |key, value|
+        - next if value.is_a? Hash
+
+        - value = "#{value} <span class='italic text-gray-300'>#{Time.at(value).strftime("%Y-%m-%d %I:%M %P GMT%:z")}</span>".html_safe if key == 'timestamp'
+        = render partial: '/admin/errors/param', locals: { key: key, value: value }
+      - @error['data'].each do |key, value|
+        - next unless %w[request notifier server].include? key
+
+        li.border.border-gray-200.bg-white.dark:bg-gray-800.dark:border-gray-700.hover:bg-gray-50.dark:hover:bg-gray-600
+          button class="flex w-full flex-row items-center justify-between sm:px-2 sm:py-1"
+            span class="flex flex-row items-center sm:w-1/2"
+              span class="sm:text-md my-0 border-0 px-0 sm:invisible sm:w-1/3 sm:justify-center sm:border sm:px-4"
+                .hidden.h-0.sm:flex.sm:h-6 #%
+              span class="flex justify-start p-2 font-semibold sm:w-2/3" = "#{key}.*"
+            span class="flex flex-row items-center justify-end hover:text-blue-500 hover:underline"
+              = "#{value.size} fields"
+              svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="size-4"
+                path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd"
+        - value.each do |k, v|
+          - if v.is_a? Hash
+            - v.each do |g, l|
+              = render partial: '/admin/errors/param', locals: { key: "#{key}.#{k}.#{g}", value: l }
+          - else
+            = render partial: '/admin/errors/param', locals: { key: "#{key}.#{k}", value: v }
+  / div = @error
