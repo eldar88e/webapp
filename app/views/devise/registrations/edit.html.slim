@@ -66,13 +66,14 @@
         span Админка
       .right-arrow
         = render IconComponent.new name: :right
-  button type="button" class="btn btn-big btn-secondary flex justify-between items-center mt-2" data-controller="modal" data-action="click->modal#openPassword"
-    .flex.justify-center.gap-2.items-center
-      = render IconComponent.new name: :profile
-      span Изменить пароль
-    .right-arrow
-      = render IconComponent.new name: :right
-  #password class="hidden"
-    = render 'devise/registrations/password'
+  - if current_user.password_sent?
+    button type="button" class="btn btn-big btn-secondary flex justify-between items-center mt-2" data-controller="modal" data-action="click->modal#openPassword"
+      .flex.justify-center.gap-2.items-center
+        = render IconComponent.new name: :profile
+        span Изменить пароль
+      .right-arrow
+        = render IconComponent.new name: :right
+    #password class="hidden"
+      = render 'devise/registrations/password'
 
 = render '/devise/registrations/edit'

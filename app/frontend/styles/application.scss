@@ -1020,7 +1020,7 @@ h3 {
     transition: 0.5s all;
   }
 
-  a:hover {
+  a:hover, button:hover {
     .right-arrow {
       transform: translate(5px);
     }
