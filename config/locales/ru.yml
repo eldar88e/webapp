@@ -129,6 +129,7 @@ ru:
         role: "Роль"
         bonus_balance: "Баланс"
         order_count: "Счетчик заказов"
+        password_sent: "Пароль отправлен"
       order:
         status: "Статус"
         user: "Клиент"

@@ -10,26 +10,28 @@
       <div class="flex items-center gap-4 mb-4">
         <%= render partial: '/layouts/partials/avatar', locals: { user: @user, style: 'w-14 h-14' } %>
         <div>
-          <h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white"><%= @user.full_name %></h1>
+          <h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white">
+            <%= @user.full_name.presence || @user.full_name_raw %>
+          </h1>
           <span class="text-gray-700 dark:text-gray-400"><%= @user.role %></span>
         </div>
       </div>
-      <% %i[id username tg_id email phone_number full_address postal_code is_blocked started created_at bonus_balance order_count].each do |attribute| %>
+      <% %i[id username tg_id email phone_number full_address postal_code is_blocked started created_at bonus_balance order_count password_sent].each do |attribute| %>
         <div>
           <span class="text-gray-700 dark:text-gray-400 text-sm"><%= t("activerecord.attributes.user.#{attribute}") %>: </span>
           <span class="font-bold ml-2">
-            <% if @user.send(attribute).blank? %>
-              <%= %i[is_blocked started].include?(attribute) ? 'Нет' : "< Не указано >" %>
+            <% if %i[is_blocked started password_sent].include?(attribute) %>
+              <%= @user.send(attribute) ? 'Да' : 'Нет' %>
+            <% elsif @user.send(attribute).blank? %>
+              < Не указано >
             <% elsif attribute == :email %>
               <%= @user.send(attribute) + (@user.confirmed_at ? ' ✔' : '') %>
             <% elsif attribute == :created_at %>
               <%= format_date @user.send(attribute) %>
-            <% elsif attribute == :username %>
-              <%= link_to "@#{@user.username}", "https://t.me/#{@user.username}", class: 'text-blue-600', target: "_blank" if @user.username.present? %>
+            <% elsif attribute == :username && @user.username.present? %>
+              <%= link_to "@#{@user.username}", "https://t.me/#{@user.username}", class: 'text-blue-600', target: "_blank" %>
             <% elsif attribute == :role %>
               <%= t("roles.#{@user.role}") %>
-            <% elsif %i[is_blocked started].include?(attribute) %>
-              Да
             <% else %>
               <%= @user.send(attribute) %>
             <% end %>
