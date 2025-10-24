@@ -15,4 +15,4 @@
   div class=("mb-2 font-semibold #{order.status == 'shipped' ? 'text-[#48C928]' : 'text-red-500'}")
     = t("order.statuses.#{order.status}")
   = link_to 'Подробнее', order_path(order), class: 'btn btn-secondary w-full flex justify-center',
-          data: { turbo_prefetch: false, controller: 'modal', action: 'click->modal#openRemote' }
+          data: { turbo_prefetch: false, controller: 'modal', action: 'click->modal#open' }

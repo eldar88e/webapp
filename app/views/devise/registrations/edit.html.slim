@@ -56,15 +56,23 @@
   = link_to orders_path, class: 'btn btn-big btn-secondary flex justify-between items-center', data: { turbo_prefetch: false } do
     .flex.justify-center.gap-2.items-center
       = render IconComponent.new name: :cart2
-      span  История заказов
+      span История заказов
     .right-arrow
       = render IconComponent.new name: :right
   - if current_user.admin_or_moderator_or_manager?
     a.btn.btn-big.btn-secondary.flex.justify-between.items-center.mt-2 class="!bg-red-100/70 hover:!bg-red-300/50 !text-red-500" href="/admin" data-turbo="false"
       .flex.justify-center.gap-2.items-center
         = render IconComponent.new name: :admin
-        span  Админка
+        span Админка
       .right-arrow
         = render IconComponent.new name: :right
+  button type="button" class="btn btn-big btn-secondary flex justify-between items-center mt-2" data-controller="modal" data-action="click->modal#openPassword"
+    .flex.justify-center.gap-2.items-center
+      = render IconComponent.new name: :profile
+      span Изменить пароль
+    .right-arrow
+      = render IconComponent.new name: :right
+  #password class="hidden"
+    = render 'devise/registrations/password'
 
 = render '/devise/registrations/edit'

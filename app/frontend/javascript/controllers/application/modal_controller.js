@@ -8,9 +8,10 @@ export default class extends Controller {
     this.wrapper = document.getElementById("modal-wrapper");
     this.body = document.getElementById("modal-block");
     this.agreement = document.getElementById("agreement");
+    this.password = document.getElementById("password");
   }
 
-  openRemote() {
+  open() {
     this.stopScrollBody();
 
     setTimeout(() => {
@@ -24,13 +25,18 @@ export default class extends Controller {
   openAgreement(event) {
     event.preventDefault();
     this.body.innerHTML = this.agreement.innerHTML;
-    this.openRemote();
+    this.open();
   }
 
   openTier() {
     this.stopScrollBody();
 
     this.modalTarget.classList.add("open");
+  }
+
+  openPassword() {
+    this.body.innerHTML = this.password.innerHTML;
+    this.open();
   }
 
   close() {
