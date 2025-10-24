@@ -40,6 +40,7 @@ class User < ApplicationRecord
   after_commit :notify_update_account_tier, if: -> { previous_changes[:account_tier_id].present? }
   after_commit :notify_bonus_user, on: :update, if: -> { bonus_balance_diff.present? && bonus_balance_diff.positive? }
   after_commit :resend_confirmation_email, on: :update, if: -> { previous_changes[:email].present? }
+  after_commit :send_password, on: :update, if: -> { !password_sent? && previous_changes[:confirmed_at].present? }
 
   def admin?
     role == 'admin'
@@ -177,5 +178,9 @@ class User < ApplicationRecord
 
   def store_bonus_balance_diff
     self.bonus_balance_diff = bonus_balance - (bonus_balance_was || 0)
+  end
+
+  def send_password
+    SendPasswordJob.perform_later(id)
   end
 end

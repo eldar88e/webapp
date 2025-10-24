@@ -12,7 +12,7 @@
       </p>
 
       <p style="color: #1a1a1a; font-size: 16px; line-height: 1.5;">
-        Ваш пароль: <span style="color: #000001; font-size: 18px; font-weight: bold; line-height: 1.5;"><%= @password %></span><br>
+        Ваш пароль: <span style="color: #000001; font-size: 18px; font-weight: bold; line-height: 1.5;"><%= @resource.password %></span><br>
         Пожалуйста, не забудьте его.<br>
         Пароль можно будет изменить в настройках аккаунта.<br>
         Ссылка на вход: <%= link_to new_user_session_url, new_user_session_url, style: 'color: #48C928;' %>

@@ -9,7 +9,7 @@ class NotApprovedEmailNoticeJob < ApplicationJob
     if user.confirmed_at.blank?
       send_for_not_confirmed(user)
     elsif user.password_sent == false
-      send_for_not_send_pass(user)
+      SendPasswordJob.perform_later(user.id)
     end
   end
 
@@ -19,31 +19,6 @@ class NotApprovedEmailNoticeJob < ApplicationJob
     msg = build_confirmation_msg(user)
     Devise::Mailer.confirmation_instructions(user, user.confirmation_token).deliver_now
     user.messages.create(text: msg, is_incoming: false, data: { markup: { markup: 'to_catalog' } })
-  end
-
-  def send_for_not_send_pass(user)
-    password = Devise.friendly_token[0, 12]
-    user.update!(password: password)
-    PassMailer.send_pass(user, user.password).deliver_now
-    send_to_telegram(user, password)
-    user.update!(password_sent: true)
-  end
-
-  def send_to_telegram(user, password)
-    enter_url = "https://#{ENV.fetch('HOST')}/users/sign_in"
-    markup    = { markup: 'to_catalog' }
-    site_link = { markup_ext_url: enter_url, markup_ext_text: 'Войти через сайт' }
-    markup.merge!(site_link) if Rails.env.production?
-    msg = build_msg(user, password, enter_url)
-    user.messages.create(text: msg, is_incoming: false, data: { markup: markup })
-  end
-
-  def build_msg(user, password, enter_url)
-    <<~TEXT.squeeze(' ').chomp
-      Уважаемый(ая) #{user.first_name},
-      🎉 рады приветствовать Вас на #{Setting.fetch_value(:app_name)}!\n
-      Ваш пароль: `#{password}`\n\nСсылка для входа: #{enter_url}
-    TEXT
   end
 
   def build_confirmation_msg(user)
