@@ -5,10 +5,7 @@ class OrdersController < ApplicationController
 
   def show
     @order = current_user.orders.includes(order_items: { product: :image_attachment }).find(params[:id])
-    render turbo_stream: [
-      turbo_stream.update('modal-block', partial: '/orders/show', locals: { order: @order }),
-      turbo_stream.append(:modal, '<script>openModal();</script>'.html_safe)
-    ]
+    render turbo_stream: turbo_stream.update('modal-block', partial: '/orders/show', locals: { order: @order })
   end
 
   def create

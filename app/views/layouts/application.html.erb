@@ -61,12 +61,12 @@
 
     <%= render partial: '/layouts/partials/fixed_menu' %>
 
-    <div id="modal" class="modal">
-      <div class="bg-white w-full p-5 modal-block">
-        <button class="close" onclick="closeModal()">
+    <div id="modal" class="modal" data-controller="modal" data-action="click->modal#closeModal">
+      <div class="bg-white w-full p-5 modal-block" id="modal-wrapper" data-modal-target="modal">
+        <button class="close" data-action="click->modal#close">
           <%= render IconComponent.new name: :close, size: 24 %>
         </button>
-        <div id="modal-block"></div>
+        <div id="modal-block" data-modal-target="body"></div>
       </div>
     </div>
 

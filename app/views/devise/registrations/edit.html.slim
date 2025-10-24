@@ -13,15 +13,15 @@
     .flex.justify-between data-controller="modal"
       div
         div Ваш баланс
-        .bonus-balance #{current_user.bonus_balance}₽
-      .account-tier data-action="click->modal#open"
+        .bonus-balance #{format_price current_user.bonus_balance}
+      .account-tier data-action="click->modal#openTier"
         div = current_user.account_tier&.title || 'Гость'
         = render IconComponent.new name: :info, size: 16
-      .modal-account-tier data-modal-target="modal"
+      .modal-account-tier data-modal-target="modal" data-action="click->modal#closeModal"
         .modal-wrapper
           .modal-title
             span.font-semibold Уровни программы лояльности
-            .close data-action="click->modal#open"
+            .close data-action="click->modal#close"
               = render IconComponent.new name: :close
           .modal-body
             - AccountTier.all.each do |item|
@@ -34,7 +34,7 @@
                       | Присваивается при первом заказе
                     - else
                       | Заказов надо сделать – #{item.order_threshold}
-          .mt-1.font-medium class="text-[10px]" Бонусы начисляются при заказах от #{Setting.fetch_value(:bonus_threshold)}₽
+          .mt-1.font-medium class="text-[10px]" Бонусы начисляются при заказах от #{format_price Setting.fetch_value(:bonus_threshold)}
   .bonus-block-footer
     - left = remaining_to_next_tier
     - if left.is_a? Integer

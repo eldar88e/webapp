@@ -2,7 +2,7 @@
   .flex.justify-between
     h3 class="!mb-1"
       = "Заказ №#{order.id}"
-    .order-total = order.total_amount.to_i.to_s + '₽'
+    .order-total = format_price order.total_amount
   div
     - if order.status == 'shipped'
       = format_date order.shipped_at
@@ -14,4 +14,5 @@
       = format_date order.updated_at
   div class=("mb-2 font-semibold #{order.status == 'shipped' ? 'text-[#48C928]' : 'text-red-500'}")
     = t("order.statuses.#{order.status}")
-  = link_to 'Подробнее', order_path(order), data: { turbo_prefetch: false }, class: 'btn btn-secondary w-full flex justify-center'
+  = link_to 'Подробнее', order_path(order), class: 'btn btn-secondary w-full flex justify-center',
+          data: { turbo_prefetch: false, controller: 'modal', action: 'click->modal#openRemote' }

@@ -57,4 +57,8 @@ module ApplicationHelper
     remaining_orders = next_tier.order_threshold - current_user.order_count
     [remaining_orders, 0].max
   end
+
+  def format_price(price, currency = '₽')
+    MoneyService.price_to_s(price, currency)
+  end
 end

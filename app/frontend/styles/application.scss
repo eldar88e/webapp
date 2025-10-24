@@ -1070,6 +1070,7 @@ h3 {
   align-items: center;
   height: 100%;
   padding: 0 40px;
+  cursor: pointer;
 
   &.open {
     display: flex;
@@ -1080,6 +1081,7 @@ h3 {
     background-color: #F9F9F9;
     width: 100%;
     padding: 20px;
+    cursor: default;
 
     .modal-title {
       display: flex;
@@ -1089,6 +1091,11 @@ h3 {
 
       .close {
         cursor: pointer;
+        transition: all 0.5s;
+
+        &:hover {
+          color: var(--color-green);
+        }
       }
     }
 
@@ -1124,6 +1131,7 @@ h3 {
   align-items: center;
   height: 100%;
   padding-top: 72px;
+  cursor: pointer;
 
   .modal-block {
     background-color: #f9f9f9;
@@ -1135,6 +1143,7 @@ h3 {
     width: 100%;
     max-height: 89vh;
     overflow-y: auto;
+    cursor: default;
   }
 
   .open {
@@ -1144,11 +1153,16 @@ h3 {
   .close {
     cursor: pointer;
     float: right;
+    transition: all 0.5s;
 
     &:hover {
-      color: #48C928;
+      color: var(--color-green);
     }
   }
+}
+
+.modal.open {
+  display: flex;
 }
 
 .history-order-items {

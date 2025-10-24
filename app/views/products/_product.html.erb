@@ -30,11 +30,11 @@
       <% if product.stock_quantity.positive? %>
         <% if product.old_price.present? %>
           <div class="flex gap-1 mb-1 items-center">
-            <div class="price"><%= product.price.to_i %>₽</div>
-            <div class="old-price"><%= product.old_price.to_i %>₽</div>
+            <div class="price"><%= format_price product.price %></div>
+            <div class="old-price"><%= format_price product.old_price %></div>
           </div>
         <% else %>
-          <div class="price-without-old"><%= product.price.to_i %>₽</div>
+          <div class="price-without-old"><%= format_price product.price %></div>
         <% end %>
         <%= turbo_frame_tag id="cart-btn-#{product.id}" do %>
           <%= render partial: '/products/btn', locals: { product: product } %>

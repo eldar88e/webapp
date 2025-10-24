@@ -37,8 +37,6 @@ export default [
               clearInterval: "readonly",
               HTMLInputElement: "readonly",
               Telegram: "readonly", // for TelegramWebApp
-              closeModal: "readonly",
-              openModal: "readonly",
               suggestions_cache: "readonly",
               dadata_token: "readonly",
             },

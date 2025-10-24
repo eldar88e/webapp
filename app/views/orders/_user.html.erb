@@ -10,7 +10,7 @@
       <div>
         <div>Я принимаю условия</div>
         <%= link_to 'пользовательского соглашения', '#', class: 'agreement',
-                    data: { controller: :agreement, action: "click->agreement#open" } %>
+                    data: { controller: :modal, action: "click->modal#openAgreement" } %>
       </div>
     </label>
   </div>
@@ -36,7 +36,7 @@
       <% end %>
     <% end %>
     <p><%= @contract['pss'] %></p><br>
-    <div class="btn btn-big text-center" onclick="closeModal()">Закрыть</div>
+    <div class="btn btn-big text-center" data-action="click->modal#close">Закрыть</div>
   </div>
 </div>
 

@@ -1,0 +1,8 @@
+- content_for :title, 'Корзина'
+
+h1 = yield(:title)
+= render '/carts/cart'
+
+style
+  | .cart-mini { display: none; }
+  | .footer { padding-bottom: 72px !important; }
