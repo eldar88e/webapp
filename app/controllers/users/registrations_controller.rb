@@ -3,7 +3,10 @@
 module Users
   class RegistrationsController < Devise::RegistrationsController
     def new
-      # TODO: убрать в дальнейшем и исследовать работает ли регистрация через post-запрос
+      redirect_to root_path
+    end
+
+    def create
       redirect_to root_path
     end
 
