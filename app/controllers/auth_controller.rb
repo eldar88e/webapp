@@ -11,6 +11,8 @@ class AuthController < ApplicationController
     init_data = URI.decode_www_form(data['initData'].to_s).to_h
     return render_error_auth if init_data.blank? || init_data['user'].blank?
 
+    binding.pry
+
     sign_in_with_tg_id(init_data['user'])
     render json: { success: true } # user: current_user, params: init_data['start_param'] head :ok
   end
