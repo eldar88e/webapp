@@ -1,6 +1,6 @@
 class ProductsController < ApplicationController
-  skip_before_action :check_authenticate_user!, only: :index
-  before_action :set_btn_link, :check_authenticate_user!, :redirect_to_btn_link, only: :index
+  skip_before_action :check_authenticate_user!
+  before_action :set_btn_link, :check_authenticate_user!, :redirect_to_btn_link
 
   def index
     redirect_to "/products/#{Setting.fetch_value(:mirena_id)}" if ENV.fetch('HOST').include?('mirena')
