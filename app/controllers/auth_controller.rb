@@ -7,14 +7,20 @@ class AuthController < ApplicationController
   # end
 
   def telegram
-    data      = params.to_unsafe_h.except(:controller, :action)
-    init_data = URI.decode_www_form(data['initData'].to_s).to_h
-    return render_error_auth if init_data.blank? || init_data['user'].blank?
+    # data      = params.to_unsafe_h.except(:controller, :action)
+    # init_data = URI.decode_www_form(data['initData'].to_s).to_h
+    # return render_error_auth if init_data.blank? || init_data['user'].blank?
 
-    binding.pry
+    auth = Tg::WebAppAuth.new(params['initData'], Setting.fetch_value(:tg_token))
 
-    sign_in_with_tg_id(init_data['user'])
-    render json: { success: true } # user: current_user, params: init_data['start_param'] head :ok
+    if auth.valid?
+      sign_in_with_tg_id(auth.user) # init_data['user']
+      render json: { success: true }
+    else
+      msg = "Params 'initData' is empty or empty user!"
+      Rails.logger.warn msg
+      render json: { error: msg }
+    end
   end
 
   # def error_register
@@ -34,15 +40,9 @@ class AuthController < ApplicationController
 
   private
 
-  def render_error_auth
-    msg = "Params 'initData' is empty or empty user!"
-    Rails.logger.warn msg
-    render json: { error: msg }
-  end
-
-  def sign_in_with_tg_id(tg_user_object)
-    tg_user = JSON.parse tg_user_object
-    user    = User.find_or_create_by_tg(tg_user, false)
+  def sign_in_with_tg_id(tg_user)
+    # tg_user = JSON.parse tg_user_object
+    user = User.find_or_create_by_tg(tg_user, false)
     update_tg_username(user, tg_user)
     sign_in(user)
   end
