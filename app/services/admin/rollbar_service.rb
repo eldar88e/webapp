@@ -15,11 +15,15 @@ module Admin
 
     def items
       resp = @conn.get('/api/1/items', {}, { 'X-Rollbar-Access-Token' => @token })
+      raise "Failed to fetch items: #{resp.body&.dig('message')}" unless resp.success?
+
       resp.body.dig('result', 'items') || []
     end
 
     def instances(item_id, limit: 100)
       resp = @conn.get("/api/1/item/#{item_id}/instances", { access_token: @token, limit: limit })
+      raise "Failed to fetch instances: #{resp.body}" unless resp.success?
+
       resp.body.dig('result', 'instances') || []
     end
   end
