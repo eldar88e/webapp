@@ -27,7 +27,7 @@ RSpec.describe 'CartSummary', type: :system do
 
       within('#cart-summary') do
         expect(find('.cart-counter')).to have_content(cart_item.quantity)
-        expect(page).to have_content("Корзина #{total} ₽")
+        expect(page.text.delete(" ")).to have_content("Корзина#{total}₽")
         expect(page).to have_content('Перейти в корзину')
       end
     end
@@ -52,7 +52,7 @@ RSpec.describe 'CartSummary', type: :system do
 
       within('#cart-summary') do
         expect(find('.cart-counter')).to have_content(count)
-        expect(page).to have_content("Корзина #{total} ₽")
+        expect(page.text.delete(" ")).to have_content("Корзина#{total}₽")
         expect(page).to have_content('Перейти в корзину')
       end
 
@@ -60,7 +60,7 @@ RSpec.describe 'CartSummary', type: :system do
 
       within("#cart-btn-#{product.id}") do
         expect(find('.count')).to have_content("#{cart_item.quantity} шт")
-        expect(find('.total')).to have_content("#{(cart_item.quantity * product.price).to_i}₽")
+        expect(find('.total').text.delete(" ")).to have_content("#{(cart_item.quantity * product.price).to_i}₽")
       end
     end
   end
