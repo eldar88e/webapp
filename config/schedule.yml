@@ -2,3 +2,8 @@ courier_salary_calculator:
   cron: "0 8 * * *"
   class: "CourierSalaryJob"
   queue: default
+
+pg_hero_stats:
+  cron: "*/5 * * * *"
+  class: "PgHeroStatsJob"
+  queue: default
