@@ -5,5 +5,6 @@
   - default
   - turbo_streams
   - mailers
+  - pg_hero
   - rollbar
   - ahoy

@@ -5,5 +5,10 @@ courier_salary_calculator:
 
 pg_hero_stats:
   cron: "*/5 * * * *"
-  class: "PgHeroStatsJob"
-  queue: default
+  class: "PgHero::StatsJob"
+  queue: pg_hero
+
+pg_hero_space:
+  cron: "10 0 * * *"
+  class: "PgHero::SpaceJob"
+  queue: pg_hero
