@@ -25,15 +25,17 @@ module Tg
       order_id = parse_order_number(message.message.text)
       order    = user.orders.find(order_id)
       new_text = mark_as_paid(order)
-      # new_text = order.status == 'unpaid' ? '✅ Оплачено' : '❌ Ошибка'
       edit_message(bot, message, "#{message.message.text}\n\n#{new_text}")
     end
 
     def approve_payment(bot, message)
-      order_id = parse_order_number(message.message.text)
+      text     = message.message.text
+      order_id = parse_order_number(text)
       order    = Order.find(order_id)
-      order.update(status: :processing)
-      bot.api.delete_message(chat_id: message.message.chat.id, message_id: message.message.message_id)
+      result   = order.update(status: :processing)
+      return bot.api.delete_message(chat_id: message.message.chat.id, message_id: message.message.message_id) if result
+
+      edit_message(bot, message, "#{text}\n\n❌ Ошибка\n\n#{order.errors.full_messages.join(', ')}")
     end
 
     def submit_tracking(bot, message)
@@ -85,12 +87,11 @@ module Tg
     end
 
     def mark_as_paid(order)
-      if order.status == 'unpaid'
-        order.update(status: :paid) ? '✅ Оплачено' : '❌ Ошибка'
-      else
-        Rails.logger.info "Order #{order.id} is already paid or other problem"
-        '❌ Ошибка'
-      end
+      return '✅ Оплачено' if order.status == 'unpaid' && order.update(status: :paid)
+
+      Rails.logger.info "Order #{order.id} has next problem: #{order.errors.full_messages.join(', ')}"
+      TelegramJob.perform_later(msg: "Failed to update order #{order.id} to paid", id: Setting.fetch_value(:admin_ids))
+      '❌ Ошибка'
     end
   end
 end

@@ -21,6 +21,7 @@ class Order < ApplicationRecord
   before_update :apply_delivery, if: -> { status == 'unpaid' }
   before_update :update_total_amount, if: -> { status == 'unpaid' || bonus_changed? }
   before_update :assign_valid_or_random_card, if: -> { status == 'unpaid' }
+  before_update :check_stock, if: -> { status_for_check? }
   before_update :remove_cart, if: -> { status_changed?(from: 'unpaid', to: 'paid') }
   before_update :deduct_stock, if: -> { status_changed?(from: 'paid', to: 'processing') }
   before_update :restock_stock, if: -> { can_restock? }
@@ -87,6 +88,17 @@ class Order < ApplicationRecord
 
   private
 
+  def status_for_check?
+    status_changed?(from: 'unpaid', to: 'paid') || status_changed?(from: 'paid', to: 'processing')
+  end
+
+  def check_stock
+    order_item = order_items_with_product.find { |oi| oi.product.stock_quantity < oi.quantity }
+    return if order_item.blank?
+
+    throw_abort(order_item.product.name)
+  end
+
   def bonus_check
     errors.add(:bonus, 'не может быть больше баланса пользователя') if bonus > user.bonus_balance
     errors.add(:bonus, 'должен быть кратен 100') unless (bonus % 100).zero?
@@ -139,18 +151,14 @@ class Order < ApplicationRecord
       if product.stock_quantity >= order_item.quantity
         product.update!(stock_quantity: product.stock_quantity - order_item.quantity)
       else
-        throw_abort(product)
+        throw_abort(product.name)
       end
     end
   end
 
-  def throw_abort(product)
-    msg = "Недостаток в остатках для продукта: #{product.name} в заказе #{id}"
+  def throw_abort(name)
+    msg = "Недостаток в остатках для продукта: #{name} в заказе #{id}"
     Rails.logger.error msg
-
-    # TelegramJob.perform_later(msg: msg) # TODO: не отработает т.к. транзакция + в группе "Оплата пришла" нажав
-    # TODO: сообщение удалится но по факту статус останется прежним. Только в админке корректно выйдет флеш
-
     errors.add(:base, msg)
     throw :abort
   end
