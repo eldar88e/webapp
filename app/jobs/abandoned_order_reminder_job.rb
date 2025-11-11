@@ -15,7 +15,8 @@ class AbandonedOrderReminderJob
     return if args['msg_type'].blank?
 
     order = Order.find_by(id: args['order_id'])
-    return if order&.status != 'unpaid'
+    return if order&.status != 'unpaid' ||
+              order.order_items_with_product.any? { |i| i.product.stock_quantity < i.quantity }
 
     process_remainder(args, order)
   end
