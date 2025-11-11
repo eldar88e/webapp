@@ -89,8 +89,9 @@ module Tg
     def mark_as_paid(order)
       return '✅ Оплачено' if order.status == 'unpaid' && order.update(status: :paid)
 
-      Rails.logger.info "Order #{order.id} has next problem: #{order.errors.full_messages.join(', ')}"
-      TelegramJob.perform_later(msg: "Failed to update order #{order.id} to paid", id: Setting.fetch_value(:admin_ids))
+      msg = "Failed to update order #{order.id} to paid: #{errors}\n\n#{order.errors.full_messages.join(', ')}"
+      Rails.logger.info msg
+      TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
       '❌ Ошибка'
     end
   end
