@@ -78,12 +78,15 @@ RSpec.describe Order, type: :model do
       end
 
       context 'when insufficient stock' do
-        before do
+        it 'raises error for paid' do
           product.update!(stock_quantity: 1)
-          order.update!(status: :paid)
+          expect { order.update!(status: :paid) }.to raise_error(StandardError, /Failed to save the record/)
         end
 
-        it 'raises error and sends notification' do
+        it 'raises error and sends notification for processing' do
+          product.update!(stock_quantity: 2)
+          order.update!(status: :paid)
+          product.update!(stock_quantity: 1)
           allow(TelegramJob).to receive(:perform_later)
           expect { order.update!(status: :processing) }.to raise_error(StandardError, /Failed to save the record/)
         end
