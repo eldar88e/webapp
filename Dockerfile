@@ -41,7 +41,7 @@ RUN yarn install --frozen-lockfile
 COPY . .
 
 # RUN bundle exec rails assets:precompile
-# RUN bundle exec bootsnap precompile app/ lib/
+RUN bundle exec bootsnap precompile --gemfile app/ lib/ config/
 # ENTRYPOINT ["/app/bin/docker-entrypoint"]
 
 RUN addgroup -g 1000 deploy && adduser -u 1000 -G deploy -D -s /bin/sh deploy
