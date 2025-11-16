@@ -28,8 +28,8 @@ gem 'googleauth', require: false
 gem 'i18n'
 gem 'image_processing'
 gem 'lograge'
-# gem 'logstash-logger'
 gem 'pagy'
+gem 'panko_serializer'
 gem 'pundit'
 gem 'ransack'
 gem 'rollbar'
@@ -38,17 +38,15 @@ gem 'sidekiq-cron'
 gem 'sidekiq-unique-jobs'
 gem 'telegram-bot-ruby', require: false
 gem 'valid_email2'
+# gem 'gretel'
 
 gem 'active_storage_dashboard'
+gem 'pghero'
+
 gem 'ahoy_matey'
 gem 'blazer'
 gem 'geocoder'
-# gem 'gretel'
 gem 'maxminddb'
-
-gem 'panko_serializer'
-
-gem 'pghero'
 
 group :development, :test do
   gem 'pry'
@@ -57,7 +55,6 @@ group :development, :test do
 end
 
 group :development do
-  # gem 'active_record_query_trace'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'brakeman', require: false
@@ -69,11 +66,9 @@ end
 
 group :test do
   gem 'capybara'
-  gem 'selenium-webdriver'
-
-  gem 'factory_bot_rails'
   # gem 'database_cleaner'
-
+  gem 'factory_bot_rails'
   gem 'rspec-rails'
+  gem 'selenium-webdriver'
   gem 'shoulda-matchers'
 end
