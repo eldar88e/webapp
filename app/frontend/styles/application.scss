@@ -80,11 +80,16 @@ h3 {
   margin: 0 -20px;
   padding-left: 20px;
   padding-right: 10px;
-  padding-bottom: 10px;
-  margin-bottom: 2px;
+  padding-bottom: 5px;
   display: flex;
   gap: 4px;
   overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   li {
     a {
@@ -1359,5 +1364,15 @@ h3 {
   &:hover {
     color: var(--color-green-dark);
     transform: none !important;
+  }
+}
+
+.banner {
+  padding: .75rem;
+  font-size: 12px;
+  margin-bottom: 1rem;
+  @media (max-width: 768px) {
+    margin: -1.25rem -1.25rem;
+    margin-bottom: 1rem;
   }
 }
