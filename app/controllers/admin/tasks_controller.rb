@@ -53,7 +53,7 @@ module Admin
       if @task.update(task_params)
         render json: { success: true }
       else
-        render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
+        render json: { errors: @task.errors.full_messages }, status: :unprocessable_content
       end
     end
 

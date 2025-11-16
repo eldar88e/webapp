@@ -43,7 +43,7 @@ class CartItemsController < ApplicationController
   def respond_error(errors)
     respond_to do |format|
       format.turbo_stream { error_notice errors }
-      format.json { render json: { success: false, errors: errors }, status: :unprocessable_entity }
+      format.json { render json: { success: false, errors: errors }, status: :unprocessable_content }
     end
   end
 

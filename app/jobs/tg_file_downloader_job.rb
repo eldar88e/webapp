@@ -6,7 +6,7 @@ class TgFileDownloaderJob < ApplicationJob
     user     = User.find_by(tg_id: args[:tg_id])
     return if user.blank? || (response.blank? && args[:msg].blank?)
 
-    file_path = response.present? ? response.file_path : nil
+    file_path = response.presence&.file_path
     file_url  = "https://api.telegram.org/file/bot#{Setting.fetch_value(:tg_token)}/#{file_path}"
     process_file(file_url, args, user, file_path)
   end

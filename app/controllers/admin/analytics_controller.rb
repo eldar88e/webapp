@@ -6,7 +6,7 @@ module Admin
       if ChartsService.instance_methods(false).include?(params[:type].to_sym)
         render json: process_cache(params[:type])
       else
-        render json: { error: 'Invalid type parameter' }, status: :unprocessable_entity
+        render json: { error: 'Invalid type parameter' }, status: :unprocessable_content
       end
     end
 

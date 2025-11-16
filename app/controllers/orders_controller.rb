@@ -26,7 +26,7 @@ class OrdersController < ApplicationController
     render turbo_stream: [
       send_notice(service[:error], 'danger'),
       turbo_stream.append(:modal, '<script>window.location.href = "/";</script>'.html_safe)
-    ], status: :unprocessable_entity
+    ], status: :unprocessable_content
   end
 
   def handle_success_notice
