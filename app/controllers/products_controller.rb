@@ -1,6 +1,4 @@
 class ProductsController < ApplicationController
-  include Pagy::Method
-
   skip_before_action :check_authenticate_user!
   before_action :set_btn_link, :check_authenticate_user!, :redirect_to_btn_link
 
