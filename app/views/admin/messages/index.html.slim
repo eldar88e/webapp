@@ -36,8 +36,8 @@
                   /   .w-3.h-3.rounded-full.bg-red-500
           .p-2.md:px-4.md:py-3.text-gray-500.dark:text-gray-400
             - if @chats_page.pages > 1
-              .mb-3 == pagy_nav(@chats_page)
-            == pagy_info(@chats_page)
+              .mb-3 == @chats_page.series_nav
+            == @chats_page.info_tag
 
       .flex-1.flex.flex-col data-controller="clear-input"
         .px-4.py-2.border-b.dark:bg-gray-800.dark:border-gray-700.border-gray-200.bg-white.text-gray-900.dark:text-white.flex.items-center.gap-4

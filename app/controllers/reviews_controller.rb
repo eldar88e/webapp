@@ -1,4 +1,6 @@
 class ReviewsController < ApplicationController
+  include Pagy::Method
+
   before_action :set_product
   before_action :detect_device, only: :new
 
