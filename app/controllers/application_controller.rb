@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   STRONG_USER_PARAMS = %i[first_name middle_name last_name phone_number email address street home postal_code].freeze
 
   include MainConcerns
-  include Pagy::Backend
+  include Pagy::Method
 
   before_action :check_authenticate_user!
   skip_before_action :check_authenticate_user!, if: :devise_confirmation_controller?

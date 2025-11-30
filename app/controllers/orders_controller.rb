@@ -1,6 +1,7 @@
 class OrdersController < ApplicationController
   def index
     @orders = current_user.orders.order(updated_at: :desc)
+    # TODO: add pagination
   end
 
   def show

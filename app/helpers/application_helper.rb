@@ -1,6 +1,4 @@
 module ApplicationHelper
-  include Pagy::Frontend
-
   def presence_email
     current_user.email.match?(/tgapp.online|example.com/) ? '' : current_user.email
   end
