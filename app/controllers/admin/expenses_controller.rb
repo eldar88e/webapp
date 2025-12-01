@@ -13,7 +13,7 @@ module Admin
     end
 
     def expense_params
-      result = params.require(:expense).permit(:category, :description, :amount, :expense_date)
+      result = params.expect(expense: %i[category description amount expense_date])
       if result[:expense_date].present?
         result[:expense_date] = current_time(result[:expense_date])
       else

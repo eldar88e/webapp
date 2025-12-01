@@ -77,7 +77,7 @@ module Admin
     end
 
     def message_params
-      params.require(:message).permit(:text, :user_id, :attachment)
+      params.expect(message: %i[text user_id attachment])
     end
   end
 end

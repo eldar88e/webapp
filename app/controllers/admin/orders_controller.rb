@@ -44,7 +44,7 @@ module Admin
     end
 
     def order_params
-      params.require(:order).permit(:status, :tracking_number)
+      params.expect(order: %i[status tracking_number])
     end
   end
 end

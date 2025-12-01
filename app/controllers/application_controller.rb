@@ -59,8 +59,7 @@ class ApplicationController < ActionController::Base
   end
 
   def user_params
-    keys = STRONG_USER_PARAMS + %i[apartment build]
-    params.require(:user).permit(keys)
+    params.expect(user: [STRONG_USER_PARAMS + %i[apartment build]])
   end
 
   def filtered_params

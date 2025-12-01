@@ -55,7 +55,7 @@ module Admin
     end
 
     def mailing_params
-      params.require(:mailing).permit(:target, :message, :send_at) # TODO: добавить  :scheduled_at
+      params.expect(mailing: %i[target message send_at]) # TODO: добавить  :scheduled_at
     end
   end
 end

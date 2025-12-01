@@ -13,6 +13,6 @@ class WebhookController < ApplicationController
   private
 
   def webhook_params
-    params.require(:webhook).permit(:product_id, :product_name, :stock_quantity, :quantity_decrement, :updated_at)
+    params.expect(webhook: %i[product_id product_name stock_quantity quantity_decrement updated_at])
   end
 end

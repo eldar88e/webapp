@@ -87,8 +87,8 @@ module Admin
     end
 
     def product_params
-      params.require(:product).permit(:name, :description, :price, :stock_quantity, :image, :ancestry, :brand,
-                                      :weight, :dosage_form, :package_quantity, :main_ingredient, :old_price)
+      params.expect(product: %i[name description price stock_quantity image ancestry brand
+                                weight dosage_form package_quantity main_ingredient old_price])
     end
   end
 end

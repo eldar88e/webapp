@@ -24,7 +24,7 @@ module Users
     private
 
     def user_email_params
-      params.require(:user).permit(:email)
+      params.expect(user: [:email])
     end
   end
 end

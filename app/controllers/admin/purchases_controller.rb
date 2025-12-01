@@ -69,11 +69,11 @@ module Admin
     end
 
     def purchase_params
-      params.require(:purchase).permit(
-        :notes, :status, :send_to_supplier,
-        purchase_items_attributes: %i[id product_id quantity unit_cost _destroy],
-        expenses_attributes: %i[id amount description _destroy]
-      )
+      params.expect(purchase: [
+                      :notes, :status, :send_to_supplier,
+                      { purchase_items_attributes: %i[id product_id quantity unit_cost _destroy],
+                        expenses_attributes: %i[id amount description _destroy] }
+                    ])
     end
 
     def set_products

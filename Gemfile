@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 ruby '3.4.6'
-gem 'rails', '~> 7.2'
+gem 'rails', '~> 8.0'
 
 gem 'bootsnap', require: false
 gem 'jbuilder'
