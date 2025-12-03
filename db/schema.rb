@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_30_220347) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_03_134245) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -349,6 +349,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_30_220347) do
     t.decimal "old_price", precision: 10, scale: 2
     t.integer "package_quantity"
     t.decimal "price"
+    t.integer "product_subscriptions_count", default: 0, null: false
     t.integer "stock_quantity", default: 0, null: false
     t.datetime "updated_at", null: false
     t.string "weight"

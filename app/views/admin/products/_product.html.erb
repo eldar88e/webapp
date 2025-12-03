@@ -29,7 +29,9 @@
   </td>
   <td class="px-6 py-4"><%= product.parent&.name || 'Без категории' %></td>
 
-  <td class="px-6 py-4"><%= product.favorites.size %></td>
+  <td class="px-6 py-4"><%= product.favorites_count %></td>
+
+  <td class="px-6 py-4"><%= product.product_subscriptions_count %></td>
 
   <td class="px-6 py-1">
     <div class="flex gap-2">
