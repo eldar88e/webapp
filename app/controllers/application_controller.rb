@@ -59,7 +59,7 @@ class ApplicationController < ActionController::Base
   end
 
   def user_params
-    params.expect(user: [STRONG_USER_PARAMS + %i[apartment build]])
+    params.expect(user: STRONG_USER_PARAMS + %i[apartment build])
   end
 
   def filtered_params
