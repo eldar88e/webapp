@@ -42,7 +42,7 @@ COPY . .
 
 # RUN bundle exec rails assets:precompile
 RUN bundle exec bootsnap precompile --gemfile app/ lib/ config/
-# ENTRYPOINT ["/app/bin/docker-entrypoint"]
+# ENTRYPOINT ["./bin/docker-entrypoint"]
 
 RUN addgroup -g 1000 deploy && adduser -u 1000 -G deploy -D -s /bin/sh deploy
 # RUN chown -R deploy:deploy /app # db log storage tmp
