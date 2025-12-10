@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./pagy";
 
 .nav-bar {
   border-bottom-width: 1px;
@@ -184,34 +185,6 @@ body {
   --tw-divide-y-reverse: 0;
   border-bottom-width: calc(1px* var(--tw-divide-y-reverse));
   border-top-width: calc(1px*(1 - var(--tw-divide-y-reverse)));
-}
-
-.pagy {
-  @apply flex space-x-1 font-semibold text-sm text-gray-500 dark:text-gray-300;
-
-  a:not(.gap) {
-    @apply block rounded-lg px-3 py-1 bg-gray-200 dark:bg-gray-700;
-
-    &:hover {
-      @apply bg-gray-300 dark:bg-gray-600;
-    }
-
-    &:not([href]) { /* disabled links */
-      @apply text-gray-300 bg-gray-100 cursor-default dark:text-gray-500 dark:bg-gray-800;
-    }
-
-    &.current {
-      @apply text-white bg-gray-400 dark:bg-gray-500;
-    }
-  }
-
-  label {
-    @apply inline-block whitespace-nowrap bg-gray-200 rounded-lg px-3 py-0.5 dark:bg-gray-700;
-
-    input {
-      @apply bg-gray-100 border-none rounded-md dark:bg-gray-800 dark:text-white;
-    }
-  }
 }
 
 .sidebarBackdrop {

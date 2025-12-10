@@ -76,11 +76,8 @@ module Tg
       end
 
       def unlock_user(user)
-        msg = "User #{user.id} started bot"
-        Rails.logger.info msg
-        TelegramJob.perform_later(msg: msg, id: settings[:test_id])
-        # TODO: убрать со временем уведомление админа
         user.update(started: true, is_blocked: false)
+        Rails.logger.info "User #{user.id} started bot"
       end
 
       def other_message(bot, message)

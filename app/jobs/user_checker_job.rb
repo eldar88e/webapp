@@ -14,9 +14,6 @@ class UserCheckerJob < ApplicationJob
 
   def unblock_user(user)
     user.update(started: true, is_blocked: false)
-    msg = "User #{user.id} started bot with webapp"
-    Rails.logger.info msg
-    TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id))
-    # TODO: убрать со временем уведомление админа
+    Rails.logger.info "User #{user.id} started bot with webapp"
   end
 end
