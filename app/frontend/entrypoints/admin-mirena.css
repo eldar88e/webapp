@@ -1,6 +1,9 @@
+@import "trix/dist/trix.css";
+@import "../styles/actiontext.scss";
 @import "../styles/admin.scss";
 @import "../styles/admin-mirena.scss";
 @import "../styles/notice.scss";
+@import "../styles/pagy.scss";
 
 @source "../../../app/components/**/*.html.slim";
 @source "../../../app/views/**/*.html.erb";
