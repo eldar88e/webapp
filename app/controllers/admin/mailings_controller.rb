@@ -21,7 +21,7 @@ module Admin
       if @mailing.save
         redirect_to admin_mailings_path, notice: t('mailing_success')
       else
-        error_notice(@mailing.errors.full_messages, :unprocessable_entity)
+        error_notice @mailing.errors.full_messages
       end
     end
 

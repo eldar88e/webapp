@@ -25,9 +25,8 @@ module Tg
       end
 
       def save_sticker(_bot, message)
-        user = find_user(message)
-        msg  = message.sticker.emoji
-        user.messages.create(text: msg, tg_msg_id: message.message_id)
+        user = find_user(message.chat.as_json)
+        user.messages.create(text: message.sticker.emoji, tg_msg_id: message.message_id)
       end
 
       def save_video(bot, message)
@@ -62,15 +61,19 @@ module Tg
       end
 
       def process_message(message)
-        user = find_user(message)
+        chat = message.chat.as_json
+        if %(group supergroup).include?(chat['type'])
+          return TelegramJob.perform_later(msg: "Группа: `#{chat['title']}`\nID: `#{chat['id']}`")
+        end
+
+        user = find_user(chat)
         return if message.text == '/start'
 
         user.messages.create(text: message.text, tg_msg_id: message.message_id)
       end
 
-      def find_user(msg)
-        tg_user = msg.chat.as_json
-        user    = User.find_or_create_by_tg(tg_user, true)
+      def find_user(chat)
+        user = User.find_or_create_by_tg(chat, true)
         unlock_user(user) unless user.started
         user
       end

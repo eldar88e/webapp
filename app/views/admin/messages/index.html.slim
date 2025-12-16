@@ -59,7 +59,7 @@
               / = button_to admin_message_path(@current_chat), method: :delete, data: { confirm: 'Вы уверены, что хотите удалить этот чат?', controller: 'confirm', action: 'click->confirm#call' } do
               /   = render Admin::IconComponent.new name: :trash
           - else
-            .text-lg.text-gray-400.italic Нет чата для просмотра
+            .text-lg.text-gray-400.italic.min-h-10 Нет чата для просмотра
 
         = turbo_stream_from "admin_chat_#{@current_chat&.id}"
         .overflow-y-auto.px-2.py-4.md:p-4.h-full id='messages' data-clear-input-target="messages" data-controller="gallery"

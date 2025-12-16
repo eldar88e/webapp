@@ -11,10 +11,10 @@ module Tg
     end
 
     def self.call(markups)
-      new(markups).form_markup
+      new(markups).build_markup
     end
 
-    def form_markup
+    def build_markup
       return if @markups.blank?
 
       prepare_markups

@@ -15,14 +15,12 @@ RSpec.describe ReportService do
 
   describe '.on_unpaid' do
     it 'sends notifications and schedules reminder' do
-      # described_class.on_unpaid(order)
-      # expect(TelegramService).to have_received(:call).with(
-      #   a_string_including("🎉 Ваш заказ №#{order.id}"),
-      #   user.tg_id,
-      #   markup: 'i_paid'
-      # )
-      # expect { described_class.on_unpaid(order) }.to have_enqueued_job(AbandonedOrderReminderJob)
-      #                                                  .with({ 'order_id' => order.id, 'msg_type' => 'one' })
+      described_class.on_unpaid(order)
+      message = user.messages.last
+
+      expect(message.text).to include("🎉 Ваш заказ №#{order.id}")
+      expect(message.is_incoming).to be(false)
+      expect(message.data.dig('markup', 'markup')).to eq('i_paid')
     end
   end
 

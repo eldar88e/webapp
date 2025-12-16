@@ -11,7 +11,7 @@ class AuthController < ApplicationController
     # init_data = URI.decode_www_form(data['initData'].to_s).to_h
     # return render_error_auth if init_data.blank? || init_data['user'].blank?
 
-    auth = Tg::WebAppAuth.new(params['initData'], Setting.fetch_value(:tg_token))
+    auth = Tg::WebAppAuth.new(params['initData'], settings[:tg_token])
 
     if auth.valid?
       sign_in_with_tg_id(auth.user) # init_data['user']

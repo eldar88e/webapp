@@ -29,7 +29,7 @@ module Admin
         @review.attach_photos(review_params[:photos], notify: true)
         redirect_to admin_reviews_path, notice: t('controller.reviews.create')
       else
-        error_notice(@review.errors.full_messages, :unprocessable_entity)
+        error_notice @review.errors.full_messages
       end
     end
 
@@ -41,7 +41,7 @@ module Admin
           success_notice(t('controller.reviews.update'))
         ]
       else
-        error_notice(@review.errors.full_messages, :unprocessable_entity)
+        error_notice @review.errors.full_messages
       end
     end
 

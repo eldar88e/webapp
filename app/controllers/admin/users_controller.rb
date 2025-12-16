@@ -28,7 +28,7 @@ module Admin
           success_notice(t('controller.users.update'))
         ]
       else
-        error_notice(@user.errors.full_messages, :unprocessable_entity)
+        error_notice @user.errors.full_messages
       end
     end
 

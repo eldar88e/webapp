@@ -41,7 +41,7 @@ class AbandonedOrderReminderJob
     if order.tg_msg.present?
       TelegramMsgDelService.remove(order.user.tg_id, order.msg_id)
     else
-      order.user.messages.find_by(id: order.msg_id)&.destroy!
+      order.user.messages.find_by(id: order.msg_id)&.destroy
     end
   end
 
