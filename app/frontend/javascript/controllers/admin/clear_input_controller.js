@@ -21,6 +21,7 @@ export default class extends Controller {
       this.inputTarget.value = "";
       this.attachTarget.value = "";
       this.attachTarget.files = null;
+      this.inputTarget.style.height = "auto";
       setTimeout(() => {
         this.messagesTarget.scrollTop = this.messagesTarget.scrollHeight;
       }, 100);
