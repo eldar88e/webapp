@@ -218,7 +218,6 @@ body {
 }
 
 body.aside-hide {
-
   .close {
     display: block;
     @media (min-width: 1024px) {
@@ -432,23 +431,6 @@ body.aside-hide {
   @apply bg-red-700 hover:bg-red-800 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800;
 }
 
-.chats {
-  @media (max-width: 768px) {
-    transition: all 0.5s;
-    position: absolute;
-    width: 90%;
-    left: -90%;
-    height: 100%;
-    z-index: 1;
-  }
-
-  &.open {
-    @media (max-width: 768px) {
-      left: 0;
-    }
-  }
-}
-
 .admin-messages {
   height: calc(100vh - 15rem);
 
@@ -469,6 +451,37 @@ body.aside-hide {
       .btn-delete {
         opacity: 1;
         visibility: visible;
+      }
+    }
+  }
+
+  .chats {
+    @media (max-width: 768px) {
+      transition: all 0.5s;
+      position: absolute;
+      width: 90%;
+      left: -90%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    &.open {
+      @media (max-width: 768px) {
+        left: 0;
+      }
+    }
+  }
+
+  .sender {
+    @apply flex items-center gap-2 p-3 border-t dark:bg-gray-800 bg-white border-gray-200 dark:border-gray-700;
+
+    textarea {
+      @apply flex-1 border-none outline-none text-gray-900 dark:text-white;
+
+      &:hover, &:focus {
+        border: none;
+        outline: none;
+        box-shadow: none;
       }
     }
   }

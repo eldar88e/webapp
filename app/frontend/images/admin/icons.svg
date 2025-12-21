@@ -5,12 +5,12 @@
   <symbol id="check" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>
   </symbol>
-  <svg id="uncheck" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <symbol id="uncheck" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <rect width="12" height="12" x="6" y="6" stroke="currentColor" stroke-linejoin="round" stroke-width="2" rx="1"/>
-  </svg>
-  <svg id="clip" aria-hidden="true" fill="none" viewBox="0 0 24 24">
+  </symbol>
+  <symbol id="clip" aria-hidden="true" fill="none" viewBox="0 0 24 24">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8v8a5 5 0 1 0 10 0V6.5a3.5 3.5 0 1 0-7 0V15a2 2 0 0 0 4 0V8"/>
-  </svg>
+  </symbol>
   <symbol id="send" aria-hidden="true" viewBox="0 0 18 20">
     <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z"></path>
   </symbol>
