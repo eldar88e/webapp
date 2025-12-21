@@ -1,11 +1,10 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-
   connect() {
     this.lineHeight = parseFloat(
-      window.getComputedStyle(this.element).lineHeight
-    )
+      window.getComputedStyle(this.element).lineHeight,
+    );
     this.maxLines = 5;
     this.maxHeight = this.lineHeight * this.maxLines;
   }
