@@ -1,5 +1,4 @@
-= form_with model: @purchase, url: (method == :patch ? admin_purchase_path(@purchase) : admin_purchases_path),
-        class: 'admin-form' do |form|
+= form_with model: [:admin, @purchase], class: 'admin-form' do |form|
   - if @purchase.persisted?
     .mb-5
       = form.label :status
@@ -25,15 +24,15 @@
         div class="relative w-11 h-6 bg-gray-200 ring-4 ring-transparent peer-focus:ring-blue-300 peer-focus:dark:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"
         span class="ms-0 md:ms-3 text-sm font-medium text-gray-900 dark:text-gray-300" Отправить поставщику
 
-  div data-controller="purchase-items"
+  div data-controller="purchase"
     h2.leading-8.font-semibold.text-gray-900.dark:text-white.mb-2.mt-7 Содержимое
     .flex.flex-wrap.mb-1.text-gray-900.dark:text-white
       .w-1/3.px-1.5 Товар
       .w-1/3.px-1.5 Кол-во
       .w-1/3.px-1.5 Цена
-    div data-purchase-items-target="items"
+    div data-purchase-target="items"
       = form.fields_for :purchase_items do |purchase_items_fields|
-        .flex.flex-wrap.mb-5 data-purchase-items-target="item"
+        .flex.flex-wrap.mb-5 data-purchase-target="item"
           .w-1/3.px-1.5
             = purchase_items_fields.select :product_id, @products.map { |p| [p.name, p.id] }, { include_blank: 'Выберите товар' }, required: true
           .w-1/3.px-1.5
@@ -41,14 +40,14 @@
           .w-1/3.px-1.5.flex.items-center.gap-2
             = purchase_items_fields.number_field :unit_cost, min: 0, required: true, placeholder: 'Цена'
             = purchase_items_fields.hidden_field :_destroy
-            button.btn.btn-outline type="button" data-action="click->purchase-items#removeItem"
+            button.btn.btn-outline type="button" data-action="click->purchase#remove"
               = render IconComponent.new name: :trash
 
     .mb-5
-      button.btn type="button" data-action="click->purchase-items#add" Добавить товар
+      button.btn type="button" data-action="click->purchase#add" Добавить товар
 
-    template data-purchase-items-target="template"
-      .flex.flex-wrap.mb-5 data-purchase-items-target="item" data-new="true"
+    template data-purchase-target="template"
+      .flex.flex-wrap.mb-5 data-purchase-target="item" data-new="true"
         = form.fields_for :purchase_items, PurchaseItem.new, child_index: "NEW_RECORD" do |new_pf|
           .w-1/3.px-1.5
             = new_pf.select :product_id, @products.map { |p| [p.name, p.id] }, { include_blank: 'Выберите товар' }, required: true
@@ -57,35 +56,35 @@
           .w-1/3.px-1.5.flex.items-center.gap-2
             = new_pf.number_field :unit_cost, value: nil, min: 0, required: true, placeholder: 'Цена'
             = new_pf.hidden_field :_destroy
-            button.btn.btn-outline type="button" data-action="click->purchase-items#removeItem"
+            button.btn.btn-outline type="button" data-action="click->purchase#remove"
               = render IconComponent.new name: :trash
 
 
   / - if %w[initialized sent_to_supplier cancelled].exclude? @purchase.status
-  div data-controller="purchase-expenses"
+  div data-controller="purchase"
     h2.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 Расходы
-    div data-purchase-expenses-target="items"
+    div data-purchase-target="items"
       = form.fields_for :expenses do |expense_fields|
-        .flex.flex-wrap.mb-5 data-purchase-expenses-target="item"
+        .flex.flex-wrap.mb-5 data-purchase-target="item"
           .w-2/3.px-1.5
             = expense_fields.text_field :description, placeholder: "Описание расхода"
           .w-1/3.px-1.5.flex.items-center.gap-2
             = expense_fields.number_field :amount, placeholder: "Сумма", min: 0
             = expense_fields.hidden_field :_destroy
-            button.btn.btn-outline type="button" data-action="click->purchase-expenses#remove"
+            button.btn.btn-outline type="button" data-action="click->purchase#remove"
               = render IconComponent.new(name: :trash)
 
-    button.btn.mt-2.mb-5 type="button" data-action="click->purchase-expenses#add" Добавить расход
+    button.btn.mt-2.mb-5 type="button" data-action="click->purchase#add" Добавить расход
 
-    template data-purchase-expenses-target="template"
-      .flex.flex-wrap.mb-5 data-new="true"
+    template data-purchase-target="template"
+      .flex.flex-wrap.mb-5 data-purchase-target="item" data-new="true"
         = form.fields_for :expenses, Expense.new, child_index: "NEW_RECORD" do |new_expense_fields|
           .w-2/3.px-1.5
-            = new_expense_fields.text_field :description, placeholder: "Описание расхода"
+            = new_expense_fields.text_field :description, placeholder: 'Описание расхода'
           .w-1/3.px-1.5.flex.items-center.gap-2
-            = new_expense_fields.number_field :amount, placeholder: "Сумма", min: 0
+            = new_expense_fields.number_field :amount, placeholder: 'Сумма', min: 0
             = new_expense_fields.hidden_field :_destroy
-            button.btn.btn-outline type="button" data-action="click->purchase-expenses#remove"
+            button.btn.btn-outline type="button" data-action="click->purchase#remove"
               = render IconComponent.new(name: :trash)
 
   = form.submit 'Сохранить', class: 'btn'

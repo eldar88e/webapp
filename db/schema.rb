@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_03_134245) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_23_134051) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -365,7 +365,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_03_134245) do
     t.decimal "unit_cost", precision: 10, scale: 2, default: "0.0"
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_purchase_items_on_product_id"
-    t.index ["purchase_id", "product_id"], name: "index_purchase_items_on_purchase_id_and_product_id", unique: true
+    t.index ["purchase_id", "product_id", "unit_cost"], name: "index_purchase_items_unique_by_price", unique: true
   end
 
   create_table "purchases", force: :cascade do |t|

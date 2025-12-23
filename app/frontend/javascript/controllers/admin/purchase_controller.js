@@ -12,10 +12,11 @@ export default class extends Controller {
   }
 
   remove(event) {
-    const item = event.target.closest("[data-purchase-expenses-target='item']");
-    const destroyField = item.querySelector("input[name*='_destroy']");
-    if (destroyField) {
-      destroyField.value = 1;
+    const item = event.target.closest("[data-purchase-target='item']");
+    if (item.dataset.new === "true") {
+      item.remove();
+    } else {
+      item.querySelector("input[name*='_destroy']").value = "1";
       item.style.display = "none";
     }
   }

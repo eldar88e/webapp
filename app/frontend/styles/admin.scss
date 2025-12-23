@@ -34,7 +34,7 @@
 }
 
 body {
-  .close {
+  .close-menu {
     display: none;
   }
 
@@ -218,7 +218,7 @@ body {
 }
 
 body.aside-hide {
-  .close {
+  .close-menu {
     display: block;
     @media (min-width: 1024px) {
       display: none;

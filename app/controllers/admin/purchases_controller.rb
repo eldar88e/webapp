@@ -45,7 +45,7 @@ module Admin
       if @purchase.save
         redirect_to admin_purchases_path, notice: t('.create')
       else
-        error_notice(@purchase.errors.full_messages)
+        error_notice @purchase.errors.full_messages
       end
     end
 
@@ -53,7 +53,7 @@ module Admin
       if @purchase.update(purchase_params)
         redirect_to admin_purchases_path, notice: t('.update')
       else
-        error_notice(@purchase.errors.full_messages)
+        error_notice @purchase.errors.full_messages
       end
     end
 
@@ -69,11 +69,21 @@ module Admin
     end
 
     def purchase_params
-      params.expect(purchase: [
-                      :notes, :status, :send_to_supplier,
-                      { purchase_items_attributes: %i[id product_id quantity unit_cost _destroy],
-                        expenses_attributes: %i[id amount description _destroy] }
-                    ])
+      # params.expect(purchase: [
+      #                 :notes, :status, :send_to_supplier,
+      #                 { purchase_items_attributes: %i[id product_id quantity unit_cost _destroy],
+      #                   expenses_attributes: %i[id amount description _destroy] }
+      #               ])
+
+      # rubocop:disable Rails/Rails/StrongParametersExpect
+      params.require(:purchase).permit(
+        :notes,
+        :status,
+        :send_to_supplier,
+        purchase_items_attributes: %i[id product_id quantity unit_cost _destroy],
+        expenses_attributes: %i[id amount description _destroy]
+      )
+      # rubocop:enable Rails/Rails/StrongParametersExpect
     end
 
     def set_products
