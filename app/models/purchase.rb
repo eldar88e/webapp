@@ -31,7 +31,7 @@ class Purchase < ApplicationRecord
 
   after_commit :set_exchange_rate, on: :update, if: -> { status == 'sent_to_supplier' }
   after_commit :clear_last_purchase_cache
-  after_commit :send_notification, if: -> { status != 'initialized' }
+  after_commit :send_notification, on: %i[create update], if: -> { status != 'initialized' }
 
   def recalc_totals
     self.subtotal = purchase_items.sum(&:line_total)
