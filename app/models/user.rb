@@ -35,9 +35,7 @@ class User < ApplicationRecord
 
   before_update :reset_confirmation_if_email_changed, if: :will_save_change_to_email?
   before_update :store_bonus_balance_diff, if: -> { bonus_balance_changed? }
-  # after_update :resend_confirmation_email, if: :saved_change_to_email?
-  after_update :check_and_upgrade_account_tier
-  after_commit :notify_update_account_tier, if: -> { previous_changes[:account_tier_id].present? }
+
   after_commit :notify_bonus_user, on: :update, if: -> { bonus_balance_diff.present? && bonus_balance_diff.positive? }
   after_commit :resend_confirmation_email, on: :update, if: -> { previous_changes[:email].present? }
   after_commit :send_password, on: :update, if: -> { !password_sent? && previous_changes[:confirmed_at].present? }
@@ -52,14 +50,6 @@ class User < ApplicationRecord
 
   def manager?
     role == 'manager'
-  end
-
-  def add_bonus(amount, reason)
-    transaction do
-      bonus_logs.create!(bonus_amount: amount, reason: reason)
-      self.bonus_balance += amount
-      save!
-    end
   end
 
   def admin_or_moderator_or_manager?
@@ -158,18 +148,6 @@ class User < ApplicationRecord
 
   def resend_confirmation_email
     Devise::Mailer.confirmation_instructions(self, confirmation_token).deliver_later
-  end
-
-  def check_and_upgrade_account_tier
-    return if !saved_change_to_attribute?(:order_count) || order_count.zero?
-    return update(account_tier: AccountTier.first_level) if account_tier.blank?
-
-    next_tier = account_tier.next
-    update(account_tier: next_tier) if next_tier && order_count >= next_tier.order_threshold
-  end
-
-  def notify_update_account_tier
-    AccountTierNoticeJob.set(wait: 0.3.seconds).perform_later(id)
   end
 
   def notify_bonus_user

@@ -106,7 +106,7 @@ class Order < ApplicationRecord
 
   def up_order_count
     bonus_threshold = Setting.fetch_value(:bonus_threshold).to_i
-    user.update(order_count: user.order_count + 1) if bonus_threshold.positive? && form_subtotal >= bonus_threshold
+    AccountTierService.call(user) if bonus_threshold.positive? && form_subtotal >= bonus_threshold
   end
 
   def cache_status
