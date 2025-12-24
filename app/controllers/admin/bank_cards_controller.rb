@@ -17,7 +17,7 @@ module Admin
     private
 
     def bank_card_params
-      params.require(:bank_card).permit(:name, :number, :fio, :active)
+      params.expect(bank_card: %i[name number fio active])
     end
 
     def form_totals_by_card

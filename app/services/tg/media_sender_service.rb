@@ -49,7 +49,7 @@ module Tg
       message_count.times do
         text_part = next_text_part
         @result   = bot.api.send_message(
-          chat_id: @chat_id, text: text_part, parse_mode: 'MarkdownV2', reply_markup: form_markup
+          chat_id: @chat_id, text: text_part, parse_mode: 'MarkdownV2', reply_markup: build_markup
         )
       end
     end
@@ -79,17 +79,17 @@ module Tg
     def send_data(bot, data)
       if @data[:type].start_with?('image')
         bot.api.send_photo(
-          chat_id: @chat_id, photo: data, caption: @message, parse_mode: 'MarkdownV2', reply_markup: form_markup
+          chat_id: @chat_id, photo: data, caption: @message, parse_mode: 'MarkdownV2', reply_markup: build_markup
         )
       elsif @data[:type].start_with?('video')
         bot.api.send_video(
-          chat_id: @chat_id, video: data, caption: @message, parse_mode: 'MarkdownV2', reply_markup: form_markup
+          chat_id: @chat_id, video: data, caption: @message, parse_mode: 'MarkdownV2', reply_markup: build_markup
         )
       end
       # TODO: Добавить для отправки pdf и др. типов файлов: elsif @data[:type].start_with?('application')
     end
 
-    def form_markup
+    def build_markup
       Tg::MarkupService.call(@data[:markup])
     end
 

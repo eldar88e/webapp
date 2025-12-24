@@ -59,16 +59,17 @@
               / = button_to admin_message_path(@current_chat), method: :delete, data: { confirm: 'Вы уверены, что хотите удалить этот чат?', controller: 'confirm', action: 'click->confirm#call' } do
               /   = render Admin::IconComponent.new name: :trash
           - else
-            .text-lg.text-gray-400.italic Нет чата для просмотра
+            .text-lg.text-gray-400.italic.min-h-10 Нет чата для просмотра
 
         = turbo_stream_from "admin_chat_#{@current_chat&.id}"
         .overflow-y-auto.px-2.py-4.md:p-4.h-full id='messages' data-clear-input-target="messages" data-controller="gallery"
           = render partial: '/admin/messages/messages'
 
         - if @current_chat
-          = form_with model: Message.new, url: admin_messages_path, class: "flex items-center gap-2 px-4 py-3.5 border-t dark:bg-gray-800 bg-white border-gray-200 dark:border-gray-700", data: { action: 'submit->clear-input#clear' } do |f|
+          = form_with model: Message.new, url: admin_messages_path, class: "sender", data: { action: 'submit->clear-input#clear' } do |f|
             = f.hidden_field :user_id, value: @current_chat.id
-            = f.text_field :text, placeholder: "Введите сообщение...", class: "flex-1 rounded border-none focus:border-none focus:outline-none text-gray-900 dark:text-white", data: { clear_input_target: 'input' }
+            = f.text_area :text, rows: 1, placeholder: 'Введите сообщение...',
+                    data: { controller: 'auto-resize', action: 'input->auto-resize#resize', clear_input_target: 'input' }
             .relative.w-6.h-6.text-blue-400.hover:text-blue-500.transition.cursor-pointer
               .absolute.left-0.top-0
                 = render Admin::IconComponent.new name: :clip, width: 24

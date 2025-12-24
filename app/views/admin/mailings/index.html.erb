@@ -1,5 +1,7 @@
+<% content_for :title, 'Рассылки' %>
+
 <div class="pt-6 px-4">
-  <h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-10">Рассылки</h1>
+  <h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-10"><%= content_for(:title) %></h1>
 
   <%= link_to 'Создать', new_admin_mailing_path, class: 'btn',
               data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false } %>

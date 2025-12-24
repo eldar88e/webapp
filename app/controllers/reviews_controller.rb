@@ -45,7 +45,7 @@ class ReviewsController < ApplicationController
   end
 
   def review_params
-    params.require(:review).permit(:content, :rating, photos: [])
+    params.expect(review: [:content, :rating, { photos: [] }])
   end
 
   def detect_device

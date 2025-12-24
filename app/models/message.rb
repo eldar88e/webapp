@@ -1,6 +1,8 @@
 class Message < ApplicationRecord
   belongs_to :user, primary_key: :tg_id, foreign_key: :tg_id, inverse_of: :messages
 
+  before_validation { self.text = text&.strip }
+
   after_create_commit :send_to_telegram, if: -> { !is_incoming? }
   after_create_commit :broadcast_admin_chat
   after_create_commit :notify_admin, if: -> { is_incoming? }

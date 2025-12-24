@@ -9,7 +9,7 @@ module Admin
     private
 
     def support_entry_params
-      params.require(:support_entry).permit(:question, :answer)
+      params.expect(support_entry: %i[question answer])
     end
   end
 end

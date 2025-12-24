@@ -9,14 +9,14 @@ module Admin
     def new
       @resource = resource_class.new
       render turbo_stream: [
-        turbo_stream.update(:modal_title, "Добавить #{resource_name.downcase}"),
+        turbo_stream.update(:modal_title, action_title),
         turbo_stream.update(:modal_body, partial: form_partial, locals: { method: :post })
       ]
     end
 
     def edit
       render turbo_stream: [
-        turbo_stream.update(:modal_title, "Редактировать #{resource_name.downcase}"),
+        turbo_stream.update(:modal_title, action_title),
         turbo_stream.update(:modal_body, partial: form_partial, locals: { method: :patch })
       ]
     end
@@ -77,6 +77,19 @@ module Admin
 
     def resource_params
       send "#{resource_class.model_name.param_key}_params"
+    end
+
+    def resource_name_accusative
+      I18n.t(
+        "activerecord.models.#{resource_class.model_name.i18n_key}.accusative",
+        default: resource_name.downcase
+      )
+    end
+
+    def action_title
+      return "Добавить #{resource_name_accusative}" if action_name == 'new'
+
+      "Редактировать #{resource_name_accusative} ID: #{@resource.id}"
     end
   end
 end

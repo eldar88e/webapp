@@ -18,19 +18,20 @@ class Purchase < ApplicationRecord
   }, default: :initialized
 
   before_validation :set_default_currency
+  before_validation :apply_send_to_supplier, if: -> { send_to_supplier == '1' }
+
   validates :currency, presence: true
 
   before_save :recalc_totals
   before_save :stamp_status_timestamps
 
   after_create :set_exchange_rate
-  after_create :sent_to_supplier!, if: -> { send_to_supplier == '1' }
   after_update :update_product_stock, if: -> { can_update_stock? }
   after_update :deduct_product_stock, if: -> { can_restock? }
 
   after_commit :set_exchange_rate, on: :update, if: -> { status == 'sent_to_supplier' }
   after_commit :clear_last_purchase_cache
-  after_commit :send_notification, on: :update, if: -> { status != 'initialized' }
+  after_commit :send_notification, on: %i[create update], if: -> { status != 'initialized' }
 
   def recalc_totals
     self.subtotal = purchase_items.sum(&:line_total)
@@ -55,10 +56,9 @@ class Purchase < ApplicationRecord
     self.currency ||= 'TRY'
   end
 
-  def sent_to_supplier!
+  def apply_send_to_supplier
     self.status = :sent_to_supplier
     self.sent_to_supplier_at = Time.current
-    save!
   end
 
   def send_notification

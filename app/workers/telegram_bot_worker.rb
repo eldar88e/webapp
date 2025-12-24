@@ -1,7 +1,7 @@
 require 'telegram/bot'
 
 class TelegramBotWorker
-  include Sidekiq::Worker
+  include Sidekiq::Job
 
   sidekiq_options queue: 'telegram_bot', retry: true
 

@@ -3,7 +3,7 @@
 - bubble_cls = incoming ? "rounded-r-xl rounded-bl-xl" : "rounded-l-xl rounded-br-xl"
 - time_align = incoming ? "text-left" : "text-right"
 
-.mb-6.flex.gap-3 class="#{align_cls} message" id="#{dom_id message}"
+.mb-4.flex.gap-3 class="#{align_cls} message" id="#{dom_id message}"
   - if incoming
     = @user ||= render partial: '/layouts/partials/avatar', locals: { user: message.user }
   - else
@@ -13,7 +13,7 @@
       = render Admin::IconComponent.new name: :trash
 
   .flex.flex-col class="max-w-[75%]"
-    .text-xs.text-slate-400.my-1.flex.gap-1
+    .text-xs.text-slate-400.mb-1.flex.gap-1
       = message.is_incoming ? "Входящее" : "Исходящее"
       div class="#{time_align}"
         time data-controller="timeago" data-timeago-locale-value="ru" title="#{format_date message.created_at}" datetime="#{message.created_at.iso8601}"

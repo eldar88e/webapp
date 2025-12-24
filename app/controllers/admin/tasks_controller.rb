@@ -64,9 +64,9 @@ module Admin
     end
 
     def task_params
-      params.require(:task).permit(
-        :title, :priority, :user_id, :assignee_id, :start_date, :due_date, :stage, :category, :task_type,
-        :deadline_notification_days, :position, :description, :price, images: [], files: []
+      params.expect(
+        task: [:title, :priority, :user_id, :assignee_id, :start_date, :due_date, :stage, :category, :task_type,
+               :deadline_notification_days, :position, :description, :price, { images: [], files: [] }]
       )
     end
 

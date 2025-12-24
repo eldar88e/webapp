@@ -74,6 +74,11 @@
                 <%= render IconComponent.new name: :unfavorite %>
               <% end %>
             </th>
+            <th scope="col" class="px-4 py-3 min-w-10">
+              <%= sort_link(@q_products, :product_subscriptions_count, data: { turbo_prefetch: false }, class: 'flex items-center gap-0.5') do %>
+                <%= render Admin::IconComponent.new name: :reply %>
+              <% end %>
+            </th>
 
             <th scope="col" class="px-6 py-3">Действия</th>
           </tr>

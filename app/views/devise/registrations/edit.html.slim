@@ -66,7 +66,7 @@
         span Админка
       .right-arrow
         = render IconComponent.new name: :right
-  - if current_user.password_sent?
+  - if current_user.confirmed_at.present?
     button type="button" class="btn btn-big btn-secondary flex justify-between items-center mt-2" data-controller="modal" data-action="click->modal#openPassword"
       .flex.justify-center.gap-2.items-center
         = render IconComponent.new name: :profile

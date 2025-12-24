@@ -13,7 +13,7 @@ class ProductSubscriptionsController < ApplicationController
         success_notice('Вы подписались на уведомления о поступлении товара.')
       ]
     else
-      error_notice(subscription.errors.full_messages, :unprocessable_entity)
+      error_notice subscription.errors.full_messages
     end
   end
 

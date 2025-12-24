@@ -28,7 +28,7 @@ module Admin
           success_notice(t('controller.users.update'))
         ]
       else
-        error_notice(@user.errors.full_messages, :unprocessable_entity)
+        error_notice @user.errors.full_messages
       end
     end
 
@@ -54,7 +54,7 @@ module Admin
       base_params = %i[first_name middle_name last_name phone_number address postal_code street
                        home apartment build email username account_tier_id]
       base_params += %i[tg_id] if current_user.admin? # :role
-      params.require(:user).permit(*base_params)
+      params.expect(user: [*base_params])
     end
   end
 end
