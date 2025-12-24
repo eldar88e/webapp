@@ -62,14 +62,17 @@ module Tg
 
       def process_message(message)
         chat = message.chat.as_json
-        if %(group supergroup).include?(chat['type'])
-          return TelegramJob.perform_later(msg: "Группа: `#{chat['title']}`\nID: `#{chat['id']}`")
-        end
+        return send_admin(chat, message.text) if %w[group supergroup].include?(chat['type'])
 
         user = find_user(chat)
         return if message.text == '/start'
 
         user.messages.create(text: message.text, tg_msg_id: message.message_id)
+      end
+
+      def send_admin(chat, message)
+        msg = "Группа: `#{chat['title']}`\nID: `#{chat['id']}`\n\n#{message}"
+        TelegramJob.perform_later(msg: msg, id: settings[:admin_ids])
       end
 
       def find_user(chat)
