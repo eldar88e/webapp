@@ -29,11 +29,12 @@ class ApplicationJob < ActiveJob::Base
     return if business.blank?
 
     msg = attrs[:started] == false ? 'не нажатия на старт!' : 'блокировки бота клиентом!'
-    notify_admin(msg)
+    notify_admin(msg, user)
   end
 
-  def notify_admin(message)
-    msg = 'Клиенту не пришло бизнес сообщение по причине'
+  def notify_admin(message, user)
+    client_name = user.username.present? ? "@#{user.username}" : "ID ##{user.id}"
+    msg = "Клиенту #{client_name} не пришло бизнес сообщение по причине"
     TelegramService.call("#{msg} #{message}", Setting.fetch_value(:test_id))
   end
 

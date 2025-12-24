@@ -11,7 +11,8 @@ class ConsumerSenderTgJob < ApplicationJob
 
   def update_entities(args, result)
     user = User.find_by(tg_id: args[:id])
-    return limit_user_privileges(result, user, args[:business]) unless result.instance_of? Telegram::Bot::Types::Message
+    business = args.dig(:data, :business)
+    return limit_user_privileges(result, user, business) unless result.instance_of?(Telegram::Bot::Types::Message)
 
     update_message(args, result)
     user.update(is_blocked: false, started: true)
