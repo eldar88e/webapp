@@ -3,7 +3,7 @@ module Admin
     ANALYTICS_CACHE_TIME = 10.minutes
 
     def index
-      if ChartsService.instance_methods(false).include?(params[:type].to_sym)
+      if ChartsService.method_defined?(params[:type].to_sym, false)
         render json: process_cache(params[:type])
       else
         render json: { error: 'Invalid type parameter' }, status: :unprocessable_content

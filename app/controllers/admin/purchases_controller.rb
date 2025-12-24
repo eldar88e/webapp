@@ -75,7 +75,7 @@ module Admin
       #                   expenses_attributes: %i[id amount description _destroy] }
       #               ])
 
-      # rubocop:disable Rails/Rails/StrongParametersExpect
+      # rubocop:disable Rails/StrongParametersExpect
       params.require(:purchase).permit(
         :notes,
         :status,
@@ -83,7 +83,7 @@ module Admin
         purchase_items_attributes: %i[id product_id quantity unit_cost _destroy],
         expenses_attributes: %i[id amount description _destroy]
       )
-      # rubocop:enable Rails/Rails/StrongParametersExpect
+      # rubocop:enable Rails/StrongParametersExpect
     end
 
     def set_products
