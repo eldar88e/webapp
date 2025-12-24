@@ -7,13 +7,12 @@ namespace :admin do
   resources :mailings
   resources :analytics, only: :index
   resources :messages, only: %i[index create destroy] # TODO: delete all messages
-  resources :support_entries, only: %i[index new create edit update destroy]
+  resources :support_entries, only: %i[index new create edit update destroy] # == except: :show
   resources :reviews
   resources :product_subscriptions, only: %i[index destroy]
   resources :bank_cards, only: %i[index new create edit update]
   get '/bank_cards/statistics', to: 'bank_cards#statistics'
   resources :attachments, only: %i[destroy]
-  resources :answers, only: :index
   resources :bonus_logs, only: :index
   resources :purchases
   resources :purchase_items, only: %i[create update]
@@ -22,6 +21,8 @@ namespace :admin do
     resources :comments, only: %i[create]
   end
   patch '/tasks/:id/move', to: 'tasks#move'
-  resources :expenses, only: %i[index new create edit update destroy]
+  resources :expenses, except: :show
   resources :errors, only: %i[index show]
+  resources :questions, except: :show
+  resources :answers, only: :index
 end

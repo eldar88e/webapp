@@ -1,0 +1,16 @@
+tr id=dom_id(resource) class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+  td.px-6.py-4
+    = resource.id
+  td class="px-2 py-4 whitespace-normal"
+    = resource.text
+  td.px-6.py-4
+    = format_date resource.created_at
+  td.px-6.py-2.flex
+    = link_to edit_admin_question_path(resource), class: 'btn me-2',
+            data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false } do
+      = render Admin::IconComponent.new name: :edit
+
+    = button_to admin_question_path(resource), method: :delete, class: 'btn btn-danger',
+            data: { confirm: 'Вы уверены, что хотите удалить данный вопрос?',
+                    controller: 'confirm', action: 'click->confirm#call' } do
+      = render Admin::IconComponent.new name: :trash

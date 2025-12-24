@@ -1,0 +1,29 @@
+= form_with model: [:admin, @resource], class: 'admin-form', data: { action: 'submit->modal#close' } do |form|
+  .mb-5
+    = form.label :text
+    = form.text_field :text
+
+  div data-controller="purchase"
+    h2.leading-8.font-semibold.text-gray-900.dark:text-white.mb-4 Варианты ответов
+    div data-purchase-target="items"
+      = form.fields_for :answer_options do |options|
+        .flex.flex-wrap.mb-5 data-purchase-target="item" class="-mx-1.5"
+          .px-1.5.flex-1
+            = options.text_field :text, placeholder: 'Вариант ответа'
+            = options.hidden_field :_destroy
+          .px-1.5.flex.items-center.gap-2
+            button.btn.btn-outline type="button" data-action="click->purchase#remove"
+              = render IconComponent.new(name: :trash)
+
+    button.btn.mt-2.mb-5 type="button" data-action="click->purchase#add" Добавить вариант ответа
+
+    template data-purchase-target="template"
+      = form.fields_for :answer_options, AnswerOption.new, child_index: "NEW_RECORD" do |new_option|
+        .flex.flex-wrap.mb-5 data-purchase-target="item" data-new="true" class="-mx-1.5"
+          .px-1.5.flex-1
+            = new_option.text_field :text, placeholder: 'Вариант ответа', required: true
+          .px-1.5
+            button.btn.btn-outline type="button" data-action="click->purchase#remove"
+              = render IconComponent.new(name: :trash)
+
+  = form.submit @resource.new_record? ? 'Создать' : 'Сохранить', class: 'btn'

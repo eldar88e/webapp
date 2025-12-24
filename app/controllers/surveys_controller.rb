@@ -1,13 +1,13 @@
 class SurveysController < ApplicationController
   def index
-    return redirect_to root_path, notice: t('.success') if current_user.answers.size == 3
+    return redirect_to root_path, notice: t('.success') if current_user.answers.size == Question.count
 
     @questions = Question.includes([:answer_options]).order(:created_at)
   end
 
   def add_answers
     save_answers
-    current_user.update(email: params[:answer][:email]) if params[:answer][:email].present?
+    # current_user.update(email: params[:answer][:email]) if params[:answer][:email].present?
 
     redirect_to root_path, notice: t('.success')
   end

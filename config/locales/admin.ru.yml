@@ -43,6 +43,10 @@ ru:
       create: "Вопрос-ответ успешно создан."
       update: "Вопрос-ответ успешно обновлен."
       destroy: "Вопрос-ответ успешно удален."
+    questions:
+      create: "Вопрос успешно создан."
+      update: "Вопрос успешно обновлен."
+      destroy: "Вопрос успешно удален."
   purchase:
     statuses:
       initialized: "Инициализирован"
@@ -83,6 +87,7 @@ ru:
       bank_card: "Банковская карта"
       support_entry: "Вопрос-ответ"
       setting: "Настройка"
+      question: "Вопрос"
     attributes:
       task:
         title: "Заголовок"
@@ -108,3 +113,5 @@ ru:
       support_entry:
         question: "Вопрос"
         answer: "Ответ"
+      question:
+        text: "Текст вопроса"
