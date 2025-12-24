@@ -26,7 +26,7 @@ class AccountTierService
 
   def upgrade_account_tier_if_needed
     new_tier = next_tier
-    return if new_tier.nil? || user.account_tier_id == new_tier.id
+    return unless new_tier
 
     # rubocop:disable Rails/SkipsModelValidations
     user.update_column(:account_tier_id, new_tier.id)
@@ -35,12 +35,7 @@ class AccountTierService
   end
 
   def next_tier
-    return AccountTier.first_level if user.account_tier.blank?
-
-    tier = user.account_tier.next
-    return unless tier
-    return if user.order_count < tier.order_threshold
-
-    tier
+    tier = user.next_account_tier
+    tier.nil? || user.order_count < tier.order_threshold ? nil : tier
   end
 end
