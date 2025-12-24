@@ -11,12 +11,9 @@ class ConsumerSenderTgJob < ApplicationJob
 
   def update_entities(args, result)
     user = User.find_by(tg_id: args[:id])
-    return limit_user_privileges(result, user) unless result.instance_of?(Telegram::Bot::Types::Message)
+    return limit_user_privileges(result, user, args[:business]) unless result.instance_of? Telegram::Bot::Types::Message
 
-    message   = Message.find(args[:msg_id])
-    msg_attrs = { tg_msg_id: result.message_id }
-    save_file_id(args, msg_attrs, message, result) if args[:data][:tg_file_id].blank? && args[:data][:file].present?
-    message.update(msg_attrs)
+    update_message(args, result)
     user.update(is_blocked: false, started: true)
   end
 
@@ -35,5 +32,12 @@ class ConsumerSenderTgJob < ApplicationJob
     elsif media_file.video?
       result.video.file_id
     end
+  end
+
+  def update_message(args, result)
+    message   = Message.find(args[:msg_id])
+    msg_attrs = { tg_msg_id: result.message_id }
+    save_file_id(args, msg_attrs, message, result) if args[:data][:tg_file_id].blank? && args[:data][:file].present?
+    message.update(msg_attrs)
   end
 end

@@ -7,17 +7,34 @@ class ApplicationJob < ActiveJob::Base
 
   private
 
-  def limit_user_privileges(error, user)
-    unless error.instance_of?(Telegram::Bot::Exceptions::ResponseError)
-      Rails.logger.error("Telegram new sending error: #{error.message}")
-      return AdminMailer.send_error(error.message, error.full_message).deliver_later
-    end
-
-    if error.message.include?('chat not found')
-      user.update(started: false)
+  def limit_user_privileges(error, user, business = nil)
+    if !error.instance_of?(Telegram::Bot::Exceptions::ResponseError)
+      notify_email_admin(error, 'Telegram new sending error')
+    elsif error.message.include?('chat not found')
+      update_user({ started: false }, user, business)
     elsif error.message.include?('bot was blocked')
-      user.update(is_blocked: true)
+      update_user({ is_blocked: true }, user, business)
+    else
+      notify_email_admin(error, 'Telegram new sending type error')
     end
+  end
+
+  def notify_email_admin(error, msg)
+    Rails.logger.error("#{msg}: #{error.message}")
+    AdminMailer.send_error(error.message, error.full_message).deliver_later
+  end
+
+  def update_user(attrs, user, business)
+    user.update(attrs)
+    return if business.blank?
+
+    msg = attrs[:started] == false ? 'не нажатия на старт!' : 'блокировки бота клиентом!'
+    notify_admin(msg)
+  end
+
+  def notify_admin(message)
+    msg = 'Клиенту не пришло бизнес сообщение по причине'
+    TelegramService.call("#{msg} #{message}", Setting.fetch_value(:test_id))
   end
 
   class << self

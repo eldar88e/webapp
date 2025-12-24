@@ -21,7 +21,7 @@ class ReportService
 
       # send_report(order, user_msg: msg, user_tg_id: user.tg_id, user_markup: 'i_paid', delete_msg: true)
       delete_old_msg(order)
-      msg = user.messages.create(text: msg, is_incoming: false, data: { markup: { markup: 'i_paid' } })
+      msg = user.messages.create(text: msg, is_incoming: false, data: { markup: { markup: 'i_paid' }, business: true })
       order.update_columns(msg_id: msg.id, tg_msg: false) if msg.present?
       AbandonedOrderReminderJob.set(wait: ONE_WAIT).perform_async({ 'order_id' => order.id, 'msg_type' => 'one' })
     end
