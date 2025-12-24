@@ -1,4 +1,4 @@
-FROM ruby:3.4.6-alpine3.22 AS miniapp
+FROM ruby:3.4.8-alpine3.23 AS miniapp
 
 RUN apk --update add --no-cache \
     build-base \
@@ -7,7 +7,6 @@ RUN apk --update add --no-cache \
     yarn \
     libc6-compat \
     postgresql-dev \
-    postgresql-client \
     redis \
     curl \
     libffi-dev \
@@ -29,7 +28,7 @@ ENV BUNDLE_DEPLOYMENT="1" \
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
-RUN gem update --system 3.7.2
+# RUN gem update --system 3.7.2
 RUN gem install bundler -v $(tail -n 1 Gemfile.lock)
 RUN bundle check || bundle install --jobs=2 --retry=3
 RUN bundle clean --force
