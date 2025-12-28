@@ -40,7 +40,10 @@
           <%= render partial: '/products/btn', locals: { product: product } %>
         <% end %>
       <% else %>
-        <div class="title-has">Нет в наличии</div>
+        <div class="flex justify-between">
+          <div class="mb-1"><%= format_price product.price %></div>
+          <div class="title-has">Нет в наличии</div>
+        </div>
         <%= render partial: '/product_subscriptions/btn', locals: { product: product } %>
       <% end %>
     </div>

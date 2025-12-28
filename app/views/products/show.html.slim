@@ -31,14 +31,14 @@ style
         .no-have-product Нет в наличии
     .card-favorite
       = render partial: '/favorites/button', locals: { product: @product }
-  - if @product.stock_quantity.positive?
-    .mb-3.flex.items-end.gap-1
+  / - if @product.stock_quantity.positive?
+  .mb-3.flex.items-end.gap-1
+    - if @product.old_price.present?
+      .card-old-price = format_price @product.old_price
+    .card-price style="#{'color: #777777' if @product.stock_quantity.zero?}"
+      = format_price @product.price
       - if @product.old_price.present?
-        .card-old-price = @product.old_price.to_i.to_s + '₽'
-      .card-price
-        = @product.price.to_i.to_s + '₽'
-        - if @product.old_price.present?
-          span.price-percent -#{((@product.old_price - @product.price) / @product.old_price * 100).round}%
+        span.price-percent -#{((@product.old_price - @product.price) / @product.old_price * 100).round}%
 
   - if @product.stock_quantity.positive?
     = turbo_frame_tag id="cart-btn-#{@product.id}" do

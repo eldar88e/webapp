@@ -49,7 +49,6 @@ gem 'geocoder'
 gem 'maxminddb'
 
 group :development, :test do
-  gem 'pry'
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
 end
