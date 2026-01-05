@@ -64,8 +64,7 @@
         <%= render Admin::IconComponent.new name: :trash %>
       <% end %>
 
-      <%= link_to admin_messages_path(chat_id: @user.tg_id), class: 'btn',
-                  data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false } do %>
+      <%= link_to admin_messages_path(chat_id: @user.tg_id), class: 'btn' do %>
         <%= render Admin::IconComponent.new name: :message %>
       <% end %>
     </div>
