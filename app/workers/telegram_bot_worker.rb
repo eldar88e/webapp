@@ -36,6 +36,7 @@ class TelegramBotWorker
     false
   end
 
+  # rubocop:disable Metrics/MethodLength
   def process_bot(bot, message)
     case message
     when Telegram::Bot::Types::CallbackQuery
@@ -44,9 +45,16 @@ class TelegramBotWorker
       return input_tracking_number(message) if message.chat.id == settings[:courier_tg_id].to_i
 
       handle_message(bot, message)
+    when Telegram::Bot::Types::ChatMember
+      handle_chat_member(bot, message)
     else
       TelegramJob.perform_later(msg: message.to_json, id: settings[:test_id])
     end
+  end
+  # rubocop:enable Metrics/MethodLength
+
+  def handle_chat_member(bot, message)
+    Tg::ChatMember.call(bot: bot, status: message.new_chat_member.status, chat_id: message.chat.id)
   end
 
   def handle_callback(bot, message)
