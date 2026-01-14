@@ -26,7 +26,7 @@ module Tg
 
     def notify_admin(user)
       user_name = make_user_name(user)
-      msg = "#{user_name}\n#{@status ? 'blocked' : 'unblocked'} bot"
+      msg = "#{user_name}\n#{@status == 'kicked' ? 'blocked' : 'unblocked'} bot"
       markup = { markup_url: "admin/users/#{user.id}", markup_text: '👤 подробнее' }
       TelegramJob.perform_later(msg: msg, id: settings[:admin_ids], **markup)
       Rails.logger.info "User #{user&.id} #{@status ? 'blocked' : 'unblocked'} bot"
