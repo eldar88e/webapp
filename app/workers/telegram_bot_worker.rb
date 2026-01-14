@@ -45,7 +45,7 @@ class TelegramBotWorker
       return input_tracking_number(message) if message.chat.id == settings[:courier_tg_id].to_i
 
       handle_message(bot, message)
-    when Telegram::Bot::Types::ChatMember
+    when Telegram::Bot::Types::ChatMemberUpdated
       handle_chat_member(bot, message)
     else
       msg = "Unknown TG message type: #{message.class}"
