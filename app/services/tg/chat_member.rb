@@ -6,8 +6,8 @@ module Tg
       @chat_id = chat_id
     end
 
-    def self.call(bot, status)
-      new(bot, status).handle_chat_member
+    def self.call(bot:, status:, chat_id:)
+      new(bot:, status:, chat_id:).handle_chat_member
     end
 
     def handle_chat_member
