@@ -48,7 +48,10 @@ class TelegramBotWorker
     when Telegram::Bot::Types::ChatMember
       handle_chat_member(bot, message)
     else
-      TelegramJob.perform_later(msg: message.to_json, id: settings[:test_id])
+      msg = "Unknown TG message type: #{message.class}"
+      msg += "\n\n#{message.to_json}"
+      Rails.logger.error msg
+      TelegramJob.perform_later(msg: msg, id: settings[:test_id])
     end
   end
   # rubocop:enable Metrics/MethodLength
