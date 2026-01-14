@@ -28,7 +28,8 @@ module Tg
       user_name = make_user_name(user)
       msg = "#{user_name}\n#{@status == 'kicked' ? 'blocked' : 'unblocked'} bot"
       markup = { markup_url: "admin/users/#{user.id}", markup_text: '👤 подробнее' }
-      TelegramJob.perform_later(msg: msg, id: settings[:admin_ids], **markup)
+      user.messages.create(text: msg, is_incoming: false, data: { markup: markup })
+      # TelegramJob.perform_later(msg: msg, id: settings[:admin_ids], **markup)
       Rails.logger.info "User #{user&.id} #{@status ? 'blocked' : 'unblocked'} bot"
     end
 
