@@ -1,13 +1,12 @@
 module Tg
   class ChatMember
-    def initialize(bot:, status:, chat_id:)
-      @bot     = bot
+    def initialize(status, chat_id)
       @status  = status
       @chat_id = chat_id
     end
 
-    def self.call(bot:, status:, chat_id:)
-      new(bot:, status:, chat_id:).handle_chat_member
+    def self.call(status, chat_id)
+      new(status, chat_id).handle_chat_member
     end
 
     def handle_chat_member

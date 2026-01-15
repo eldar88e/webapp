@@ -56,8 +56,8 @@ class TelegramBotWorker
   end
   # rubocop:enable Metrics/MethodLength
 
-  def handle_chat_member(bot, message)
-    Tg::ChatMember.call(bot: bot, status: message.new_chat_member.status, chat_id: message.chat.id)
+  def handle_chat_member(_bot, message)
+    Tg::ChatMember.call(message.new_chat_member.status, message.chat.id)
   end
 
   def handle_callback(bot, message)
