@@ -61,7 +61,7 @@ class TelegramBotWorker
   end
 
   def handle_callback(bot, message)
-    Tg::TelegramCallbackService.call(bot, message)
+    Tg::CallbackService.call(bot, message)
   end
 
   def handle_message(bot, message)
