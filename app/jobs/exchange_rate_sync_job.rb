@@ -19,7 +19,7 @@ class ExchangeRateSyncJob < ApplicationJob
     CurrencyRateService.call(currency)
   rescue StandardError => e
     setting = Setting.find_by(variable: currency)
-    msg     = "Error: #{e.message}.\n\nDate last updated: #{setting.updated_at}"
+    msg     = "Error: #{e.message}.\n\nDate last updated exchange rate: #{setting.updated_at}"
     Rails.logger.error msg
     TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id))
     setting.value.to_f
