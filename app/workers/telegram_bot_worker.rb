@@ -48,8 +48,7 @@ class TelegramBotWorker
     when Telegram::Bot::Types::ChatMemberUpdated
       handle_chat_member(bot, message)
     else
-      msg = "Unknown TG message type: #{message.class}"
-      msg += "\n\n#{message.to_json}"
+      msg = "Unknown TG message type: #{message.class}\n\n#{message.to_json}"
       Rails.logger.error msg
       TelegramJob.perform_later(msg: msg, id: settings[:test_id])
     end
@@ -61,7 +60,7 @@ class TelegramBotWorker
   end
 
   def handle_callback(bot, message)
-    Tg::CallbackService.call(bot, message)
+    Tg::CallbackDispatcher.call(bot, message)
   end
 
   def handle_message(bot, message)

@@ -11,13 +11,14 @@ class UpdaterProductStockService
         process_quantity_decrement(product, params)
       end
     rescue StandardError => e
-      { error: "#{e.class}: #{e.message}" }
+      send_error "#{e.class}: #{e.message}"
     end
 
     private
 
     def process_quantity_decrement(product, params)
-      return main_stock_not_available_log(product) if insufficient_stock?(product, params[:quantity_decrement].to_i)
+      msg = "Product #{product.id} Stock quantity must be greater than or equal to 1 or order item quantity!"
+      return send_error(msg) if insufficient_stock?(product, params[:quantity_decrement].to_i)
 
       new_quantity = [product.stock_quantity - params[:quantity_decrement].to_i, 0].max
       product.update!(stock_quantity: new_quantity)
@@ -28,8 +29,7 @@ class UpdaterProductStockService
       product.stock_quantity < required_quantity || product.stock_quantity.zero?
     end
 
-    def main_stock_not_available_log(product)
-      msg = "Product #{product.id} Stock quantity must be greater than or equal to 1 or order item quantity!"
+    def send_error(msg)
       Rails.logger.error(msg)
       TelegramJob(msg: msg, id: Setting.fetch_value(:admin_ids))
       { error: msg }
