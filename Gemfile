@@ -48,6 +48,8 @@ gem 'blazer'
 gem 'geocoder'
 gem 'maxminddb'
 
+gem 'caxlsx', require: false
+
 group :development, :test do
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
