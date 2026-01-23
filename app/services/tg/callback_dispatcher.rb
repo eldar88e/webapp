@@ -1,6 +1,6 @@
 module Tg
   class CallbackDispatcher
-    HANDLERS = %w[i_paid post_payment approve_payment submit_tracking purchase_paid review].freeze
+    HANDLERS = %w[i_paid approve_payment submit_tracking purchase_paid review].freeze
     # TODO: убрать дублирование
     TRACK_CACHE_PERIOD = 5.minutes
 
@@ -26,14 +26,6 @@ module Tg
       order_id = parse_order_number(message.message.text)
       order    = user.orders.find(order_id)
       new_text = mark_as_paid(order)
-      edit_message(bot, message, "#{message.message.text}\n\n#{new_text}")
-    end
-
-    def post_payment(bot, message)
-      user     = User.find_by(tg_id: message.from.id)
-      order_id = parse_order_number(message.message.text)
-      order    = user.orders.find(order_id)
-      new_text = mark_as_paid(order, true)
       edit_message(bot, message, "#{message.message.text}\n\n#{new_text}")
     end
 
@@ -95,8 +87,8 @@ module Tg
       )
     end
 
-    def mark_as_paid(order, post_payment = nil)
-      return '✅ Оплачено' if order.status == 'unpaid' && order.update(status: :paid, post_payment: !post_payment.nil?)
+    def mark_as_paid(order)
+      return '✅ Оплачено' if order.status == 'unpaid' && order.update(status: :paid)
 
       msg = "Failed to update order #{order.id} to paid:\n\n#{order.errors.full_messages.join("\n")}"
       Rails.logger.info msg
