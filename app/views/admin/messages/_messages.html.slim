@@ -1,5 +1,5 @@
 - if @messages.present?
-  div class="-mx-6 -mt-4"
+  div class="-mx-2 md:-mx-4 -mt-4"
     = render partial: '/layouts/partials/admin/pagy'
   = render partial: '/admin/messages/msg', collection: @messages, as: :message
 - else

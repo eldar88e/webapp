@@ -473,7 +473,7 @@ body.aside-hide {
   }
 
   .sender {
-    @apply flex items-center gap-2 p-3 border-t dark:bg-gray-800 bg-white border-gray-200 dark:border-gray-700;
+    @apply flex items-center gap-3 p-3 border-t dark:bg-gray-800 bg-white border-gray-200 dark:border-gray-700;
 
     textarea {
       @apply flex-1 border-none outline-none text-gray-900 dark:text-white;
