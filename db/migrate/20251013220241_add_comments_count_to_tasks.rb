@@ -1,7 +1,13 @@
 class AddCommentsCountToTasks < ActiveRecord::Migration[7.2]
+  class MigrationTask < ApplicationRecord
+    self.table_name = "tasks"
+  end
+
   def up
     add_column :tasks, :comments_count, :integer, default: 0, null: false
-    Task.find_each { |task| Task.reset_counters(task.id, :comments) }
+
+    MigrationTask.reset_column_information
+    MigrationTask.find_each { |task| MigrationTask.reset_counters(task.id, :comments) }
   end
 
   def down
