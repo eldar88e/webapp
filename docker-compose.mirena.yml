@@ -6,6 +6,7 @@ services:
     volumes:
       - gems:/usr/local/bundle
       - .:/app
+      - node_modules:/app/node_modules
 
   webapp:
     <<: *base
@@ -69,6 +70,7 @@ volumes:
   db_data:
   redis:
   gems:
+  node_modules:
 
 networks:
   net:
