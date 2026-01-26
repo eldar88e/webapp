@@ -6,7 +6,7 @@ namespace :reports do
         args[:year].to_i
       else
         print 'Введите год (например 2025): '
-        input = STDIN.gets&.strip
+        input = $stdin.gets&.strip
 
         unless input&.match?(/\A\d{4}\z/)
           puts '❌ Неверный год'
@@ -19,6 +19,6 @@ namespace :reports do
     file_path = SalesReportService.call(year)
 
     puts '✅ Отчёт сформирован'
-    puts "   #{file_path}"
+    puts "  #{file_path}"
   end
 end
