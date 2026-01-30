@@ -16,7 +16,9 @@ namespace :admin do
   resources :bonus_logs, only: :index
   resources :purchases
   resources :purchase_items, only: %i[create update]
-  resources :product_statistics, only: :index
+  resources :product_statistics, only: :index do
+    get :xlsx, on: :collection
+  end
   resources :tasks, only: %i[index show new create edit update] do
     resources :comments, only: %i[create]
   end

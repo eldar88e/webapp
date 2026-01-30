@@ -36,6 +36,8 @@ class StatisticsService
         avg_sale_price: form_price(sales_all.dig(product.id, :avg_price) || product.price),
         source_price_tl: form_price(source_price_tl, '₺'),
         source_price: form_price(source_price_ru),
+        subscriptions_count: product.product_subscriptions_count,
+        favorites_count: product.favorites_count,
         expenses_percent: (expenses * 100 / product.price).round,
         markup_percent: source_price_ru.zero? ? 0 : ((product.price - source_price_ru) * 100 / source_price_ru).round,
         stock_quantity: product.stock_quantity,
@@ -43,18 +45,16 @@ class StatisticsService
         money_in_product: (product.stock_quantity + quantity_in_way) * (expenses + source_price_ru),
         net_profit: form_price(product.price - source_price_ru - expenses),
         margin_period: source_price_ru.zero? || sales.zero? ? 0 : ((net_profit_period / sales) * 100 / source_price_ru).round,
-        net_profit_period: net_profit_period,
         net_profit_period_expenses: (product.price - source_price_ru) * sales,
-        sales: sales,
+        net_profit_period: net_profit_period,
         expenses: expenses,
         expenses_period: form_price(expenses * sales),
-        deficit: deficit,
-        strategy_stock: strategy_stock,
-        days_of_stock: days_of_stock(product, avg_daily_consumption, quantity_in_way),
-        rop: ((avg_daily_consumption * @lead_time) + strategy_stock).round,
         avg_daily_consumption: avg_daily_consumption,
-        favorites_count: product.favorites_count,
-        subscriptions_count: product.product_subscriptions_count
+        sales: sales,
+        strategy_stock: strategy_stock,
+        deficit: deficit,
+        days_of_stock: days_of_stock(product, avg_daily_consumption, quantity_in_way),
+        rop: ((avg_daily_consumption * @lead_time) + strategy_stock).round
       }
     end
 
