@@ -20,8 +20,8 @@ ENV RAILS_ENV=production \
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
-RUN gem install bundler -v $(tail -n 1 Gemfile.lock)
-RUN bundle check || bundle install --jobs=4 --retry=3 \
+RUN gem install bundler -v "$(tail -n 1 Gemfile.lock)" \
+ && bundle install --jobs=4 --retry=3 \
  && bundle clean --force \
  && rm -rf /usr/local/bundle/cache
 
