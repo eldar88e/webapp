@@ -4,6 +4,11 @@ module Admin
 
     def index
       @purchase_items = Purchase.find_by(status: :initialized)&.purchase_items&.pluck(:product_id) || []
+
+      respond_to do |format|
+        format.html
+        format.json { render json: @product_statistics }
+      end
     end
 
     def xlsx
