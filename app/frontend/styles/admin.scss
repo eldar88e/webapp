@@ -521,6 +521,35 @@ body.aside-hide {
   }
 }
 
-.datepicker-dropdown {
-  left: 16px !important;
+.bg-neutral-primary-medium {
+  background-color: var(--color-white);
+  border-color: var(--color-gray-200);
+  border-radius: 12px;
+@media (prefers-color-scheme: dark) {
+    background-color: var(--color-gray-800);
+    border-color: var(--color-gray-700);
+  }
+}
+
+.text-heading {
+  color: var(--color-gray-950);
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-white);
+  }
+}
+
+.text-body {
+  color: var(--color-gray-600);
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-gray-300);
+  }
+}
+
+@media (hover: hover) {
+  .hover\:bg-neutral-tertiary-medium:hover {
+    background-color: var(--color-gray-100);
+    @media (prefers-color-scheme: dark) {
+      background-color: var(--color-gray-700);
+    }
+  }
 }

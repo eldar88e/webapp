@@ -20,6 +20,10 @@ tr id="product_statistic_#{product_statistic[:id]}" class="item"
   td.px-6.py-4
     = product_statistic[:source_price]
   td.px-6.py-4
+    = product_statistic[:favorites_count]
+  td.px-6.py-4
+    = product_statistic[:subscriptions_count]
+  td.px-6.py-4
     = stat_value product_statistic[:expenses_percent], suffix: '%'
   td.px-6.py-4
     = stat_value product_statistic[:markup_percent], suffix: '%'
