@@ -3,7 +3,7 @@
     .container.mx-auto.px-5
       ul
         li
-          - unless ENV.fetch('HOST').include? 'mirena'
+          - unless ENV.fetch('HOST', '').include? 'mirena'
             = active_link_to root_path, active: [products: :index], data: { turbo_prefetch: false } do
               = render IconComponent.new name: :catalog, size: 24
               | Каталог
@@ -11,7 +11,7 @@
             = active_link_to product_path(Setting.fetch_value(:mirena_id)), active: :exclusive, data: { turbo_prefetch: false } do
               = render IconComponent.new name: :catalog, size: 24
               | Заказать
-        - unless ENV.fetch('HOST').include? 'mirena'
+        - unless ENV.fetch('HOST', '').include? 'mirena'
           li
             = active_link_to favorites_path, active: :exclusive, data: { turbo_prefetch: false } do
               = render IconComponent.new name: :unfavorite, size: 24

@@ -24,7 +24,7 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :beget
 
-  config.action_cable.allowed_request_origins = ["https://#{ENV.fetch('HOST')}"]
+  config.action_cable.allowed_request_origins = ["https://#{ENV.fetch('HOST', 'localhost')}"]
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   # config.assume_ssl = true
@@ -63,14 +63,14 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: ENV.fetch('HOST') }
+  config.action_mailer.default_url_options = { host: ENV.fetch('HOST', 'localhost') }
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: 'smtp.beget.com',
     port: 465,
-    domain: ENV.fetch('HOST'),
+    domain: ENV.fetch('HOST', 'localhost'),
     user_name: ENV.fetch('EMAIL_FROM'),
     password: ENV.fetch('EMAIL_PASSWORD'),
     authentication: 'login',
