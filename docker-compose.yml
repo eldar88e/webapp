@@ -18,7 +18,6 @@ services:
         ipv4_address: 172.29.0.10
     restart: always
 
-
   sidekiq:
     <<: *base
     container_name: miniapp-sidekiq
@@ -29,10 +28,6 @@ services:
     environment:
       SIDEKIQ_QUEUE: telegram_bot
     command: ['bundle', 'exec', 'sidekiq']
-#    command: >
-#      sh -c "SIDEKIQ_QUEUE=telegram_bot bundle exec sidekiq -q telegram_bot -c 1 &
-#             bundle exec sidekiq -q default -q ahoy &&
-#             wait"
     networks:
       net:
     restart: always
