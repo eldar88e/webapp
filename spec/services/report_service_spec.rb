@@ -11,6 +11,7 @@ RSpec.describe ReportService do
     allow(TelegramMsgDelService).to receive(:remove)
     # allow(AbandonedOrderReminderJob).to receive(:perform_async)
     allow(SendReviewRequestJob).to receive(:perform_later)
+    allow(AbandonedOrderReminderJob).to receive_message_chain(:set, :perform_async)
   end
 
   describe '.on_unpaid' do
