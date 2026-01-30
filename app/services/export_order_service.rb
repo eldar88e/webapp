@@ -69,16 +69,16 @@ class ExportOrderService < GoogleSheetsService
     @order.order_items.map do |i|
       prepare_mirena_order
       product_id = prepare_mirena_product_id(i)
-      order_info + [product_id, i.product.name, i.quantity, i.price.to_i, ENV.fetch('HOST')]
+      order_info + [product_id, i.product.name, i.quantity, i.price.to_i, ENV.fetch('HOST', 'localhost')]
     end
   end
 
   def prepare_mirena_product_id(order_item)
-    ENV.fetch('HOST').include?('mirena') ? "M_#{order_item.product.id}" : order_item.product.id
+    ENV.fetch('HOST', '').include?('mirena') ? "M_#{order_item.product.id}" : order_item.product.id
   end
 
   def prepare_mirena_order
-    return unless ENV.fetch('HOST').include?('mirena')
+    return unless ENV.fetch('HOST', '').include?('mirena')
 
     order_info[0] = "M_#{order_info[0]}"
     order_info[2] = "M_#{order_info[2]}"

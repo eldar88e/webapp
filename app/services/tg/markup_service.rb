@@ -75,7 +75,7 @@ module Tg
     end
 
     def catalog_btn(btn_text = nil)
-      btn_text ||= ENV.fetch('HOST').include?('mirena') ? 'Заказать' : I18n.t('tg_btn.to_catalog')
+      btn_text ||= ENV.fetch('HOST', '').include?('mirena') ? 'Заказать' : I18n.t('tg_btn.to_catalog')
       form_url_btn(@app_url, btn_text)
     end
 

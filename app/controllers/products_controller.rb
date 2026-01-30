@@ -3,7 +3,7 @@ class ProductsController < ApplicationController
   before_action :set_btn_link, :check_authenticate_user!, :redirect_to_btn_link
 
   def index
-    redirect_to "/products/#{Setting.fetch_value(:mirena_id)}" if ENV.fetch('HOST').include?('mirena')
+    redirect_to "/products/#{Setting.fetch_value(:mirena_id)}" if ENV.fetch('HOST', '').include?('mirena')
 
     @products = params[:q].nil? ? available_products : product_search.result
     # @pagy, @products = pagy(@products, limit: 10)
