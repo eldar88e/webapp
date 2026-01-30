@@ -7,6 +7,6 @@ class AdminMailer < ApplicationMailer
     @user    = User.find_by(tg_id: Setting.fetch_value(:test_id))
     return Rails.logger.error 'User not found for Error mailer' if @user.nil?
 
-    mail(to: @user.email, subject: subject || "Произошла критическая ошибка на сайте #{ENV.fetch('HOST', 'localhost')}!")
+    mail(to: @user.email, subject: subject || "Произошла критическая ошибка на сайте #{ENV.fetch('HOST', 'no_set')}!")
   end
 end
