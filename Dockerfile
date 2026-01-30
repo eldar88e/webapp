@@ -1,52 +1,63 @@
-FROM ruby:3.4.8-alpine3.23 AS miniapp
+# =========================
+# Builder
+# =========================
+FROM ruby:3.4.8-alpine3.23 AS builder
 
-RUN apk --update add --no-cache \
+RUN apk add --no-cache \
     build-base \
+    postgresql-dev \
+    vips-dev \
     yaml-dev \
     tzdata \
-    yarn \
-    libc6-compat \
-    postgresql-dev \
-    redis \
-    curl \
-    libffi-dev \
-    ruby-dev \
-    vips \
-    vips-dev \
-    libjpeg-turbo-dev \
-    libpng-dev \
-    libwebp-dev \
-    libheif-dev \
-    imagemagick \
-    imagemagick-dev \
-    && rm -rf /var/cache/apk/*
+    yarn
 
-ENV BUNDLE_DEPLOYMENT="1" \
-    BUNDLE_PATH="/usr/local/bundle" \
+ENV RAILS_ENV=production \
+    NODE_ENV=production \
+    BUNDLE_DEPLOYMENT=1 \
+    BUNDLE_PATH=/usr/local/bundle \
     BUNDLE_WITHOUT="development test"
 
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
-# RUN gem update --system 3.7.2
 RUN gem install bundler -v $(tail -n 1 Gemfile.lock)
-RUN bundle check || bundle install --jobs=2 --retry=3
-RUN bundle clean --force
+RUN bundle check || bundle install --jobs=4 --retry=3 \
+ && bundle clean --force \
+ && rm -rf /usr/local/bundle/cache
 
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
-# RUN rm -rf node_modules
+RUN yarn install --frozen-lockfile \
+ && rm -rf node_modules/.cache
 
 COPY . .
 
-# RUN bundle exec rails assets:precompile
-RUN bundle exec bootsnap precompile --gemfile app/ lib/ config/
-# ENTRYPOINT ["./bin/docker-entrypoint"]
+# ---- Assets + bootsnap ----
+RUN bundle exec rails assets:precompile \
+ && bundle exec bootsnap precompile --gemfile app/ lib/ config/ \
+ && rm -rf node_modules
+
+# =========================
+# Runtime
+# =========================
+FROM ruby:3.4.8-alpine3.23 AS runtime
+
+RUN apk add --no-cache \
+    tzdata \
+    libpq \
+    yaml \
+    vips
+
+ENV RAILS_ENV=production \
+    BUNDLE_DEPLOYMENT=1 \
+    BUNDLE_PATH=/usr/local/bundle \
+    BUNDLE_WITHOUT="development test"
+
+WORKDIR /app
 
 RUN addgroup -g 1000 deploy && adduser -u 1000 -G deploy -D -s /bin/sh deploy
-# RUN chown -R deploy:deploy /app # db log storage tmp
 
-RUN chown -R deploy:deploy /usr/local/bundle
+COPY --from=builder --chown=deploy:deploy /usr/local/bundle /usr/local/bundle
+COPY --from=builder --chown=deploy:deploy /app /app
 
 USER deploy:deploy
 

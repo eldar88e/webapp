@@ -23,6 +23,7 @@ export default defineConfig({
     },
   },
   build: {
+    assetsInlineLimit: 1500,
     chunkSizeWarningLimit: 800,
     sourcemap: false,
     rollupOptions: {
