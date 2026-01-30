@@ -54,7 +54,7 @@ class StatisticsService
         rop: ((avg_daily_consumption * @lead_time) + strategy_stock).round,
         avg_daily_consumption: avg_daily_consumption,
         favorites_count: product.favorites_count,
-        subscriptions_count: product.product_subscriptions.count
+        subscriptions_count: product.product_subscriptions_count
       }
     end
 
