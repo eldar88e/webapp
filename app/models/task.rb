@@ -3,8 +3,8 @@ class Task < ApplicationRecord
 
   has_rich_text :description
 
-  has_many_attached :images
-  has_many_attached :files
+  has_many_attached :images, dependent: :purge
+  has_many_attached :files, dependent: :purge
 
   has_many :comments, dependent: :destroy
   has_one :expense, as: :expenseable, dependent: :destroy
