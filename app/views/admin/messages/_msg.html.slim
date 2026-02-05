@@ -3,7 +3,7 @@
 - bubble_cls = incoming ? "rounded-r-xl rounded-bl-xl" : "rounded-l-xl rounded-br-xl"
 - time_align = incoming ? "text-left" : "text-right"
 
-.mb-4.flex.gap-3 class="#{align_cls} message" id="#{dom_id message}"
+.mb-4.flex.gap-2.md:gap-3 class="#{align_cls} message" id="#{dom_id message}"
   - if incoming
     = @user ||= render partial: '/layouts/partials/avatar', locals: { user: message.user }
   - else
@@ -12,7 +12,7 @@
                     controller: 'confirm', action: 'click->confirm#call' } do
       = render Admin::IconComponent.new name: :trash
 
-  .flex.flex-col class="max-w-[75%]"
+  .flex.flex-col class="max-w-auto sm:max-w-[75%]"
     .text-xs.text-slate-400.mb-1.flex.gap-1
       = message.is_incoming ? "Входящее" : "Исходящее"
       div class="#{time_align}"
