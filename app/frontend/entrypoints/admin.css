@@ -4,10 +4,11 @@
 @import "../styles/notice.scss";
 @import "../styles/pagy.scss";
 
-@source "../../../app/components/admin/**/*.slim";
+@source "../../../app/components/admin/**/*.html.slim";
 @source "../../../app/views/admin/**/*.html.erb";
 @source "../../../app/views/admin/**/*.html.slim";
 @source "../../../app/views/notices/**/*.html.erb";
-@source "../../../app/views/layouts/**/*.html.slim";
-@source "../../../app/views/layouts/**/*.html.erb";
+@source "../../../app/views/layouts/partials/admin/**/*.html.slim";
+@source "../../../app/views/layouts/partials/admin/**/*.html.erb";
+@source "../../../app/views/layouts/admin.html.erb";
 @source "../../../app/helpers/**/*.rb";
