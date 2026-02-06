@@ -3,6 +3,11 @@ courier_salary_calculator:
   class: "CourierSalaryJob"
   queue: default
 
+review_reminder:
+  cron: "0 9 * * *"
+  class: "UnapprovedReviewsNotifierJob"
+  queue: default
+
 pg_hero_stats:
   cron: "*/5 * * * *"
   class: "PgHero::StatsJob"
