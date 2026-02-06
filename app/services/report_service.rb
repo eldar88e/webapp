@@ -138,18 +138,11 @@ class ReportService
       msg_id = TelegramService.call(args[:user_msg], args[:user_tg_id], markup: args[:user_markup])
       return order.update_columns(msg_id: msg_id, tg_msg: true) if msg_id.instance_of?(Integer)
 
-      notify_admin(msg_id, order.id)
+      notify_admin(msg_id, order)
     end
 
-    def notify_admin(error, order_id)
-      msg = "Клиенту не пришло бизнес сообщение по заказу #{order_id} по причине"
-      if error.message.include?('chat not found')
-        TelegramService.call("#{msg} не нажатия на старт!", Setting.fetch_value(:test_id))
-      elsif error.message.include?('bot was blocked')
-        TelegramService.call("#{msg} добавления им бота в бан!", Setting.fetch_value(:test_id))
-      else
-        AdminMailer.send_error("#{msg} #{error.message}", error.full_message).deliver_later
-      end
+    def notify_admin(error, order)
+      Tg::ErrorHandlerService.call(error: error, user: order.user, business: true)
     end
   end
 end

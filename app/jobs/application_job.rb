@@ -8,34 +8,7 @@ class ApplicationJob < ActiveJob::Base
   private
 
   def limit_user_privileges(error, user, business = nil)
-    if !error.instance_of?(Telegram::Bot::Exceptions::ResponseError)
-      notify_email_admin(error, 'Telegram new sending error')
-    elsif error.message.include?('chat not found')
-      update_user({ started: false }, user, business)
-    elsif error.message.include?('bot was blocked')
-      update_user({ is_blocked: true }, user, business)
-    else
-      notify_email_admin(error, 'Telegram new sending type error')
-    end
-  end
-
-  def notify_email_admin(error, msg)
-    Rails.logger.error("#{msg}: #{error.message}")
-    AdminMailer.send_error(error.message, error.full_message).deliver_later
-  end
-
-  def update_user(attrs, user, business)
-    user.update(attrs)
-    return if business.blank?
-
-    msg = attrs[:started] == false ? 'не нажатия на старт!' : 'блокировки бота клиентом!'
-    notify_admin(msg, user)
-  end
-
-  def notify_admin(message, user)
-    client_name = user.username.present? ? "@#{user.username}" : "ID ##{user.id}"
-    msg = "Клиенту #{client_name} не пришло бизнес сообщение по причине"
-    TelegramService.call("#{msg} #{message}", Setting.fetch_value(:test_id))
+    Tg::ErrorHandlerService.call(error: error, user: user, business: business)
   end
 
   class << self
