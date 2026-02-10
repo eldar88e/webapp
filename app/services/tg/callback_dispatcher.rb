@@ -1,6 +1,6 @@
 module Tg
   class CallbackDispatcher
-    HANDLERS = %w[i_paid approve_payment submit_tracking purchase_paid review].freeze
+    HANDLERS = %w[i_paid approve_payment submit_tracking purchase_paid review cancel_order].freeze
     # TODO: убрать дублирование
     TRACK_CACHE_PERIOD = 5.minutes
 
@@ -60,6 +60,14 @@ module Tg
       review    = Review.find(review_id)
       review.update(approved: true)
       new_text = "#{message.message.text}\n\n✅ Отзыв подтвержден"
+      edit_message(bot, message, new_text)
+    end
+
+    def cancel_order(bot, message)
+      order_id = parse_order_number(message.message.text)
+      order    = Order.find(order_id)
+      order.update(status: :cancelled)
+      new_text = "#{message.message.text}\n\n❌ Отменен"
       edit_message(bot, message, new_text)
     end
 

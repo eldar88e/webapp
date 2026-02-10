@@ -1,0 +1,3 @@
+= form_with model: @order, url: order_attach_checks_path(@order), method: :post do |f|
+  = f.file_field :attachment, accept: 'pdf', class: 'mb-5', required: true
+  = f.submit 'Отправить чек', class: 'btn'

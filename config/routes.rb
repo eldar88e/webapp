@@ -22,7 +22,9 @@ Rails.application.routes.draw do
   resources :favorites, only: %i[index]
   resources :carts, only: %i[index destroy]
   resources :cart_items, only: %i[create update]
-  resources :orders, only: %i[index show create update]
+  resources :orders, only: %i[index show create update] do
+    resource :attach_checks, only: %i[new create], module: :orders
+  end
   resources :support, only: :index
   resources :surveys, only: :index
   post :add_answers, to: 'surveys#add_answers'

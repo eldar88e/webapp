@@ -1,4 +1,6 @@
 class CreateOrderService
+  ORDER_STATUS_FOR_UPDATE = %i[initialized] # unpaid
+
   def initialize(user, bonus)
     @user  = user
     @bonus = bonus.to_i
@@ -34,7 +36,7 @@ class CreateOrderService
   end
 
   def find_or_create_order
-    order = @user.orders.find_by(status: %i[unpaid initialized])
+    order = @user.orders.find_by(status: ORDER_STATUS_FOR_UPDATE)
     return @user.orders.create(bonus: @bonus) unless order
 
     cart_product_ids = @cart_items.pluck(:product_id)

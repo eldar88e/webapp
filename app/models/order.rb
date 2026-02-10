@@ -5,6 +5,7 @@ class Order < ApplicationRecord
   belongs_to :bank_card, optional: true
   has_many :order_items, dependent: :destroy
   has_many :bonus_logs, as: :source, dependent: :nullify
+  has_one :payment_transaction, dependent: :destroy
 
   validates :status, presence: true
   validates :total_amount, presence: true
@@ -13,6 +14,8 @@ class Order < ApplicationRecord
 
   enum :status, { initialized: 0, unpaid: 1, paid: 2, processing: 3, shipped: 4, cancelled: 5, overdue: 7, refunded: 8 }
 
+  has_one_attached :attachment, dependent: :purge
+
   before_save -> { self.created_at = Time.current }, if: -> { status == 'unpaid' }
   before_save -> { self.paid_at = Time.current }, if: -> { status == 'processing' }
   before_save -> { self.shipped_at = Time.current }, if: -> { status == 'shipped' }
@@ -20,9 +23,8 @@ class Order < ApplicationRecord
   before_update :cache_status, if: -> { status_changed? }
   before_update :apply_delivery, if: -> { status == 'unpaid' }
   before_update :update_total_amount, if: -> { status == 'unpaid' || bonus_changed? }
-  before_update :assign_valid_or_random_card, if: -> { status == 'unpaid' }
+  # before_update :assign_valid_or_random_card, if: -> { status == 'unpaid' }
   before_update :check_stock, if: -> { status_for_check? }
-  before_update :remove_cart, if: -> { status_changed?(from: 'unpaid', to: 'paid') }
   before_update :deduct_stock, if: -> { status_changed?(from: 'paid', to: 'processing') }
   before_update :restock_stock, if: -> { can_restock? }
 
@@ -139,10 +141,6 @@ class Order < ApplicationRecord
 
   def notify_status_change
     ReportJob.perform_later(order_id: id)
-  end
-
-  def remove_cart
-    user.cart.destroy
   end
 
   def deduct_stock

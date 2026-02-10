@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_23_134051) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_08_130445) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -124,6 +124,30 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_23_134051) do
     t.index ["answer_option_id"], name: "index_answers_on_answer_option_id"
     t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["user_id", "question_id"], name: "index_answers_on_user_id_and_question_id", unique: true
+  end
+
+  create_table "api_logs", force: :cascade do |t|
+    t.string "action"
+    t.datetime "created_at", null: false
+    t.string "direction", default: "outgoing"
+    t.float "duration_ms"
+    t.jsonb "error_message", default: {}
+    t.string "http_method"
+    t.bigint "loggable_id"
+    t.string "loggable_type"
+    t.jsonb "request_body", default: {}
+    t.jsonb "request_headers", default: {}
+    t.jsonb "response_body", default: {}
+    t.jsonb "response_headers", default: {}
+    t.integer "response_status"
+    t.string "service_name"
+    t.boolean "success", default: false
+    t.string "url"
+    t.index ["action"], name: "index_api_logs_on_action"
+    t.index ["created_at"], name: "index_api_logs_on_created_at"
+    t.index ["loggable_type", "loggable_id"], name: "index_api_logs_on_loggable"
+    t.index ["service_name"], name: "index_api_logs_on_service_name"
+    t.index ["success"], name: "index_api_logs_on_success"
   end
 
   create_table "bank_cards", force: :cascade do |t|
@@ -305,6 +329,31 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_23_134051) do
     t.bigint "user_id", null: false
     t.index ["bank_card_id"], name: "index_orders_on_bank_card_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
+  create_table "payment_transactions", force: :cascade do |t|
+    t.decimal "amount", precision: 12, scale: 2, null: false
+    t.decimal "amount_transfer", precision: 12, scale: 2, default: "0.0"
+    t.datetime "approved_at"
+    t.string "bank_name"
+    t.datetime "cancelled_at"
+    t.string "card_number"
+    t.string "card_people"
+    t.datetime "checking_at"
+    t.datetime "created_at", null: false
+    t.string "currency", default: "₽", null: false
+    t.datetime "failed_at"
+    t.datetime "initialized_at"
+    t.string "object_token"
+    t.bigint "order_id", null: false
+    t.datetime "overdue_at"
+    t.datetime "paid_at"
+    t.integer "payment_method", default: 1, null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["object_token"], name: "index_payment_transactions_on_object_token", unique: true
+    t.index ["order_id"], name: "index_payment_transactions_on_order_id"
+    t.index ["status"], name: "index_payment_transactions_on_status"
   end
 
   create_table "pghero_query_stats", force: :cascade do |t|
@@ -507,6 +556,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_23_134051) do
   add_foreign_key "order_items", "products"
   add_foreign_key "orders", "bank_cards"
   add_foreign_key "orders", "users"
+  add_foreign_key "payment_transactions", "orders"
   add_foreign_key "product_subscriptions", "products"
   add_foreign_key "product_subscriptions", "users"
   add_foreign_key "purchase_items", "products"
