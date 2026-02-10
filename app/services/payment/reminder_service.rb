@@ -47,7 +47,7 @@ module Payment
         card: payment_transaction.card_number,
         bank: payment_transaction.bank_name,
         fio_card: payment_transaction.card_people,
-        price: @order.total_amount,
+        price: @order.total_amount.to_i,
         items: @order.order_items_str,
         address: user.full_address, postal_code: user.postal_code, fio: user.full_name, phone: user.phone_number
       )
