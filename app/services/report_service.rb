@@ -137,7 +137,7 @@ class ReportService
       Rails.logger.info "Order #{order.id} has been cancelled"
 
       payment_transaction = order.payment_transaction
-      if payment_transaction.status == 'initialized'
+      if payment_transaction&.status == 'initialized'
         response = Payment::ApiService.order_cancel(payment_transaction)
         if response['response'] == 'error'
           raise "Failed to create payment transaction for order #{order.id}: #{response['message']}"
@@ -163,7 +163,7 @@ class ReportService
 
     def on_overdue(order)
       Rails.logger.info "Order #{order.id} has been overdue"
-      order.payment_transaction.update!(status: :overdue)
+      order.payment_transaction&.update!(status: :overdue)
       delete_old_msg(order)
       user_msg = I18n.t('tg_msg.unpaid.reminder.overdue', order: order.id)
       send_report(order, user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order')
