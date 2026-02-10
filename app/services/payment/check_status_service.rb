@@ -67,7 +67,7 @@ module Payment
 
     def schedule_next_check
       puts '*' * 30
-      puts "Status: #{status}"
+      puts "Status: #{@status}"
       puts '=' * 30
       Payment::CheckStatusJob.set(wait: 15.seconds).perform_later(@transaction.id, @status)
     end
