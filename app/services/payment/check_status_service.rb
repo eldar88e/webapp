@@ -1,5 +1,10 @@
 module Payment
   class CheckStatusService
+    STATUSES = {
+      approved: { order: :processing, transaction: :approved },
+      overdue: { order: :overdue, transaction: :overdue }
+    }.freeze
+
     def initialize(transaction_id, status)
       @transaction = PaymentTransaction.find(transaction_id)
       @status = status
@@ -22,7 +27,7 @@ module Payment
       return if status.match?('merch_process')
 
       if status.match?('system_timer_end_merch_initialized_cancel')
-        set_order_overdue
+        update_statuses(:overdue)
       else
         schedule_next_check
       end
@@ -32,17 +37,17 @@ module Payment
       return if @transaction.status == 'approved'
 
       status = fetch_status
-      return set_order_approved if status.match?('success')
+      return update_statuses(:approved) if status.match?('success')
 
       if status.match?('trader_check_query')
         @transaction.update!(status: :check)
         schedule_next_check
         order  = @transaction.order
-        msg    = "Для подтверждения оплаты пожалуйста приложите чек в формате pdf нажав на кнопку «Приложить чек»."
+        msg    = 'Для подтверждения оплаты пожалуйста приложите чек в формате pdf нажав на кнопку «Приложить чек».'
         markup = { markup_url: "/order/#{order.id}/attach_check", markup_text: 'Приложить чек' }
         TelegramService.call(msg, order.user.tg_id, **markup)
       elsif status.match?('system_timer')
-        set_order_overdue
+        update_statuses(:overdue)
       else
         schedule_next_check
       end
@@ -53,17 +58,10 @@ module Payment
       response&.dig('data', 'status', 'status')
     end
 
-    def set_order_approved
+    def update_statuses(statuses)
       ActiveRecord::Base.transaction do
-        @transaction.update!(status: :approved)
-        @transaction.order.update!(status: :processing)
-      end
-    end
-
-    def set_order_overdue
-      ActiveRecord::Base.transaction do
-        @transaction.update!(status: :overdue)
-        @transaction.order.update!(status: :overdue)
+        @transaction.update!(status: STATUSES[statuses][:transaction])
+        @transaction.order.update!(status: STATUSES[statuses][:order])
       end
     end
 
