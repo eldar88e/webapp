@@ -44,6 +44,7 @@ class ReportService
         fio: user.full_name,
         phone: user.phone_number
       )
+      msg += "\n\n#{I18n.t('tg_msg.unpaid.footer')}"
 
       # send_report(order, user_msg: msg, user_tg_id: user.tg_id, user_markup: 'i_paid', delete_msg: true)
       delete_old_msg(order)

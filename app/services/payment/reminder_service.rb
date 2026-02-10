@@ -50,7 +50,7 @@ module Payment
         price: @order.total_amount.to_i,
         items: @order.order_items_str,
         address: user.full_address, postal_code: user.postal_code, fio: user.full_name, phone: user.phone_number
-      )
+      ) + "\n\n#{I18n.t('tg_msg.unpaid.reminder.footer')}"
       { text: text, is_incoming: false, data: { markup: { markup: 'i_paid' } } }
     end
   end
