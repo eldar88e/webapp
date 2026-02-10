@@ -150,7 +150,7 @@ class ReportService
 
       month_cancelled = order.user.orders.where(status: :cancelled, updated_at: Time.current.all_month).count
       admin_msg = "❌ Заказ №#{order.id} был отменен!"
-      user_msg  = I18n.t('tg_msg.cancel', order: order.id, limit: "#{LIMIT_CANCEL}/#{month_cancelled}")
+      user_msg  = I18n.t('tg_msg.cancel', order: order.id, limit: "#{month_cancelled}/#{LIMIT_CANCEL}")
       send_report(order, admin_msg: admin_msg, user_msg: user_msg, user_tg_id: order.user.tg_id,
                          user_markup: 'new_order')
     end
