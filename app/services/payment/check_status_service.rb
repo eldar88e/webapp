@@ -40,7 +40,7 @@ module Payment
       return update_statuses(:approved) if status.match?('success')
 
       if status.match?('trader_check_query')
-        @transaction.update!(status: :check)
+        @transaction.update!(status: :checking)
         schedule_next_check
         order  = @transaction.order
         msg    = 'Для подтверждения оплаты пожалуйста приложите чек в формате pdf нажав на кнопку «Приложить чек».'

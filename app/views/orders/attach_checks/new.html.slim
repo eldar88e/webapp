@@ -1,3 +1,12 @@
-= form_with model: @order, url: order_attach_checks_path(@order), method: :post do |f|
-  = f.file_field :attachment, accept: 'pdf', class: 'mb-5', required: true
-  = f.submit 'Отправить чек', class: 'btn'
+h1 Прикрепите чек к заказу №#{@order.id}
+
+= form_with model: @order, url: order_attach_checks_path(@order), method: :post, class: 'profile-form' do |f|
+  div class="input-container !mb-4 review-photos" data-controller="image-input"
+    = f.label :attachment, 'Чек должен быть в формате pdf'
+    .flex.gap-1.flex-wrap
+      div data-image-input-target="preview" class="flex gap-1 flex-wrap"
+      .wrapper-ico
+        .add-img-ico
+          = render IconComponent.new name: 'add-img', size: 24
+        = f.file_field :attachment, accept: 'application/pdf', required: true, class: 'input-str'
+  = f.submit 'Отправить чек', class: 'btn btn-big'
