@@ -69,10 +69,6 @@ class ReportService
             payment_transaction.update!(status: :overdue)
           else
             payment_transaction.update!(status: :paid)
-            user = order.user
-            user_msg = I18n.t('tg_msg.paid_client')
-            TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if order.msg_id.present? && order.tg_msg.present?
-            send_report(order, user_msg: user_msg, user_tg_id: user.tg_id, user_markup: 'new_order')
 
             Payment::CheckStatusJob.set(wait: 15.seconds).perform_later(payment_transaction.id, 'approved')
           end
@@ -90,6 +86,9 @@ class ReportService
       #   phone: user.phone_number
       # )
 
+      TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if order.msg_id.present? && order.tg_msg.present?
+      user_msg = I18n.t('tg_msg.paid_client')
+      send_report(order, user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order')
       # send_report(order, admin_msg: msg, admin_markup: 'approve_payment',
       #             user_msg: user_msg, user_tg_id: user.tg_id, user_markup: 'new_order')
     end
