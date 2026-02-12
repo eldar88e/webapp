@@ -45,7 +45,9 @@ module Payment
         order  = @transaction.order
         msg    = 'Для подтверждения оплаты пожалуйста приложите чек в формате pdf нажав на кнопку «Приложить чек».'
         markup = { markup_url: "/order/#{order.id}/attach_check", markup_text: 'Приложить чек' }
-        TelegramService.call(msg, order.user.tg_id, **markup)
+        Rails.cache.fetch("check_status_#{@transaction.id}", expires_in: 15.minutes) do
+          TelegramService.call(msg, order.user.tg_id, **markup)
+        end
       elsif status.match?('system_timer')
         update_statuses(:overdue)
       else
