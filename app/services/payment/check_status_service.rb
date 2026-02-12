@@ -43,7 +43,8 @@ module Payment
         @transaction.update!(status: :checking)
         schedule_next_check
         order  = @transaction.order
-        msg    = 'Для подтверждения оплаты пожалуйста приложите чек в формате pdf нажав на кнопку «Приложить чек».'
+        msg    = "Для подтверждения оплаты по заказу №#{@transaction.order} пожалуйста приложите чек в \
+                  формате pdf нажав на кнопку «Приложить чек».".squeeze(' ')
         markup = { markup_url: "/order/#{order.id}/attach_check", markup_text: 'Приложить чек' }
         Rails.cache.fetch("check_status_#{@transaction.id}", expires_in: 15.minutes) do
           TelegramService.call(msg, order.user.tg_id, **markup)
