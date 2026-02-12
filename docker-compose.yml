@@ -3,6 +3,8 @@ services:
     image: miniapp
     build: .
     env_file: ./.env
+    volumes:
+      - ./log:/app/log
 
   miniapp:
     <<: *base
