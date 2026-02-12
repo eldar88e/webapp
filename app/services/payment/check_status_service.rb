@@ -25,8 +25,9 @@ module Payment
 
       status = fetch_status
       return if status.match?('merch_process')
+      return update_statuses(:approved) if status.match?('success')
 
-      if status.match?('system_timer_end_merch_initialized_cancel')
+      if status.match?(/system_timer_end_merch_initialized_cancel|merch_cancel/)
         update_statuses(:overdue)
       else
         schedule_next_check
@@ -49,7 +50,7 @@ module Payment
         Rails.cache.fetch("check_status_#{@transaction.id}", expires_in: 7.minutes) do
           TelegramService.call(msg, order.user.tg_id, **markup)
         end
-      elsif status.match?('system_timer_end_')
+      elsif status.match?(/system_timer_end_|admin_appeal_cancel/)
         update_statuses(:overdue)
       else
         schedule_next_check
