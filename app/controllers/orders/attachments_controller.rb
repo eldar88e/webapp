@@ -1,5 +1,5 @@
 module Orders
-  class AttachChecksController < ApplicationController
+  class AttachmentsController < ApplicationController
     before_action :set_order
 
     def new; end

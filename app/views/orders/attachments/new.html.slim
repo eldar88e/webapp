@@ -1,6 +1,6 @@
 h1 Прикрепите чек к заказу №#{@order.id}
 
-= form_with model: @order, url: order_attach_checks_path(@order), method: :post, class: 'profile-form' do |f|
+= form_with model: @order, url: order_attachments_path(@order), method: :post, class: 'profile-form' do |f|
   div class="input-container !mb-4 review-photos" data-controller="image-input"
     = f.label :attachment, 'Чек должен быть в формате pdf'
     .flex.gap-1.flex-wrap
