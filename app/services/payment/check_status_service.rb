@@ -39,7 +39,7 @@ module Payment
       status = fetch_status
       return update_statuses(:approved) if status.match?('success')
 
-      if status.match?('trader_check_query')
+      if status == 'trader_check_query'
         @transaction.update!(status: :checking)
         schedule_next_check
         order = @transaction.order
@@ -49,7 +49,7 @@ module Payment
         Rails.cache.fetch("check_status_#{@transaction.id}", expires_in: 15.minutes) do
           TelegramService.call(msg, order.user.tg_id, **markup)
         end
-      elsif status.match?('system_timer')
+      elsif status.match?('system_timer_end_')
         update_statuses(:overdue)
       else
         schedule_next_check
