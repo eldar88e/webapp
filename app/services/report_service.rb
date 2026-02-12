@@ -10,18 +10,14 @@ class ReportService
       payment_transaction = order.payment_transaction || order.create_payment_transaction!(amount: order.total_amount)
       if payment_transaction.status == 'created'
         request_card = Payment::ApiService.order_initialized(payment_transaction)
-        if request_card['response'] == 'error'
-          raise "Failed to create payment transaction for order #{order.id}: #{request_card['message']}"
-        else
-          payment_transaction.update!(
-            status: :initialized,
-            object_token: request_card[:object_token],
-            amount_transfer: request_card[:amount_transfer],
-            bank_name: request_card[:bank_name],
-            card_people: request_card[:fio],
-            card_number: request_card[:card_number]
-          )
-        end
+        payment_transaction.update!(
+          status: :initialized,
+          object_token: request_card[:object_token],
+          amount_transfer: request_card[:amount_transfer],
+          bank_name: request_card[:bank_name],
+          card_people: request_card[:fio],
+          card_number: request_card[:card_number]
+        )
       end
 
       # TODO: Добавить обработку ошибки в случае ошибок со стороны платежной системы
