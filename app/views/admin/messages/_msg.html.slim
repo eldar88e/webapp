@@ -19,7 +19,7 @@
         time data-controller="timeago" data-timeago-locale-value="ru" title="#{format_date message.created_at}" datetime="#{message.created_at.iso8601}"
           = format_date message.created_at
 
-    .px-4.py-2.shadow-sm.bg-gray-100.text-gray-900.dark:text-white.dark:bg-gray-700 class=bubble_cls
+    .px-4.py-2.shadow-sm.bg-gray-100.text-gray-900.dark:text-white.dark:bg-gray-700.break-all class=bubble_cls
       - if message.data && (message.data['media_id'].present? || message.data['tg_file_id'].present?)
         .mb-2.pt-2
           = preview_media(message.data, :big)
