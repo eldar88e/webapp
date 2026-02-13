@@ -13,8 +13,8 @@ module Tg
       private
 
       def save_text(bot, message)
-        process_message(message)
-        send_firs_msg(bot, message.chat.id)
+        process_message(bot, message)
+        # send_firs_msg(bot, message.chat.id)
       end
 
       def save_photo(_bot, message)
@@ -65,7 +65,7 @@ module Tg
         return send_admin(chat, message.text) if %w[group supergroup].include?(chat['type'])
 
         user = find_user(chat)
-        return if message.text == '/start'
+        send_firs_msg(bot, message.chat.id) if message.text == '/start'
 
         user.messages.create(text: message.text, tg_msg_id: message.message_id)
       end
