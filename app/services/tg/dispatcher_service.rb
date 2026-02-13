@@ -60,7 +60,7 @@ module Tg
         bot.api.send_message(chat_id: message.chat.id, text: "ID видео:\n#{message.video.file_id}")
       end
 
-      def process_message(message)
+      def process_message(bot, message)
         chat = message.chat.as_json
         return send_admin(chat, message.text) if %w[group supergroup].include?(chat['type'])
 
