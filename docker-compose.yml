@@ -5,7 +5,6 @@ services:
     env_file: ./.env
     volumes:
       - ./log:/app/log
-      - ./public:/app/public
 
   miniapp:
     <<: *base
