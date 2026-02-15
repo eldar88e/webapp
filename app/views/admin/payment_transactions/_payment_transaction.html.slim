@@ -35,7 +35,7 @@ tr id="#{dom_id(resource)}" class="bg-white border-b dark:bg-gray-800 dark:borde
   td.px-6.py-4
     = resource.checking_at.present? ? format_date(resource.checking_at) : '—'
   td.px-6.py-4
-    = resource.checking_at.present? ? format_date(resource.checking_at) : '—'
+    = resource.approved_at.present? ? format_date(resource.approved_at) : '—'
   td.px-6.py-4
     = resource.cancelled_at.present? ? format_date(resource.cancelled_at) : '—'
   td.px-6.py-4
