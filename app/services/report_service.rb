@@ -9,6 +9,11 @@ class ReportService
       Rails.logger.info "Order #{order.id} is now unpaid"
       payment_transaction = order.payment_transaction || order.create_payment_transaction!(amount: order.total_amount)
       if payment_transaction.status == 'created'
+        msg = "Что бы ускорить процесс проверки оплаты, поле того как вы произвели оплату и нажали кнопку 'Я оплатил', \
+               отправьте в чат Чек в формате PDF. Картинки и скриншоты в формате JPG, PNG не принимаются.".squeeze(' ')
+        # TelegramService.call(msg, order.user.tg_id, markup: 'first_msg')
+        order.user.messages
+             .create(text: msg, is_incoming: false, data: { markup: { markup: 'first_msg' }, business: true })
         request_card = Payment::ApiService.order_initialized(payment_transaction)
         payment_transaction.update!(
           status: :initialized,

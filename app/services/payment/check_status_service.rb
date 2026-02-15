@@ -45,10 +45,13 @@ module Payment
         schedule_next_check
         order = @transaction.order
         msg   = "Для подтверждения оплаты по заказу №#{order.id}.\nПожалуйста приложите чек в \
-                 формате pdf нажав на кнопку «Приложить чек».".squeeze(' ')
+                 формате pdf нажав на кнопку «Приложить чек».\nДля подтверждения оплаты у вас есть 30 минут с момента \
+                 первого уведомления. После чего заказ будет автоматически отменен. При возникновении \
+                 проблем свяжитесь с нами.\nСпасибо за понимание!".squeeze(' ')
         markup = { markup_url: "/orders/#{order.id}/attachments/new", markup_text: 'Приложить чек' }
         Rails.cache.fetch("check_status_#{@transaction.id}", expires_in: 7.minutes) do
-          TelegramService.call(msg, order.user.tg_id, **markup)
+          # TelegramService.call(msg, order.user.tg_id, **markup)
+          order.user.messages.create(text: msg, is_incoming: false, data: { markup: markup, business: true })
         end
       elsif status.match?(/system_timer_end_|admin_appeal_cancel/)
         update_statuses(:overdue)
