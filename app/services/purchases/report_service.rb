@@ -21,6 +21,7 @@ module Purchases
       msg += "\n\n#{purchase_items_str(true)}"
       Rails.logger.info msg
       TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids), markup: 'purchase_paid')
+      TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:ceo_tg_id), markup: 'purchase_paid')
       send_to_supplier(msg)
     end
 
@@ -41,6 +42,7 @@ module Purchases
       msg = "❌ Закупка №#{@purchase.id} отменена"
       Rails.logger.info msg
       TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
+      TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:ceo_tg_id))
       send_to_supplier(msg)
     end
 

@@ -103,6 +103,7 @@ class Product < ApplicationRecord
     if stock_quantity < MIN_STOCK_QUANTITY && stock_quantity_was >= MIN_STOCK_QUANTITY
       msg = "⚠️ Внимание! Осталось всего #{stock_quantity} единиц товара '#{name}'!"
       TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
+      TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:ceo_tg_id))
     end
     return unless stock_quantity < 10
 
