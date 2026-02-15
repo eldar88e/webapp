@@ -10,6 +10,7 @@ module Tg
       new(**args).handle_error
     end
 
+    # rubocop:disable Metrics/MethodLength
     def handle_error
       if !@error.is_a?(Telegram::Bot::Exceptions::ResponseError)
         notify_email_admin('Telegram new sending error')
@@ -24,6 +25,7 @@ module Tg
         notify_email_admin('Telegram new sending type error')
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     private
 
