@@ -10,14 +10,14 @@
 
   <td class="px-6 py-4">
     <div class="flex gap-2">
-      <%- if order.attachment.attached? %>
-        <%= link_to url_for(order.attachment), target: '_blank' do %>
-          <%= render Admin::IconComponent.new name: :pdf %>
-        <% end %>
-      <% end %>
       <%- if order.payment_transaction.present? %>
         <%= link_to admin_payment_transaction_path(order.payment_transaction), data: { turbo_prefetch: false } do %>
           <%= render Admin::IconComponent.new name: :link, width: 20 %>
+        <% end %>
+      <% end %>
+      <%- if order.attachment.attached? %>
+        <%= link_to url_for(order.attachment), target: '_blank' do %>
+          <%= render Admin::IconComponent.new name: :pdf %>
         <% end %>
       <% end %>
     </div>
