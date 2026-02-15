@@ -27,4 +27,5 @@ namespace :admin do
   resources :errors, only: %i[index show]
   resources :questions, except: :show
   resources :answers, only: :index
+  resources :payment_transactions, only: %i[index show]
 end

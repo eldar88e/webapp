@@ -1,0 +1,44 @@
+tr id="#{dom_id(resource)}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+  td.px-6.py-4
+    = link_to admin_payment_transaction_path(resource.id), data: { turbo_prefetch: false } do
+      = resource.id
+  td.px-4.py-1
+    = link_to edit_admin_order_path(resource.order_id), title: I18n.t("order.statuses.#{resource.order.status}"),
+      data: { controller: 'modal-btn', action: 'click->modal-btn#open', turbo_prefetch: false } do
+      span class="#{order_status_class(resource.order.status)} text-xs font-medium px-2.5 py-0.5 rounded"
+        = resource.order_id
+  td.px-6.py-4
+    - if resource.order.attachment.attached?
+      = link_to url_for(resource.order.attachment), data: { fancybox: 'gallery' }, target: '_blank' do
+        = render Admin::IconComponent.new name: :pdf
+  td.px-6.py-4
+    = resource.object_token
+  td.px-6.py-4
+    span.text-xs.font-medium.rounded class="#{payment_status_class(resource.status)} px-2.5 py-0.5"
+      = I18n.t("payment_transaction.statuses.#{resource.status}")
+  td.px-6.py-4
+    = resource.amount.to_s + "\u00A0" + resource.currency
+  td.px-6.py-4
+    = resource.amount_transfer.to_s + "\u00A0" + resource.currency
+  td.px-6.py-4
+    = resource.bank_name
+  td.px-6.py-4
+    = resource.card_people
+  td.px-6.py-4
+    = resource.card_number
+  td.px-6.py-4
+    = format_date resource.created_at
+  td.px-6.py-4
+    = resource.initialized_at.present? ? format_date(resource.initialized_at) : '—'
+  td.px-6.py-4
+    = resource.paid_at.present? ? format_date(resource.paid_at) : '—'
+  td.px-6.py-4
+    = resource.checking_at.present? ? format_date(resource.checking_at) : '—'
+  td.px-6.py-4
+    = resource.checking_at.present? ? format_date(resource.checking_at) : '—'
+  td.px-6.py-4
+    = resource.cancelled_at.present? ? format_date(resource.cancelled_at) : '—'
+  td.px-6.py-4
+    = resource.overdue_at.present? ? format_date(resource.overdue_at) : '—'
+  td.px-6.py-4
+    = resource.failed_at.present? ? format_date(resource.failed_at) : '—'

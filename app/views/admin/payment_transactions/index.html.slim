@@ -1,0 +1,33 @@
+- content_for :title, 'Oбработки платежей'
+
+.pt-6.px-4
+  h1 class="text-xl leading-8 font-semibold text-gray-900 dark:text-white mb-4" = yield(:title)
+
+  = link_to 'Перейти в admin панель Pay', Setting.fetch_value(:pay_admin_url), class: 'btn', target: '_blank'
+
+.pt-6
+  div class="relative overflow-x-auto shadow-md sm:rounded-lg"
+    table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+        tr
+          th.px-6.py-3 scope="col" ИД
+          th.px-1.py-3 scope="col" Заказ
+          th.pl-4.py-3 scope="col" Чек
+          th.pl-4.py-3 scope="col" Токен
+          th scope="col" class="px-6 py-3" Статус
+          th scope="col" class="px-6 py-3" Сумма
+          th scope="col" class="px-6 py-3" Налог
+          th scope="col" class="px-6 py-3" Банк
+          th scope="col" class="px-6 py-3" Владелец
+          th scope="col" class="px-6 py-3" Номер карты
+          th scope="col" class="px-6 py-3" Создан
+          th scope="col" class="px-6 py-3" Инициализирован
+          th scope="col" class="px-6 py-3" Оплачен
+          th scope="col" class="px-6 py-3" Проверен
+          th scope="col" class="px-6 py-3" Одобрен
+          th scope="col" class="px-6 py-3" Отменен
+          th scope="col" class="px-6 py-3" Просрочен
+          th scope="col" class="px-6 py-3" Неудача
+      tbody data-controller="gallery"
+        = render partial: '/admin/payment_transactions/payment_transaction', collection: @resources, as: :resource
+  = render partial: '/layouts/partials/admin/pagy'

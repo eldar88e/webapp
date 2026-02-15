@@ -4,7 +4,7 @@ module Admin
     before_action :assign_bank_card, only: :update
 
     def index
-      @q_orders       = Order.includes(:user).ransack(params[:q])
+      @q_orders       = Order.includes(:user, :payment_transaction, :attachment_attachment).ransack(params[:q])
       @q_orders.sorts = 'created_at desc' if params[:q].nil?
       @pagy, @orders  = pagy(@q_orders.result)
     end

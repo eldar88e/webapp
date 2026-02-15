@@ -54,6 +54,16 @@ ru:
       shipped: "В пути"
       stocked: "Оприходовано"
       cancelled: "Отменено"
+  payment_transaction:
+    statuses:
+      created: "Создан"
+      initialized: "Инициализирован"
+      paid: "Оплачен"
+      checking: "Проверяется"
+      approved: "Одобрен"
+      cancelled: "Отменен"
+      failed: "Неудача"
+      overdue: "Просрочен"
   task_types:
     bugfix: "Ошибка"
     feature: "Новая фича"
