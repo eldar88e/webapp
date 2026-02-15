@@ -1,14 +1,11 @@
 module Orders
   class AttachmentsController < ApplicationController
     before_action :set_order
+    before_action :check_order_status, only: :create
 
     def new; end
 
     def create
-      if @order.status != 'paid' || @order.attachment.attached?
-        return redirect_to orders_path, alert: t('.already_attached')
-      end
-
       @order.attachment.attach(params[:order][:attachment])
       result = Payment::ApiService.order_check_down(@order.payment_transaction, helpers.storage_path(@order.attachment))
 
@@ -28,6 +25,10 @@ module Orders
 
     def set_order
       @order = Order.find(params[:order_id])
+    end
+
+    def check_order_status
+      redirect_to orders_path, alert: t('.already_attached') if @order.status != 'paid' || @order.attachment.attached?
     end
   end
 end

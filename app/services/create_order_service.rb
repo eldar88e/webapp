@@ -1,5 +1,5 @@
 class CreateOrderService
-  ORDER_STATUS_FOR_UPDATE = %i[initialized] # unpaid
+  ORDER_STATUS_FOR_UPDATE = %i[initialized].freeze # unpaid
 
   def initialize(user, bonus)
     @user  = user

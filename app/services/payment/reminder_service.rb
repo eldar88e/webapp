@@ -2,7 +2,7 @@ module Payment
   class ReminderService
     STEPS = {
       'one' => { 'wait' => 10.minutes, 'msg_type' => 'two' },
-      'two' => { 'wait' => 5.second, 'msg_type' => 'exit' }
+      'two' => { 'wait' => 5.seconds, 'msg_type' => 'exit' }
     }.freeze
 
     def initialize(**args)
