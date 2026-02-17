@@ -61,12 +61,8 @@ module Payment
       private
 
       def fetch_response(payment_amount, payload, endpoint)
-        response = connection.post(endpoint) do |req|
-          req.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-          req.body = payload.merge(user_token: USER_TOKEN)
-        end
-
-        result = JSON.parse(response.body)
+        response = connection_to(endpoint)
+        result   = JSON.parse(response.body)
         return error_response(payment_amount, payload, response&.status, result) if result['response'] == 'error'
 
         log_transaction(payment_amount, payload, response&.status, result)
@@ -77,10 +73,17 @@ module Payment
       end
 
       def connection
-        @connection ||= Faraday.new(url: API_URL) do |f|
+        Faraday.new(url: API_URL) do |f|
           f.request :url_encoded
           f.adapter Faraday.default_adapter
           f.response :logger if Rails.env.development?
+        end
+      end
+
+      def connection_to(endpoint)
+        connection.post(endpoint) do |req|
+          req.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+          req.body = payload.merge(user_token: USER_TOKEN)
         end
       end
 
