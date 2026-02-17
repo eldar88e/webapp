@@ -3,8 +3,9 @@ module Admin
     before_action :set_user, only: %i[show edit update destroy]
 
     def index
-      @q_users      = User.order(created_at: :desc).ransack(params[:q])
-      @pagy, @users = pagy(@q_users.result)
+      @q_users       = User.ransack(params[:q])
+      @q_users.sorts = 'created_at desc' if @q_users.sorts.empty?
+      @pagy, @users  = pagy(@q_users.result)
     end
 
     def show
