@@ -5,7 +5,7 @@ module Admin
 
     def index
       @q_orders       = Order.includes(:user, :payment_transaction, :attachment_attachment).ransack(params[:q])
-      @q_orders.sorts = 'created_at desc' if params[:q].nil?
+      @q_orders.sorts = 'created_at desc' if @q_orders.sorts.empty?
       @pagy, @orders  = pagy(@q_orders.result)
     end
 

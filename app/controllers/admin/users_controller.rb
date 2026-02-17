@@ -9,8 +9,9 @@ module Admin
     end
 
     def show
-      @q_orders      = @user.orders.includes(:bank_card).order(created_at: :desc).ransack(params[:q])
-      @pagy, @orders = pagy(@q_orders.result)
+      @q_orders       = @user.orders.includes(:bank_card).ransack(params[:q])
+      @q_orders.sorts = 'created_at desc' if @q_orders.sorts.empty?
+      @pagy, @orders  = pagy(@q_orders.result)
       # TODO: Добавить отзывы
     end
 
