@@ -1,6 +1,18 @@
 class Review < ApplicationRecord
   SHIPPED = 4
   PHOTO_LIMIT_SIZE = 10
+  THANKS_MSG = [
+    'Спасибо за ваш отзыв! 🙏',
+    'Ваше мнение очень важно для нас! 💙',
+    'Благодарим за обратную связь! ✨',
+    'Спасибо за тёплые слова! 🤗',
+    'Мы ценим ваше мнение! 🌟',
+    'Спасибо, что нашли время поделиться впечатлениями! 💫',
+    'Ваш отзыв вдохновляет нас становиться лучше! 🚀',
+    'Большое спасибо за вашу оценку! ❤️',
+    'Рады, что вам понравилось! 😊',
+    'Спасибо за доверие и обратную связь! 🤝'
+  ].freeze
 
   belongs_to :user
   belongs_to :product
@@ -19,6 +31,7 @@ class Review < ApplicationRecord
   scope :pending, -> { where(approved: false) }
 
   after_commit :clear_reviews_cache, on: %i[create update destroy]
+  after_commit :send_thanks_msg, on: :update, if: -> { previous_changes['approved'] == [false, true] }
 
   def approve!
     update!(approved: true)
@@ -99,5 +112,11 @@ class Review < ApplicationRecord
 
   def clear_reviews_cache
     Rails.cache.delete_multi(%i[all_reviews])
+  end
+
+  def send_thanks_msg
+    msg    = "Ваш отзыв на товар #{product.name} опубликован!\n#{THANKS_MSG.sample}"
+    markup = { markup: { markup: 'to_catalog' } }
+    user.messages.create(text: msg, is_incoming: false, data: markup)
   end
 end

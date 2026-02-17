@@ -37,6 +37,8 @@ class Message < ApplicationRecord
   private
 
   def notify_admin
+    return if text == '/start'
+
     markup = { markup_url: "admin/messages&chat_id=#{tg_id}", markup_text: '💬 Перейти к сообщению' }
     TelegramJob.set(wait: 1.second)
                .perform_later(msg: build_notice_msg, id: Setting.fetch_value(:admin_ids), **markup)
