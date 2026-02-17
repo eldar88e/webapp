@@ -21,25 +21,7 @@ module Payment
           amount: transaction.amount,
           id_pay_method: 1
         }
-        begin
-          result = fetch_response(transaction, payload, INIT_ENDPOINT)
-          raise result['message'] if result['response'] == 'error'
-        rescue StandardError => e
-          if result['message'].downcase.include?('поменяйте сумму') && try <= LIMIT_INIT
-            msg = "Transaction #{transaction.id} failed to initialize. #{e.message}. Retrying..."
-            Rails.logger.error msg
-            TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id))
-            try += 1
-            sleep 3 * try
-            retry
-          else
-            msg = "Transaction: #{transaction.id} for Order: #{transaction.order.id}"
-            msg += " failed to initialize after #{try} tries. Error: #{e.message}"
-            Rails.logger.error msg + "Full message: #{e.full_message}"
-            TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
-            return result
-          end
-        end
+        result = fetch_initialized(transaction, payload, try)
         prepare_response(result)
       end
 
@@ -90,8 +72,8 @@ module Payment
         log_transaction(payment_amount, payload, response&.status, result)
         result
       rescue StandardError => e
+        result = { 'response' => 'error', 'message' => e.message }
         error_response(payment_amount, payload, response&.status, result, e.full_message)
-        { 'response' => 'error', 'message' => e.message }
       end
 
       def connection
@@ -102,6 +84,7 @@ module Payment
         end
       end
 
+      # rubocop:disable Metrics/MethodLength
       def log_transaction(payment_amount, payload, status, result, error = nil)
         ::ApiLog.create!(
           loggable: payment_amount,
@@ -118,22 +101,48 @@ module Payment
           error_message: error
         )
       end
+      # rubocop:enable Metrics/MethodLength
 
       def prepare_response(result)
+        return result if result['response'] == 'error'
+
+        data_requisite = result['data']['data_requisite']
         {
-          object_token: result['data']['data_requisite']['object_token'],
-          fio: result['data']['data_requisite']['data_people'].values.join(' '),
-          card_number: result['data']['data_requisite']['value'],
-          bank_name: result['data']['data_requisite']['data_bank']['name'],
-          amount_transfer: result['data']['data_requisite']['data_mathematics']['amount_transfer']
+          object_token: data_requisite['object_token'],
+          fio: data_requisite['data_people'].values.join(' '),
+          card_number: data_requisite['value'],
+          bank_name: data_requisite['data_bank']['name'],
+          amount_transfer: data_requisite['data_mathematics']['amount_transfer']
         }
       end
 
       def error_response(payment_amount, payload, status, result, error = nil)
-        Rails.logger.error "Failed to fetch response: #{result['message']}"
         error ||= result['message']
+        Rails.logger.error "Failed to fetch response: #{error}"
         log_transaction(payment_amount, payload, status, result, { error: error })
         result
+      end
+
+      def fetch_initialized(transaction, payload, try)
+        result = fetch_response(transaction, payload, INIT_ENDPOINT)
+        raise result['message'] if result['response'] == 'error'
+      rescue StandardError => e
+        if result['message'].downcase.include?('поменяйте сумму') && try <= LIMIT_INIT
+          error_log "Transaction #{transaction.id} failed to initialize. #{e.message}. Retrying...", :test_id
+          try += 1
+          sleep 3 * try
+          retry
+        else
+          msg = "Transaction: #{transaction.id} for Order: #{transaction.order.id}"
+          msg += " failed to initialize after #{try} tries. Error: #{e.message}"
+          error_log msg
+          result
+        end
+      end
+
+      def error_log(msg, tg_id = :admin_ids)
+        Rails.logger.error msg + "Full message: #{e.full_message}"
+        TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(tg_id))
       end
     end
   end

@@ -21,7 +21,9 @@ module Payment
       remove_old_msg
       msg     = form_msg
       message = @order.user.messages.create(**msg)
+      # rubocop:disable Rails/SkipsModelValidations
       @order.update_columns(msg_id: message.id, tg_msg: false)
+      # rubocop:enable Rails/SkipsModelValidations
 
       step = STEPS[@msg_type]
       Payment::ReminderJob.set(wait: step['wait']).perform_later(order_id: @order.id, msg_type: step['msg_type'])

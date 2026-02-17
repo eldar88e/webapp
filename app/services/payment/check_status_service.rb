@@ -41,21 +41,7 @@ module Payment
       return update_statuses(:approved) if status.match?('success')
 
       if status == 'trader_check_query'
-        @transaction.update!(status: :checking)
-        schedule_next_check
-        order = @transaction.order
-        result = nil
-        if order.attachment.attached?
-          result = Payment::ApiService.order_check_down(@transaction, storage_url(order.attachment))
-        end
-
-        if result && result['response'] != 'success'
-          msg = "Error attach check to transaction ##{@transaction.object_token}: #{result}"
-          Rails.logger.error msg
-          TelegramService.call(msg, Setting.fetch_value(:admin_ids))
-        else
-          send_pdf_notice(order)
-        end
+        handle_trader_check_query
       elsif status.match?(/system_timer_end_|admin_appeal_cancel/)
         update_statuses(:overdue)
       else
@@ -96,6 +82,26 @@ module Payment
 
     def storage_url(attach)
       ApplicationController.helpers.storage_path(attach)
+    end
+
+    def handle_trader_check_query
+      @transaction.update!(status: :checking)
+      schedule_next_check
+      result = send_check
+
+      if result && result['response'] != 'success'
+        msg = "Error attach check to transaction ##{@transaction.object_token}: #{result}"
+        Rails.logger.error msg
+        TelegramService.call(msg, Setting.fetch_value(:admin_ids))
+      else
+        send_pdf_notice(@transaction.order)
+      end
+    end
+
+    def send_check
+      return unless @transaction.order.attachment.attached?
+
+      Payment::ApiService.order_check_down(@transaction, storage_url(@transaction.order.attachment))
     end
   end
 end
