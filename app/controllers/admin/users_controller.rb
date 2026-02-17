@@ -25,7 +25,7 @@ module Admin
         update_bonus
         render turbo_stream: [
           turbo_stream.replace(@user, partial: '/admin/users/user', locals: { user: @user }),
-          success_notice(t('controller.users.update'))
+          success_notice(t('.update'))
         ]
       else
         error_notice @user.errors.full_messages
@@ -34,7 +34,9 @@ module Admin
 
     def destroy
       @user.destroy!
-      redirect_to admin_users_path, status: :see_other, notice: t('controller.users.destroy')
+      # redirect_to admin_users_path, status: :see_other, notice: t('controller.users.destroy')
+
+      render turbo_stream: [turbo_stream.remove(@user), success_notice(t('.destroy'))]
     end
 
     private
