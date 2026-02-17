@@ -58,7 +58,7 @@
         <% no_blocked = User.where(is_blocked: false, started: false).count %>
         <% if no_blocked != not_started %>
           <span>/</span>
-          <%= User.where(is_blocked: false, started: false).count %>
+          <%= no_blocked %>
           <span class="text-xs -ml-1">(не блок.)</span>
         <% end %>
       </div>
