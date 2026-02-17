@@ -6,7 +6,7 @@ module Payment
     API_PATH   = '/api/method/merch/payin/'.freeze
     API_URL    = "#{API_DOMAIN}#{API_PATH}".freeze
     USER_TOKEN = ENV.fetch('PAYMENT_USER_TOKEN')
-    LIMIT_INIT = 3
+    LIMIT_INIT = 5
 
     INIT_ENDPOINT    = 'order_initialized/standart'.freeze
     PROCESS_ENDPOINT = 'order_process'.freeze
@@ -23,17 +23,21 @@ module Payment
             id_pay_method: 1
           }
           result = fetch_response(transaction, payload, INIT_ENDPOINT)
-          raise "Transaction: #{transaction.id} has error: #{result['message']}" if result['response'] == 'error'
+          raise result['message'] if result['response'] == 'error'
         rescue StandardError => e
           if result['message'].downcase.include?('поменяйте сумму') && try <= LIMIT_INIT
-            Rails.logger.error "Transaction #{transaction.id} failed to initialize. #{e.message}. Retrying..."
+            msg = "Transaction #{transaction.id} failed to initialize. #{e.message}. Retrying..."
+            Rails.logger.error msg
+            TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id))
             try += 1
-            sleep 1
+            sleep 3 * try
             retry
           else
-            msg = "Transaction #{transaction.id} failed to initialize after #{try} tries. Error: #{e.message}"
+            msg = "Transaction: #{transaction.id} for Order: #{transaction.order.id}"
+            msg += " failed to initialize after #{try} tries. Error: #{e.message}"
+            Rails.logger.error msg + "Full message: #{e.full_message}"
             TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
-            raise e
+            return result
           end
         end
         prepare_response(result)

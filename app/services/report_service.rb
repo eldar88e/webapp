@@ -7,14 +7,21 @@ class ReportService
   class << self
     def on_unpaid(order)
       Rails.logger.info "Order #{order.id} is now unpaid"
+
+      user = order.user
+      user.cart.destroy
+      delete_old_msg(order)
+
       payment_transaction = order.payment_transaction || order.create_payment_transaction!(amount: order.total_amount)
       if payment_transaction.status == 'created'
         msg = "Что бы ускорить процесс проверки оплаты, поле того как вы произвели оплату и нажали кнопку 'Я оплатил', \
                отправьте в чат Чек в формате PDF. Картинки и скриншоты в формате JPG, PNG не принимаются.".squeeze(' ')
-        # TelegramService.call(msg, order.user.tg_id, markup: 'first_msg')
         order.user.messages
              .create(text: msg, is_incoming: false, data: { markup: { markup: 'first_msg' }, business: true })
         request_card = Payment::ApiService.order_initialized(payment_transaction)
+
+        return cancel_order(order) if request_card['response'] == 'error'
+
         payment_transaction.update!(
           status: :initialized,
           object_token: request_card[:object_token],
@@ -25,13 +32,7 @@ class ReportService
         )
       end
 
-      # TODO: Добавить обработку ошибки в случае ошибок со стороны платежной системы
-
-      user = order.user
-
-      user.cart.destroy
-
-      msg  = "#{I18n.t('tg_msg.unpaid.msg', order: order.id)}\n\n"
+      msg = "#{I18n.t('tg_msg.unpaid.msg', order: order.id)}\n\n"
       msg += I18n.t(
         'tg_msg.unpaid.main',
         # card: order.bank_card.bank_details,
@@ -48,7 +49,7 @@ class ReportService
       msg += "\n\n#{I18n.t('tg_msg.unpaid.footer')}"
 
       # send_report(order, user_msg: msg, user_tg_id: user.tg_id, user_markup: 'i_paid', delete_msg: true)
-      delete_old_msg(order)
+
       msg = user.messages.create(text: msg, is_incoming: false, data: { markup: { markup: 'i_paid' }, business: true })
       order.update_columns(msg_id: msg.id, tg_msg: false) if msg.present?
       # AbandonedOrderReminderJob.set(wait: ONE_WAIT).perform_async({ 'order_id' => order.id, 'msg_type' => 'one' })
@@ -142,7 +143,10 @@ class ReportService
       if payment_transaction&.status == 'initialized'
         response = Payment::ApiService.order_cancel(payment_transaction)
         if response['response'] == 'error'
-          raise "Failed to create payment transaction for order #{order.id}: #{response['message']}"
+          msg = "Failed cancel transaction #{payment_transaction.id} for order #{order.id}: #{response['message']}"
+          Rails.logger.error msg
+          order.payment_transaction.update!(status: :failed)
+          TelegramService.call(msg, Setting.fetch_value(:admin_ids))
         else
           order.payment_transaction.update!(status: :cancelled)
         end
@@ -204,6 +208,13 @@ class ReportService
 
     def notify_admin(error, order)
       Tg::ErrorHandlerService.call(error: error, user: order.user, business: true)
+    end
+
+    def cancel_order(order)
+      order.payment_transaction.update!(status: :failed)
+      msg_error = "Ошибка получения реквизитов для заказа #{order.id}. Пожалуйста, свяжитесь с нами."
+      order.user.messages.create(text: msg_error, is_incoming: false)
+      order.update!(status: :cancelled)
     end
   end
 end
