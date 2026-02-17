@@ -126,6 +126,7 @@ module Payment
       def fetch_initialized(transaction, payload, try)
         result = fetch_response(transaction, payload, INIT_ENDPOINT)
         raise result['message'] if result['response'] == 'error'
+        result
       rescue StandardError => e
         if result['message'].downcase.include?('поменяйте сумму') && try <= LIMIT_INIT
           error_log "Transaction #{transaction.id} failed to initialize. #{e.message}. Retrying...", :test_id
