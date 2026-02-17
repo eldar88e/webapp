@@ -6,20 +6,14 @@ module Orders
     def new; end
 
     def create
-      @order.attachment.attach(params[:order][:attachment])
-      result = Payment::ApiService.order_check_down(@order.payment_transaction, helpers.storage_path(@order.attachment))
+      file = params.dig(:order, :attachment)
+      return redirect_to orders_path, alert: t('.invalid_format') unless file&.content_type == 'application/pdf'
 
-      if result&.dig('response') == 'success'
-        redirect_to orders_path, notice: t('.success')
-      else
-        @order.attachment.purge
-        msg    = "‼️ Failed to attach check for Order ##{@order.id}.\nResponse:\n#{result}"
-        markup = { markup_url: 'admin/orders', markup_text: '📋 Перейти к заказам' }
-        TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids), **markup)
-        redirect_to orders_path, alert: t('.error')
-      end
+      @order.attachment.attach(file)
+      # Payment::AttachmentJob.perform_later(@order.id)
+
+      redirect_to orders_path, notice: t('.success')
     end
-
 
     private
 
