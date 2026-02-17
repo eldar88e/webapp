@@ -1,10 +1,12 @@
 module Admin
   class ProductsController < Admin::ApplicationController
     before_action :set_product, only: %i[edit update destroy]
+    before_action :set_products_scope, only: :index
 
     def index
-      @q_products      = Product.includes(:image_attachment).order(:created_at).ransack(params[:q])
-      @pagy, @products = pagy form_products
+      @q_products       = @products_scope.ransack(params[:q])
+      @q_products.sorts = 'created_at desc' if @q_products.sorts.empty?
+      @pagy, @products  = pagy @q_products.result
     end
 
     def new
@@ -57,21 +59,22 @@ module Admin
       success
     end
 
-    def form_products
-      root_product_id  = Setting.fetch_value(:root_product_id).to_i
+    def set_products_scope
+      @products_scope = Product.includes(:image_attachment)
+      root_product    = Product.find_by(id: Setting.fetch_value(:root_product_id).to_i)
+      return if root_product.blank?
+
       session[:filter] = params[:filter].presence || session[:filter].presence || 'descendants'
-      root_product     = Product.find_by(id: root_product_id)
-      root_product.nil? ? @q_products.result : filter_products(root_product)
+      filter_products(root_product)
     end
 
     def filter_products(root_product)
       case session[:filter]
       when 'descendants'
-        @q_products.result.where(id: root_product.descendants.ids).where.not(id: root_product.children.ids)
+        @products_scope = @products_scope.where(id: root_product.descendants.ids)
+                                         .where.not(id: root_product.children.ids)
       when 'children'
-        @q_products.result.where(id: root_product.children.ids)
-      else
-        @q_products.result
+        @products_scope = @products_scope.where(id: root_product.children.ids)
       end
     end
 
