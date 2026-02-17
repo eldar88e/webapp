@@ -57,7 +57,7 @@ class CourierSalaryCalculatorService
     def notify(list_purchase, salary)
       purchases = "📦 Состав:\n#{list_purchase.join("\n")}"
       msg = "🚚 Курьеру за #{yesterday.strftime('%d.%m.%Yг.')}:\n\n#{purchases}\n\n💰 Итого: #{price_to_s(salary)}"
-      [Setting.fetch_value(:ceo_tg_id), Setting.fetch_value(:admin_ids)].flatten.split(',').each do |id|
+      [Setting.fetch_value(:ceo_tg_id).split(','), Setting.fetch_value(:admin_ids).split(',')].flatten.each do |id|
         User.find_by(tg_id: id.to_i)&.messages&.create(text: msg, is_incoming: false)
       end
       notify_courier(msg)
