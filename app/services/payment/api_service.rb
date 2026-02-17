@@ -16,12 +16,12 @@ module Payment
 
     class << self
       def order_initialized(transaction, try = 1)
+        payload = {
+          version: 3,
+          amount: transaction.amount,
+          id_pay_method: 1
+        }
         begin
-          payload = {
-            version: 3,
-            amount: transaction.amount,
-            id_pay_method: 1
-          }
           result = fetch_response(transaction, payload, INIT_ENDPOINT)
           raise result['message'] if result['response'] == 'error'
         rescue StandardError => e
