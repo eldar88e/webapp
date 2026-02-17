@@ -41,6 +41,7 @@ module Payment
       end
     end
 
+    # rubocop:disable Metrics/MethodLength
     def form_msg
       user = @order.user
       payment_transaction = @order.payment_transaction
@@ -55,5 +56,6 @@ module Payment
       ) + "\n\n#{I18n.t('tg_msg.unpaid.reminder.footer')}"
       { text: text, is_incoming: false, data: { markup: { markup: 'i_paid' } } }
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end
