@@ -14,8 +14,9 @@ class ReportService
 
       payment_transaction = order.payment_transaction || order.create_payment_transaction!(amount: order.total_amount)
       if payment_transaction.status == 'created'
-        msg = "Что бы ускорить процесс проверки оплаты, поле того как вы произвели оплату и нажали кнопку 'Я оплатил', \
-               отправьте в чат Чек в формате PDF. Картинки и скриншоты в формате JPG, PNG не принимаются.".squeeze(' ')
+        msg = "🎉 Ваш заказ №#{order.id} в процессе обработки.\n \
+               Что бы ускорить процесс проверки оплаты, поле того как вы произвели оплату и нажали кнопку 'Я оплатил', \
+               отправьте в чат Чек в формате PDF.\nКартинки и скриншоты в формате JPG, PNG не принимаются.".squeeze(' ')
         order.user.messages
              .create(text: msg, is_incoming: false, data: { markup: { markup: 'first_msg' }, business: true })
         request_card = Payment::ApiService.order_initialized(payment_transaction)
