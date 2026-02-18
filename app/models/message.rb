@@ -1,5 +1,7 @@
 class Message < ApplicationRecord
   belongs_to :user, primary_key: :tg_id, foreign_key: :tg_id, inverse_of: :messages
+  belongs_to :reply_to, class_name: 'Message', optional: true
+  belongs_to :manager, class_name: 'User', optional: true
 
   before_validation { self.text = text&.strip }
 
@@ -56,13 +58,16 @@ class Message < ApplicationRecord
   # rubocop:enable Metrics/AbcSize
 
   def send_to_telegram
-    ConsumerSenderTgJob.perform_later(msg_id: id, id: user.tg_id, msg: text, data: parsed_data)
+    data = parsed_data
+    data[:reply_to_message_id] = reply_to.tg_msg_id if reply_to&.tg_msg_id.present?
+    ConsumerSenderTgJob.perform_later(msg_id: id, id: user.tg_id, msg: text, data: data)
   end
 
   def broadcast_admin_chat
+    sender = is_incoming? ? user : manager || user
     broadcast_append_later_to(
       "admin_chat_#{user.id}", partial: '/admin/messages/msg',
-                               locals: { message: self, current_user: user }, target: 'messages'
+                               locals: { message: self, current_user: sender }, target: 'messages'
     )
   end
 

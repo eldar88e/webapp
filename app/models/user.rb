@@ -24,6 +24,8 @@ class User < ApplicationRecord
   has_many :favorites, dependent: :destroy
   has_many :favorite_products, through: :favorites, source: :product
   has_many :bonus_logs, dependent: :destroy
+  has_many :managed_messages, class_name: 'Message', foreign_key: :manager_id, dependent: :nullify
+
   belongs_to :account_tier, optional: true
 
   # validates :order_count, numericality: { greater_than_or_equal_to: 0 }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_17_234220) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_18_072440) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -296,10 +296,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_17_234220) do
     t.datetime "created_at", null: false
     t.jsonb "data"
     t.boolean "is_incoming", default: true, null: false
+    t.bigint "manager_id"
+    t.bigint "reply_to_id"
     t.text "text"
     t.bigint "tg_id"
     t.bigint "tg_msg_id"
     t.datetime "updated_at", null: false
+    t.index ["manager_id"], name: "index_messages_on_manager_id"
+    t.index ["reply_to_id"], name: "index_messages_on_reply_to_id"
     t.index ["tg_id", "created_at"], name: "index_messages_on_tg_id_created_at_desc", order: { created_at: :desc }
   end
 
@@ -554,6 +558,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_17_234220) do
   add_foreign_key "favorites", "products"
   add_foreign_key "favorites", "users"
   add_foreign_key "mailings", "users"
+  add_foreign_key "messages", "messages", column: "reply_to_id", on_delete: :nullify
+  add_foreign_key "messages", "users", column: "manager_id", on_delete: :nullify
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
   add_foreign_key "orders", "bank_cards"

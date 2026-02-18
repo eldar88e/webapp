@@ -49,7 +49,8 @@ module Tg
       message_count.times do
         text_part = next_text_part
         @result   = bot.api.send_message(
-          chat_id: @chat_id, text: text_part, parse_mode: 'MarkdownV2', reply_markup: build_markup
+          chat_id: @chat_id, text: text_part, parse_mode: 'MarkdownV2',
+          reply_markup: build_markup, reply_to_message_id: @data[:reply_to_message_id]
         )
       end
     end
@@ -78,17 +79,21 @@ module Tg
 
     # rubocop:disable Metrics/MethodLength
     def send_data(bot, data)
+      reply_id = @data[:reply_to_message_id]
       if @data[:type].start_with?('image')
         bot.api.send_photo(
-          chat_id: @chat_id, photo: data, caption: @message, parse_mode: 'MarkdownV2', reply_markup: build_markup
+          chat_id: @chat_id, photo: data, caption: @message, parse_mode: 'MarkdownV2',
+          reply_markup: build_markup, reply_to_message_id: reply_id
         )
       elsif @data[:type].start_with?('video')
         bot.api.send_video(
-          chat_id: @chat_id, video: data, caption: @message, parse_mode: 'MarkdownV2', reply_markup: build_markup
+          chat_id: @chat_id, video: data, caption: @message, parse_mode: 'MarkdownV2',
+          reply_markup: build_markup, reply_to_message_id: reply_id
         )
       else
         bot.api.send_document(
-          chat_id: @chat_id, document: data, caption: @message, parse_mode: 'MarkdownV2', reply_markup: build_markup
+          chat_id: @chat_id, document: data, caption: @message, parse_mode: 'MarkdownV2',
+          reply_markup: build_markup, reply_to_message_id: reply_id
         )
       end
     end

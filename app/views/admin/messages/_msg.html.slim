@@ -7,10 +7,13 @@
   - if incoming
     = @user ||= render partial: '/layouts/partials/avatar', locals: { user: message.user }
   - else
-    = button_to admin_message_path(message), method: :delete, class: 'btn-delete -me-2 mt-6',
-            data: { confirm: 'Вы уверены, что хотите удалить данное сообщение?',
-                    controller: 'confirm', action: 'click->confirm#call' } do
-      = render Admin::IconComponent.new name: :trash
+    .flex.flex-col.gap-1.-me-2.mt-6
+      = button_to admin_message_path(message), method: :delete, class: 'btn-delete',
+              data: { confirm: 'Вы уверены, что хотите удалить данное сообщение?',
+                      controller: 'confirm', action: 'click->confirm#call' } do
+        = render Admin::IconComponent.new name: :trash
+      button.btn-reply.text-gray-400.hover:text-blue-500.transition type="button" data-action="click->clear-input#selectReply" data-message-id="#{message.id}" data-message-text="#{message.text&.truncate(100)}"
+        = render Admin::IconComponent.new name: :reply, width: 16
 
   .flex.flex-col class="max-w-auto sm:max-w-[75%]"
     .text-xs.text-slate-400.mb-1.flex.gap-1
@@ -20,6 +23,11 @@
           = format_date message.created_at
 
     .px-4.py-2.shadow-sm.bg-gray-100.text-gray-900.dark:text-white.dark:bg-gray-700.break-all class=bubble_cls
+      - if message.reply_to.present?
+        .mb-2.border-l-2.border-blue-400.pl-2.py-1.text-xs.text-gray-500.dark:text-gray-400.bg-gray-200.dark:bg-gray-600.rounded-r.cursor-pointer
+          - if message.reply_to.data && (message.reply_to.data['media_id'].present? || message.reply_to.data['tg_file_id'].present?)
+            span.mr-1 📎
+          = message.reply_to.text&.truncate(80) || "Медиа"
       - if message.data && (message.data['media_id'].present? || message.data['tg_file_id'].present?)
         .mb-2.pt-2
           = preview_media(message.data, :big)
@@ -33,9 +41,12 @@
           = render Admin::IconComponent.new name: :check, width: 16
 
   - if incoming
-    = button_to admin_message_path(message), method: :delete, class: 'btn-delete -ms-2 mt-6',
-            data: { confirm: 'Вы уверены, что хотите удалить данное сообщение?',
-                    controller: 'confirm', action: 'click->confirm#call' } do
-      = render Admin::IconComponent.new name: :trash
+    .flex.flex-col.gap-1.-ms-2.mt-6
+      = button_to admin_message_path(message), method: :delete, class: 'btn-delete',
+              data: { confirm: 'Вы уверены, что хотите удалить данное сообщение?',
+                      controller: 'confirm', action: 'click->confirm#call' } do
+        = render Admin::IconComponent.new name: :trash
+      button.btn-reply.text-gray-400.hover:text-blue-500.transition type="button" data-action="click->clear-input#selectReply" data-message-id="#{message.id}" data-message-text="#{message.text&.truncate(100)}"
+        = render Admin::IconComponent.new name: :reply, width: 16
   - else
     = @user_admin ||= render partial: '/layouts/partials/avatar', locals: { user: current_user }

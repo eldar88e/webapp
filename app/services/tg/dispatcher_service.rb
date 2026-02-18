@@ -21,19 +21,22 @@ module Tg
         tg_id   = message.chat.id
         file_id = message.photo.last.file_id
         msg_id  = message.message_id
-        TgFileDownloaderJob.perform_later(tg_id: tg_id, file_id: file_id, msg: message.caption, msg_id: msg_id)
+        TgFileDownloaderJob.perform_later(tg_id: tg_id, file_id: file_id, msg: message.caption, msg_id: msg_id,
+                                          reply_to_id: find_reply_to_id(message))
       end
 
       def save_sticker(_bot, message)
         user = find_user(message.chat.as_json)
-        user.messages.create(text: message.sticker.emoji, tg_msg_id: message.message_id)
+        user.messages.create(text: message.sticker.emoji, tg_msg_id: message.message_id,
+                             reply_to_id: find_reply_to_id(message))
       end
 
       def save_video(bot, message)
         tg_id   = message.chat.id
         file_id = message.video.file_id
         msg_id  = message.message_id
-        TgFileDownloaderJob.perform_later(tg_id: tg_id, file_id: file_id, msg: message.caption, msg_id: msg_id)
+        TgFileDownloaderJob.perform_later(tg_id: tg_id, file_id: file_id, msg: message.caption, msg_id: msg_id,
+                                          reply_to_id: find_reply_to_id(message))
         send_admin_video_id(bot, message)
       end
 
@@ -41,7 +44,8 @@ module Tg
         tg_id   = message.chat.id
         file_id = message.document.file_id
         msg_id  = message.message_id
-        TgFileDownloaderJob.perform_later(tg_id: tg_id, file_id: file_id, msg: message.caption, msg_id: msg_id)
+        TgFileDownloaderJob.perform_later(tg_id: tg_id, file_id: file_id, msg: message.caption, msg_id: msg_id,
+                                          reply_to_id: find_reply_to_id(message))
       end
 
       def send_firs_msg(bot, chat_id)
@@ -67,7 +71,8 @@ module Tg
         user = find_user(chat)
         send_firs_msg(bot, message.chat.id) if message.text == '/start'
 
-        user.messages.create(text: message.text, tg_msg_id: message.message_id)
+        user.messages.create(text: message.text, tg_msg_id: message.message_id,
+                             reply_to_id: find_reply_to_id(message))
       end
 
       def send_admin(chat, message)
@@ -90,6 +95,12 @@ module Tg
         TelegramJob.perform_later(msg: "Неизв. тип сообщения от #{message.chat.id}", id: settings[:test_id])
         TelegramJob.perform_later(msg: message.to_json, id: settings[:test_id])
         send_firs_msg(bot, message.chat.id)
+      end
+
+      def find_reply_to_id(message)
+        return unless message.respond_to?(:reply_to_message) && message.reply_to_message.present?
+
+        Message.find_by(tg_msg_id: message.reply_to_message.message_id, tg_id: message.chat.id)&.id
       end
 
       def settings

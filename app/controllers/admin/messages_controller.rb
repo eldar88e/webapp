@@ -40,22 +40,19 @@ module Admin
     end
 
     def build_message
-      @message      = @user.messages.build(text: message_params[:text], is_incoming: false)
-      @message.data = AttachmentService.call(params[:message][:attachment])
+      @message             = @user.messages.build(text: message_params[:text], is_incoming: false)
+      @message.data        = AttachmentService.call(params[:message][:attachment])
+      @message.reply_to_id = message_params[:reply_to_id] if message_params[:reply_to_id].present?
+      @message.manager_id  = current_user.id
     end
 
     def fetch_messages(user)
-      messages         = user&.messages&.order(created_at: :desc) || Message.none
+      messages         = user&.messages&.includes(:reply_to)&.order(created_at: :desc) || Message.none
       @pagy, @messages = pagy(messages, limit: 50)
       @messages        = @messages.reverse
     end
 
     def set_chats
-      # @chats = User.joins('INNER JOIN messages ON (messages.tg_id = users.tg_id)')
-      #              .select('users.*, MAX(messages.created_at)')
-      #              .group('users.id')
-      #              .order('MAX(messages.created_at) DESC')
-      #              .includes(:messages)
       @chats = User.joins('INNER JOIN (
                       SELECT DISTINCT ON (tg_id)
                         tg_id,
@@ -77,7 +74,7 @@ module Admin
     end
 
     def message_params
-      params.expect(message: %i[text user_id attachment])
+      params.expect(message: %i[text user_id attachment reply_to_id])
     end
   end
 end
