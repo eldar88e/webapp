@@ -5,12 +5,57 @@ module Tg
     class << self
       def call(bot, message)
         type = MESSAGE_TYPES.find { |t| message.public_send(t).present? }
+        return handle_admin_reply(bot, message, type) if admin_reply?(message)
         return send("save_#{type}", bot, message) if type
 
         other_message(bot, message)
       end
 
       private
+
+      def admin?(tg_id)
+        settings[:admin_ids].to_s.split(',').include?(tg_id.to_s)
+      end
+
+      def admin_reply?(message)
+        admin?(message.chat.id) &&
+          message.respond_to?(:reply_to_message) &&
+          message.reply_to_message.present? # &&
+        # message.reply_to_message.text&.include?('Входящее сообщение')
+      end
+
+      def handle_admin_reply(_bot, message, type)
+        user = find_reply_user(message.reply_to_message)
+        return unless user
+
+        admin_user = User.find_by(tg_id: message.chat.id)
+
+        case type
+        when 'text'
+          user.messages.create(text: message.text, is_incoming: false, manager_id: admin_user&.id)
+        when 'photo'
+          forward_admin_file(user, admin_user, message.photo.last.file_id, message.caption)
+        when 'video'
+          forward_admin_file(user, admin_user, message.video.file_id, message.caption)
+        when 'document'
+          forward_admin_file(user, admin_user, message.document.file_id, message.caption)
+        when 'sticker'
+          user.messages.create(text: message.sticker.emoji, is_incoming: false, manager_id: admin_user&.id)
+        end
+      end
+
+      def find_reply_user(replied_msg)
+        return unless replied_msg
+
+        Message.find_by(tg_msg_id: replied_msg.message_id)&.user
+      end
+
+      def forward_admin_file(user, admin_user, file_id, caption)
+        TgFileDownloaderJob.perform_later(
+          tg_id: user.tg_id, file_id: file_id, msg: caption,
+          is_outgoing: true, manager_id: admin_user&.id
+        )
+      end
 
       def save_text(bot, message)
         process_message(bot, message)

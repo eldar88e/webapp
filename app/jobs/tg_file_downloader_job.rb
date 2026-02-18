@@ -25,8 +25,17 @@ class TgFileDownloaderJob < ApplicationJob
   end
 
   def save_message(user, args, tg_file)
-    data = Tg::MessageService.build_data(tg_file)
-    user.messages.create(text: args[:msg], tg_msg_id: args[:msg_id], data: data, reply_to_id: args[:reply_to_id])
+    data  = Tg::MessageService.build_data(tg_file)
+    attrs = { text: args[:msg], data: data, reply_to_id: args[:reply_to_id] }
+
+    if args[:is_outgoing]
+      attrs[:is_incoming] = false
+      attrs[:manager_id] = args[:manager_id]
+    else
+      attrs[:tg_msg_id] = args[:msg_id]
+    end
+
+    user.messages.create(attrs)
   end
 
   def find_or_create_tg_file(file_hash, file_id, file_type, name)
