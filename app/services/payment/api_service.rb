@@ -61,7 +61,7 @@ module Payment
       private
 
       def fetch_response(payment_amount, payload, endpoint)
-        response = connection_to(endpoint)
+        response = connection_to(endpoint, payload)
         result   = JSON.parse(response.body)
         return error_response(payment_amount, payload, response&.status, result) if result['response'] == 'error'
 
@@ -80,7 +80,7 @@ module Payment
         end
       end
 
-      def connection_to(endpoint)
+      def connection_to(endpoint, payload)
         connection.post(endpoint) do |req|
           req.headers['Content-Type'] = 'application/x-www-form-urlencoded'
           req.body = payload.merge(user_token: USER_TOKEN)
@@ -133,20 +133,20 @@ module Payment
         result
       rescue StandardError => e
         if result['message'].downcase.include?('поменяйте сумму') && try <= LIMIT_INIT
-          error_log "Transaction #{transaction.id} failed to initialize. #{e.message}. Retrying...", :test_id
+          error_log "Transaction #{transaction.id} failed to initialize. #{e.message}. Retrying...", e, :test_id
           try += 1
           sleep 3 * try
           retry
         else
           msg = "Transaction: #{transaction.id} for Order: #{transaction.order.id}"
           msg += " failed to initialize after #{try} tries. Error: #{e.message}"
-          error_log msg
+          error_log msg, e
           result
         end
       end
 
-      def error_log(msg, tg_id = :admin_ids)
-        Rails.logger.error msg + "Full message: #{e.full_message}"
+      def error_log(msg, error, tg_id = :admin_ids)
+        Rails.logger.error msg + "Full message: #{error.full_message}"
         TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(tg_id))
       end
     end
