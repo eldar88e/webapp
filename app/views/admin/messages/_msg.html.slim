@@ -2,6 +2,7 @@
 - align_cls  = incoming ? "justify-start" : "justify-end"
 - bubble_cls = incoming ? "rounded-r-xl rounded-bl-xl" : "rounded-l-xl rounded-br-xl"
 - time_align = incoming ? "text-left" : "text-right"
+- media_info = message_media_info(message)
 
 .mb-4.flex.gap-2.md:gap-3 class="#{align_cls} message" id="#{dom_id message}"
   - if incoming
@@ -12,7 +13,7 @@
               data: { confirm: 'Вы уверены, что хотите удалить данное сообщение?',
                       controller: 'confirm', action: 'click->confirm#call' } do
         = render Admin::IconComponent.new name: :trash
-      button.btn-reply.text-gray-400.hover:text-blue-500.transition type="button" data-action="click->clear-input#selectReply" data-message-id="#{message.id}" data-message-text="#{message.text&.truncate(100)}"
+      button.btn-reply.text-gray-400.hover:text-blue-500.transition type="button" data-action="click->clear-input#selectReply" data-message-id="#{message.id}" data-message-text="#{message.text&.truncate(100)}" data-message-media-url="#{media_info[:url]}" data-message-media-name="#{media_info[:name]}" data-message-media-type="#{media_info[:type]}"
         = render Admin::IconComponent.new name: :reply, width: 16
 
   .flex.flex-col class="max-w-auto sm:max-w-[75%]"
@@ -46,7 +47,7 @@
               data: { confirm: 'Вы уверены, что хотите удалить данное сообщение?',
                       controller: 'confirm', action: 'click->confirm#call' } do
         = render Admin::IconComponent.new name: :trash
-      button.btn-reply.text-gray-400.hover:text-blue-500.transition type="button" data-action="click->clear-input#selectReply" data-message-id="#{message.id}" data-message-text="#{message.text&.truncate(100)}"
+      button.btn-reply.text-gray-400.hover:text-blue-500.transition type="button" data-action="click->clear-input#selectReply" data-message-id="#{message.id}" data-message-text="#{message.text&.truncate(100)}" data-message-media-url="#{media_info[:url]}" data-message-media-name="#{media_info[:name]}" data-message-media-type="#{media_info[:type]}"
         = render Admin::IconComponent.new name: :reply, width: 16
   - else
     = @user_admin ||= render partial: '/layouts/partials/avatar', locals: { user: current_user }

@@ -78,6 +78,19 @@ module Admin
       link_to build_icon(attachment.content_type, url, params), url, data: { fancybox: 'gallery' }
     end
 
+    def message_media_info(message)
+      return {} unless message.data&.dig('media_id').present? || message.data&.dig('tg_file_id').present?
+
+      media_file = find_tg_media_file(message.data)
+      attachment = media_file&.attachment
+      return {} unless attachment&.attached?
+
+      url = build_full_path(attachment)
+      return {} if url.blank?
+
+      { url: url, name: media_file.original_filename, type: attachment.content_type }
+    end
+
     def build_icon(content_type, url, params)
       if content_type.start_with?('image')
         image_tag url, class: ICONS_PARAMS[params][:image]
