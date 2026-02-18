@@ -6,7 +6,7 @@ module Admin
     before_action :form_mailing, only: :create
 
     def index
-      @mailings = Mailing.order(created_at: :desc).includes(:user)
+      @pagy, @mailings = pagy Mailing.order(created_at: :desc).includes(:user)
     end
 
     def new
