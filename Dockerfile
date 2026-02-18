@@ -21,7 +21,7 @@ WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
 RUN gem install bundler -v "$(tail -n 1 Gemfile.lock)" \
- && bundle install --jobs=4 --retry=3 \
+ && bundle install --jobs=6 --retry=3 \
  && bundle clean --force \
  && rm -rf /usr/local/bundle/cache
 
