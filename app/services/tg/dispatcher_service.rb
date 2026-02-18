@@ -25,11 +25,7 @@ module Tg
       end
 
       def handle_admin_reply(_bot, message, type)
-        Rails.logger.error '*' * 70
-        Rails.logger.error "Admin reply: #{message.reply_to_message}"
-        Rails.logger.error "Admin reply msg_id: #{message.reply_to_message.message_id}"
-        Rails.logger.error '=' * 70
-        user = find_reply_user(message.reply_to_message)
+        user = find_reply_user(message.reply_to_message.text)
         return unless user
 
         admin_user = User.find_by(tg_id: message.chat.id)
@@ -48,10 +44,9 @@ module Tg
         end
       end
 
-      def find_reply_user(replied_msg)
-        return unless replied_msg
-
-        Message.find_by(tg_msg_id: replied_msg.message_id)&.user
+      def find_reply_user(text)
+        user_id = text&.match(/🆔\s+(\d+)/)&.captures&.first
+        User.find_by(id: user_id) if user_id
       end
 
       def forward_admin_file(user, admin_user, file_id, caption)
