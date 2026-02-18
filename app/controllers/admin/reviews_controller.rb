@@ -4,7 +4,7 @@ module Admin
 
     def index
       @q_reviews = Review.includes(:user, :product, :photos_attachments).ransack(params[:q])
-      @q_reviews.sorts = 'created_at desc' if @q_users.sorts.empty?
+      @q_reviews.sorts = 'created_at desc' if @q_reviews.sorts.empty?
       @pagy, @reviews = pagy(@q_reviews.result)
     end
 
