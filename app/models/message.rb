@@ -40,6 +40,7 @@ class Message < ApplicationRecord
 
   def notify_admin
     return if text == '/start'
+    return if Setting.fetch_value(:admin_ids).to_s.split(',').include?(tg_id.to_s)
 
     markup = { markup_url: "admin/messages&chat_id=#{tg_id}", markup_text: '💬 Перейти к сообщению' }
     TelegramJob.set(wait: 1.second)
