@@ -25,6 +25,9 @@ module Tg
       end
 
       def handle_admin_reply(_bot, message, type)
+        Rails.logger.error '*' * 100
+        Rails.logger.error "Admin reply: #{message}"
+        Rails.logger.error '=' * 100
         user = find_reply_user(message.reply_to_message)
         return unless user
 
