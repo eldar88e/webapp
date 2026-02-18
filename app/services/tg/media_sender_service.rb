@@ -76,6 +76,7 @@ module Tg
       send_data(bot, @data[:tg_file_id])
     end
 
+    # rubocop:disable Metrics/MethodLength
     def send_data(bot, data)
       if @data[:type].start_with?('image')
         bot.api.send_photo(
@@ -85,9 +86,13 @@ module Tg
         bot.api.send_video(
           chat_id: @chat_id, video: data, caption: @message, parse_mode: 'MarkdownV2', reply_markup: build_markup
         )
+      else
+        bot.api.send_document(
+          chat_id: @chat_id, document: data, caption: @message, parse_mode: 'MarkdownV2', reply_markup: build_markup
+        )
       end
-      # TODO: Добавить для отправки pdf и др. типов файлов: elsif @data[:type].start_with?('application')
     end
+    # rubocop:enable Metrics/MethodLength
 
     def build_markup
       Tg::MarkupService.call(@data[:markup])
