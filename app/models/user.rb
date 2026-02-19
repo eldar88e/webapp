@@ -24,7 +24,7 @@ class User < ApplicationRecord
   has_many :favorites, dependent: :destroy
   has_many :favorite_products, through: :favorites, source: :product
   has_many :bonus_logs, dependent: :destroy
-  has_many :managed_messages, class_name: 'Message', foreign_key: :manager_id, dependent: :nullify
+  has_many :managed_messages, class_name: 'Message', foreign_key: :manager_id, dependent: :nullify, inverse_of: :manager
 
   belongs_to :account_tier, optional: true
 

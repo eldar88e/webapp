@@ -50,4 +50,7 @@
       button.btn-reply.text-gray-400.hover:text-blue-500.transition type="button" data-action="click->clear-input#selectReply" data-message-id="#{message.id}" data-message-text="#{message.text&.truncate(100)}" data-message-media-url="#{media_info[:url]}" data-message-media-name="#{media_info[:name]}" data-message-media-type="#{media_info[:type]}"
         = render Admin::IconComponent.new name: :reply, width: 16
   - else
-    = @user_admin ||= render partial: '/layouts/partials/avatar', locals: { user: current_user }
+    - if message.manager
+      = render partial: '/layouts/partials/avatar', locals: { user: message.manager }
+    - else
+      = @bot_avatar ||= render partial: '/layouts/partials/avatar', locals: { user: bot_user }

@@ -26,6 +26,7 @@ Metrics/ClassLength:
     - 'app/models/order.rb'
     - 'app/models/user.rb'
     - 'app/services/payment/api_service.rb'
+    - 'app/services/tg/dispatcher_service.rb'
 
 Metrics/BlockLength:
   Exclude:

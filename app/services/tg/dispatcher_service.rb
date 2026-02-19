@@ -45,7 +45,7 @@ module Tg
       end
 
       def find_reply_user(text)
-        user_id = text&.match(/🆔\s+(\d+)/)&.captures&.first
+        user_id = text.match(/🆔\s+(\d+)/)&.captures&.first
         User.find_by(id: user_id) if user_id
       end
 

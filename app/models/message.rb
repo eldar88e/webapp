@@ -1,7 +1,7 @@
 class Message < ApplicationRecord
   belongs_to :user, primary_key: :tg_id, foreign_key: :tg_id, inverse_of: :messages
   belongs_to :reply_to, class_name: 'Message', optional: true
-  belongs_to :manager, class_name: 'User', optional: true
+  belongs_to :manager, class_name: 'User', optional: true, inverse_of: :managed_messages
 
   before_validation { self.text = text&.strip }
 
@@ -65,7 +65,7 @@ class Message < ApplicationRecord
   end
 
   def broadcast_admin_chat
-    sender = is_incoming? ? user : manager || user
+    sender = is_incoming? ? user : manager || BotUser.instance
     broadcast_append_later_to(
       "admin_chat_#{user.id}", partial: '/admin/messages/msg',
                                locals: { message: self, current_user: sender }, target: 'messages'

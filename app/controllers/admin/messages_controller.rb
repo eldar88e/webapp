@@ -5,7 +5,7 @@ module Admin
     before_action :set_chats, :set_chats_page, :render_msg, only: :index
 
     def index
-      @chats_page, @chats = pagy(@chats, limit: 30, page_param: :chats_page)
+      @chats_page, @chats = pagy(@chats, limit: 30, page_key: :chats_page)
       @current_chat       = params[:chat_id].present? ? User.find_by!(tg_id: params[:chat_id]) : @chats.first
       fetch_messages(@current_chat)
     end
@@ -42,12 +42,12 @@ module Admin
     def build_message
       @message             = @user.messages.build(text: message_params[:text], is_incoming: false)
       @message.data        = AttachmentService.call(params[:message][:attachment])
-      @message.reply_to_id = message_params[:reply_to_id] if message_params[:reply_to_id].present?
+      @message.reply_to_id = message_params[:reply_to_id].presence
       @message.manager_id  = current_user.id
     end
 
     def fetch_messages(user)
-      messages         = user&.messages&.includes(:reply_to)&.order(created_at: :desc) || Message.none
+      messages         = user.messages&.includes(:reply_to, :manager)&.order(created_at: :desc) || Message.none
       @pagy, @messages = pagy(messages, limit: 50)
       @messages        = @messages.reverse
     end
