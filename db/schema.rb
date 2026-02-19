@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_19_212520) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_19_230452) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -322,6 +322,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_212520) do
     t.bigint "bank_card_id"
     t.integer "bonus", default: 0, null: false
     t.datetime "created_at", null: false
+    t.integer "delivery_price", default: 0, null: false
     t.decimal "exchange_rate", precision: 10, scale: 2, default: "0.0", null: false
     t.boolean "has_delivery", default: false, null: false
     t.integer "msg_id"

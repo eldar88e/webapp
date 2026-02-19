@@ -45,10 +45,6 @@ class Order < ApplicationRecord
     order_items.includes(:product)
   end
 
-  def delivery_price
-    has_delivery? ? Setting.fetch_value(:delivery_price).to_i : 0
-  end
-
   def total_price
     order_items_with_product.sum { |item| item.product.price * item.quantity } + delivery_price
   end
@@ -126,11 +122,11 @@ class Order < ApplicationRecord
 
   def apply_delivery
     self.has_delivery = order_items.one? && order_items.first.quantity == 1
+    self.delivery_price = Setting.fetch_value(:delivery_price).to_i if has_delivery?
   end
 
   def update_total_amount
-    total_price_without_bonus = total_price
-    self.total_amount = bonus.zero? ? total_price_without_bonus : total_price_without_bonus - bonus
+    self.total_amount = total_price - bonus
   end
 
   def assign_valid_or_random_card
@@ -182,16 +178,16 @@ class Order < ApplicationRecord
   end
 
   def provide_bonus
-    total           = form_subtotal
+    subtotal        = form_subtotal
     bonus_threshold = Setting.fetch_value(:bonus_threshold).to_i
-    return if bonus_threshold.zero? || total < bonus_threshold
+    return if bonus_threshold.zero? || subtotal < bonus_threshold
 
-    result = ((total * user.account_tier.bonus_percentage / 100) / 50.0).round * 50
+    result = ((subtotal * user.account_tier.bonus_percentage / 100) / 50.0).round * 50
     user.bonus_logs.create!(bonus_amount: result, reason: :order, source: self)
   end
 
   def form_subtotal
-    has_delivery? ? total_amount - Setting.fetch_value(:delivery_price).to_i : total_amount
+    has_delivery? ? total_amount - delivery_price : total_amount
   end
 
   def deduct_bonus!
