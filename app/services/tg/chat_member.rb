@@ -18,29 +18,29 @@ module Tg
       elsif @status == 'kicked'
         user.update(is_blocked: true)
       end
-      notify_admin(user)
+      send_msg_to_user(user)
     end
 
     private
 
-    def notify_admin(user)
-      # user_name = make_user_name(user)
+    def send_msg_to_user(user)
       msg = "Клиент #{@status == 'kicked' ? 'заблокировал' : 'разблокировал'} бот"
-      # markup    = { markup_url: "admin/users/#{user.id}", markup_text: '👤 подробнее' }
-      user.messages.create(text: msg) # , data: { markup: markup }
-      # TelegramJob.perform_later(msg: msg, id: settings[:admin_ids], **markup)
-      Rails.logger.info "User #{user&.id} #{@status ? 'blocked' : 'unblocked'} bot"
+      user.messages.create(text: msg)
+      send_welcome_msg(user) if @status == 'member'
     end
 
     def settings
       Setting.all_cached
     end
 
-    def make_user_name(user)
-      msg = "User ##{user.id}"
-      msg += "\n(@#{user.username})" if user.username.present?
-      msg += user.full_name.present? ? "\n#{user.full_name}" : "\n#{user.full_name_raw}"
-      msg
+    def send_welcome_msg(user)
+      msg = <<~MSG.squeeze(' ').chomp
+        С возвращением #{user.first_name || user.first_name_raw}! 👋
+        Мы рады снова приветствовать вас в #{Setting.fetch_value(:app_name)&.capitalize}!
+        Мы по-прежнему здесь, чтобы помочь вам с заказами и ответить на любые вопросы.\n
+        Чем можем быть полезны?
+      MSG
+      user.messages.create(text: msg, is_incoming: false, data: { markup: { markup: 'to_catalog' } })
     end
   end
 end
