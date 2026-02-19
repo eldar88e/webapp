@@ -22,7 +22,7 @@ class Mailing < ApplicationRecord
 
   def set_end_time
     # rubocop:disable Rails/SkipsModelValidations
-    update_columns(end_at: Time.current)
+    update_columns(ended_at: Time.current)
     # rubocop:enable Rails/SkipsModelValidations
   end
 end
