@@ -1,4 +1,6 @@
 class Message < ApplicationRecord
+  SKIP_MSG_NOTICE = ['/start', 'Клиент заблокировал бот'].freeze
+
   belongs_to :user, primary_key: :tg_id, foreign_key: :tg_id, inverse_of: :messages
   belongs_to :reply_to, class_name: 'Message', optional: true
   belongs_to :manager, class_name: 'User', optional: true, inverse_of: :managed_messages
@@ -39,7 +41,7 @@ class Message < ApplicationRecord
   private
 
   def notify_admin
-    return if text == '/start'
+    return if SKIP_MSG_NOTICE.include?(text)
     return if Setting.fetch_value(:admin_ids).to_s.split(',').include?(tg_id.to_s)
 
     markup = { markup_url: "admin/messages&chat_id=#{tg_id}", markup_text: '💬 Перейти к сообщению' }
