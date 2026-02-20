@@ -65,10 +65,9 @@ class Message < ApplicationRecord
   end
 
   def broadcast_admin_chat
-    sender = is_incoming? ? user : manager || BotUser.instance
     broadcast_append_later_to(
       "admin_chat_#{user.id}", partial: '/admin/messages/msg',
-                               locals: { message: self, current_user: sender }, target: 'messages'
+                               locals: { message: self }, target: 'messages'
     )
   end
 

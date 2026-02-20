@@ -1,4 +1,4 @@
-class BotUser
+class BotUserService
   include ActiveModel::API
 
   def first_name = 'Бот'

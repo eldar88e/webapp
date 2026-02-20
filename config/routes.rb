@@ -44,6 +44,7 @@ Rails.application.routes.draw do
   get 'service-worker' => 'pwa#service_worker', as: :pwa_service_worker
   get 'manifest.json' => 'pwa#manifest', as: :pwa_manifest
   get '/offline.html' => 'pwa#offline'
+  get '/thanks.html' => 'pwa#thanks'
 
   draw :admin
   draw :api_v1

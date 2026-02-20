@@ -11,6 +11,7 @@ class Order < ApplicationRecord
   validates :total_amount, presence: true
   validates :bonus, numericality: { greater_than_or_equal_to: 0 }
   validate :bonus_check, if: -> { bonus&.positive? }
+  validate :check_old_order, on: :create
 
   enum :status, { initialized: 0, unpaid: 1, paid: 2, processing: 3, shipped: 4, cancelled: 5, overdue: 7, refunded: 8 }
 
@@ -204,5 +205,11 @@ class Order < ApplicationRecord
 
   def clear_cache
     Rails.cache.delete(:paid_orders)
+  end
+
+  def check_old_order
+    return true if user.orders.where(status: :unpaid).none?
+
+    errors.add(:base, 'У вас есть неоплаченный заказ. Пожалуйста, оплатите его или отмените перед созданием нового.')
   end
 end

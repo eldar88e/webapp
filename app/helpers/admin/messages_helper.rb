@@ -89,7 +89,7 @@ module Admin
     end
 
     def bot_user
-      @bot_user ||= BotUser.instance
+      @bot_user ||= BotUserService.instance
     end
 
     def random_avatar_color

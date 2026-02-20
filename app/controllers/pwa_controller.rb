@@ -1,7 +1,7 @@
 class PwaController < ApplicationController
   skip_before_action :check_authenticate_user!
   skip_forgery_protection
-  layout false, except: :offline
+  layout false, except: %i[offline thanks]
 
   def service_worker
     return render js: 'console.log("SW for dev mode.");'.html_safe if Rails.env.development?
@@ -20,4 +20,6 @@ class PwaController < ApplicationController
   def offline
     render :offline
   end
+
+  def thanks; end
 end
