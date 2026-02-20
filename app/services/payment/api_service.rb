@@ -132,7 +132,7 @@ module Payment
 
         result
       rescue StandardError => e
-        if result['message'].downcase.include?('поменяйте сумму') && try <= LIMIT_INIT
+        if result['message'].downcase.match?(/поменяйте сумму|нет подходящих реквизитов/) && try <= LIMIT_INIT
           error_log "Transaction #{transaction.id} failed to initialize. #{e.message}. Retrying...", e, :test_id
           try += 1
           sleep 3 * try
