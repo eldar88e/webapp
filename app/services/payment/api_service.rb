@@ -6,7 +6,7 @@ module Payment
     API_PATH   = '/api/method/merch/payin/'.freeze
     API_URL    = "#{API_DOMAIN}#{API_PATH}".freeze
     USER_TOKEN = ENV.fetch('PAYMENT_USER_TOKEN')
-    LIMIT_INIT = 5
+    LIMIT_INIT = 10
 
     INIT_ENDPOINT    = 'order_initialized/standart'.freeze
     PROCESS_ENDPOINT = 'order_process'.freeze
@@ -132,8 +132,9 @@ module Payment
 
         result
       rescue StandardError => e
+        notify_client(transaction.order) if try == 1
         if result['message'].downcase.match?(/поменяйте сумму|нет подходящих реквизитов/) && try <= LIMIT_INIT
-          error_log "Transaction #{transaction.id} failed to initialize. #{e.message}. Retrying...", e, :test_id
+          # error_log "Transaction #{transaction.id} failed to initialize. #{e.message}. Retrying...", e, :test_id
           try += 1
           sleep 3 * try
           retry
@@ -148,6 +149,11 @@ module Payment
       def error_log(msg, error, tg_id = :admin_ids)
         Rails.logger.error msg + "Full message: #{error.full_message}"
         TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(tg_id))
+      end
+
+      def notify_client(order)
+        msg = "Ожидайте мы вам скоро отправим реквизиты для оплаты заказа №#{order.id}."
+        order.user.messages.create(text: msg, is_incoming: false)
       end
     end
   end

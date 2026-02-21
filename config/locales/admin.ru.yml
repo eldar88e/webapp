@@ -47,6 +47,11 @@ ru:
       create: "Вопрос успешно создан."
       update: "Вопрос успешно обновлен."
       destroy: "Вопрос успешно удален."
+    payment_transactions:
+      update:
+        cancelled: "Транзакция была успешно отменена."
+        error: "Неверный запрос."
+      destroy: "Транзакция была успешно удалена."
   purchase:
     statuses:
       initialized: "Инициализирован"
