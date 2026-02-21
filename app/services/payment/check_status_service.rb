@@ -22,6 +22,7 @@ module Payment
     private
 
     def check_initialized
+      return if @transaction.order.bank_card.present?
       return if @transaction.status != 'initialized'
 
       status = fetch_status

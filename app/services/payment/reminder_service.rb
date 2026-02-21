@@ -15,7 +15,7 @@ module Payment
     end
 
     def send_reminder
-      return if @order.status != 'unpaid'
+      return if @transaction.order.bank_card.present? || @order.status != 'unpaid'
       return if @msg_type == 'exit'
 
       remove_old_msg

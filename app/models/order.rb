@@ -24,7 +24,7 @@ class Order < ApplicationRecord
   before_update :cache_status, if: -> { status_changed? }
   before_update :apply_delivery, if: -> { status == 'unpaid' }
   before_update :update_total_amount, if: -> { status == 'unpaid' || bonus_changed? }
-  # before_update :assign_valid_or_random_card, if: -> { status == 'unpaid' }
+  before_update :assign_valid_or_random_card, if: -> { Setting.fetch_value(:self_payment).to_s == 'true' && status == 'unpaid' }
   before_update :check_stock, if: -> { status_for_check? }
   before_update :deduct_stock, if: -> { status_changed?(from: 'paid', to: 'processing') }
   before_update :restock_stock, if: -> { can_restock? }

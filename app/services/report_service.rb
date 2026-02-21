@@ -1,5 +1,5 @@
 class ReportService
-  # ONE_WAIT    = 3.hours
+  ONE_WAIT_OLD = 3.hours
   ONE_WAIT     = 10.minutes
   REVIEW_WAIT  = 10.days
   LIMIT_CANCEL = 3
@@ -12,24 +12,32 @@ class ReportService
       user.cart.destroy
       delete_old_msg(order)
 
-      payment_transaction = order.payment_transaction || order.create_payment_transaction!(amount: order.total_amount)
-      if payment_transaction.status == 'created'
-        msg = "🎉 Ваш заказ №#{order.id} в процессе обработки.\n \
-               Что бы ускорить процесс проверки оплаты, поле того как вы произвели оплату и нажали кнопку 'Я оплатил', \
-               отправьте в чат Чек в формате PDF.\nКартинки и скриншоты в формате JPG, PNG не принимаются.".squeeze(' ')
-        order.user.messages
-             .create(text: msg, is_incoming: false, data: { markup: { markup: 'first_msg' }, business: true })
-        request_card = Payment::ApiService.order_initialized(payment_transaction)
+      if order.bank_card.blank?
+        payment_transaction = order.payment_transaction || order.create_payment_transaction!(amount: order.total_amount)
+        if payment_transaction.status == 'created'
+          msg = "🎉 Ваш заказ №#{order.id} в процессе обработки.\n \
+                 Что бы ускорить процесс проверки оплаты, поле того как вы произвели оплату и нажали кнопку 'Я оплатил', \
+                 отправьте в чат Чек в формате PDF.\nКартинки и скриншоты в формате JPG, PNG не принимаются.".squeeze(' ')
+          order.user.messages
+               .create(text: msg, is_incoming: false, data: { markup: { markup: 'first_msg' }, business: true })
+          request_card = Payment::ApiService.order_initialized(payment_transaction)
 
-        return cancel_order(order) if request_card['response'] == 'error'
+          return cancel_order(order) if request_card['response'] == 'error'
 
-        payment_transaction.update!(
-          status: :initialized,
-          object_token: request_card[:object_token],
-          amount_transfer: request_card[:amount_transfer],
-          bank_name: request_card[:bank_name],
-          card_people: request_card[:fio],
-          card_number: request_card[:card_number]
+          payment_transaction.update!(
+            status: :initialized,
+            object_token: request_card[:object_token],
+            amount_transfer: request_card[:amount_transfer],
+            bank_name: request_card[:bank_name],
+            card_people: request_card[:fio],
+            card_number: request_card[:card_number]
+          )
+        end
+      else
+        payment_transaction = OpenStruct.new(
+          card_number: order.bank_card.number,
+          bank_name: order.bank_card.name,
+          card_people: order.bank_card.fio
         )
       end
 
@@ -49,52 +57,56 @@ class ReportService
       )
       msg += "\n\n#{I18n.t('tg_msg.unpaid.footer')}"
 
-      # send_report(order, user_msg: msg, user_tg_id: user.tg_id, user_markup: 'i_paid', delete_msg: true)
-
       msg = user.messages.create(text: msg, is_incoming: false, data: { markup: { markup: 'i_paid' }, business: true })
       order.update_columns(msg_id: msg.id, tg_msg: false) if msg.present?
-      # AbandonedOrderReminderJob.set(wait: ONE_WAIT).perform_async({ 'order_id' => order.id, 'msg_type' => 'one' })
-      Payment::ReminderJob.set(wait: ONE_WAIT).perform_later(order_id: order.id, msg_type: 'one')
-      Payment::CheckStatusJob.set(wait: 15.seconds).perform_later(payment_transaction.id, 'initialized')
+      if order.bank_card.blank?
+        Payment::ReminderJob.set(wait: ONE_WAIT).perform_later(order_id: order.id, msg_type: 'one')
+        Payment::CheckStatusJob.set(wait: 15.seconds).perform_later(payment_transaction.id, 'initialized')
+      else
+        AbandonedOrderReminderJob.set(wait: ONE_WAIT_OLD).perform_async({ 'order_id' => order.id, 'msg_type' => 'one' })
+      end
     end
 
     def on_paid(order)
       Rails.logger.info "Order #{order.id} is now paid"
 
-      payment_transaction = order.payment_transaction
-      if payment_transaction.status == 'initialized'
-        response = Payment::ApiService.order_process(payment_transaction)
-        if response['response'] == 'error'
-          raise "Failed to create payment transaction for order #{order.id}: #{response['message']}"
-        else
-          if response['message'].include?('system_timer_end_merch_initialized_cancel')
-            order.update!(status: :overdue)
-            payment_transaction.update!(status: :overdue)
+      if order.bank_card.blank?
+        payment_transaction = order.payment_transaction
+        if payment_transaction.status == 'initialized'
+          response = Payment::ApiService.order_process(payment_transaction)
+          if response['response'] == 'error'
+            raise "Failed to create payment transaction for order #{order.id}: #{response['message']}"
           else
-            payment_transaction.update!(status: :paid)
+            if response['message'].include?('system_timer_end_merch_initialized_cancel')
+              order.update!(status: :overdue)
+              payment_transaction.update!(status: :overdue)
+            else
+              payment_transaction.update!(status: :paid)
 
-            Payment::CheckStatusJob.set(wait: 15.seconds).perform_later(payment_transaction.id, 'approved')
+              Payment::CheckStatusJob.set(wait: 15.seconds).perform_later(payment_transaction.id, 'approved')
+            end
           end
         end
       end
 
-      # msg  = I18n.t(
-      #   'tg_msg.paid_admin',
-      #   order: order.id,
-      #   card: order.bank_card.bank_details,
-      #   price: order.total_amount,
-      #   items: order.order_items_str,
-      #   address: user.full_address,
-      #   fio: user.full_name,
-      #   phone: user.phone_number
-      # )
-
-      # TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if order.msg_id.present? && order.tg_msg.present?
       delete_old_msg(order)
       user_msg = I18n.t('tg_msg.paid_client')
-      send_report(order, user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order')
-      # send_report(order, admin_msg: msg, admin_markup: 'approve_payment',
-      #             user_msg: user_msg, user_tg_id: user.tg_id, user_markup: 'new_order')
+      if order.bank_card.blank?
+        send_report(order, user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order')
+      else
+        msg  = I18n.t(
+          'tg_msg.paid_admin',
+          order: order.id,
+          card: order.bank_card.bank_details,
+          price: order.total_amount,
+          items: order.order_items_str,
+          address: user.full_address,
+          fio: user.full_name,
+          phone: user.phone_number
+        )
+        send_report(order, admin_msg: msg, admin_markup: 'approve_payment',
+                    user_msg: user_msg, user_tg_id: user.tg_id, user_markup: 'new_order')
+      end
     end
 
     def on_processing(order)
@@ -170,7 +182,7 @@ class ReportService
 
     def on_overdue(order)
       Rails.logger.info "Order #{order.id} has been overdue"
-      order.payment_transaction&.update!(status: :overdue)
+      order.payment_transaction&.update(status: :overdue)
       delete_old_msg(order)
       user_msg = I18n.t('tg_msg.unpaid.reminder.overdue', order: order.id)
       send_report(order, user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order')
