@@ -1,5 +1,6 @@
 module Payment
   class CheckStatusService
+    TIME_WAIT = 20.seconds
     STATUSES = {
       approved: { order: :processing, transaction: :approved },
       overdue: { order: :overdue, transaction: :overdue }
@@ -77,7 +78,7 @@ module Payment
     end
 
     def schedule_next_check
-      Payment::CheckStatusJob.set(wait: 15.seconds).perform_later(@transaction.id, @status)
+      Payment::CheckStatusJob.set(wait: TIME_WAIT).perform_later(@transaction.id, @status)
     end
 
     def storage_url(attach)
