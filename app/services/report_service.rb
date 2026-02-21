@@ -90,6 +90,7 @@ class ReportService
       end
 
       delete_old_msg(order)
+
       user_msg = I18n.t('tg_msg.paid_client')
       if order.bank_card.blank?
         send_report(order, user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order')
@@ -105,7 +106,7 @@ class ReportService
           phone: user.phone_number
         )
         send_report(order, admin_msg: msg, admin_markup: 'approve_payment',
-                    user_msg: user_msg, user_tg_id: user.tg_id, user_markup: 'new_order')
+                    user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order')
       end
     end
 
