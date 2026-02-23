@@ -39,7 +39,7 @@
               .mb-3 == @chats_page.series_nav
             == @chats_page.info_tag
 
-      .flex-1.flex.flex-col data-controller="clear-input"
+      .flex-1.flex.flex-col.min-w-0 data-controller="clear-input"
         .px-4.py-2.border-b.dark:bg-gray-800.dark:border-gray-700.border-gray-200.bg-white.text-gray-900.dark:text-white.flex.items-center.gap-4
           button class="text-gray-600 dark:text-gray-400 block md:hidden" data-action="click->chats-list#showChats"
             = render Admin::IconComponent.new name: :menu, width: 24

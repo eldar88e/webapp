@@ -445,10 +445,25 @@ body.aside-hide {
       visibility: hidden;
       opacity: 0;
       transition: all 0.5s;
+
+      &:hover {
+        @apply text-red-600 dark:text-red-500;
+      }
     }
 
     &:hover {
       .btn-delete {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+    .btn-reply {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    &:hover {
+      .btn-reply {
         opacity: 1;
         visibility: visible;
       }
