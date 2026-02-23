@@ -3,6 +3,7 @@ require 'telegram/bot'
 module Tg
   class MediaSenderService
     MESSAGE_LIMIT = 4_090
+    PARSE_MODE    = 'MarkdownV2'.freeze
 
     def initialize(message, id, data)
       @chat_id   = id
@@ -49,7 +50,7 @@ module Tg
       message_count.times do
         text_part = next_text_part
         @result   = bot.api.send_message(
-          chat_id: @chat_id, text: text_part, parse_mode: 'MarkdownV2',
+          chat_id: @chat_id, text: text_part, parse_mode: PARSE_MODE,
           reply_markup: build_markup, reply_to_message_id: @data[:reply_to_message_id]
         )
       end
@@ -82,17 +83,17 @@ module Tg
       reply_id = @data[:reply_to_message_id]
       if @data[:type].start_with?('image')
         bot.api.send_photo(
-          chat_id: @chat_id, photo: data, caption: @message, parse_mode: 'MarkdownV2',
+          chat_id: @chat_id, photo: data, caption: @message, parse_mode: PARSE_MODE,
           reply_markup: build_markup, reply_to_message_id: reply_id
         )
       elsif @data[:type].start_with?('video')
         bot.api.send_video(
-          chat_id: @chat_id, video: data, caption: @message, parse_mode: 'MarkdownV2',
+          chat_id: @chat_id, video: data, caption: @message, parse_mode: PARSE_MODE,
           reply_markup: build_markup, reply_to_message_id: reply_id
         )
       else
         bot.api.send_document(
-          chat_id: @chat_id, document: data, caption: @message, parse_mode: 'MarkdownV2',
+          chat_id: @chat_id, document: data, caption: @message, parse_mode: PARSE_MODE,
           reply_markup: build_markup, reply_to_message_id: reply_id
         )
       end
