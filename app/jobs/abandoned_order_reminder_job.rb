@@ -67,12 +67,12 @@ class AbandonedOrderReminderJob
   end
 
   def form_msg(msg_type, order)
-    user = order.user
-    card = order.bank_card.bank_details
+    user        = order.user
+    bank_card   = order.bank_card
     transaction = OpenStruct.new(
-      card_number: card.number,
-      bank_name: card.name,
-      card_people: card.fio
+      card_number: bank_card.number,
+      bank_name: bank_card.name,
+      card_people: bank_card.fio
     )
     text = "#{I18n.t("tg_msg.unpaid.reminder.#{msg_type}", order: order.id)}\n\n" + I18n.t(
       'tg_msg.unpaid.main',
