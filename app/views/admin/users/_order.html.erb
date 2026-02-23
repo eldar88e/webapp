@@ -10,7 +10,7 @@
   </td>
   <td class="px-6 py-4 flex gap-2">
     <%- if order.payment_transaction.present? %>
-      <%= link_to admin_payment_transaction_path(order.payment_transaction), data: { turbo_prefetch: false } do %>
+      <%= link_to admin_payment_transaction_path(order.payment_transaction), data: { turbo: false } do %>
         <%= render Admin::IconComponent.new name: :link, width: 20 %>
       <% end %>
     <% end %>

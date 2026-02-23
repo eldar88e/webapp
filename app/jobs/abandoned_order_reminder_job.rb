@@ -78,7 +78,7 @@ class AbandonedOrderReminderJob
       'tg_msg.unpaid.main',
       # card: card,
       card: transaction.card_number, bank:transaction.bank_name, fio_card: transaction.card_people,
-      price: order.total_amount, items: order.order_items_str,
+      price: order.total_amount.to_i, items: order.order_items_str,
       address: user.full_address, postal_code: user.postal_code, fio: user.full_name, phone: user.phone_number
     )
     { text: text, is_incoming: false, data: { markup: { markup: 'i_paid' } } }
