@@ -88,7 +88,7 @@ module Tg
     def edit_message(bot, message, text, markup = nil)
       chat_id    = message.message.chat.id
       message_id = message.message.message_id
-      args       = { chat_id: chat_id, text: text, parse_mode: 'MarkdownV2', reply_markup: markup }
+      args       = { chat_id: chat_id, text: text, parse_mode: 'HTML', reply_markup: markup }
       bot.api.edit_message_text(message_id: message_id, **args)
     rescue Telegram::Bot::Exceptions::ResponseError => e
       Rails.logger.warn("Failed to edit message #{message_id}: #{e.message}")
