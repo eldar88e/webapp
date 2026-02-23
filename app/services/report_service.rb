@@ -15,11 +15,7 @@ class ReportService
       if order.bank_card.blank?
         payment_transaction = order.payment_transaction || order.create_payment_transaction!(amount: order.total_amount)
         if payment_transaction.status == 'created'
-          msg = "🎉 Ваш заказ №#{order.id} в процессе обработки.\n \
-                 Что бы ускорить процесс проверки оплаты, поле того как вы произвели оплату и нажали кнопку 'Я оплатил', \
-                 отправьте в чат Чек в формате PDF.\nКартинки и скриншоты в формате JPG, PNG не принимаются.".squeeze(' ')
-          order.user.messages
-               .create(text: msg, is_incoming: false, data: { markup: { markup: 'first_msg' }, business: true })
+          send_pdf_notice(order)
           request_card = Payment::ApiService.order_initialized(payment_transaction)
 
           return cancel_order(order) if request_card['response'] == 'error'
@@ -34,6 +30,7 @@ class ReportService
           )
         end
       else
+        send_pdf_notice(order)
         payment_transaction = OpenStruct.new(
           card_number: order.bank_card.number,
           bank_name: order.bank_card.name,
@@ -230,6 +227,19 @@ class ReportService
       msg_error = "Ошибка получения реквизитов для заказа #{order.id}. Пожалуйста, свяжитесь с нами."
       order.user.messages.create(text: msg_error, is_incoming: false)
       order.update!(status: :cancelled)
+    end
+
+    def send_msg_to_admins(order)
+      msg = <<~MSG.squeeze(' ')
+        Уважаемый(ая) #{order.user.first_name || order.user.first_name_raw},
+        🎉 Ваш заказ №#{order.id} в процессе обработки.
+        Чтобы ускорить проверку оплаты, после того как вы произведёте оплату \
+        и нажмёте кнопку «Я оплатил», отправьте в чат чек в формате PDF.
+        Картинки и скриншоты в формате JPG, PNG не принимаются.
+      MSG
+
+      order.user.messages
+           .create(text: msg, is_incoming: false, data: { markup: { markup: 'first_msg' }, business: true })
     end
   end
 end
