@@ -57,6 +57,7 @@ module Tg
       rescue Telegram::Bot::Exceptions::ResponseError => e
         raise unless e.message.include?('parse entities')
 
+        Rails.logger.warn "Failed bot api send message to #{@chat_id}. Message: #{text_part}. Error: #{e.message}"
         bot.api.send_message(chat_id: @chat_id, text: unescape(text_part),
                              reply_markup: build_markup, reply_to_message_id: @data[:reply_to_message_id])
       end
