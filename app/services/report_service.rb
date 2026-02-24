@@ -229,7 +229,7 @@ class ReportService
       order.update!(status: :cancelled)
     end
 
-    def send_msg_to_admins(order)
+    def send_pdf_notice(order)
       msg = <<~MSG.squeeze(' ')
         Уважаемый(ая) #{order.user.first_name || order.user.first_name_raw},
         🎉 Ваш заказ №#{order.id} в процессе обработки.
