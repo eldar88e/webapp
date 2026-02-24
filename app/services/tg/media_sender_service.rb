@@ -43,6 +43,7 @@ module Tg
 
     def escape(text)
       text.gsub(/\[.*?m/, '').gsub(/([-_\[\]()~>#+=|{}.!])/, '\\\\\1')
+      # text.gsub(/\[.*?m/, '').gsub(/([-_*`\[\]()~>#+=|{}.!])/, '\\\\\1')
     end
 
     def send_text(bot)
@@ -53,6 +54,11 @@ module Tg
           chat_id: @chat_id, text: text_part, parse_mode: PARSE_MODE,
           reply_markup: build_markup, reply_to_message_id: @data[:reply_to_message_id]
         )
+      rescue Telegram::Bot::Exceptions::ResponseError => e
+        raise unless e.message.include?('parse entities')
+
+        bot.api.send_message(chat_id: @chat_id, text: unescape(text_part),
+                             reply_markup: build_markup, reply_to_message_id: @data[:reply_to_message_id])
       end
     end
 
@@ -108,6 +114,10 @@ module Tg
       part     = @message[0...MESSAGE_LIMIT]
       @message = @message[MESSAGE_LIMIT..] || ''
       part
+    end
+
+    def unescape(text)
+      text.gsub(/\\(.)/, '\1')
     end
   end
 end
