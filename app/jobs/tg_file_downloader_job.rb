@@ -62,9 +62,7 @@ class TgFileDownloaderJob < ApplicationJob
     return if order.blank?
 
     order.attachment.attach(tg_file.attachment.blob)
-    TelegramJob.perform_later(msg: "PDF прикреплён к заказу №#{order.id}", id: user.tg_id)
-    msg = "Пользователь ##{user.id} прикрепил PDF к заказу №#{order.id}"
-    TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:admin_ids))
+    order.user.messages.create(text: "📄 PDF прикреплён к заказу №#{order.id}", is_incoming: false)
   end
 
   def attach_file(media_file, name, file_type, tempfile)
