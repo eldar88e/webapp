@@ -1,8 +1,7 @@
 class UpdaterProductStockService
   class << self
     def process_product(params)
-      product = Product.find_by(name: params[:product_name])
-      return { error: "Product #{product.id} not found" } if product.nil?
+      product = Product.find_by!(name: params[:product_name])
 
       if params[:stock_quantity] # for mirena
         product.update!(stock_quantity: params[:stock_quantity].to_i)
@@ -31,7 +30,7 @@ class UpdaterProductStockService
 
     def send_error(msg)
       Rails.logger.error(msg)
-      TelegramJob(msg: msg, id: Setting.fetch_value(:admin_ids))
+      TelegramJob(msg: msg, id: Setting.fetch_value(:test_id))
       { error: msg }
     end
   end
