@@ -30,9 +30,9 @@ module Tg
     private
 
     def notify_email_admin(msg)
-      Rails.logger.error("#{msg}: #{@error.message}")
+      Rails.logger.error("#{msg}: #{@error&.message}")
 
-      AdminMailer.send_error("#{msg} #{@error.message}", @error.full_message).deliver_later
+      AdminMailer.send_error("#{msg} #{@error&.message}", @error&.full_message).deliver_later
     end
 
     def update_user(attrs)

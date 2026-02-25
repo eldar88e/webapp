@@ -21,10 +21,11 @@ module Tg
 
       Telegram::Bot::Client.run(@bot_token) do |bot|
         return send_attachment(bot) if @data[:tg_file_id].present? || @data[:file].present?
+        return send_text(bot) if @message.present?
 
-        send_text(bot) if @message.present?
+        raise 'Empty message and data!'
       end
-      @result
+      # @result
     rescue StandardError => e
       Rails.logger.warn "Failed to send message to bot: #{e.message}"
       e
@@ -61,6 +62,7 @@ module Tg
         bot.api.send_message(chat_id: @chat_id, text: unescape(text_part),
                              reply_markup: build_markup, reply_to_message_id: @data[:reply_to_message_id])
       end
+      @result
     end
 
     def send_attachment(bot)
