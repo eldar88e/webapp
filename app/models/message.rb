@@ -66,11 +66,12 @@ class Message < ApplicationRecord
     data = parsed_data
     data[:reply_to_message_id] = reply_to.tg_msg_id if reply_to&.tg_msg_id.present?
     ConsumerSenderTgJob.perform_later(msg_id: id, id: user.tg_id, msg: text, data: data)
+
     ceo_tg_id = Setting.fetch_value(:ceo_tg_id)
     test_id   = Setting.fetch_value(:test_id).to_s.split(',')
     return if [test_id, ceo_tg_id].flatten.exclude?(user.tg_id.to_s)
 
-    WebPushNoticeJob.perform_later(title: 'Новое сообщение', body: text, user_ids: user.tg_id)
+    WebPushNoticeJob.perform_later(title: 'Новое сообщение', body: text, user_ids: user.id)
   end
 
   def broadcast_admin_chat
