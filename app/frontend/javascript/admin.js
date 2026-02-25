@@ -50,3 +50,37 @@ themeToggleBtn.addEventListener("click", function () {
     }
   }
 });
+
+async function subscribePush() {
+  const reg = await navigator.serviceWorker.ready;
+  let sub = await reg.pushManager.getSubscription();
+
+  if (!sub) {
+    sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: document.querySelector('meta[name="vapid-public-key"]').content,
+    });
+  }
+
+  await fetch("/push/subscribe", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')?.content,
+    },
+    body: JSON.stringify(sub.toJSON()),
+  });
+}
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then(function () {
+        subscribePush();
+      })
+      .catch(function (error) {
+        console.log("Error registering ServiceWorker:", error);
+      });
+  });
+}

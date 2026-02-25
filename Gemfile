@@ -49,6 +49,7 @@ gem 'geocoder'
 gem 'maxminddb'
 
 gem 'caxlsx', require: false
+gem 'web-push'
 
 group :development, :test do
   gem 'rubocop-performance', require: false

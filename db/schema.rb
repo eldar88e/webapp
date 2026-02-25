@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_19_230452) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_24_225920) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -440,6 +440,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_230452) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "push_subscriptions", force: :cascade do |t|
+    t.string "auth", null: false
+    t.datetime "created_at", null: false
+    t.string "endpoint", null: false
+    t.string "p256dh", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["endpoint"], name: "index_push_subscriptions_on_endpoint", unique: true
+    t.index ["user_id"], name: "index_push_subscriptions_on_user_id"
+  end
+
   create_table "questions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "text"
@@ -570,6 +581,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_230452) do
   add_foreign_key "product_subscriptions", "users"
   add_foreign_key "purchase_items", "products"
   add_foreign_key "purchase_items", "purchases"
+  add_foreign_key "push_subscriptions", "users"
   add_foreign_key "reviews", "products"
   add_foreign_key "reviews", "users"
   add_foreign_key "tasks", "users"

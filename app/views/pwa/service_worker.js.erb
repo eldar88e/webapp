@@ -43,3 +43,18 @@ self.addEventListener("fetch", event => {
     );
 });
 
+self.addEventListener("push", event => {
+    const data = event.data ? event.data.json() : {};
+    event.waitUntil(
+      self.registration.showNotification(data.title || "Strattera", {
+          body: data.body || "",
+          icon: "/android-chrome-192x192.png",
+          badge: "/android-chrome-192x192.png",
+      })
+    );
+});
+
+self.addEventListener("notificationclick", event => {
+    event.notification.close();
+    event.waitUntil(clients.openWindow("/admin"));
+});

@@ -46,6 +46,9 @@ Rails.application.routes.draw do
   get '/offline.html' => 'pwa#offline'
   get '/thanks.html' => 'pwa#thanks'
 
+  post 'push/subscribe', to: 'push_subscriptions#create'
+  delete 'push/unsubscribe', to: 'push_subscriptions#destroy'
+
   draw :admin
   draw :api_v1
 

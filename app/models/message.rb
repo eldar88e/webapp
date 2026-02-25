@@ -45,8 +45,10 @@ class Message < ApplicationRecord
     return if Setting.fetch_value(:admin_ids).to_s.split(',').include?(tg_id.to_s)
 
     markup = { markup_url: "admin/messages&chat_id=#{tg_id}", markup_text: '💬 Перейти к сообщению' }
+    msg    = build_notice_msg
     TelegramJob.set(wait: 1.second)
-               .perform_later(msg: build_notice_msg, id: Setting.fetch_value(:admin_ids), **markup)
+               .perform_later(msg: msg, id: Setting.fetch_value(:admin_ids), **markup)
+    WebPushNoticeJob.perform_later(title: 'Новое сообщение', body: msg)
   end
 
   # rubocop:disable Metrics/AbcSize
