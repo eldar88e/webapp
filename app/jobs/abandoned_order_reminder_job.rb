@@ -7,8 +7,10 @@ class AbandonedOrderReminderJob
                   retry: 3
 
   STEPS = {
-    'one' => { 'wait' => 48.hours, 'msg_type' => 'two' },
-    'two' => { 'wait' => 3.hours, 'msg_type' => 'overdue' }
+    # 'one' => { 'wait' => 48.hours, 'msg_type' => 'two' },
+    # 'two' => { 'wait' => 3.hours, 'msg_type' => 'overdue' }
+    'one' => { 'wait' => 30.minutes, 'msg_type' => 'two' },
+    'two' => { 'wait' => 10.minutes, 'msg_type' => 'overdue' }
   }.freeze
 
   def perform(args)

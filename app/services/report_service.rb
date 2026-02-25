@@ -1,5 +1,5 @@
 class ReportService
-  ONE_WAIT_OLD = 3.hours
+  # ONE_WAIT_OLD = 3.hours
   ONE_WAIT     = 10.minutes
   REVIEW_WAIT  = 10.days
   LIMIT_CANCEL = 3
@@ -60,7 +60,7 @@ class ReportService
         Payment::ReminderJob.set(wait: ONE_WAIT).perform_later(order_id: order.id, msg_type: 'one')
         Payment::CheckStatusJob.set(wait: 15.seconds).perform_later(payment_transaction.id, 'initialized')
       else
-        AbandonedOrderReminderJob.set(wait: ONE_WAIT_OLD).perform_async({ 'order_id' => order.id, 'msg_type' => 'one' })
+        AbandonedOrderReminderJob.set(wait: ONE_WAIT).perform_async({ 'order_id' => order.id, 'msg_type' => 'one' })
       end
     end
 
