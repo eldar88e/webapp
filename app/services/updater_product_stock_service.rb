@@ -30,7 +30,7 @@ class UpdaterProductStockService
 
     def send_error(msg)
       Rails.logger.error(msg)
-      TelegramJob(msg: msg, id: Setting.fetch_value(:test_id))
+      TelegramJob.perform_later(msg: msg, id: Setting.fetch_value(:test_id))
       { error: msg }
     end
   end
