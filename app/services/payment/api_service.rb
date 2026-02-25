@@ -142,6 +142,7 @@ module Payment
           msg = "Transaction: #{transaction.id} for Order: #{transaction.order.id}"
           msg += " failed to initialize after #{try} tries. Error: #{e.message}"
           error_log msg, e
+          # result['self_payment'] = true
           result
         end
       end

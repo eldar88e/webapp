@@ -31,11 +31,7 @@ class ReportService
         end
       else
         send_pdf_notice(order)
-        payment_transaction = OpenStruct.new(
-          card_number: order.bank_card.number,
-          bank_name: order.bank_card.name,
-          card_people: order.bank_card.fio
-        )
+        payment_transaction = prepare_payment_transaction(order)
       end
 
       msg = "#{I18n.t('tg_msg.unpaid.msg', order: order.id)}\n\n"
@@ -240,6 +236,14 @@ class ReportService
 
       order.user.messages
            .create(text: msg, is_incoming: false, data: { markup: { markup: 'first_msg' }, business: true })
+    end
+
+    def prepare_payment_transaction(order)
+      OpenStruct.new(
+        card_number: order.bank_card.number,
+        bank_name: order.bank_card.name,
+        card_people: order.bank_card.fio
+      )
     end
   end
 end
