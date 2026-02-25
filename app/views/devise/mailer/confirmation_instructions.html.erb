@@ -9,13 +9,13 @@
       <tr>
         <td style="padding: 30px; text-align: center; background-color: #48C928; color: #ffffff;">
           <img src="https://<%= ENV.fetch('HOST', 'localhost') %>/bot_logo.svg" alt="Bot" width="100" height="100" style="width: 36px; height: 36px;">
-          <h1 style="margin: 0; font-size: 22px; letter-spacing: 1px;"><%= Setting.fetch_value(:app_name) %></h1>
+          <h1 style="margin: 0; font-size: 22px; letter-spacing: 1px;"><%= Setting.fetch_value(:app_name)&.capitalize %></h1>
         </td>
       </tr>
       <tr>
         <td style="background-color: #f9f9f9; padding: 40px 30px;">
           <p style="color: #1a1a1a; font-size: 16px; line-height: 1.5;">
-            <%= @resource.full_name %>, добро пожаловать на <%= Setting.fetch_value(:app_name) %>! 🎉<br>
+            <%= @resource.full_name %>, добро пожаловать<br>на <%= Setting.fetch_value(:app_name)&.capitalize %>! 🎉<br>
             Остался один шаг — подтвердите свой e-mail, нажав на кнопку ниже, чтобы мы могли держать вас в курсе и защитить ваш аккаунт.
           </p>
 
@@ -31,7 +31,7 @@
       </tr>
       <tr>
         <td style="background-color: #f9f9f9; text-align: center; border-top: 1px solid #f0f0f0; padding: 20px; color: #48C928; font-size: 12px;">
-          <%= Setting.fetch_value(:app_name) %> | <a href="https://t.me/<%= Setting.fetch_value(:tg_main_bot) %>" style="color: #48C928;">https://t.me/<%= Setting.fetch_value(:tg_main_bot) %></a>
+          <%= Setting.fetch_value(:app_name)&.capitalize %> | <a href="https://t.me/<%= Setting.fetch_value(:tg_main_bot) %>" style="color: #48C928;">https://t.me/<%= Setting.fetch_value(:tg_main_bot) %></a>
         </td>
       </tr>
     </table>

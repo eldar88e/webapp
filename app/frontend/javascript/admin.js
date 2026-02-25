@@ -51,7 +51,7 @@ themeToggleBtn.addEventListener("click", function () {
   }
 });
 
-async function subscribePush() {
+async function subscribePushHandler() {
   const reg = await navigator.serviceWorker.ready;
   let sub = await reg.pushManager.getSubscription();
 
@@ -73,14 +73,30 @@ async function subscribePush() {
 }
 
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function () {
-    navigator.serviceWorker
-      .register("/service-worker.js")
-      .then(function () {
-        subscribePush();
-      })
-      .catch(function (error) {
-        console.log("Error registering ServiceWorker:", error);
-      });
-  });
+  navigator.serviceWorker
+    .register("/service-worker.js")
+    .then(async () => {
+      if (Notification.permission === 'granted') {
+        await subscribePushHandler();
+      }
+    })
+    .catch(function (error) {
+      console.log("Error registering ServiceWorker:", error);
+    });
+}
+
+async function subscribePush() {
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') return;
+
+    await subscribePushHandler();
+  } catch (e) {
+    console.error('Push subscribe error:', e);
+  }
+}
+
+const pushBtn = document.getElementById('enable-push');
+if (pushBtn) {
+  pushBtn.addEventListener('click', subscribePush);
 }
