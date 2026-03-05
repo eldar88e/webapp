@@ -58,7 +58,9 @@ async function subscribePushHandler() {
   if (!sub) {
     sub = await reg.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: document.querySelector('meta[name="vapid-public-key"]').content,
+      applicationServerKey: document.querySelector(
+        'meta[name="vapid-public-key"]',
+      ).content,
     });
   }
 
@@ -66,7 +68,8 @@ async function subscribePushHandler() {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')?.content,
+      "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')
+        ?.content,
     },
     body: JSON.stringify(sub.toJSON()),
   });
@@ -76,7 +79,7 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("/service-worker.js")
     .then(async () => {
-      if (Notification.permission === 'granted') {
+      if (Notification.permission === "granted") {
         await subscribePushHandler();
       }
     })
@@ -88,15 +91,15 @@ if ("serviceWorker" in navigator) {
 async function subscribePush() {
   try {
     const permission = await Notification.requestPermission();
-    if (permission !== 'granted') return;
+    if (permission !== "granted") return;
 
     await subscribePushHandler();
   } catch (e) {
-    console.error('Push subscribe error:', e);
+    console.error("Push subscribe error:", e);
   }
 }
 
-const pushBtn = document.getElementById('enable-push');
+const pushBtn = document.getElementById("enable-push");
 if (pushBtn) {
-  pushBtn.addEventListener('click', subscribePush);
+  pushBtn.addEventListener("click", subscribePush);
 }

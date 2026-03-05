@@ -27,6 +27,8 @@ export default [
               HTMLMetaElement: "readonly",
               HTMLDivElement: "readonly",
               URLSearchParams: "readonly",
+              URL: "readonly",
+              Notification: "readonly",
               FileReader: "readonly",
               IntersectionObserver: "readonly",
               navigator: "readonly",
