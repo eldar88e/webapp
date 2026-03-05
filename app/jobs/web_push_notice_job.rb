@@ -13,8 +13,8 @@ class WebPushNoticeJob < ApplicationJob
           p256dh: sub.p256dh,
           auth: sub.auth,
           vapid: {
-            public_key: ENV['VAPID_PUBLIC_KEY'],
-            private_key: ENV['VAPID_PRIVATE_KEY'],
+            public_key: ENV.fetch('VAPID_PUBLIC_KEY', nil),
+            private_key: ENV.fetch('VAPID_PRIVATE_KEY', nil),
             subject: "mailto:#{ENV.fetch('EMAIL_FROM', 'noreply@example.com')}"
           }
         )
