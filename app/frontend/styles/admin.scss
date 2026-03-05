@@ -435,7 +435,7 @@ body.aside-hide {
   height: calc(100vh - 15rem);
 
   @media (max-width: 768px) {
-    height: calc(100vh - 8.5rem);
+    height: calc(100vh - 7.5rem);
   }
 
   .message {
@@ -445,10 +445,25 @@ body.aside-hide {
       visibility: hidden;
       opacity: 0;
       transition: all 0.5s;
+
+      &:hover {
+        @apply text-red-600 dark:text-red-500;
+      }
     }
 
     &:hover {
       .btn-delete {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+    .btn-reply {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    &:hover {
+      .btn-reply {
         opacity: 1;
         visibility: visible;
       }

@@ -3,6 +3,7 @@ require 'telegram/bot'
 module Tg
   class MediaSenderService
     MESSAGE_LIMIT = 4_090
+    PARSE_MODE    = 'MarkdownV2'.freeze
 
     def initialize(message, id, data)
       @chat_id   = id
@@ -20,10 +21,11 @@ module Tg
 
       Telegram::Bot::Client.run(@bot_token) do |bot|
         return send_attachment(bot) if @data[:tg_file_id].present? || @data[:file].present?
+        return send_text(bot) if @message.present?
 
-        send_text(bot) if @message.present?
+        raise 'Empty message and data!'
       end
-      @result
+      # @result
     rescue StandardError => e
       Rails.logger.warn "Failed to send message to bot: #{e.message}"
       e
@@ -42,6 +44,7 @@ module Tg
 
     def escape(text)
       text.gsub(/\[.*?m/, '').gsub(/([-_\[\]()~>#+=|{}.!])/, '\\\\\1')
+      # text.gsub(/\[.*?m/, '').gsub(/([-_*`\[\]()~>#+=|{}.!])/, '\\\\\1')
     end
 
     def send_text(bot)
@@ -49,9 +52,17 @@ module Tg
       message_count.times do
         text_part = next_text_part
         @result   = bot.api.send_message(
-          chat_id: @chat_id, text: text_part, parse_mode: 'MarkdownV2', reply_markup: build_markup
+          chat_id: @chat_id, text: text_part, parse_mode: PARSE_MODE,
+          reply_markup: build_markup, reply_to_message_id: @data[:reply_to_message_id]
         )
+      rescue Telegram::Bot::Exceptions::ResponseError => e
+        raise unless e.message.include?('parse entities')
+
+        Rails.logger.warn "Failed bot api send message to #{@chat_id}. Message: #{text_part}. Error: #{e.message}"
+        bot.api.send_message(chat_id: @chat_id, text: unescape(text_part),
+                             reply_markup: build_markup, reply_to_message_id: @data[:reply_to_message_id])
       end
+      @result
     end
 
     def send_attachment(bot)
@@ -76,18 +87,27 @@ module Tg
       send_data(bot, @data[:tg_file_id])
     end
 
+    # rubocop:disable Metrics/MethodLength
     def send_data(bot, data)
+      reply_id = @data[:reply_to_message_id]
       if @data[:type].start_with?('image')
         bot.api.send_photo(
-          chat_id: @chat_id, photo: data, caption: @message, parse_mode: 'MarkdownV2', reply_markup: build_markup
+          chat_id: @chat_id, photo: data, caption: @message, parse_mode: PARSE_MODE,
+          reply_markup: build_markup, reply_to_message_id: reply_id
         )
       elsif @data[:type].start_with?('video')
         bot.api.send_video(
-          chat_id: @chat_id, video: data, caption: @message, parse_mode: 'MarkdownV2', reply_markup: build_markup
+          chat_id: @chat_id, video: data, caption: @message, parse_mode: PARSE_MODE,
+          reply_markup: build_markup, reply_to_message_id: reply_id
+        )
+      else
+        bot.api.send_document(
+          chat_id: @chat_id, document: data, caption: @message, parse_mode: PARSE_MODE,
+          reply_markup: build_markup, reply_to_message_id: reply_id
         )
       end
-      # TODO: Добавить для отправки pdf и др. типов файлов: elsif @data[:type].start_with?('application')
     end
+    # rubocop:enable Metrics/MethodLength
 
     def build_markup
       Tg::MarkupService.call(@data[:markup])
@@ -97,6 +117,10 @@ module Tg
       part     = @message[0...MESSAGE_LIMIT]
       @message = @message[MESSAGE_LIMIT..] || ''
       part
+    end
+
+    def unescape(text)
+      text.gsub(/\\(.)/, '\1')
     end
   end
 end

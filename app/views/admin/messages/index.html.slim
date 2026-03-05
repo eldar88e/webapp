@@ -39,7 +39,7 @@
               .mb-3 == @chats_page.series_nav
             == @chats_page.info_tag
 
-      .flex-1.flex.flex-col data-controller="clear-input"
+      .flex-1.flex.flex-col.min-w-0 data-controller="clear-input"
         .px-4.py-2.border-b.dark:bg-gray-800.dark:border-gray-700.border-gray-200.bg-white.text-gray-900.dark:text-white.flex.items-center.gap-4
           button class="text-gray-600 dark:text-gray-400 block md:hidden" data-action="click->chats-list#showChats"
             = render Admin::IconComponent.new name: :menu, width: 24
@@ -66,13 +66,32 @@
           = render partial: '/admin/messages/messages'
 
         - if @current_chat
+          .reply-preview.hidden.px-4.py-2.bg-blue-50.dark:bg-gray-700.border-b.border-blue-200.dark:border-gray-600.flex.items-center.gap-2 data-clear-input-target="replyPreview"
+            .flex-1.flex.items-center.gap-2.min-w-0
+              .w-1.self-stretch.bg-blue-400.rounded-full.shrink-0
+              .w-10.h-10.rounded.overflow-hidden.shrink-0.hidden data-clear-input-target="replyMediaWrap"
+              .min-w-0
+                .text-xs.text-blue-500.dark:text-blue-400.font-medium.truncate.hidden data-clear-input-target="replyMediaName"
+                .text-sm.text-gray-600.dark:text-gray-300.truncate data-clear-input-target="replyText"
+            button.text-gray-400.hover:text-gray-600.dark:hover:text-gray-200.transition.shrink-0 type="button" data-action="click->clear-input#cancelReply"
+              = render Admin::IconComponent.new name: :close, width: 16
+          .attach-preview.hidden.px-4.py-2.bg-green-50.dark:bg-gray-700.border-b.border-green-200.dark:border-gray-600.flex.items-center.gap-2 data-clear-input-target="attachPreview"
+            .flex-1.flex.items-center.gap-2.min-w-0
+              .w-1.self-stretch.bg-green-400.rounded-full.shrink-0
+              .w-10.h-10.rounded.overflow-hidden.shrink-0.hidden data-clear-input-target="attachMediaWrap"
+              .min-w-0
+                .text-xs.text-green-600.dark:text-green-400.font-medium Вложение
+                .text-sm.text-gray-600.dark:text-gray-300.truncate data-clear-input-target="attachName"
+            button.text-gray-400.hover:text-gray-600.dark:hover:text-gray-200.transition.shrink-0 type="button" data-action="click->clear-input#cancelAttach"
+              = render Admin::IconComponent.new name: :close, width: 16
           = form_with model: Message.new, url: admin_messages_path, class: "sender", data: { action: 'submit->clear-input#clear' } do |f|
             = f.hidden_field :user_id, value: @current_chat.id
+            = f.hidden_field :reply_to_id, value: nil, data: { clear_input_target: 'reply' }
             = f.text_area :text, rows: 1, placeholder: 'Введите сообщение...',
                     data: { controller: 'auto-resize', action: 'input->auto-resize#resize', clear_input_target: 'input' }
             label.w-6.h-6.text-blue-400.hover:text-blue-500.transition.cursor-pointer for="message_attachment"
               = render Admin::IconComponent.new name: :clip, width: 24
-            = f.file_field :attachment, accept: 'image/jpeg,image/png,image/webp,video/mp4,video/mpeg,video/quicktime,application/pdf', class: 'hidden', data: { clear_input_target: 'attach' }
+            = f.file_field :attachment, accept: 'image/jpeg,image/png,image/webp,video/mp4,video/mpeg,video/quicktime,application/pdf', class: 'hidden', data: { clear_input_target: 'attach', action: 'change->clear-input#selectAttach' }
             = button_tag class: "p-0.5 text-blue-600 hover:text-blue-700 transition cursor-pointer" do
               = render Admin::IconComponent.new name: :send
 .py-0.md:py-10

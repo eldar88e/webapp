@@ -7,13 +7,13 @@ class TgFileDownloaderJob < ApplicationJob
     return if user.blank? || (response.blank? && args[:msg].blank?)
 
     file_path = response.presence&.file_path
-    file_url  = "https://api.telegram.org/file/bot#{Setting.fetch_value(:tg_token)}/#{file_path}"
-    process_file(file_url, args, user, file_path)
+    process_file(user, file_path, args)
   end
 
   private
 
-  def process_file(file_url, args, user, file_path)
+  def process_file(user, file_path, args)
+    file_url  = "https://api.telegram.org/file/bot#{Setting.fetch_value(:tg_token)}/#{file_path}"
     tempfile  = FileDownloaderService.call(file_url)
     file_type = Marcel::MimeType.for(tempfile)
     name      = file_path.split('/')&.last
@@ -21,12 +21,21 @@ class TgFileDownloaderJob < ApplicationJob
     tg_file   = find_or_create_tg_file(file_hash, args[:file_id], file_type, name)
     attach_file(tg_file, name, file_type, tempfile) unless tg_file.attachment.attached?
     save_message(user, args, tg_file)
+    attach_pdf_to_order(user, tg_file, file_type)
   end
 
   def save_message(user, args, tg_file)
-    # data = { tg_file_id: tg_file.file_id, media_id: tg_file.id }
-    data = Tg::MessageService.build_data(tg_file)
-    user.messages.create(text: args[:msg], tg_msg_id: args[:msg_id], data: data)
+    data  = Tg::MessageService.build_data(tg_file)
+    attrs = { text: args[:msg], data: data, reply_to_id: args[:reply_to_id] }
+
+    if args[:is_outgoing]
+      attrs[:is_incoming] = false
+      attrs[:manager_id] = args[:manager_id]
+    else
+      attrs[:tg_msg_id] = args[:msg_id]
+    end
+
+    user.messages.create(attrs)
   end
 
   def find_or_create_tg_file(file_hash, file_id, file_type, name)
@@ -44,6 +53,16 @@ class TgFileDownloaderJob < ApplicationJob
       response = bot.api.get_file(file_id: args[:file_id])
     end
     response
+  end
+
+  def attach_pdf_to_order(user, tg_file, file_type)
+    return unless file_type == 'application/pdf'
+
+    order = user.orders.paid.order(created_at: :desc).first
+    return if order.blank?
+
+    order.attachment.attach(tg_file.attachment.blob)
+    order.user.messages.create(text: "📄 PDF прикреплён к заказу №#{order.id}", is_incoming: false)
   end
 
   def attach_file(media_file, name, file_type, tempfile)

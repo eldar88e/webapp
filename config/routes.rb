@@ -22,7 +22,9 @@ Rails.application.routes.draw do
   resources :favorites, only: %i[index]
   resources :carts, only: %i[index destroy]
   resources :cart_items, only: %i[create update]
-  resources :orders, only: %i[index show create update]
+  resources :orders, only: %i[index show create update] do
+    resource :attachments, only: %i[new create], module: :orders
+  end
   resources :support, only: :index
   resources :surveys, only: :index
   post :add_answers, to: 'surveys#add_answers'
@@ -42,6 +44,10 @@ Rails.application.routes.draw do
   get 'service-worker' => 'pwa#service_worker', as: :pwa_service_worker
   get 'manifest.json' => 'pwa#manifest', as: :pwa_manifest
   get '/offline.html' => 'pwa#offline'
+  get '/thanks.html' => 'pwa#thanks'
+
+  post 'push/subscribe', to: 'push_subscriptions#create'
+  delete 'push/unsubscribe', to: 'push_subscriptions#destroy'
 
   draw :admin
   draw :api_v1

@@ -7,14 +7,14 @@ ru:
       update: "Товар был успешно обновлен."
       update_restore: "Товар был успешно восстановлен."
       destroy: "Товар был успешно удален."
-    users:
-      update: "Данные пользователя успешно обновлены."
-      destroy: "Пользователь успешно удален."
     reviews:
       create: "Отзыв успешно создан."
       update: "Отзыв успешно обновлен."
       destroy: "Отзыв успешно удален."
   admin:
+    users:
+      update: "Данные пользователя успешно обновлены."
+      destroy: "Пользователь успешно удален."
     product_subscriptions:
       destroy:
         success: "Подписка успешно удалена."
@@ -47,6 +47,11 @@ ru:
       create: "Вопрос успешно создан."
       update: "Вопрос успешно обновлен."
       destroy: "Вопрос успешно удален."
+    payment_transactions:
+      update:
+        cancelled: "Транзакция была успешно отменена."
+        error: "Неверный запрос."
+      destroy: "Транзакция была успешно удалена."
   purchase:
     statuses:
       initialized: "Инициализирован"
@@ -54,6 +59,16 @@ ru:
       shipped: "В пути"
       stocked: "Оприходовано"
       cancelled: "Отменено"
+  payment_transaction:
+    statuses:
+      created: "Создан"
+      initialized: "Инициализирован"
+      paid: "Оплачен"
+      checking: "Проверяется"
+      approved: "Одобрен"
+      cancelled: "Отменен"
+      failed: "Неудача"
+      overdue: "Просрочен"
   task_types:
     bugfix: "Ошибка"
     feature: "Новая фича"

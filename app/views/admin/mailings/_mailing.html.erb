@@ -18,7 +18,11 @@
 
   <td class="px-6 py-4"><%= format_date mailing.created_at %></td>
 
+  <td class="px-6 py-4"><%= format_date mailing.scheduled_at %></td>
+
   <td class="px-6 py-4"><%= format_date mailing.send_at %></td>
+
+  <td class="px-6 py-4"><%= format_date mailing.ended_at %></td>
 
   <td class="px-6 py-4">
     <% if mailing.completed %>

@@ -1,43 +1,32 @@
-<%= form_with model: @mailing, url: admin_mailings_path, class: "max-w-md mx-auto" do |form| %>
+<%= form_with model: @mailing, url: admin_mailings_path, class: "max-w-md mx-auto admin-form" do |form| %>
   <div class="mb-5">
     <%= form.label :target,
                    class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
     <%= form.select :target, Mailing.targets.keys[0..-1].map { |target| [I18n.t("target.#{target}"), target] },
-                    { include_blank: "Выберите категорию пользователей" }, required: true,
-                    class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %>
-  </div>
-
-  <div class="mb-5">
-    <div class="mb-5">
-      <%= form.label :send_at, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
-      <%= form.text_field :send_at, disabled: true, value: 'Сейчас', class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %>
-    </div>
+                    { include_blank: "Выберите категорию пользователей" }, required: true %>
   </div>
 
   <div class="mb-5">
     <%= form.label :message, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white"  %>
-    <%= form.text_area :message, rows: 4, required: true,
-                       class: "block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %>
+    <%= form.text_area :message, rows: 4, required: true %>
   </div>
 
-  <div class="mb-5 hidden">
+  <div class="mb-5">
     <%= form.label :scheduled_at, "Время отправки (YYYY-MM-DD HH:MM)",
                    class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white"  %>
-    <%= form.text_field :scheduled_at, placeholder: "2024-12-20 14:30",
-                        class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %>
+    <%= form.text_field :scheduled_at, disabled: true, value: 'Сейчас', placeholder: Time.current.strftime('%Y-%m-%d %H:%M') %>
   </div>
 
   <div class="mb-5">
     <%= form.label :attachment, class: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white' %>
-    <%= form.file_field :attachment, accept: 'image/jpeg,image/png,image/webp,video/mp4,video/mpeg,video/quicktime',
-                        class: 'shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:shadow-sm-light' %>
+    <%= form.file_field :attachment, accept: 'image/jpeg,image/png,image/webp,video/mp4,video/mpeg,video/quicktime' %>
   </div>
 
   <div class="flex items-start mb-5">
     <div class="flex items-center h-5">
       <%= form.check_box :to_catalog, checked: true, class: "w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" %>
     </div>
-    <%= form.label :to_catalog, 'Кнопка "каталог"', class: "ms-2 text-sm font-medium text-gray-900 dark:text-gray-300" %>
+    <%= form.label :to_catalog, 'Кнопка "Каталог"', class: "ms-2 text-sm font-medium text-gray-900 dark:text-gray-300" %>
   </div>
 
   <div data-controller="markups">

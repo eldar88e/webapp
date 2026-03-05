@@ -4,6 +4,7 @@ class MailingJob < ApplicationJob
   def perform(**args)
     mailing = Mailing.find(args[:id])
     users   = FetchUsersService.call(mailing.target, args[:user_ids])
+    mailing.update(send_at: Time.current)
     users.find_each { |user| save_message(user, mailing) }
     TelegramService.call('Рассылка успешно завершена.', Setting.fetch_value(:admin_ids))
     mailing.update(completed: true)

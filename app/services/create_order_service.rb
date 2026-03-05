@@ -1,4 +1,6 @@
 class CreateOrderService
+  ORDER_STATUS_FOR_UPDATE = %i[initialized].freeze # unpaid
+
   def initialize(user, bonus)
     @user  = user
     @bonus = bonus.to_i
@@ -10,14 +12,14 @@ class CreateOrderService
 
   def create_order
     @cart_items = @user.cart.cart_items_with_product
-    return { success: false, error: 'Ваша корзина пуста' } if @cart_items.blank?
+    return { error: 'Ваша корзина пуста' } if @cart_items.blank?
 
     order = find_or_create_order
     order.create_order_items(@cart_items)
     check_order(order)
   rescue StandardError => e
     Rails.logger.error("Ошибка при создании заказа: #{e.message}")
-    { success: false, error: 'Ошибка при создании заказа' }
+    { error: e.message.presence || 'Ошибка при создании заказа' }
   end
 
   private
@@ -29,13 +31,13 @@ class CreateOrderService
     else
       order.destroy!
       Rails.logger.warn("Order #{order.id} is empty and was deleted.")
-      { success: false, error: 'Заказ пуст, возможно товары которые вы заказали закончились на складе.' }
+      { error: 'Заказ пуст, возможно товары которые вы заказали закончились на складе.' }
     end
   end
 
   def find_or_create_order
-    order = @user.orders.find_by(status: %i[unpaid initialized])
-    return @user.orders.create(bonus: @bonus) unless order
+    order = @user.orders.find_by(status: ORDER_STATUS_FOR_UPDATE)
+    return @user.orders.create!(bonus: @bonus) unless order
 
     cart_product_ids = @cart_items.pluck(:product_id)
     order.order_items.where.not(product_id: cart_product_ids).destroy_all

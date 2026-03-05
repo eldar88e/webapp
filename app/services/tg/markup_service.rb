@@ -48,7 +48,8 @@ module Tg
       @keyboards << form_callback(@markups[:markup], I18n.t("tg_btn.#{@markups[:markup]}"))
       return @keyboards if @markups[:markup] != 'i_paid'
 
-      @keyboards += form_url_keyboard('carts', 'Изменить заказ')
+      # @keyboards += form_url_keyboard('carts', 'Изменить заказ')
+      @keyboards << form_callback('cancel_order', '❌ Отменить заказ')
       @keyboards << ask_btn
     end
 
@@ -80,7 +81,7 @@ module Tg
     end
 
     def ask_btn
-      form_url_btn(settings[:tg_support].to_s, 'Задать вопрос')
+      form_url_btn(settings[:tg_support].to_s, '❔ Задать вопрос')
     end
 
     def group_btn

@@ -12,27 +12,28 @@ class FetchUsersService
   private
 
   def users
-    User.where(id: @user_ids)
+    User.where(is_blocked: false).where(id: @user_ids)
   end
 
   def add_cart
     User.joins(cart: :cart_items)
         .where(cart_items: { created_at: ...1.week.ago })
+        .where(is_blocked: false)
         .where.missing(:orders)
         .or(User.where.not(orders: { status: %i[paid processing shipped] }))
         .distinct
   end
 
   def ordered
-    User.joins(:orders).where.not(orders: { id: nil }).distinct
+    User.joins(:orders).where(is_blocked: false).where.not(orders: { id: nil }).distinct
   end
 
   def no_ordered
-    User.where.missing(:orders).distinct
+    User.where(is_blocked: false).where.missing(:orders).distinct
   end
 
   def all_users
-    User.all
+    User.where(is_blocked: false).all
   end
 
   def blocked
@@ -40,6 +41,6 @@ class FetchUsersService
   end
 
   def subscriptions
-    User.joins(:product_subscriptions).distinct
+    User.where(is_blocked: false).joins(:product_subscriptions).distinct
   end
 end

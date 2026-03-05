@@ -1,5 +1,9 @@
 class Message < ApplicationRecord
+  SKIP_MSG_NOTICE = ['/start', 'Клиент заблокировал бот'].freeze
+
   belongs_to :user, primary_key: :tg_id, foreign_key: :tg_id, inverse_of: :messages
+  belongs_to :reply_to, class_name: 'Message', optional: true
+  belongs_to :manager, class_name: 'User', optional: true, inverse_of: :managed_messages
 
   before_validation { self.text = text&.strip }
 
@@ -37,9 +41,14 @@ class Message < ApplicationRecord
   private
 
   def notify_admin
+    return if SKIP_MSG_NOTICE.include?(text)
+    return if Setting.fetch_value(:admin_ids).to_s.split(',').include?(tg_id.to_s)
+
     markup = { markup_url: "admin/messages&chat_id=#{tg_id}", markup_text: '💬 Перейти к сообщению' }
+    msg    = build_notice_msg
     TelegramJob.set(wait: 1.second)
-               .perform_later(msg: build_notice_msg, id: Setting.fetch_value(:admin_ids), **markup)
+               .perform_later(msg: msg, id: Setting.fetch_value(:admin_ids), **markup)
+    WebPushNoticeJob.perform_later(title: 'Новое сообщение', body: msg)
   end
 
   # rubocop:disable Metrics/AbcSize
@@ -54,13 +63,21 @@ class Message < ApplicationRecord
   # rubocop:enable Metrics/AbcSize
 
   def send_to_telegram
-    ConsumerSenderTgJob.perform_later(msg_id: id, id: user.tg_id, msg: text, data: parsed_data)
+    data = parsed_data
+    data[:reply_to_message_id] = reply_to.tg_msg_id if reply_to&.tg_msg_id.present?
+    ConsumerSenderTgJob.perform_later(msg_id: id, id: user.tg_id, msg: text, data: data)
+
+    ceo_tg_id = Setting.fetch_value(:ceo_tg_id)
+    test_id   = Setting.fetch_value(:test_id).to_s.split(',')
+    return if [test_id, ceo_tg_id].flatten.exclude?(user.tg_id.to_s)
+
+    WebPushNoticeJob.perform_later(title: 'Новое сообщение', body: text, user_ids: user.id)
   end
 
   def broadcast_admin_chat
     broadcast_append_later_to(
       "admin_chat_#{user.id}", partial: '/admin/messages/msg',
-                               locals: { message: self, current_user: user }, target: 'messages'
+                               locals: { message: self }, target: 'messages'
     )
   end
 

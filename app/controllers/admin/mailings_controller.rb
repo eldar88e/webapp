@@ -6,7 +6,7 @@ module Admin
     before_action :form_mailing, only: :create
 
     def index
-      @mailings = Mailing.order(send_at: :desc).includes(:user)
+      @pagy, @mailings = pagy Mailing.order(created_at: :desc).includes(:user)
     end
 
     def new
@@ -55,7 +55,7 @@ module Admin
     end
 
     def mailing_params
-      params.expect(mailing: %i[target message send_at]) # TODO: добавить  :scheduled_at
+      params.expect(mailing: %i[target message scheduled_at])
     end
   end
 end

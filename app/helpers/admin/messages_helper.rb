@@ -53,21 +53,6 @@ module Admin
       } # TODO: add this week days
     end
 
-    # def preview_media(data)
-    #   return if data.blank?
-    #
-    #   media_file = find_tg_media_file(data)
-    #   attachment = media_file&.attachment
-    #   url        = build_full_path(attachment)
-    #   return if url.blank?
-    #
-    #   return image_tag url, class: 'w-5 h-5' if attachment.content_type.start_with?('image')
-    #   return video_tag url, class: 'w-5 h-5' if attachment.content_type.start_with?('video')
-    #   return render Admin::IconComponent.new name: :pdf if attachment.content_type == 'application/pdf'
-    #
-    #   '???'
-    # end
-
     def preview_media(data, params = :thumb)
       media_file = find_tg_media_file(data)
       attachment = media_file&.attachment
@@ -76,6 +61,19 @@ module Admin
       return build_icon(attachment.content_type, url, params) if params == :thumb
 
       link_to build_icon(attachment.content_type, url, params), url, data: { fancybox: 'gallery' }
+    end
+
+    def message_media_info(message)
+      return {} unless message.data&.dig('media_id').present? || message.data&.dig('tg_file_id').present?
+
+      media_file = find_tg_media_file(message.data)
+      attachment = media_file&.attachment
+      return {} unless attachment&.attached?
+
+      url = build_full_path(attachment)
+      return {} if url.blank?
+
+      { url: url, name: media_file.original_filename, type: attachment.content_type }
     end
 
     def build_icon(content_type, url, params)
@@ -88,6 +86,14 @@ module Admin
       else
         params == :thumb ? '???' : "Unknown file type(#{content_type})"
       end
+    end
+
+    def bot_user
+      @bot_user ||= BotUserService.instance
+    end
+
+    def random_avatar_color
+      @random_avatar_color ||= %w[red blue green indigo purple].sample
     end
   end
 end

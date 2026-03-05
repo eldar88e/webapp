@@ -1,6 +1,6 @@
 {
-  "name": "Strattera — БАДы",
-  "short_name": "Strattera",
+  "name": "<%= Setting.fetch_value(:app_name).to_s.capitalize %>",
+  "short_name": "<%= Setting.fetch_value(:app_name).to_s.split(' ').first&.capitalize %>",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -37,7 +37,7 @@
   "start_url": "/",
   "display": "standalone",
   "scope": "/",
-  "description": "Strattera.",
+  "description": "Telegram Mini App c ботом для заказа товаров",
   "theme_color": "white",
   "background_color": "white"
 }

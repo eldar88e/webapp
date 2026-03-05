@@ -1,6 +1,6 @@
 module Tg
   class CallbackDispatcher
-    HANDLERS = %w[i_paid approve_payment submit_tracking purchase_paid review].freeze
+    HANDLERS = %w[i_paid approve_payment submit_tracking purchase_paid review cancel_order].freeze
     # TODO: убрать дублирование
     TRACK_CACHE_PERIOD = 5.minutes
 
@@ -63,6 +63,14 @@ module Tg
       edit_message(bot, message, new_text)
     end
 
+    def cancel_order(bot, message)
+      order_id = parse_order_number(message.message.text)
+      order    = Order.find(order_id)
+      order.update(status: :cancelled)
+      new_text = "#{message.message.text}\n\n❌ Отменен"
+      edit_message(bot, message, new_text)
+    end
+
     def parse_order_number(text)
       text.match(/№(\d+)/)[1]
     end
@@ -78,13 +86,13 @@ module Tg
     end
 
     def edit_message(bot, message, text, markup = nil)
-      bot.api.edit_message_text(
-        chat_id: message.message.chat.id,
-        message_id: message.message.message_id,
-        text: text,
-        parse_mode: 'HTML',
-        reply_markup: markup
-      )
+      chat_id    = message.message.chat.id
+      message_id = message.message.message_id
+      args       = { chat_id: chat_id, text: text, parse_mode: 'HTML', reply_markup: markup }
+      bot.api.edit_message_text(message_id: message_id, **args)
+    rescue Telegram::Bot::Exceptions::ResponseError => e
+      Rails.logger.warn("Failed to edit message #{message_id}: #{e.message}")
+      bot.api.send_message(**args)
     end
 
     def mark_as_paid(order)

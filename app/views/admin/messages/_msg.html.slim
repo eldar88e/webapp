@@ -2,15 +2,19 @@
 - align_cls  = incoming ? "justify-start" : "justify-end"
 - bubble_cls = incoming ? "rounded-r-xl rounded-bl-xl" : "rounded-l-xl rounded-br-xl"
 - time_align = incoming ? "text-left" : "text-right"
+- media_info = message_media_info(message)
 
 .mb-4.flex.gap-2.md:gap-3 class="#{align_cls} message" id="#{dom_id message}"
   - if incoming
     = @user ||= render partial: '/layouts/partials/avatar', locals: { user: message.user }
   - else
-    = button_to admin_message_path(message), method: :delete, class: 'btn-delete -me-2 mt-6',
-            data: { confirm: 'Вы уверены, что хотите удалить данное сообщение?',
-                    controller: 'confirm', action: 'click->confirm#call' } do
-      = render Admin::IconComponent.new name: :trash
+    .flex.flex-col.gap-1.-me-2.mt-6
+      = button_to admin_message_path(message), method: :delete, class: 'btn-delete',
+              data: { confirm: 'Вы уверены, что хотите удалить данное сообщение?',
+                      controller: 'confirm', action: 'click->confirm#call' } do
+        = render Admin::IconComponent.new name: :trash
+      button.btn-reply.text-gray-400.hover:text-blue-500.transition type="button" data-action="click->clear-input#selectReply" data-message-id="#{message.id}" data-message-text="#{message.text&.truncate(100)}" data-message-media-url="#{media_info[:url]}" data-message-media-name="#{media_info[:name]}" data-message-media-type="#{media_info[:type]}"
+        = render Admin::IconComponent.new name: :reply, width: 16
 
   .flex.flex-col class="max-w-auto sm:max-w-[75%]"
     .text-xs.text-slate-400.mb-1.flex.gap-1
@@ -19,7 +23,12 @@
         time data-controller="timeago" data-timeago-locale-value="ru" title="#{format_date message.created_at}" datetime="#{message.created_at.iso8601}"
           = format_date message.created_at
 
-    .px-4.py-2.shadow-sm.bg-gray-100.text-gray-900.dark:text-white.dark:bg-gray-700 class=bubble_cls
+    .px-4.py-2.shadow-sm.bg-gray-100.text-gray-900.dark:text-white.dark:bg-gray-700.break-all class=bubble_cls
+      - if message.reply_to.present?
+        .mb-2.border-l-2.border-blue-400.pl-2.py-1.text-xs.text-gray-500.dark:text-gray-400.bg-gray-200.dark:bg-gray-600.rounded-r.cursor-pointer
+          - if message.reply_to.data && (message.reply_to.data['media_id'].present? || message.reply_to.data['tg_file_id'].present?)
+            span.mr-1 📎
+          = message.reply_to.text&.truncate(80) || "Медиа"
       - if message.data && (message.data['media_id'].present? || message.data['tg_file_id'].present?)
         .mb-2.pt-2
           = preview_media(message.data, :big)
@@ -33,9 +42,15 @@
           = render Admin::IconComponent.new name: :check, width: 16
 
   - if incoming
-    = button_to admin_message_path(message), method: :delete, class: 'btn-delete -ms-2 mt-6',
-            data: { confirm: 'Вы уверены, что хотите удалить данное сообщение?',
-                    controller: 'confirm', action: 'click->confirm#call' } do
-      = render Admin::IconComponent.new name: :trash
+    .flex.flex-col.gap-1.-ms-2.mt-6
+      = button_to admin_message_path(message), method: :delete, class: 'btn-delete',
+              data: { confirm: 'Вы уверены, что хотите удалить данное сообщение?',
+                      controller: 'confirm', action: 'click->confirm#call' } do
+        = render Admin::IconComponent.new name: :trash
+      button.btn-reply.text-gray-400.hover:text-blue-500.transition type="button" data-action="click->clear-input#selectReply" data-message-id="#{message.id}" data-message-text="#{message.text&.truncate(100)}" data-message-media-url="#{media_info[:url]}" data-message-media-name="#{media_info[:name]}" data-message-media-type="#{media_info[:type]}"
+        = render Admin::IconComponent.new name: :reply, width: 16
   - else
-    = @user_admin ||= render partial: '/layouts/partials/avatar', locals: { user: current_user }
+    - if message.manager
+      = render partial: '/layouts/partials/avatar', locals: { user: message.manager }
+    - else
+      = @bot_avatar ||= render partial: '/layouts/partials/avatar', locals: { user: bot_user }

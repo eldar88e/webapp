@@ -15,6 +15,7 @@ AllCops:
     - 'config/initializers/filter_parameter_logging.rb'
     - 'config/deploy.rb'
     - 'app/services/statistics_service.rb'
+    - 'app/services/pochta_tracking_service.rb'
 
 Style/StringLiterals:
   Exclude:
@@ -24,6 +25,8 @@ Metrics/ClassLength:
   Exclude:
     - 'app/models/order.rb'
     - 'app/models/user.rb'
+    - 'app/services/payment/api_service.rb'
+    - 'app/services/tg/dispatcher_service.rb'
 
 Metrics/BlockLength:
   Exclude:

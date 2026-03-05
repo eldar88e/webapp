@@ -3,13 +3,17 @@ module Admin
     before_action :set_user, only: %i[show edit update destroy]
 
     def index
-      @q_users      = User.order(created_at: :desc).ransack(params[:q])
-      @pagy, @users = pagy(@q_users.result)
+      @q_users       = User.ransack(params[:q])
+      @q_users.sorts = 'created_at desc' if @q_users.sorts.empty?
+      @pagy, @users  = pagy(@q_users.result)
     end
 
     def show
-      @q_orders      = @user.orders.includes(:bank_card).order(created_at: :desc).ransack(params[:q])
-      @pagy, @orders = pagy(@q_orders.result)
+      @q_orders = @user.orders
+                       .includes(:bank_card, :payment_transaction, :attachment_attachment)
+                       .ransack(params[:q])
+      @q_orders.sorts = 'created_at desc' if @q_orders.sorts.empty?
+      @pagy, @orders  = pagy(@q_orders.result)
       # TODO: Добавить отзывы
     end
 
@@ -25,7 +29,7 @@ module Admin
         update_bonus
         render turbo_stream: [
           turbo_stream.replace(@user, partial: '/admin/users/user', locals: { user: @user }),
-          success_notice(t('controller.users.update'))
+          success_notice(t('.update'))
         ]
       else
         error_notice @user.errors.full_messages
@@ -34,7 +38,9 @@ module Admin
 
     def destroy
       @user.destroy!
-      redirect_to admin_users_path, status: :see_other, notice: t('controller.users.destroy')
+      # redirect_to admin_users_path, status: :see_other, notice: t('controller.users.destroy')
+
+      render turbo_stream: [turbo_stream.remove(@user), success_notice(t('.destroy'))]
     end
 
     private

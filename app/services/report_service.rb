@@ -1,50 +1,107 @@
 class ReportService
-  ONE_WAIT    = 3.hours
-  REVIEW_WAIT = 10.days
+  # ONE_WAIT_OLD = 3.hours
+  ONE_WAIT     = 10.minutes
+  REVIEW_WAIT  = 10.days
+  LIMIT_CANCEL = 3
 
   class << self
     def on_unpaid(order)
       Rails.logger.info "Order #{order.id} is now unpaid"
 
       user = order.user
-      msg  = "#{I18n.t('tg_msg.unpaid.msg', order: order.id)}\n\n"
+      user.cart.destroy
+      delete_old_msg(order)
+
+      if order.bank_card.blank?
+        payment_transaction = order.payment_transaction || order.create_payment_transaction!(amount: order.total_amount)
+        if payment_transaction.status == 'created'
+          send_pdf_notice(order)
+          request_card = Payment::ApiService.order_initialized(payment_transaction)
+
+          return cancel_order(order) if request_card['response'] == 'error'
+
+          payment_transaction.update!(
+            status: :initialized,
+            object_token: request_card[:object_token],
+            amount_transfer: request_card[:amount_transfer],
+            bank_name: request_card[:bank_name],
+            card_people: request_card[:fio],
+            card_number: request_card[:card_number]
+          )
+        end
+      else
+        send_pdf_notice(order)
+        payment_transaction = prepare_payment_transaction(order)
+      end
+
+      msg = "#{I18n.t('tg_msg.unpaid.msg', order: order.id)}\n\n"
       msg += I18n.t(
         'tg_msg.unpaid.main',
-        card: order.bank_card.bank_details,
-        price: order.total_amount,
+        # card: order.bank_card.bank_details,
+        card: payment_transaction.card_number,
+        bank: payment_transaction.bank_name,
+        fio_card: payment_transaction.card_people,
+        price: order.total_amount.to_i,
         items: order.order_items_str,
         address: user.full_address,
         postal_code: user.postal_code,
         fio: user.full_name,
         phone: user.phone_number
       )
+      msg += "\n\n#{I18n.t('tg_msg.unpaid.footer')}"
 
-      # send_report(order, user_msg: msg, user_tg_id: user.tg_id, user_markup: 'i_paid', delete_msg: true)
-      delete_old_msg(order)
       msg = user.messages.create(text: msg, is_incoming: false, data: { markup: { markup: 'i_paid' }, business: true })
       order.update_columns(msg_id: msg.id, tg_msg: false) if msg.present?
-      AbandonedOrderReminderJob.set(wait: ONE_WAIT).perform_async({ 'order_id' => order.id, 'msg_type' => 'one' })
+      if order.bank_card.blank?
+        Payment::ReminderJob.set(wait: ONE_WAIT).perform_later(order_id: order.id, msg_type: 'one')
+        Payment::CheckStatusJob.set(wait: 15.seconds).perform_later(payment_transaction.id, 'initialized')
+      else
+        AbandonedOrderReminderJob.set(wait: ONE_WAIT).perform_async({ 'order_id' => order.id, 'msg_type' => 'one' })
+      end
     end
 
     def on_paid(order)
       Rails.logger.info "Order #{order.id} is now paid"
 
-      user = order.user
-      msg  = I18n.t(
-        'tg_msg.paid_admin',
-        order: order.id,
-        card: order.bank_card.bank_details,
-        price: order.total_amount,
-        items: order.order_items_str,
-        address: user.full_address,
-        fio: user.full_name,
-        phone: user.phone_number
-      )
+      if order.bank_card.blank?
+        payment_transaction = order.payment_transaction
+        if payment_transaction.status == 'initialized'
+          response = Payment::ApiService.order_process(payment_transaction)
+          if response['response'] == 'error'
+            raise "Failed to create payment transaction for order #{order.id}: #{response['message']}"
+          else
+            if response['message'].include?('system_timer_end_merch_initialized_cancel')
+              order.update!(status: :overdue)
+              payment_transaction.update!(status: :overdue)
+            else
+              payment_transaction.update!(status: :paid)
+
+              Payment::CheckStatusJob.set(wait: 15.seconds).perform_later(payment_transaction.id, 'approved')
+            end
+          end
+        end
+      end
+
+      delete_old_msg(order)
 
       user_msg = I18n.t('tg_msg.paid_client')
-      TelegramMsgDelService.remove(order.user.tg_id, order.msg_id) if order.msg_id.present? && order.tg_msg.present?
-      send_report(order, admin_msg: msg, admin_markup: 'approve_payment',
-                  user_msg: user_msg, user_tg_id: user.tg_id, user_markup: 'new_order')
+      if order.bank_card.blank?
+        send_report(order, user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order')
+      else
+        user = order.user
+        msg  = I18n.t(
+          'tg_msg.paid_admin',
+          order: order.id,
+          card: order.bank_card.bank_details,
+          price: order.total_amount,
+          items: order.order_items_str,
+          address: user.full_address,
+          fio: user.full_name,
+          phone: user.phone_number
+        )
+        send_report(order, admin_msg: msg, admin_markup: 'approve_payment',
+                    user_msg: user_msg, user_tg_id: user.tg_id, user_markup: 'new_order')
+      end
     end
 
     def on_processing(order)
@@ -90,9 +147,24 @@ class ReportService
     def on_cancelled(order)
       Rails.logger.info "Order #{order.id} has been cancelled"
 
-      admin_msg = "❌ Заказ №#{order.id} был отменен!"
-      user_msg  = I18n.t('tg_msg.cancel', order: order.id)
+      payment_transaction = order.payment_transaction
+      if payment_transaction&.status == 'initialized'
+        response = Payment::ApiService.order_cancel(payment_transaction)
+        if response['response'] == 'error'
+          msg = "Failed cancel transaction #{payment_transaction.id} for order #{order.id}: #{response['message']}"
+          Rails.logger.error msg
+          order.payment_transaction.update!(status: :failed)
+          TelegramService.call(msg, Setting.fetch_value(:admin_ids))
+        else
+          order.payment_transaction.update!(status: :cancelled)
+        end
+      end
+
       delete_old_msg(order)
+
+      month_cancelled = order.user.orders.where(status: :cancelled, updated_at: Time.current.all_month).count
+      admin_msg = "❌ Заказ №#{order.id} был отменен!"
+      user_msg  = I18n.t('tg_msg.cancel', order: order.id, limit: "#{month_cancelled}/#{LIMIT_CANCEL}")
       send_report(order, admin_msg: admin_msg, user_msg: user_msg, user_tg_id: order.user.tg_id,
                          user_markup: 'new_order')
     end
@@ -105,8 +177,9 @@ class ReportService
 
     def on_overdue(order)
       Rails.logger.info "Order #{order.id} has been overdue"
-      user_msg = I18n.t('tg_msg.unpaid.reminder.overdue', order: order.id)
+      order.payment_transaction&.update(status: :overdue)
       delete_old_msg(order)
+      user_msg = I18n.t('tg_msg.unpaid.reminder.overdue', order: order.id)
       send_report(order, user_msg: user_msg, user_tg_id: order.user.tg_id, user_markup: 'new_order')
     end
 
@@ -143,6 +216,34 @@ class ReportService
 
     def notify_admin(error, order)
       Tg::ErrorHandlerService.call(error: error, user: order.user, business: true)
+    end
+
+    def cancel_order(order)
+      order.payment_transaction.update!(status: :failed)
+      msg_error = "Ошибка получения реквизитов для заказа #{order.id}. Пожалуйста, свяжитесь с нами."
+      order.user.messages.create(text: msg_error, is_incoming: false)
+      order.update!(status: :cancelled)
+    end
+
+    def send_pdf_notice(order)
+      msg = <<~MSG.squeeze(' ')
+        Уважаемый(ая) #{order.user.first_name || order.user.first_name_raw},
+        🎉 Ваш заказ №#{order.id} в процессе обработки.
+        Чтобы ускорить проверку оплаты, после того как вы произведёте оплату \
+        и нажмёте кнопку «Я оплатил», отправьте в чат чек в формате PDF.
+        Картинки и скриншоты в формате JPG, PNG не принимаются.
+      MSG
+
+      order.user.messages
+           .create(text: msg, is_incoming: false, data: { markup: { markup: 'first_msg' }, business: true })
+    end
+
+    def prepare_payment_transaction(order)
+      OpenStruct.new(
+        card_number: order.bank_card.number,
+        bank_name: order.bank_card.name,
+        card_people: order.bank_card.fio
+      )
     end
   end
 end

@@ -18,14 +18,10 @@
       <div class="text-emerald-900 bg-emerald-100 text-xs font-medium py-0.5 px-2 rounded dark:text-emerald-300 dark:bg-emerald-900 inline-flex">
         <% users = User.joins(:orders).where(orders: { status: %w[processing shipped], paid_at: Time.current.all_day }) %>
         <% count = users.select { |i| i.orders.count { |el|  %w[shipped processing].include? el.status } == 1 }.size %>
-        <% if count.zero? %>
-          0
-        <% else %>
-          <div class="flex items-center gap-1">
-            <%= render Admin::IconComponent.new name: 'mini-arrow', width: 14 %>
-            <span><%= count %></span>
-          </div>
-        <% end %>
+        <div class="flex items-center gap-1">
+          <%= render Admin::IconComponent.new name: 'mini-arrow', width: 14 if count.positive? %>
+          <span><%= count %></span>
+        </div>
       </div>
       <div class="text-gray-900 dark:text-white font-bold text-2xl leading-none space-y-3 mt-3">
         <%= User.joins(:orders).where(orders: { status: %w[shipped processing] }).distinct.count %>
@@ -34,20 +30,15 @@
     </div>
 
     <div class="p-4 rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-600 dark:bg-gray-800">
-      <% users = User.all %>
       <div class="text-gray-800 bg-gray-100 text-xs font-medium py-0.5 px-2 rounded dark:text-gray-300 dark:bg-gray-700 inline-flex">
-        <% count = users.where(created_at: Time.current.all_day).count %>
-        <% if count.zero? %>
-          0
-        <% else %>
-          <div class="flex items-center gap-1">
-            <%= render Admin::IconComponent.new name: 'mini-arrow', width: 14 %>
-            <span><%= count %></span>
-          </div>
-        <% end %>
+        <% count = User.where(created_at: Time.current.all_day).count %>
+        <div class="flex items-center gap-1">
+          <%= render Admin::IconComponent.new name: 'mini-arrow', width: 14 if count.positive? %>
+          <span><%= count %></span>
+        </div>
       </div>
       <div class="text-gray-900 dark:text-white font-bold text-2xl leading-none space-y-3 mt-3">
-        <%= users.count %>
+        <%= User.count %>
       </div>
       <p class="mt-3 text-gray-500 dark:text-gray-400">Всего</p>
     </div>
@@ -63,7 +54,13 @@
     <div class="p-4 rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-600 dark:bg-gray-800">
       <div class="text-yellow-800 bg-yellow-100 text-xs font-medium py-0.5 px-2 rounded dark:text-yellow-300 dark:bg-yellow-900 inline-flex">nostart</div>
       <div class="text-gray-900 dark:text-white font-bold text-2xl leading-none space-y-3 mt-3">
-        <%= User.where(is_blocked: false, started: false).count %>
+        <%= not_started = User.where(started: false).count %>
+        <% no_blocked = User.where(is_blocked: false, started: false).count %>
+        <% if no_blocked != not_started %>
+          <span>/</span>
+          <%= no_blocked %>
+          <span class="text-xs -ml-1">(не блок.)</span>
+        <% end %>
       </div>
       <p style="width: 150px" class="mt-3 text-gray-500 dark:text-gray-400">Не нажали старт</p>
     </div>

@@ -5,13 +5,17 @@ class Order < ApplicationRecord
   belongs_to :bank_card, optional: true
   has_many :order_items, dependent: :destroy
   has_many :bonus_logs, as: :source, dependent: :nullify
+  has_one :payment_transaction, dependent: :destroy
 
   validates :status, presence: true
   validates :total_amount, presence: true
   validates :bonus, numericality: { greater_than_or_equal_to: 0 }
   validate :bonus_check, if: -> { bonus&.positive? }
+  validate :check_old_order, on: :create
 
   enum :status, { initialized: 0, unpaid: 1, paid: 2, processing: 3, shipped: 4, cancelled: 5, overdue: 7, refunded: 8 }
+
+  has_one_attached :attachment, dependent: :purge
 
   before_save -> { self.created_at = Time.current }, if: -> { status == 'unpaid' }
   before_save -> { self.paid_at = Time.current }, if: -> { status == 'processing' }
@@ -20,9 +24,8 @@ class Order < ApplicationRecord
   before_update :cache_status, if: -> { status_changed? }
   before_update :apply_delivery, if: -> { status == 'unpaid' }
   before_update :update_total_amount, if: -> { status == 'unpaid' || bonus_changed? }
-  before_update :assign_valid_or_random_card, if: -> { status == 'unpaid' }
+  before_update :assign_valid_or_random_card, if: -> { Setting.fetch_value(:self_payment).to_s == 'true' && status == 'unpaid' }
   before_update :check_stock, if: -> { status_for_check? }
-  before_update :remove_cart, if: -> { status_changed?(from: 'unpaid', to: 'paid') }
   before_update :deduct_stock, if: -> { status_changed?(from: 'paid', to: 'processing') }
   before_update :restock_stock, if: -> { can_restock? }
 
@@ -41,10 +44,6 @@ class Order < ApplicationRecord
 
   def order_items_with_product
     order_items.includes(:product)
-  end
-
-  def delivery_price
-    has_delivery? ? Setting.fetch_value(:delivery_price).to_i : 0
   end
 
   def total_price
@@ -124,11 +123,11 @@ class Order < ApplicationRecord
 
   def apply_delivery
     self.has_delivery = order_items.one? && order_items.first.quantity == 1
+    self.delivery_price = Setting.fetch_value(:delivery_price).to_i if has_delivery?
   end
 
   def update_total_amount
-    total_price_without_bonus = total_price
-    self.total_amount = bonus.zero? ? total_price_without_bonus : total_price_without_bonus - bonus
+    self.total_amount = total_price - bonus
   end
 
   def assign_valid_or_random_card
@@ -139,10 +138,6 @@ class Order < ApplicationRecord
 
   def notify_status_change
     ReportJob.perform_later(order_id: id)
-  end
-
-  def remove_cart
-    user.cart.destroy
   end
 
   def deduct_stock
@@ -184,16 +179,16 @@ class Order < ApplicationRecord
   end
 
   def provide_bonus
-    total           = form_subtotal
+    subtotal        = form_subtotal
     bonus_threshold = Setting.fetch_value(:bonus_threshold).to_i
-    return if bonus_threshold.zero? || total < bonus_threshold
+    return if bonus_threshold.zero? || subtotal < bonus_threshold
 
-    result = ((total * user.account_tier.bonus_percentage / 100) / 50.0).round * 50
+    result = ((subtotal * user.account_tier.bonus_percentage / 100) / 50.0).round * 50
     user.bonus_logs.create!(bonus_amount: result, reason: :order, source: self)
   end
 
   def form_subtotal
-    has_delivery? ? total_amount - Setting.fetch_value(:delivery_price).to_i : total_amount
+    has_delivery? ? total_amount - delivery_price : total_amount
   end
 
   def deduct_bonus!
@@ -210,5 +205,11 @@ class Order < ApplicationRecord
 
   def clear_cache
     Rails.cache.delete(:paid_orders)
+  end
+
+  def check_old_order
+    return true if user.orders.where(status: :unpaid).none?
+
+    errors.add(:base, 'У вас есть неоплаченный заказ. Пожалуйста, оплатите его или отмените перед созданием нового.')
   end
 end
