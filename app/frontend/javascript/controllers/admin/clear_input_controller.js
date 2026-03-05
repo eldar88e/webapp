@@ -2,9 +2,17 @@ import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
   static targets = [
-    "input", "messages", "attach", "reply",
-    "replyPreview", "replyText", "replyMediaWrap", "replyMediaName",
-    "attachPreview", "attachMediaWrap", "attachName"
+    "input",
+    "messages",
+    "attach",
+    "reply",
+    "replyPreview",
+    "replyText",
+    "replyMediaWrap",
+    "replyMediaName",
+    "attachPreview",
+    "attachMediaWrap",
+    "attachName",
   ];
 
   connect() {
@@ -23,7 +31,10 @@ export default class extends Controller {
     this.replyTextTarget.textContent = messageText;
 
     if (mediaUrl) {
-      this.replyMediaWrapTarget.innerHTML = this.buildMediaPreview(mediaUrl, mediaType);
+      this.replyMediaWrapTarget.innerHTML = this.buildMediaPreview(
+        mediaUrl,
+        mediaType,
+      );
       this.replyMediaWrapTarget.classList.remove("hidden");
       this.replyMediaNameTarget.textContent = mediaName || "";
       this.replyMediaNameTarget.classList.toggle("hidden", !mediaName);
@@ -58,12 +69,10 @@ export default class extends Controller {
     const url = URL.createObjectURL(file);
 
     if (file.type.startsWith("image/")) {
-      this.attachMediaWrapTarget.innerHTML =
-        `<img src="${url}" class="w-10 h-10 object-cover" />`;
+      this.attachMediaWrapTarget.innerHTML = `<img src="${url}" class="w-10 h-10 object-cover" />`;
       this.attachMediaWrapTarget.classList.remove("hidden");
     } else if (file.type.startsWith("video/")) {
-      this.attachMediaWrapTarget.innerHTML =
-        `<video src="${url}" class="w-10 h-10 object-cover" muted preload="metadata"></video>`;
+      this.attachMediaWrapTarget.innerHTML = `<video src="${url}" class="w-10 h-10 object-cover" muted preload="metadata"></video>`;
       this.attachMediaWrapTarget.classList.remove("hidden");
     } else {
       this.attachMediaWrapTarget.innerHTML = "";
