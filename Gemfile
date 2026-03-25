@@ -33,7 +33,7 @@ gem 'panko_serializer'
 gem 'pundit'
 gem 'ransack'
 gem 'rollbar'
-gem 'sidekiq', '~> 8.0'
+gem 'sidekiq', '~> 8.1'
 gem 'sidekiq-cron'
 gem 'sidekiq-unique-jobs'
 gem 'telegram-bot-ruby', require: false
